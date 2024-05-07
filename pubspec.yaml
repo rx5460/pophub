@@ -32,9 +32,12 @@ dependencies:
     sdk: flutter
 
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  http: ^0.13.3
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -64,8 +67,8 @@ flutter:
   
     - family: NanumGothicCoding
       fonts:
-        - asset: assets/fonts/NanumGothicCoding-Bold.ttf
-        - asset: assets/fonts/NanumGothicCoding-Regular.ttf
+        - asset: assets/fonts/NanumGothicBold.ttf
+        - asset: assets/fonts/NanumGothic.ttf
           style: italic
 
   # To add assets to your application, add an assets section, like this:

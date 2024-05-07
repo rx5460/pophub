@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/user/join_verify_phone.dart';
 import 'assets/style.dart';
-import 'user/login.dart';
+import 'screen/user/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      home: MainPagePage(),
+      home: const MainPagePage(),
     );
   }
 }
@@ -37,7 +36,7 @@ class _MainPagePageState extends State<MainPagePage> {
                 child: Container(
       color: Colors.white,
       child: Padding(
-        padding: EdgeInsets.all(Constants.DEFAULT_PADDING),
+        padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,27 +46,19 @@ class _MainPagePageState extends State<MainPagePage> {
               height: 100,
               width: 100,
             ),
-            Text("팝허브와 함께 \n 다양한 팝업스토어 \n 정보를 찾아봐요!",
-                textAlign: TextAlign.center),
             Container(
               width: double.infinity,
               height: 50,
-              margin: EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.only(top: 30),
               child: OutlinedButton(
                   onPressed: () => {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Login()))
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()))
                       },
-                  child: Text("로그인")),
+                  child: const Text("로그인")),
             ),
-            TextButton(
-                onPressed: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VerifyPhone()))
-                    },
-                child: Text("회원가입"))
           ],
         ),
       ),
