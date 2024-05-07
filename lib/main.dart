@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
+import 'package:pophub/user/join_verify_phone.dart';
+import 'assets/style.dart';
 import 'user/login.dart';
 
 void main() {
@@ -12,32 +15,62 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      theme: theme,
+      home: MainPagePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class MainPagePage extends StatefulWidget {
+  const MainPagePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainPagePage> createState() => _MainPagePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPagePageState extends State<MainPagePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+    return SafeArea(
+        child: Scaffold(
+            body: Center(
+                child: Container(
+      color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.all(Constants.DEFAULT_PADDING),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/img/logo.jpg',
+              height: 100,
+              width: 100,
+            ),
+            Text("팝허브와 함께 \n 다양한 팝업스토어 \n 정보를 찾아봐요!",
+                textAlign: TextAlign.center),
+            Container(
+              width: double.infinity,
+              height: 50,
+              margin: EdgeInsets.only(top: 30),
+              child: OutlinedButton(
+                  onPressed: () => {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()))
+                      },
+                  child: Text("로그인")),
+            ),
+            TextButton(
+                onPressed: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyPhone()))
+                    },
+                child: Text("회원가입"))
+          ],
         ),
-        body: Login());
+      ),
+    ))));
   }
 }
