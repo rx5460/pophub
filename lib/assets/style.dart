@@ -17,11 +17,19 @@ var theme = ThemeData(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
   textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(foregroundColor: Colors.black)),
-  inputDecorationTheme: const InputDecorationTheme(
-    // 입력 필드 스타일 설정
-    contentPadding: EdgeInsets.all(10),
-    fillColor: Color(0xffadd8e6),
-    hintStyle: TextStyle(color: Colors.grey),
-    labelStyle: TextStyle(color: Colors.blue),
+  inputDecorationTheme: InputDecorationTheme(
+    filled: true,
+    fillColor: const Color(0xFFFFFFFF),
+    contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.blue),
+    ),
+    errorBorder: const OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+    errorStyle: const TextStyle(color: Colors.red),
   ),
 );

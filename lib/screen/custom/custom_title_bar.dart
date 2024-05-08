@@ -12,11 +12,11 @@ class _CustomTitleBarState extends State<CustomTitleBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 70),
+      margin: const EdgeInsets.only(bottom: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // 시작과 끝에 정렬
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
             onPressed: () {

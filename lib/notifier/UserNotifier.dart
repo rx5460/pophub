@@ -5,9 +5,12 @@ class UserNotifier with ChangeNotifier {
   int get count => _count;
   bool isVerify = false;
 
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController verifyController = TextEditingController();
-  TextEditingController idController = TextEditingController();
+  late final TextEditingController phoneController = TextEditingController();
+  late final TextEditingController certifiController = TextEditingController();
+  late final TextEditingController idController = TextEditingController();
+  late final TextEditingController pwController = TextEditingController();
+  late final TextEditingController confirmPwController =
+      TextEditingController();
 
   set count(int value) {
     _count = value;

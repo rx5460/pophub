@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/screen/user/log.dart';
 import 'assets/style.dart';
 import 'screen/user/login.dart';
 
@@ -12,6 +13,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger.setLogLevel(LogLevel.debug); // 로그 레벨 설정
+    Logger.debug('APP start ! ');
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
@@ -48,7 +52,7 @@ class _MainPagePageState extends State<MainPagePage> {
             ),
             Container(
               width: double.infinity,
-              height: 50,
+              height: 55,
               margin: const EdgeInsets.only(top: 30),
               child: OutlinedButton(
                   onPressed: () => {

@@ -5,32 +5,42 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
-import 'package:pophub/screen/user/log.dart';
-import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/join_user.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/utils.dart';
 
-class FindId extends StatefulWidget {
-  const FindId({super.key});
+class CertifiPhone extends StatefulWidget {
+  const CertifiPhone({super.key});
 
   @override
-  State<FindId> createState() => _FindIdState();
+  State<CertifiPhone> createState() => _CertifiPhoneState();
 }
 
-class _FindIdState extends State<FindId> {
+class _CertifiPhoneState extends State<CertifiPhone> {
   get http => null;
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
-  late Future<String> data;
 
   @override
   void dispose() {
     userNotifier.phoneController.text = "";
     userNotifier.certifiController.text = "";
-    userNotifier.isVerify = false;
     super.dispose();
+  }
+
+  Future<void> verifyApi() async {
+    final data = Api.sendVerify(
+      userNotifier.certifiController.text.toString(),
+    );
+
+    if (data.toString().contains("success")) {
+      userNotifier.isVerify = true;
+    } else {
+      userNotifier.isVerify = false;
+    }
+    userNotifier.refresh();
   }
 
   @override
@@ -39,14 +49,23 @@ class _FindIdState extends State<FindId> {
       builder: (_, userNotifier, child) {
         return SafeArea(
             child: Scaffold(
-          resizeToAvoidBottomInset: false,
           body: Center(
             child: Padding(
                 padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    const CustomTitleBar(titleName: "아이디 찾기"),
+                    const CustomTitleBar(titleName: "휴대폰 본인 인증"),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      width: double.infinity,
+                      child: const Text(
+                        "도용 방지를 위해\n본인 인증을 완료해주세요!",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     Form(
                         key: _phoneFormkey,
                         child: CustomTextFormFeild(
@@ -66,7 +85,7 @@ class _FindIdState extends State<FindId> {
                     Container(
                       width: double.infinity,
                       height: 55,
-                      margin: const EdgeInsets.only(top: 30),
+                      margin: const EdgeInsets.only(top: 15),
                       child: OutlinedButton(
                           onPressed: () => {
                                 if (_phoneFormkey.currentState!.validate())
@@ -107,7 +126,7 @@ class _FindIdState extends State<FindId> {
                           width: 80,
                           height: 55,
                           margin: const EdgeInsets.only(
-                              top: 30, bottom: 30, left: 10),
+                              top: 18, bottom: 18, left: 10),
                           child: OutlinedButton(
                               onPressed: () => {
                                     if (_certifiFormkey.currentState!
@@ -116,16 +135,13 @@ class _FindIdState extends State<FindId> {
                                                 .length ==
                                             6)
                                       {
-                                        // TODO 황지민 : RES 체크
-                                        if (data ==
-                                            userNotifier.certifiController.text)
+                                        verifyApi(),
+                                        if (userNotifier.isVerify)
                                           {
-                                            userNotifier.isVerify = true,
-                                            userNotifier.refresh,
                                             showAlert(context, "확인", "인증되었습니다.",
                                                 () {
                                               Navigator.of(context).pop();
-                                              // 키보드 내리기
+
                                               FocusManager.instance.primaryFocus
                                                   ?.unfocus();
                                             })
@@ -139,82 +155,31 @@ class _FindIdState extends State<FindId> {
                         ),
                       ],
                     ),
-                    Selector<UserNotifier, bool>(
-                      selector: (_, userNotifier) => userNotifier.isVerify,
-                      builder: (context, isVerifyed, child) {
-                        Logger.debug("인증 완료 ${isVerifyed}");
-                        return isVerifyed
-                            ? const Text("회원님의 아이디는 ~~ 입니다.")
-                            : Container();
-                      },
-                    ),
                     const Spacer(),
                     SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 55,
-                                child: OutlinedButton(
-                                    onPressed: () => {
-                                          {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Login()))
-                                          }
-                                        },
-                                    style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                            color: Colors.white),
-                                        backgroundColor:
-                                            const Color(0xffadd8e6),
-                                        foregroundColor: Colors.white,
-                                        textStyle: const TextStyle(
-                                            color: Colors.white),
-                                        padding: const EdgeInsets.all(0),
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                bottomLeft:
-                                                    Radius.circular(10)))),
-                                    child: const Text("로그인")),
-                              ),
-                            ),
-                            Expanded(
-                              child: SizedBox(
-                                height: 55,
-                                child: OutlinedButton(
-                                    onPressed: () => {
-                                          {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Login()))
-                                          }
-                                        },
-                                    style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                            color: Colors.white),
-                                        backgroundColor:
-                                            const Color(0xffadd8e6),
-                                        foregroundColor: Colors.white,
-                                        textStyle: const TextStyle(
-                                            color: Colors.white),
-                                        padding: const EdgeInsets.all(0),
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10)))),
-                                    child: const Text("비밀번호 찾기")),
-                              ),
-                            )
-                          ],
-                        ))
+                      width: double.infinity,
+                      height: 55,
+                      child: OutlinedButton(
+                          onPressed: () => {
+                                ///TODO 황지민 : 테스트 코드
+                                if (true)
+                                  {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const JoinUser()))
+                                  }
+                                else
+                                  {
+                                    showAlert(context, "경고", "핸드폰 인증을 완료해주세요.",
+                                        () {
+                                      Navigator.of(context).pop();
+                                    })
+                                  }
+                              },
+                          child: const Text("완료")),
+                    ),
                   ],
                 )),
           ),
