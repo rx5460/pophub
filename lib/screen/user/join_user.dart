@@ -6,6 +6,7 @@ import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 
 class JoinUser extends StatefulWidget {
@@ -20,6 +21,7 @@ class _JoinUserState extends State<JoinUser> {
   final _idFormkey = GlobalKey<FormState>();
   final _pwFormkey = GlobalKey<FormState>();
   final _confirmPwFormkey = GlobalKey<FormState>();
+  bool joinComplete = false;
 
   @override
   void dispose() {
@@ -27,6 +29,24 @@ class _JoinUserState extends State<JoinUser> {
     userNotifier.pwController.text = "";
     userNotifier.confirmPwController.text = "";
     super.dispose();
+  }
+
+  Future<void> singUpApi() async {
+    final data = Api.signUp(userNotifier.idController.text,
+        userNotifier.pwController.text, userRole.toString());
+
+    Logger.debug("data $data");
+    if (data.toString().contains("가입")) {
+      joinComplete = true;
+      showAlert(context, "확인", "인증되었습니다.", () {
+        Navigator.of(context).pop();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Login()));
+      });
+    } else {
+      joinComplete = false;
+    }
+    userNotifier.refresh();
   }
 
   @override
@@ -66,28 +86,28 @@ class _JoinUserState extends State<JoinUser> {
                                       onChange: () => {},
                                     ),
                                   )),
-                              Container(
-                                height: 55,
-                                width: 90,
-                                margin: const EdgeInsets.only(left: 10),
-                                child: OutlinedButton(
-                                    onPressed: () => {
-                                          if (_idFormkey.currentState!
-                                              .validate())
-                                            {
-                                              userNotifier.isVerify = true,
-                                              showAlert(
-                                                  context, "확인", "인증되었습니다.",
-                                                  () {
-                                                Navigator.of(context).pop();
-                                              })
-                                            }
-                                        },
-                                    child: const Text(
-                                      "중복 확인",
-                                      textAlign: TextAlign.center,
-                                    )),
-                              ),
+                              // Container(
+                              //   height: 55,
+                              //   width: 90,
+                              //   margin: const EdgeInsets.only(left: 10),
+                              //   child: OutlinedButton(
+                              //       onPressed: () => {
+                              //             if (_idFormkey.currentState!
+                              //                 .validate())
+                              //               {
+                              //                 userNotifier.isVerify = true,
+                              //                 showAlert(
+                              //                     context, "확인", "인증되었습니다.",
+                              //                     () {
+                              //                   Navigator.of(context).pop();
+                              //                 })
+                              //               }
+                              //           },
+                              //       child: const Text(
+                              //         "중복 확인",
+                              //         textAlign: TextAlign.center,
+                              //       )),
+                              // ),
                             ],
                           ),
                         ),
@@ -201,22 +221,8 @@ class _JoinUserState extends State<JoinUser> {
                           width: double.infinity,
                           child: OutlinedButton(
                               onPressed: () => {
-                                    if (_idFormkey.currentState!.validate() &&
-                                        _pwFormkey.currentState!.validate() &&
-                                        _confirmPwFormkey.currentState!
-                                            .validate())
-                                      {
-                                        ///TODO 황지민 : 데이터 들어가는거 확인
-                                        Api.signUp(
-                                            userNotifier.idController.text,
-                                            userNotifier.pwController.text,
-                                            userRole.toString()),
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const Login()))
-                                      },
+                                    singUpApi(),
+                                    if (joinComplete) {},
                                   },
                               child: const Text("완료")),
                         ),

@@ -25,8 +25,8 @@ class _CertifiPhoneState extends State<CertifiPhone> {
 
   @override
   void dispose() {
-    userNotifier.phoneController.text = "";
-    userNotifier.certifiController.text = "";
+    // userNotifier.phoneController.text = "";
+    // userNotifier.certifiController.text = "";
     super.dispose();
   }
 
@@ -35,7 +35,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
       userNotifier.certifiController.text.toString(),
     );
 
-    if (data.toString().contains("success")) {
+    if (data.toString().contains("성공")) {
       userNotifier.isVerify = true;
     } else {
       userNotifier.isVerify = false;

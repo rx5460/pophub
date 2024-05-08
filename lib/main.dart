@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/screen/user/log.dart';
+import 'package:pophub/utils/log.dart';
 import 'assets/style.dart';
 import 'screen/user/login.dart';
 
@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
     Logger.debug('APP start ! ');
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: theme,
       home: const MainPagePage(),

@@ -1,4 +1,4 @@
-import 'package:pophub/screen/user/log.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/http.dart';
 
 class Api {
@@ -22,7 +22,7 @@ class Api {
   }
 
   // 회원가입
-  static Future<Map<String, String>> signUp(
+  static Future<String> signUp(
       String userId, String userPassword, String userRole) async {
     final data = await postData('$domain/user/sign_up',
         {'userId': userId, "userPassword": userPassword, "userRole": userRole});
@@ -31,9 +31,9 @@ class Api {
   }
 
   // 로그인
-  static login(String userId, String userPassword, String authPassword) async {
+  static Future<String> login(String userId, String authPassword) async {
     final data = await postData('$domain/user/sign_in',
-        {'userId': userId, "authPassword": authPassword});
+        {'userId': userId, 'authPassword': authPassword});
     Logger.debug("### 로그인 ${data}");
     return data;
   }

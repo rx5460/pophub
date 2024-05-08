@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pophub/screen/user/log.dart';
+import 'package:pophub/utils/log.dart';
 
 // 황지민 : http 통신
 
-Future<Map<String, String>> postData(
-    String url, Map<String, String> data) async {
+Future<String> postData(String url, Map<String, String> data) async {
   final response = await http.post(
     Uri.parse(url),
     headers: <String, String>{
@@ -14,8 +13,8 @@ Future<Map<String, String>> postData(
     body: jsonEncode(data),
   );
 
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    return response.body;
   } else {
     throw Exception('Failed to post data');
   }
