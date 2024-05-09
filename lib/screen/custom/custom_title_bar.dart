@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomTitleBar extends StatefulWidget {
   final String titleName;
-  const CustomTitleBar({super.key, this.titleName = ""});
+  final bool useBack;
+
+  const CustomTitleBar({super.key, this.titleName = "", this.useBack = true});
 
   @override
   State<CustomTitleBar> createState() => _CustomTitleBarState();
@@ -18,14 +20,17 @@ class _CustomTitleBarState extends State<CustomTitleBar> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // 시작과 끝에 정렬
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.keyboard_arrow_left,
-              color: Colors.black87,
-              size: 30,
+          Visibility(
+            visible: widget.useBack,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black87,
+                size: 30,
+              ),
             ),
           ),
           Text(

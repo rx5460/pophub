@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/user/find_id.dart';
+import 'package:pophub/screen/store/store_main.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
-import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -20,22 +19,40 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool loginCompelete = false;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  late final TextEditingController idController = TextEditingController();
+  late final TextEditingController pwController = TextEditingController();
+
+  @override
+  void dispose() {
+    idController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
 
   Future<void> loginApi() async {
-    final data = await Api.login(
-        userNotifier.idController.text, userNotifier.pwController.text);
-    Map<String, dynamic> valueMap = json.decode(data);
-    // String token = jsonDecode(valueMap);
-    Logger.debug("### 로그인 데이터 ${valueMap[1]}");
+    Map<String, dynamic> data =
+        await Api.login(idController.text, pwController.text);
 
-    //auth 받으면 jwt 에 등록 처리
-    //data
-    if (data.toString().contains("성공")) {
-      loginCompelete = true;
-      setState(() {});
+    if (!data.toString().contains("fail")) {
+      if (data['token'].isNotEmpty) {
+        // 토큰 추가
+        await _storage.write(key: 'token', value: data['token']);
+        // User 싱글톤에 user_id 추가
+        User().userId = data['user_id'];
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const StoreMain())));
+      }
     } else {
-      loginCompelete = false;
-      setState(() {});
+      showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
+        Navigator.of(context).pop();
+      });
     }
     userNotifier.refresh();
   }
@@ -51,55 +68,59 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
                   child: Column(
                     children: <Widget>[
-                      const CustomTitleBar(titleName: "로그인"),
+                      const CustomTitleBar(
+                        titleName: "로그인",
+                        useBack: false,
+                      ),
                       Image.asset(
                         'assets/img/logo.jpg',
                         height: 150,
                         width: 150,
                       ),
                       TextField(
-                          controller: userNotifier.idController,
-                          decoration: InputDecoration(hintText: "아이디")),
+                          controller: idController,
+                          decoration: const InputDecoration(hintText: "아이디")),
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                       ),
                       TextField(
-                          controller: userNotifier.pwController,
+                          controller: pwController,
                           obscureText: true,
-                          decoration: InputDecoration(hintText: "비밀번호")),
+                          decoration: const InputDecoration(hintText: "비밀번호")),
                       Container(
                         margin: const EdgeInsets.only(top: 0, bottom: 10),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextButton(
-                              onPressed: () => {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MultiProvider(
-                                                    providers: [
-                                                      ChangeNotifierProvider(
-                                                          create: (_) =>
-                                                              UserNotifier())
-                                                    ],
-                                                    child: const FindId())))
-                                  },
-                              child: const Text("아이디 찾기")),
-                          TextButton(
-                              onPressed: () => {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MultiProvider(providers: [
-                                                  ChangeNotifierProvider(
-                                                      create: (_) =>
-                                                          UserNotifier())
-                                                ], child: const ResetPasswd())))
-                                  },
-                              child: const Text("비밀번호 찾기")),
+                          //TODO 황지민 : 나중에 기능 살리기
+                          // TextButton(
+                          //     onPressed: () => {
+                          //           Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(
+                          //                   builder: (context) => MultiProvider(
+                          //                           providers: [
+                          //                             ChangeNotifierProvider(
+                          //                                 create: (_) =>
+                          //                                     UserNotifier())
+                          //                           ],
+                          //                           child: const FindId())))
+                          //         },
+                          //     child: const Text("아이디 찾기")),
+                          // TextButton(
+                          //     onPressed: () => {
+                          //           Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(
+                          //                   builder: (context) =>
+                          //                       MultiProvider(providers: [
+                          //                         ChangeNotifierProvider(
+                          //                             create: (_) =>
+                          //                                 UserNotifier())
+                          //                       ], child: const ResetPasswd())))
+                          //         },
+                          //     child: const Text("비밀번호 찾기")),
                         ],
                       ),
                       Container(

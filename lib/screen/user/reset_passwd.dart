@@ -55,7 +55,6 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           if (value == null || value.isEmpty) {
                             return "아이디를 입력해주세요 !";
                           }
-                          //TODO 황지민 : 중복된 확인
                           return null;
                         },
                         textInputType: TextInputType.text,
