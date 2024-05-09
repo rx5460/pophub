@@ -14,7 +14,7 @@ class StoreMain extends StatefulWidget {
 
 class _StoreMainState extends State<StoreMain> {
   bool loginCompelete = false;
-  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String token = "";
   String profileData = "";
 
@@ -53,7 +53,7 @@ class _StoreMainState extends State<StoreMain> {
                         height: 150,
                         width: 150,
                       ),
-                      Text("${profileData}"),
+                      Text(profileData),
                       Container(
                         width: double.infinity,
                         height: 55,

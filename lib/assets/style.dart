@@ -28,7 +28,7 @@ var theme = ThemeData(
       borderSide: BorderSide(color: Colors.blue),
     ),
     errorBorder: const OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.red),
+      borderSide: BorderSide(color: Colors.red),
     ),
     errorStyle: const TextStyle(color: Colors.red),
   ),

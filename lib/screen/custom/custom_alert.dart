@@ -6,7 +6,10 @@ class AlertDialogWidget extends StatelessWidget {
   final VoidCallback onPressed;
 
   const AlertDialogWidget(
-      {required this.title, required this.content, required this.onPressed});
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

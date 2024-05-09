@@ -33,6 +33,7 @@ class MainPagePage extends StatefulWidget {
 }
 
 class _MainPagePageState extends State<MainPagePage> {
+  // TODO 김영수 : 앱 시작시 메인 페이지로 이동하게
   @override
   Widget build(BuildContext context) {
     return SafeArea(

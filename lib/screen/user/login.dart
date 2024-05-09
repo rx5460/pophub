@@ -42,6 +42,7 @@ class _LoginState extends State<Login> {
         // User 싱글톤에 user_id 추가
         User().userId = data['user_id'];
 
+        // TODO 김영수 : 로그인시 메인페이지로 이동하게 수정
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -90,7 +91,7 @@ class _LoginState extends State<Login> {
                       Container(
                         margin: const EdgeInsets.only(top: 0, bottom: 10),
                       ),
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           //TODO 황지민 : 나중에 기능 살리기

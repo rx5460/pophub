@@ -44,7 +44,7 @@ class _JoinUserState extends State<JoinUser> {
         Navigator.of(context).pop();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Login()),
+          MaterialPageRoute(builder: (context) => const Login()),
         );
       });
     } else {

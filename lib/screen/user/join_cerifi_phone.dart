@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
