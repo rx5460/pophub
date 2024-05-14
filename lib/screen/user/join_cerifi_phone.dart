@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
 import 'package:pophub/screen/user/join_user.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/utils.dart';
@@ -23,24 +23,55 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
 
+  late final TextEditingController phoneController = TextEditingController();
+  late final TextEditingController certifiController = TextEditingController();
+
+  String realAuthCode = "";
+
   @override
   void dispose() {
-    // userNotifier.phoneController.text = "";
-    // userNotifier.certifiController.text = "";
+    phoneController.dispose();
+    certifiController.dispose();
     super.dispose();
   }
 
-  Future<void> verifyApi() async {
-    final data = Api.sendVerify(
-      userNotifier.certifiController.text.toString(),
-    );
+  Future<void> certifiApi() async {
+    final data = await Api.sendCertifi(phoneController.text.toString());
 
-    if (data.toString().contains("성공")) {
-      userNotifier.isVerify = true;
+    ///TODO 황지민 : Auth Code 추가
+    if (!data.toString().contains("fail")) {
+      realAuthCode = data["Number"];
+      ToastUtil.customToastMsg("전송되었습니다.", context);
+      setState(() {});
     } else {
-      userNotifier.isVerify = false;
+      showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+        Navigator.of(context).pop();
+
+        FocusManager.instance.primaryFocus?.unfocus();
+      });
     }
-    userNotifier.refresh();
+  }
+
+  Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
+    final data = await Api.sendVerify(certifi, realAuthCode);
+
+    if (data.toString().contains("Successful")) {
+      showAlert(context, "확인", "인증되었습니다.", () {
+        Navigator.of(context).pop();
+
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        userNoti.isVerify = true;
+        userNoti.refresh();
+      });
+    } else {
+      showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+        Navigator.of(context).pop();
+
+        FocusManager.instance.primaryFocus?.unfocus();
+      });
+    }
+    Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
   }
 
   @override
@@ -69,7 +100,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                     Form(
                         key: _phoneFormkey,
                         child: CustomTextFormFeild(
-                          controller: userNotifier.phoneController,
+                          controller: phoneController,
                           hintText: "핸드폰 번호 입력",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -89,15 +120,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       child: OutlinedButton(
                           onPressed: () => {
                                 if (_phoneFormkey.currentState!.validate())
-                                  {
-                                    Api.sendCertifi(userNotifier
-                                        .phoneController.text
-                                        .toString()),
-                                    User().phoneNumber =
-                                        userNotifier.phoneController.text,
-                                    ToastUtil.customToastMsg(
-                                        "전송되었습니다.", context),
-                                  }
+                                  {certifiApi()}
                               },
                           child: const Text("전송")),
                     ),
@@ -107,7 +130,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                             child: Form(
                                 key: _certifiFormkey,
                                 child: CustomTextFormFeild(
-                                  controller: userNotifier.certifiController,
+                                  controller: certifiController,
                                   hintText: "인증번호 입력",
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -131,21 +154,11 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                               onPressed: () => {
                                     if (_certifiFormkey.currentState!
                                             .validate() &&
-                                        userNotifier.certifiController.text
-                                                .length ==
-                                            6)
+                                        certifiController.text.length == 6)
                                       {
-                                        verifyApi(),
-                                        if (userNotifier.isVerify)
-                                          {
-                                            showAlert(context, "확인", "인증되었습니다.",
-                                                () {
-                                              Navigator.of(context).pop();
-
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                            })
-                                          },
+                                        verifyApi(
+                                            certifiController.text.toString(),
+                                            userNotifier),
                                       }
                                   },
                               child: const Text(
@@ -162,8 +175,10 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       child: OutlinedButton(
                           onPressed: () => {
                                 ///TODO 황지민 : 테스트 코드
-                                if (true)
+                                if (userNotifier.isVerify)
                                   {
+                                    phoneController.text = "",
+                                    certifiController.text = "",
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -172,7 +187,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                   }
                                 else
                                   {
-                                    showAlert(context, "경고", "핸드폰 인증을 완료해주세요.",
+                                    showAlert(context, "", "핸드폰 인증을 완료해주세요.",
                                         () {
                                       Navigator.of(context).pop();
                                     })

@@ -37,6 +37,7 @@ class _FindIdState extends State<FindId> {
   Widget build(BuildContext context) {
     return Consumer<UserNotifier>(
       builder: (_, userNotifier, child) {
+        // TODO : 황지민 나중에 수정 필요
         return SafeArea(
             child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -116,20 +117,19 @@ class _FindIdState extends State<FindId> {
                                                 .length ==
                                             6)
                                       {
-                                        // TODO 황지민 : RES 체크
-                                        if (data ==
-                                            userNotifier.certifiController.text)
-                                          {
-                                            userNotifier.isVerify = true,
-                                            userNotifier.refresh,
-                                            showAlert(context, "확인", "인증되었습니다.",
-                                                () {
-                                              Navigator.of(context).pop();
-                                              // 키보드 내리기
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                            })
-                                          },
+                                        // if (data ==
+                                        //     userNotifier.certifiController.text)
+                                        //   {
+                                        //     userNotifier.isVerify = true,
+                                        //     userNotifier.refresh,
+                                        //     showAlert(context, "확인", "인증되었습니다.",
+                                        //         () {
+                                        //       Navigator.of(context).pop();
+                                        //       // 키보드 내리기
+                                        //       FocusManager.instance.primaryFocus
+                                        //           ?.unfocus();
+                                        //     })
+                                        //   },
                                       }
                                   },
                               child: const Text(
@@ -142,7 +142,7 @@ class _FindIdState extends State<FindId> {
                     Selector<UserNotifier, bool>(
                       selector: (_, userNotifier) => userNotifier.isVerify,
                       builder: (context, isVerifyed, child) {
-                        Logger.debug("인증 완료 ${isVerifyed}");
+                        Logger.debug("인증 완료 $isVerifyed");
                         return isVerifyed
                             ? const Text("회원님의 아이디는 ~~ 입니다.")
                             : Container();

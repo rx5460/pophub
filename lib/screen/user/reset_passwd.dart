@@ -36,6 +36,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
   Widget build(BuildContext context) {
     return Consumer<UserNotifier>(
       builder: (_, userNotifier, child) {
+        // TODO : 황지민 나중에 수정 필요
         return SafeArea(
             child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -55,7 +56,6 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           if (value == null || value.isEmpty) {
                             return "아이디를 입력해주세요 !";
                           }
-                          //TODO 황지민 : 중복된 확인
                           return null;
                         },
                         textInputType: TextInputType.text,
@@ -87,15 +87,11 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                 if (_idFormkey.currentState!.validate() &&
                                     _phoneFormkey.currentState!.validate())
                                   {
-                                    //fetchData(),
-                                    //TODO 황지민 : 인증번호 전송하기
                                     User().phoneNumber =
                                         userNotifier.phoneController.text,
                                     ToastUtil.customToastMsg(
                                         "전송되었습니다.", context),
                                   }
-
-                                //todo
                               },
                           child: const Text("전송")),
                     ),
@@ -127,7 +123,6 @@ class _ResetPasswdState extends State<ResetPasswd> {
                               top: 30, bottom: 30, left: 10),
                           child: OutlinedButton(
                               onPressed: () => {
-                                    //TODO 황지민 : 인증번호 체크하기
                                     if (_certifiFormkey.currentState!
                                             .validate() &&
                                         userNotifier.certifiController.text
@@ -163,7 +158,6 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           if (value.length < 8) {
                             return '비밀번호는 8자 이상으로 입력해주세요.';
                           }
-                          //TODO 황지민 : 중복된 확인
                           return null;
                         },
                         textInputType: TextInputType.text,
@@ -186,7 +180,6 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           if (value != userNotifier.pwController.text) {
                             return '비밀번호가 일치하지 않습니다.';
                           }
-                          //TODO 황지민 : 중복된 확인
                           return null;
                         },
                         textInputType: TextInputType.text,
@@ -200,10 +193,8 @@ class _ResetPasswdState extends State<ResetPasswd> {
                       height: 55,
                       child: OutlinedButton(
                           onPressed: () => {
-                                if ( //TODO 황지민 : 인증번호 체크 로직 추가
-                                    _pwFormkey.currentState!.validate() &&
-                                        _confirmPwFormkey.currentState!
-                                            .validate())
+                                if (_pwFormkey.currentState!.validate() &&
+                                    _confirmPwFormkey.currentState!.validate())
                                   {
                                     Navigator.push(
                                         context,

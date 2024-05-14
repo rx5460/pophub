@@ -1,0 +1,333 @@
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pophub/screen/store/popup_detail.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+  TextEditingController searchController = TextEditingController();
+  String? searchInput;
+
+  List imageList = [
+    'assets/images/Untitled.png',
+    'assets/images/Untitled.png',
+    'assets/images/Untitled.png',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Image.asset(
+          'assets/images/logo.png',
+          width: screenWidth * 0.14,
+        ),
+        // centerTitle: true,
+        actions: const [
+          Icon(
+            Icons.notifications_outlined,
+            size: 32,
+            color: Color.fromARGB(255, 106, 105, 105),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.055,
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      searchInput = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1.0,
+                        color: Color(0xFFADD8E6),
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1.0,
+                        color: Color(0xFFADD8E6),
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    labelText: '검색',
+                    labelStyle: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 18,
+                      fontFamily: 'recipe',
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.search_sharp,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: sliderWidget(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Transform.translate(
+                    offset: Offset(0, -screenWidth * 0.1),
+                    child: Container(
+                      width: screenWidth * 0.17,
+                      height: screenWidth * 0.06,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                        color: Colors.white.withOpacity(0.2),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${(_current + 1).toString()}/${imageList.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: screenWidth * 0.9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '인기 있는 팝업스토어',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Row(
+                        children: [
+                          Text(
+                            '더보기',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: screenWidth * 0.05),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PopupDetail()),
+                          );
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                'assets/images/Untitled.png',
+                                width: screenWidth * 0.5,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                '주술회전 팝업스토어',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              '24.03.23 ~ 24.06.16',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: screenWidth * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              'assets/images/Untitled.png',
+                              width: screenWidth * 0.5,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              '주술회전 팝업스토어',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            '24.03.23 ~ 24.06.16',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: screenWidth * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              'assets/images/Untitled.png',
+                              width: screenWidth * 0.5,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              '주술회전 팝업스토어',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            '24.03.23 ~ 24.06.16',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.05,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.08,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget sliderWidget() {
+    return CarouselSlider(
+      carouselController: _controller,
+      items: imageList.map(
+        (img) {
+          return Builder(
+            builder: (context) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  img,
+                  fit: BoxFit.fill,
+                ),
+              );
+            },
+          );
+        },
+      ).toList(),
+      options: CarouselOptions(
+        height: 250,
+        viewportFraction: 1.0,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 4),
+        onPageChanged: (index, reason) {
+          setState(() {
+            _current = index;
+          });
+        },
+      ),
+    );
+  }
+}

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 
 class JoinUser extends StatefulWidget {
@@ -23,28 +21,37 @@ class _JoinUserState extends State<JoinUser> {
   final _confirmPwFormkey = GlobalKey<FormState>();
   bool joinComplete = false;
 
+  late final TextEditingController idController = TextEditingController();
+  late final TextEditingController pwController = TextEditingController();
+  late final TextEditingController confirmPwController =
+      TextEditingController();
+
   @override
   void dispose() {
-    userNotifier.idController.text = "";
-    userNotifier.pwController.text = "";
-    userNotifier.confirmPwController.text = "";
+    idController.dispose();
+    pwController.dispose();
+    confirmPwController.dispose();
     super.dispose();
   }
 
   Future<void> singUpApi() async {
-    final data = Api.signUp(userNotifier.idController.text,
-        userNotifier.pwController.text, userRole.toString());
+    final data = await Api.signUp(
+        idController.text, pwController.text, userRole.toString());
 
-    Logger.debug("data $data");
-    if (data.toString().contains("가입")) {
+    if (data.toString().contains("완료")) {
       joinComplete = true;
-      showAlert(context, "확인", "인증되었습니다.", () {
+      showAlert(context, "확인", "회원가입이 완료되었습니다.", () {
         Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Login()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Login()),
+        );
       });
     } else {
       joinComplete = false;
+      showAlert(context, "경고", "회원가입에 실패했습니다.", () {
+        Navigator.of(context).pop();
+      });
     }
     userNotifier.refresh();
   }
@@ -73,7 +80,7 @@ class _JoinUserState extends State<JoinUser> {
                                   child: Form(
                                     key: _idFormkey,
                                     child: CustomTextFormFeild(
-                                      controller: userNotifier.idController,
+                                      controller: idController,
                                       hintText: "아이디",
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
@@ -117,7 +124,7 @@ class _JoinUserState extends State<JoinUser> {
                           child: Form(
                             key: _pwFormkey,
                             child: CustomTextFormFeild(
-                              controller: userNotifier.pwController,
+                              controller: pwController,
                               hintText: "비밀번호",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -141,7 +148,7 @@ class _JoinUserState extends State<JoinUser> {
                           child: Form(
                             key: _confirmPwFormkey,
                             child: CustomTextFormFeild(
-                              controller: userNotifier.confirmPwController,
+                              controller: confirmPwController,
                               hintText: "비밀번호 재입력",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -150,7 +157,8 @@ class _JoinUserState extends State<JoinUser> {
                                 if (value.length < 8) {
                                   return '비밀번호는 8자 이상으로 입력해주세요.';
                                 }
-                                if (value != userNotifier.pwController.text) {
+                                if (confirmPwController.text !=
+                                    pwController.text) {
                                   return '비밀번호가 일치하지 않습니다.';
                                 }
                                 return null;
@@ -221,8 +229,13 @@ class _JoinUserState extends State<JoinUser> {
                           width: double.infinity,
                           child: OutlinedButton(
                               onPressed: () => {
-                                    singUpApi(),
-                                    if (joinComplete) {},
+                                    if (_idFormkey.currentState!.validate() &&
+                                        _pwFormkey.currentState!.validate() &&
+                                        _confirmPwFormkey.currentState!
+                                            .validate())
+                                      {
+                                        singUpApi(),
+                                      }
                                   },
                               child: const Text("완료")),
                         ),
