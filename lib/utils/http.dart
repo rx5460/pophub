@@ -61,6 +61,30 @@ Future<Map<String, dynamic>> getData(
   }
 }
 
+Future<List<dynamic>> getListData(
+    String url, Map<String, dynamic> queryParams, String token) async {
+  try {
+    Dio dio = Dio();
+    Response response = await dio.get(
+      url,
+      queryParameters: queryParams,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    throw Exception('Failed to get data: $e');
+  }
+}
+
 Future<Map<String, dynamic>> updateData(
     String url, Map<String, dynamic> data) async {
   final response = await http.put(

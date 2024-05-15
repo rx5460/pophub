@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,12 +17,36 @@ class _HomePageState extends State<HomePage> {
   final CarouselController _controller = CarouselController();
   TextEditingController searchController = TextEditingController();
   String? searchInput;
+  List<PopupModel>? poppularList;
 
   List imageList = [
     'assets/images/Untitled.png',
     'assets/images/Untitled.png',
     'assets/images/Untitled.png',
   ];
+  Future<void> fetchPopupData() async {
+    try {
+      // Api.getPopup()을 사용하여 팝업 데이터를 가져옵니다.
+      List<PopupModel>? dataList =
+          await Api.getPopupList(); // 여러 개의 팝업 데이터를 가져옵니다.
+      // 데이터가 있으면 상태를 업데이트하여 화면을 다시 그립니다.
+      if (dataList.isNotEmpty) {
+        setState(() {
+          poppularList = dataList; // 여러 개의 팝업 데이터를 리스트에 저장합니다.
+        });
+      }
+    } catch (error) {
+      // 오류 처리
+      print('Error fetching popup data: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 홈 화면이 로드될 때 팝업 데이터를 가져옵니다.
+    fetchPopupData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,130 +195,87 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 20,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: screenWidth * 0.05),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const PopupDetail()),
-                          );
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                'assets/images/Untitled.png',
-                                width: screenWidth * 0.5,
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                '주술회전 팝업스토어',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: screenWidth,
+                    height: screenWidth * 0.8,
+                    child: ListView.builder(
+                      itemCount: poppularList?.length ?? 0, // null 체크 추가
+                      // physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final popup = poppularList![index];
+
+                        // 팝업 데이터를 표시하는 위젯을 반환합니다.
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: screenWidth * 0.05,
+                              right: poppularList?.length == index + 1
+                                  ? screenWidth * 0.05
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PopupDetail(
+                                    storeId: popup.id!,
+                                  ),
                                 ),
-                              ),
-                            ),
-                            const Text(
-                              '24.03.23 ~ 24.06.16',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: screenWidth * 0.05),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              'assets/images/Untitled.png',
+                              );
+                            },
+                            child: SizedBox(
                               width: screenWidth * 0.5,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              '주술회전 팝업스토어',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      '${popup.image![0]}',
+                                      // width: screenHeight * 0.07 - 5,
+                                      width: screenWidth * 0.5,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '${popup.name}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${DateFormat("yy.MM.dd").format(DateTime.parse(popup.start!))} ~ ${DateFormat("yy.MM.dd").format(DateTime.parse(popup.end!))}',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const Text(
-                            '24.03.23 ~ 24.06.16',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: screenWidth * 0.05),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              'assets/images/Untitled.png',
-                              width: screenWidth * 0.5,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              '주술회전 팝업스토어',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                          const Text(
-                            '24.03.23 ~ 24.06.16',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: screenWidth * 0.05,
-                    ),
-                  ],
-                ),
+                  ),
+                  // SizedBox(
+                  //   width: screenWidth * 0.05,
+                  // ),
+                ],
               ),
-              SizedBox(
-                height: screenHeight * 0.08,
-              ),
+              // SizedBox(
+              //   height: screenHeight * 0.08,
+              // ),
             ],
           ),
         ),
