@@ -26,17 +26,14 @@ class _HomePageState extends State<HomePage> {
   ];
   Future<void> fetchPopupData() async {
     try {
-      // Api.getPopup()을 사용하여 팝업 데이터를 가져옵니다.
-      List<PopupModel>? dataList =
-          await Api.getPopupList(); // 여러 개의 팝업 데이터를 가져옵니다.
-      // 데이터가 있으면 상태를 업데이트하여 화면을 다시 그립니다.
+      List<PopupModel>? dataList = await Api.getPopupList();
+
       if (dataList.isNotEmpty) {
         setState(() {
-          poppularList = dataList; // 여러 개의 팝업 데이터를 리스트에 저장합니다.
+          poppularList = dataList;
         });
       }
     } catch (error) {
-      // 오류 처리
       print('Error fetching popup data: $error');
     }
   }
@@ -44,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // 홈 화면이 로드될 때 팝업 데이터를 가져옵니다.
+
     fetchPopupData();
   }
 
@@ -268,14 +265,8 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  // SizedBox(
-                  //   width: screenWidth * 0.05,
-                  // ),
                 ],
               ),
-              // SizedBox(
-              //   height: screenHeight * 0.08,
-              // ),
             ],
           ),
         ),

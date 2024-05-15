@@ -22,11 +22,10 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> getPopupData() async {
     try {
-      // Api.getPopup()을 사용하여 팝업 데이터를 가져옵니다.
       PopupModel? data = await Api.getPopup(widget.storeId);
-      // 데이터가 있으면 상태를 업데이트하여 화면을 다시 그립니다.
+
       setState(() {
-        popup = data; // 단일 데이터만 받아온 것으로 가정합니다.
+        popup = data;
         isLoading = false;
       });
     } catch (error) {
@@ -38,7 +37,7 @@ class _PopupDetailState extends State<PopupDetail> {
   @override
   void initState() {
     super.initState();
-    // 홈 화면이 로드될 때 팝업 데이터를 가져옵니다.
+
     getPopupData();
   }
 

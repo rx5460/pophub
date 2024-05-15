@@ -59,11 +59,9 @@ class Api {
   // 전체 팝업 조회
   static Future<List<PopupModel>> getPopupList() async {
     try {
-      // API에 요청을 보냅니다. 이 예시에서는 getData 함수를 사용하고 있습니다.
-      final List<dynamic> dataList = await getListData(
-          '$domain/popup/popular', {}, ''); // 팝업 리스트를 가져오는 API를 호출합니다.
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/popular', {}, '');
 
-      // 받은 데이터를 PopupModel의 리스트로 파싱합니다.
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
@@ -77,11 +75,9 @@ class Api {
   //팝업 상세 조회(팝업 단일 조회)
   static Future<PopupModel> getPopup(int storeId) async {
     try {
-      // API에 요청을 보냅니다. 이 예시에서는 getData 함수를 사용하고 있습니다.
       final Map<String, dynamic> data =
           await getData('$domain/popup/$storeId', {}, '');
 
-      // 받은 데이터를 PopupModel 객체로 파싱합니다.
       return PopupModel.fromJson(data);
     } catch (e) {
       // 오류 처리
