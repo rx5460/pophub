@@ -6,6 +6,7 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_main.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
+import 'package:pophub/screen/user/purchase_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
@@ -149,7 +150,7 @@ class _LoginState extends State<Login> {
                                                               UserNotifier())
                                                     ],
                                                     child:
-                                                        const CertifiPhone())))
+                                                        const PurchasePage())))
                                   },
                               child: const Text(
                                 "회원가입",
