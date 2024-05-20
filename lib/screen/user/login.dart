@@ -150,7 +150,8 @@ class _LoginState extends State<Login> {
                                                           create: (_) =>
                                                               UserNotifier())
                                                     ],
-                                                    child: const JoinUser())))
+                                                    child:
+                                                        const CertifiPhone())))
                                   },
                               child: const Text(
                                 "회원가입",

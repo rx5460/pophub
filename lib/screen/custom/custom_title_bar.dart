@@ -14,31 +14,17 @@ class _CustomTitleBarState extends State<CustomTitleBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 시작과 끝에 정렬
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Visibility(
-            visible: widget.useBack,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.keyboard_arrow_left,
-                color: Colors.black87,
-                size: 30,
-              ),
-            ),
-          ),
-          Text(
-            widget.titleName,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 40), // 가운데 공간 확보
-        ],
+      margin: const EdgeInsets.only(bottom: 30),
+      child: AppBar(
+        title: Text(widget.titleName),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }
