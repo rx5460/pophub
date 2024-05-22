@@ -145,11 +145,29 @@ class _GoodsOrderState extends State<GoodsOrder> {
                             const SizedBox(
                               width: 8,
                             ),
-                            OutlinedButton(
-                              onPressed: () {},
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 16, right: 16),
-                                child: Text('모두사용'),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                width: screenWidth * 0.2,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: const Color(0xFFADD8E6),
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: const Color(0xFFADD8E6)),
+                                child: const Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(2.0),
+                                  child: Text(
+                                    '모두사용',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                )),
                               ),
                             ),
                           ],
