@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
-import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
@@ -24,8 +23,6 @@ class _PopupDetailState extends State<PopupDetail> {
   PopupModel? popup;
   List<ReviewModel>? reviewList;
   bool isLoading = true;
-  Set<Marker> markers = {};
-  late KakaoMapController mapController;
 
   Future<void> getPopupData() async {
     try {

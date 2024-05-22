@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding: EdgeInsets.only(top: screenWidth * 0.1),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -298,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: screenWidth * 0.3,
+                    width: screenWidth * 0.26,
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(1000),
