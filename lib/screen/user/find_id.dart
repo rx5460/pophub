@@ -76,7 +76,7 @@ class _FindIdState extends State<FindId> {
           userNoti.refresh();
         });
 
-        findIdApi();
+        // findIdApi();
       }
     } else {
       if (!isDialogShowing) {
@@ -96,14 +96,14 @@ class _FindIdState extends State<FindId> {
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
   }
 
-  Future<void> findIdApi() async {
-    final data = await Api.getId(phoneController.text.toString(), token);
-    userId = data.toString();
-    Logger.debug("### userId = ${userId}");
-    if (!data.toString().contains("fail")) {
-      setState(() {});
-    } else {}
-  }
+  // Future<void> findIdApi() async {
+  //   final data = await Api.getId(phoneController.text.toString(), token);
+  //   userId = data.toString();
+  //   Logger.debug("### userId = ${userId}");
+  //   if (!data.toString().contains("fail")) {
+  //     setState(() {});
+  //   } else {}
+  // }
 
   @override
   void initState() {
@@ -200,10 +200,10 @@ class _FindIdState extends State<FindId> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("회원님의 아이디는"),
+                          const Text("회원님의 아이디는"),
                           Text(
                             userId,
-                            style: TextStyle(fontWeight: FontWeight.w900),
+                            style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                           const Text("입니다."),
                         ],

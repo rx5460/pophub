@@ -84,7 +84,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
           userNoti.refresh();
         });
 
-        ResetPasswdApi();
+        // ResetPasswdApi();
       }
     } else {
       if (!isDialogShowing) {
@@ -104,18 +104,18 @@ class _ResetPasswdState extends State<ResetPasswd> {
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
   }
 
-  Future<void> ResetPasswdApi() async {
-    final data = await Api.getId(phoneController.text.toString(), token);
-    userId = data.toString();
-    Logger.debug("### userId = ${userId}");
-    if (!data.toString().contains("fail")) {
-      realAuthCode = data["Number"];
-      ToastUtil.customToastMsg("전송되었습니다.", context);
-      setState(() {});
-    } else {
-      ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
-    }
-  }
+  // Future<void> ResetPasswdApi() async {
+  //   final data = await Api.getId(phoneController.text.toString(), token);
+  //   userId = data.toString();
+  //   Logger.debug("### userId = ${userId}");
+  //   if (!data.toString().contains("fail")) {
+  //     realAuthCode = data["Number"];
+  //     ToastUtil.customToastMsg("전송되었습니다.", context);
+  //     setState(() {});
+  //   } else {
+  //     ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+  //   }
+  // }
 
   @override
   void initState() {
@@ -161,7 +161,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                 if (_phoneFormkey.currentState!.validate())
                                   {
                                     ///TODO : 황지민 나중엔 이거로certifiApi()
-                                    ResetPasswdApi()
+                                    // ResetPasswdApi()
                                   }
                               },
                           child: const Text("전송")),
