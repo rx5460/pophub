@@ -13,6 +13,7 @@ var theme = ThemeData(
           foregroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.white),
           padding: const EdgeInsets.all(0),
+          minimumSize: Size(double.infinity, 50),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
   textButtonTheme: TextButtonThemeData(
@@ -22,6 +23,7 @@ var theme = ThemeData(
     fillColor: const Color(0xFFFFFFFF),
     contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
     border: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xffd9d9d9)),
       borderRadius: BorderRadius.circular(10),
     ),
     focusedBorder: const OutlineInputBorder(

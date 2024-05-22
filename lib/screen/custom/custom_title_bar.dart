@@ -1,31 +1,37 @@
 import 'package:flutter/material.dart';
 
-class CustomTitleBar extends StatefulWidget {
+class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleName;
   final bool useBack;
 
-  const CustomTitleBar({super.key, this.titleName = "", this.useBack = true});
+  const CustomTitleBar({Key? key, this.titleName = "", this.useBack = true})
+      : super(key: key);
 
-  @override
-  State<CustomTitleBar> createState() => _CustomTitleBarState();
-}
-
-class _CustomTitleBarState extends State<CustomTitleBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 30),
+    return PreferredSize(
+      preferredSize: Size.fromHeight(kToolbarHeight),
       child: AppBar(
-        title: Text(widget.titleName),
+        title: Text(
+          titleName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.white,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: useBack
+            ? IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
     );
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/setting/app_setting_page.dart';
+import 'package:pophub/screen/setting/inquery_page.dart';
+import 'package:pophub/screen/setting/notice_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,7 +22,13 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
-          const Icon(Icons.settings_outlined),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AppSetting()));
+            },
+          ),
           SizedBox(
             width: screenWidth * 0.05,
           )
@@ -203,12 +212,22 @@ class _ProfilePageState extends State<ProfilePage> {
                           MenuList(
                             icon: Icons.message_outlined,
                             text: '공지사항',
-                            onClick: () {},
+                            onClick: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NoticePage()));
+                            },
                           ),
                           MenuList(
                             icon: Icons.message_outlined,
                             text: '문의내역',
-                            onClick: () {},
+                            onClick: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InqueryPage()));
+                            },
                           ),
                           MenuList(
                             icon: Icons.message_outlined,
