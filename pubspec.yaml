@@ -50,6 +50,7 @@ dependencies:
   googleapis_auth: ^1.5.1
   cloud_firestore: ^4.17.2
   firebase_auth: ^4.19.4
+  file_picker: ^8.0.3 
 
 dev_dependencies:
   flutter_test:

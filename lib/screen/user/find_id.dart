@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/utils.dart';
@@ -23,24 +23,100 @@ class _FindIdState extends State<FindId> {
   get http => null;
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
-  late Future<String> data;
+  bool isDialogShowing = false;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  String token = "";
+  String userId = "";
+
+  late final TextEditingController phoneController = TextEditingController();
+  late final TextEditingController certifiController = TextEditingController();
+
+  String realAuthCode = "";
 
   @override
   void dispose() {
-    userNotifier.phoneController.text = "";
-    userNotifier.certifiController.text = "";
-    userNotifier.isVerify = false;
+    phoneController.dispose();
+    certifiController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showToken() async {
+    token = (await _storage.read(key: 'token'))!;
+    setState(() {});
+  }
+
+  Future<void> certifiApi() async {
+    final data = await Api.sendCertifi(phoneController.text.toString());
+
+    if (!data.toString().contains("fail")) {
+      realAuthCode = data["Number"];
+      ToastUtil.customToastMsg("전송되었습니다.", context);
+      setState(() {});
+    } else {
+      ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+    }
+  }
+
+  Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
+    final data = await Api.sendVerify(certifi, realAuthCode);
+
+    if (data.toString().contains("Successful")) {
+      if (!isDialogShowing) {
+        setState(() {
+          isDialogShowing = true;
+        });
+
+        showAlert(context, "확인", "인증되었습니다.", () {
+          Navigator.of(context).pop();
+          FocusManager.instance.primaryFocus?.unfocus();
+          userNoti.isVerify = true;
+          setState(() {
+            isDialogShowing = false;
+          });
+          userNoti.refresh();
+        });
+
+        findIdApi();
+      }
+    } else {
+      if (!isDialogShowing) {
+        setState(() {
+          isDialogShowing = true;
+        });
+        showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+          Navigator.of(context).pop();
+          FocusManager.instance.primaryFocus?.unfocus();
+
+          setState(() {
+            isDialogShowing = false;
+          });
+        });
+      }
+    }
+    Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
+  }
+
+  Future<void> findIdApi() async {
+    final data = await Api.getId(phoneController.text.toString(), token);
+    userId = data.toString();
+    Logger.debug("### userId = ${userId}");
+    if (!data.toString().contains("fail")) {
+      setState(() {});
+    } else {}
+  }
+
+  @override
+  void initState() {
+    _showToken();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<UserNotifier>(
       builder: (_, userNotifier, child) {
-        // TODO : 황지민 나중에 수정 필요
         return SafeArea(
             child: Scaffold(
-          resizeToAvoidBottomInset: false,
           body: Center(
             child: Padding(
                 padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
@@ -51,7 +127,7 @@ class _FindIdState extends State<FindId> {
                     Form(
                         key: _phoneFormkey,
                         child: CustomTextFormFeild(
-                          controller: userNotifier.phoneController,
+                          controller: phoneController,
                           hintText: "핸드폰 번호 입력",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -67,19 +143,11 @@ class _FindIdState extends State<FindId> {
                     Container(
                       width: double.infinity,
                       height: 55,
-                      margin: const EdgeInsets.only(top: 30),
+                      margin: const EdgeInsets.only(top: 15),
                       child: OutlinedButton(
                           onPressed: () => {
                                 if (_phoneFormkey.currentState!.validate())
-                                  {
-                                    Api.sendCertifi(userNotifier
-                                        .phoneController.text
-                                        .toString()),
-                                    User().phoneNumber =
-                                        userNotifier.phoneController.text,
-                                    ToastUtil.customToastMsg(
-                                        "전송되었습니다.", context),
-                                  }
+                                  {certifiApi()}
                               },
                           child: const Text("전송")),
                     ),
@@ -89,7 +157,7 @@ class _FindIdState extends State<FindId> {
                             child: Form(
                                 key: _certifiFormkey,
                                 child: CustomTextFormFeild(
-                                  controller: userNotifier.certifiController,
+                                  controller: certifiController,
                                   hintText: "인증번호 입력",
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -108,28 +176,16 @@ class _FindIdState extends State<FindId> {
                           width: 80,
                           height: 55,
                           margin: const EdgeInsets.only(
-                              top: 30, bottom: 30, left: 10),
+                              top: 18, bottom: 18, left: 10),
                           child: OutlinedButton(
                               onPressed: () => {
                                     if (_certifiFormkey.currentState!
                                             .validate() &&
-                                        userNotifier.certifiController.text
-                                                .length ==
-                                            6)
+                                        certifiController.text.length == 6)
                                       {
-                                        // if (data ==
-                                        //     userNotifier.certifiController.text)
-                                        //   {
-                                        //     userNotifier.isVerify = true,
-                                        //     userNotifier.refresh,
-                                        //     showAlert(context, "확인", "인증되었습니다.",
-                                        //         () {
-                                        //       Navigator.of(context).pop();
-                                        //       // 키보드 내리기
-                                        //       FocusManager.instance.primaryFocus
-                                        //           ?.unfocus();
-                                        //     })
-                                        //   },
+                                        verifyApi(
+                                            certifiController.text.toString(),
+                                            userNotifier),
                                       }
                                   },
                               child: const Text(
@@ -139,14 +195,19 @@ class _FindIdState extends State<FindId> {
                         ),
                       ],
                     ),
-                    Selector<UserNotifier, bool>(
-                      selector: (_, userNotifier) => userNotifier.isVerify,
-                      builder: (context, isVerifyed, child) {
-                        Logger.debug("인증 완료 $isVerifyed");
-                        return isVerifyed
-                            ? const Text("회원님의 아이디는 ~~ 입니다.")
-                            : Container();
-                      },
+                    Visibility(
+                      visible: userId != "",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("회원님의 아이디는"),
+                          Text(
+                            userId,
+                            style: TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                          const Text("입니다."),
+                        ],
+                      ),
                     ),
                     const Spacer(),
                     SizedBox(
@@ -176,10 +237,8 @@ class _FindIdState extends State<FindId> {
                                             color: Colors.white),
                                         padding: const EdgeInsets.all(0),
                                         shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                bottomLeft:
-                                                    Radius.circular(10)))),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)))),
                                     child: const Text("로그인")),
                               ),
                             ),
@@ -206,10 +265,8 @@ class _FindIdState extends State<FindId> {
                                             color: Colors.white),
                                         padding: const EdgeInsets.all(0),
                                         shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10)))),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)))),
                                     child: const Text("비밀번호 찾기")),
                               ),
                             )

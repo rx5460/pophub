@@ -22,6 +22,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   get http => null;
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
+  bool isDialogShowing = false;
 
   late final TextEditingController phoneController = TextEditingController();
   late final TextEditingController certifiController = TextEditingController();
@@ -38,17 +39,12 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   Future<void> certifiApi() async {
     final data = await Api.sendCertifi(phoneController.text.toString());
 
-    ///TODO 황지민 : Auth Code 추가
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
       ToastUtil.customToastMsg("전송되었습니다.", context);
       setState(() {});
     } else {
-      showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
-        Navigator.of(context).pop();
-
-        FocusManager.instance.primaryFocus?.unfocus();
-      });
+      ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
     }
   }
 
@@ -56,20 +52,35 @@ class _CertifiPhoneState extends State<CertifiPhone> {
     final data = await Api.sendVerify(certifi, realAuthCode);
 
     if (data.toString().contains("Successful")) {
-      showAlert(context, "확인", "인증되었습니다.", () {
-        Navigator.of(context).pop();
+      if (!isDialogShowing) {
+        setState(() {
+          isDialogShowing = true;
+        });
 
-        FocusManager.instance.primaryFocus?.unfocus();
-
-        userNoti.isVerify = true;
-        userNoti.refresh();
-      });
+        showAlert(context, "확인", "인증되었습니다.", () {
+          Navigator.of(context).pop();
+          FocusManager.instance.primaryFocus?.unfocus();
+          userNoti.isVerify = true;
+          setState(() {
+            isDialogShowing = false;
+          });
+          userNoti.refresh();
+        });
+      }
     } else {
-      showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
-        Navigator.of(context).pop();
+      if (!isDialogShowing) {
+        setState(() {
+          isDialogShowing = true;
+        });
+        showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+          Navigator.of(context).pop();
+          FocusManager.instance.primaryFocus?.unfocus();
 
-        FocusManager.instance.primaryFocus?.unfocus();
-      });
+          setState(() {
+            isDialogShowing = false;
+          });
+        });
+      }
     }
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
   }

@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show File;
 import 'package:dio/dio.dart';
+import 'package:pophub/utils/log.dart';
 
 const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
@@ -60,6 +61,30 @@ Future<Map<String, dynamic>> getData(
     Response response = await dio.get(
       url,
       queryParameters: queryParams,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    throw Exception('Failed to get data: $e');
+  }
+}
+
+Future<Map<String, dynamic>> getNoAuthData(
+    String url, Map<String, dynamic> queryParams) async {
+  try {
+    Dio dio = Dio();
+    Logger.debug("url : $url");
+    Response response = await dio.get(
+      url,
+      queryParameters: queryParams,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      ),
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.data;
