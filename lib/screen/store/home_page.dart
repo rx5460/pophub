@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:intl/intl.dart';
@@ -61,11 +63,19 @@ class _HomePageState extends State<HomePage> {
           width: screenWidth * 0.14,
         ),
         // centerTitle: true,
-        actions: const [
-          Icon(
-            Icons.notifications_outlined,
-            size: 32,
-            color: Color.fromARGB(255, 106, 105, 105),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AlarmPage()),
+              );
+            },
+            child: Icon(
+              Icons.notifications_outlined,
+              size: 32,
+              color: Color.fromARGB(255, 106, 105, 105),
+            ),
           ),
           SizedBox(
             width: 10,

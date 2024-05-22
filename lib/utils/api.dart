@@ -73,7 +73,7 @@ class Api {
   }
 
   //팝업 상세 조회(팝업 단일 조회)
-  static Future<PopupModel> getPopup(int storeId) async {
+  static Future<PopupModel> getPopup(String storeId) async {
     try {
       final Map<String, dynamic> data =
           await getData('$domain/popup/$storeId', {}, '');
