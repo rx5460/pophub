@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white, surfaceTintColor: Colors.white,
         title: Image.asset(
           'assets/images/logo.png',
           width: screenWidth * 0.14,

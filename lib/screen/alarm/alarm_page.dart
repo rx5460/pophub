@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pophub/model/user.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:http/http.dart' as http;
 
@@ -39,7 +40,7 @@ class _AlarmPageState extends State<AlarmPage>
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc('user') // Example User ID
+          .doc(User().userId)
           .collection(collection)
           .snapshots()
           .listen((snapshot) {
@@ -153,7 +154,7 @@ class _AlarmPageState extends State<AlarmPage>
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc('user')
+          .doc(User().userId)
           .collection(collection)
           .snapshots(),
       builder: (context, snapshot) {
