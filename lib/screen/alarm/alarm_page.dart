@@ -47,8 +47,22 @@ class _AlarmPageState extends State<AlarmPage>
         for (var change in snapshot.docChanges) {
           if (change.type == DocumentChangeType.added) {
             var data = change.doc.data() as Map<String, dynamic>;
+            String notificationMessage;
+            switch (collection) {
+              case 'alarms':
+                notificationMessage = "전체";
+                break;
+              case 'orderAlarms':
+                notificationMessage = "주문";
+                break;
+              case 'waitAlarms':
+                notificationMessage = "대기";
+                break;
+              default:
+                notificationMessage = "알 수 없음";
+            }
             showNotification("${data['title']} \n ${data['label']}",
-                "새로운 ${collection.replaceFirst('Alarms', '').toLowerCase()} 알람이 왔습니다!");
+                "새로운 $notificationMessage 알람이 왔습니다!");
             setState(() {});
           }
         }
