@@ -7,7 +7,7 @@ import 'package:pophub/utils/api.dart';
 import 'package:intl/intl.dart';
 
 class PopupDetail extends StatefulWidget {
-  final String storeId;
+  final int storeId;
   const PopupDetail({Key? key, required this.storeId}) : super(key: key);
 
   @override

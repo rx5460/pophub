@@ -3,46 +3,8 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/utils/log.dart';
 import 'assets/style.dart';
 import 'screen/user/login.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:developer' as developer;
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  developer.log("백그라운드 메시지 처리: ${message.notification!.body!}",
-      name: 'app.background');
-}
-
-void initializeNotification() async {
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-          'high_importance_channel', 'high_importance_notification',
-          importance: Importance.max));
-
-  await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
-    android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-  ));
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-}
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp();
-
-  initializeNotification();
-
+void main() {
   runApp(const MyApp());
 }
 
