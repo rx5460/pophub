@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
           'assets/images/logo.png',
           width: screenWidth * 0.14,
         ),
+        surfaceTintColor: Colors.white,
         // centerTitle: true,
         actions: const [
           Icon(

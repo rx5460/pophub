@@ -4,8 +4,6 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/store_main.dart';
-import 'package:pophub/screen/user/join_cerifi_phone.dart';
 import 'package:pophub/screen/user/purchase_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
