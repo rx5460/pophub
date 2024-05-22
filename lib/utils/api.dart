@@ -85,4 +85,28 @@ class Api {
       throw Exception('Failed to fetch popup');
     }
   }
+
+  // 결제
+  static Future<Map<String, dynamic>> pay(String userId, String itemName,
+      int quantity, int totalAmount, int vatAmount, int taxFreeAmount) async {
+    final data = await postData('$domain/pay', {
+      'userId': userId,
+      "itemName": itemName,
+      "quantity": quantity,
+      "totalAmount": totalAmount,
+      "vatAmount": vatAmount,
+      "taxFreeAmount": taxFreeAmount
+    });
+    Logger.debug("### 결제 $data");
+    return data;
+  }
+
+  // 아이디 조회
+  static Future<Map<String, dynamic>> getId(
+      String phoneNumber, String token) async {
+    final data =
+        await getNoAuthData('$domain/user/search_id/:$phoneNumber', {});
+    Logger.debug("### 아이디 조회 $data");
+    return data;
+  }
 }

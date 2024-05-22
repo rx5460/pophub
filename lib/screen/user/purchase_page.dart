@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,6 +38,8 @@ class _PurchasePageState extends State<PurchasePage> {
           onNavigationRequest: (NavigationRequest request) async {
             /// 황지민 : 결제시 intent 버그를 막기위한 작업
             /// 2024/05/20 재 수정 ..
+            ///
+            Logger.debug("### ${request.url}");
             if (request.url.startsWith('intent')) {
               String parseUrl = request.url;
               if (parseUrl.contains("intent")) {
@@ -44,9 +47,11 @@ class _PurchasePageState extends State<PurchasePage> {
               }
               launchUrlString(parseUrl);
               return NavigationDecision.prevent;
-            } else if (request.url.startsWith('http://localhost')) {
-              return NavigationDecision.prevent;
-            } else {
+            }
+            // else if (request.url.startsWith('http://localhost')) {
+            //   return NavigationDecision.prevent;
+            // }
+            else {
               return NavigationDecision.navigate;
             }
           },

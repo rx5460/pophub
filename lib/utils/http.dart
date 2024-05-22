@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 // 황지민 : http 통신
 
 import 'package:dio/dio.dart';
+import 'package:pophub/utils/log.dart';
 
 Future<Map<String, dynamic>> postData(
     String url, Map<String, dynamic> data) async {
@@ -48,6 +49,30 @@ Future<Map<String, dynamic>> getData(
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': token
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    throw Exception('Failed to get data: $e');
+  }
+}
+
+Future<Map<String, dynamic>> getNoAuthData(
+    String url, Map<String, dynamic> queryParams) async {
+  try {
+    Dio dio = Dio();
+    Logger.debug("url : $url");
+    Response response = await dio.get(
+      url,
+      queryParameters: queryParams,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       ),
     );

@@ -5,9 +5,11 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_main.dart';
+import 'package:pophub/screen/user/find_id.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
 import 'package:pophub/screen/user/join_user.dart';
 import 'package:pophub/screen/user/purchase_page.dart';
+import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
@@ -94,37 +96,37 @@ class _LoginState extends State<Login> {
                       Container(
                         margin: const EdgeInsets.only(top: 0, bottom: 10),
                       ),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          //TODO 황지민 : 나중에 기능 살리기
-                          // TextButton(
-                          //     onPressed: () => {
-                          //           Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(
-                          //                   builder: (context) => MultiProvider(
-                          //                           providers: [
-                          //                             ChangeNotifierProvider(
-                          //                                 create: (_) =>
-                          //                                     UserNotifier())
-                          //                           ],
-                          //                           child: const FindId())))
-                          //         },
-                          //     child: const Text("아이디 찾기")),
-                          // TextButton(
-                          //     onPressed: () => {
-                          //           Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(
-                          //                   builder: (context) =>
-                          //                       MultiProvider(providers: [
-                          //                         ChangeNotifierProvider(
-                          //                             create: (_) =>
-                          //                                 UserNotifier())
-                          //                       ], child: const ResetPasswd())))
-                          //         },
-                          //     child: const Text("비밀번호 찾기")),
+                          // TODO 황지민 : 나중에 기능 살리기
+                          TextButton(
+                              onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MultiProvider(
+                                                    providers: [
+                                                      ChangeNotifierProvider(
+                                                          create: (_) =>
+                                                              UserNotifier())
+                                                    ],
+                                                    child: const FindId())))
+                                  },
+                              child: const Text("아이디 찾기")),
+                          TextButton(
+                              onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MultiProvider(providers: [
+                                                  ChangeNotifierProvider(
+                                                      create: (_) =>
+                                                          UserNotifier())
+                                                ], child: const ResetPasswd())))
+                                  },
+                              child: const Text("비밀번호 찾기")),
                         ],
                       ),
                       Container(
