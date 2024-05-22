@@ -152,11 +152,11 @@ class Api {
   }
 
   // 아이디 조회
-  static Future<Map<String, dynamic>> getId(
-      String phoneNumber, String token) async {
-    final data =
-        await getNoAuthData('$domain/user/search_id/:$phoneNumber', {});
-    Logger.debug("### 아이디 조회 $data");
-    return data;
-  }
+  // static Future<Map<String, dynamic>> getId(
+  //     String phoneNumber, String token) async {
+  //   final data =
+  //       await getNoAuthData('$domain/user/search_id/:$phoneNumber', {});
+  //   Logger.debug("### 아이디 조회 $data");
+  //   return data;
+  // }
 }
