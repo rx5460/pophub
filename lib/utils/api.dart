@@ -1,4 +1,5 @@
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/review_model.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/http.dart';
 
@@ -49,9 +50,8 @@ class Api {
   }
 
   // 프로필 조회
-  static Future<Map<String, dynamic>> getProfile(
-      String userId, String token) async {
-    final data = await getData('$domain/user/search_user/$userId', {}, token);
+  static Future<Map<String, dynamic>> getProfile(String userId) async {
+    final data = await getData('$domain/user/$userId', {});
     Logger.debug("### 프로필 조회 $data");
     return data;
   }
@@ -59,8 +59,10 @@ class Api {
   // 전체 팝업 조회
   static Future<List<PopupModel>> getPopupList() async {
     try {
-      final List<dynamic> dataList =
-          await getListData('$domain/popup/popular', {}, '');
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/popular',
+        {},
+      );
 
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
@@ -73,10 +75,11 @@ class Api {
   }
 
   //팝업 상세 조회(팝업 단일 조회)
-  static Future<PopupModel> getPopup(int storeId) async {
+  static Future<PopupModel> getPopup(String storeId) async {
+    print(storeId);
     try {
       final Map<String, dynamic> data =
-          await getData('$domain/popup/$storeId', {}, '');
+          await getData('$domain/popup/view/$storeId', {});
 
       return PopupModel.fromJson(data);
     } catch (e) {
@@ -84,5 +87,52 @@ class Api {
       print('팝업스토어 조회 오류: $e');
       throw Exception('Failed to fetch popup');
     }
+  }
+
+  // 팝업스토어 예약
+  static Future<Map<String, dynamic>> popupReservation(
+      String popup, String visitorName, int count, String userId) async {
+    final data = await postData('$domain/popup/reservation/$popup', {
+      'user_id': userId,
+      'wait_visitor_name': visitorName,
+      'wait_visitor_number': count
+    });
+    Logger.debug("### 예약 $data");
+    return data;
+  }
+
+  //리뷰 조회
+  static Future<List<ReviewModel>> getReviewList(String popup) async {
+    try {
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/reviews/store/$popup', {});
+
+      List<ReviewModel> reviewList =
+          dataList.map((data) => ReviewModel.fromJson(data)).toList();
+      return reviewList;
+    } catch (e) {
+      // 오류 처리
+      print('Failed to fetch review list: $e');
+      throw Exception('Failed to fetch review list');
+    }
+  }
+
+  //리뷰 작성
+  static Future<Map<String, dynamic>> writeReview(
+      String popup, double rating, String content, String userId) async {
+    final data = await postData('$domain/popup/review/create/$popup', {
+      'user_id': userId,
+      'review_rating': rating,
+      'review_content': content
+    });
+    Logger.debug("### 리뷰 작성 $data");
+    return data;
+  }
+
+  // 닉네임 중복 체크
+  static Future<Map<String, dynamic>> nameCheck(String userName) async {
+    final data = await getData('$domain/user/check/?userName=$userName', {});
+    Logger.debug("### 닉네임 중복 확인 $data");
+    return data;
   }
 }

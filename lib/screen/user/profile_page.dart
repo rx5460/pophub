@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/user/acount_info.dart';
+import 'package:pophub/utils/api.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,11 +11,60 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late Map<String, dynamic> profile;
+  bool isLoading = true; // 로딩 상태 변수 추가
+
+  Future<void> profileApi() async {
+    Map<String, dynamic> data = await Api.getProfile(User().userId);
+
+    if (!data.toString().contains("fail")) {
+      profile = data;
+      User().userName = data['userName'];
+      User().phoneNumber = data['phoneNumber'];
+      User().age = data['age'];
+      User().gender = data['gender'];
+      User().file = data['userImage'];
+    } else {
+      // 에러 처리
+      profile = {};
+    }
+
+    setState(() {
+      isLoading = false; // 로딩 상태 변경
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    profileApi(); // API 호출
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+            const Icon(Icons.settings_outlined),
+            SizedBox(
+              width: screenWidth * 0.05,
+            )
+          ],
+          backgroundColor: const Color(0xFFADD8E6),
+          elevation: 0,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -85,14 +135,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                             },
                             child: SizedBox(
-                              width: screenWidth * 0.3,
+                              width: screenWidth * 0.4,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const SizedBox(width: 20),
                                   Text(
                                     // 닉네임으로 수정
-                                    User().userId,
+                                    profile['userName'] ?? '',
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500,
@@ -113,19 +163,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 SizedBox(
                                   width: (screenWidth * 0.3) - 2,
-                                  child: const Column(
+                                  child: Column(
                                     children: [
                                       Text(
-                                        '3000',
-                                        style: TextStyle(
+                                        profile['pointScore'].toString(),
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
-                                      Text(
+                                      const Text(
                                         '포인트',
                                         style: TextStyle(
                                           fontSize: 16,
@@ -236,12 +286,30 @@ class _ProfilePageState extends State<ProfilePage> {
           Stack(
             alignment: Alignment.topCenter,
             children: [
-              SizedBox(
-                width: screenWidth,
-                child: const CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Untitled.png'),
-                  radius: 50,
-                ),
+              // SizedBox(
+              //   width: screenWidth,
+              //   child: CircleAvatar(
+              //     backgroundImage: NetworkImage(profile['userImage'] ?? ''),
+              //     radius: 50,
+              //   ),
+              // ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: screenWidth * 0.3,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(1000),
+                      ),
+                      child: Image.network(
+                        profile['userImage'] ?? '',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
               )
             ],
           ),

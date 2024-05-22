@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/utils/api.dart';
 
 class AcountInfo extends StatefulWidget {
   const AcountInfo({super.key});
@@ -10,6 +13,31 @@ class AcountInfo extends StatefulWidget {
 class _AcountInfoState extends State<AcountInfo> {
   TextEditingController nicknameController = TextEditingController();
   String? nicknameInput;
+
+  // XFile? _image; //이미지를 담을 변수 선언
+  // final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+
+  // //이미지를 가져오는 함수
+  // Future getImage(ImageSource imageSource) async {
+  //   //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
+  //   final XFile? pickedFile = await picker.pickImage(source: imageSource);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
+  //       // print(_image.path);
+  //     });
+  //   }
+  // }
+
+  String? fileName;
+
+  Future<void> nameCheckApi() async {
+    Map<String, dynamic> data = await Api.nameCheck(nicknameInput!);
+
+    if (!data.toString().contains("fail")) {
+      print(data);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +81,34 @@ class _AcountInfoState extends State<AcountInfo> {
                       SizedBox(
                         width: screenWidth * 0.4,
                         height: screenHeight * 0.2,
-                        child: const CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/Untitled.png'),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(User().file),
                           radius: 1000,
                         ),
                       ),
                       Transform.translate(
-                        offset: Offset(screenWidth * 0.2 - 10, -40),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.black,
-                            size: 30,
+                        offset: Offset(screenWidth * 0.2 - 18, -48),
+                        child: GestureDetector(
+                          onTap: () {
+                            // getImage(ImageSource.gallery);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: const Color(0xFFADD8E6),
+                                ),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(50)),
+                                color: Colors.white),
+                            child: const Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Icon(
+                                Icons.settings_outlined,
+                                color: Colors.black,
+                                size: 24,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -89,10 +131,10 @@ class _AcountInfoState extends State<AcountInfo> {
                             nicknameInput = value;
                           });
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 2.0,
                               color: Color(0xFFADD8E6),
@@ -101,7 +143,7 @@ class _AcountInfoState extends State<AcountInfo> {
                               Radius.circular(10),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 2.0,
                               color: Color(0xFFADD8E6),
@@ -110,8 +152,8 @@ class _AcountInfoState extends State<AcountInfo> {
                               Radius.circular(10),
                             ),
                           ),
-                          labelText: '닉네임',
-                          labelStyle: TextStyle(
+                          labelText: User().userName,
+                          labelStyle: const TextStyle(
                             color: Colors.grey,
                             fontSize: 18,
                             fontFamily: 'recipe',
@@ -133,7 +175,11 @@ class _AcountInfoState extends State<AcountInfo> {
                         // color: const Color(0xFFE6A3B3)
                       ),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          if (nicknameInput != '') {
+                            nameCheckApi();
+                          }
+                        },
                         child: const Center(
                           child: Text(
                             '중복확인',
@@ -191,10 +237,10 @@ class _AcountInfoState extends State<AcountInfo> {
                   ),
                   // color: const Color(0xFFE6A3B3)
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '성별',
-                    style: TextStyle(
+                    '성별 : ${User().gender}',
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                       fontSize: 16,
@@ -216,10 +262,10 @@ class _AcountInfoState extends State<AcountInfo> {
                   ),
                   // color: const Color(0xFFE6A3B3)
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '나이',
-                    style: TextStyle(
+                    '나이 : ${User().age}',
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                       fontSize: 16,

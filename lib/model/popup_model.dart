@@ -7,8 +7,9 @@ class PopupModel {
       status,
       start,
       end,
+      id,
       wait;
-  final int? id, category, mark, veiw;
+  final int? category, mark, veiw;
   final List? image;
 
   PopupModel.fromJson(Map<String, dynamic> json)

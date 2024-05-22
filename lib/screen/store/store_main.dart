@@ -19,7 +19,7 @@ class _StoreMainState extends State<StoreMain> {
   String profileData = "";
 
   Future<void> popupApi() async {
-    final data = await Api.getProfile(User().userId, token);
+    final data = await Api.getProfile(User().userId);
     // Map<String, dynamic> valueMap = json.decode(data);
     profileData = data.toString();
     setState(() {});

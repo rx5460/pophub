@@ -3,7 +3,7 @@ class User {
   String userName = "";
   String phoneNumber = "";
   String gender = "";
-  String age = "";
+  int age = 0;
   String file = "";
 
   static final User _singleton = User._internal();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 var theme = ThemeData(
+  appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
   scaffoldBackgroundColor: Colors.white,
   fontFamily: 'NanumGothicCoding',
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(

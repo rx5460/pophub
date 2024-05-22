@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/assets/style.dart';
 import 'package:pophub/utils/log.dart';
-import 'assets/style.dart';
 import 'screen/user/login.dart';
 
 void main() {
