@@ -136,6 +136,7 @@ class Api {
     return data;
   }
 
+  //결제
   static Future<Map<String, dynamic>> pay(String userId, String itemName,
       int quantity, int totalAmount, int vatAmount, int taxFreeAmount) async {
     final data = await postData('$domain/pay', {
