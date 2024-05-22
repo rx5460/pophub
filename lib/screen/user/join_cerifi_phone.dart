@@ -186,7 +186,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       child: OutlinedButton(
                           onPressed: () => {
                                 ///TODO 황지민 : 테스트 코드
-                                if (true)
+                                if (userNotifier.isVerify)
                                   {
                                     phoneController.text = "",
                                     certifiController.text = "",
