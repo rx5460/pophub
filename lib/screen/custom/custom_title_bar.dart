@@ -27,7 +27,7 @@ class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.pop(context);
                 },
               )
-            : null,
+            : Container(),
       ),
     );
   }
