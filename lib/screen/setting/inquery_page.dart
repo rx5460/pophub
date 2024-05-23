@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/setting/inquery_answer_page.dart';
 import 'package:pophub/screen/setting/inquery_write_page.dart';
 
 class InqueryPage extends StatefulWidget {
@@ -66,9 +68,11 @@ class _InqueryPageState extends State<InqueryPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => InquiryWritePage()))
+                                    builder: (context) => InquiryAnswerPage()))
+                            // builder: (context) => InquiryWritePage()))
                           },
-                      child: const Text("문의 하기")),
+                      //    child: const Text("문의 하기")),
+                      child: const Text("문의 답변 하기")),
                 )
               ],
             )));
@@ -84,6 +88,9 @@ class NoticeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
     return Container(
         child: DecoratedBox(
             decoration: BoxDecoration(
@@ -94,7 +101,23 @@ class NoticeTile extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.zero)),
             child: ExpansionTile(
               title: Text(title),
-              subtitle: Text(date),
+              subtitle: SizedBox(
+                width: screenWidth * 0.8,
+                child: Row(
+                  children: [
+                    Text(date),
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      width: 50.0,
+                      height: 30,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: Text("접수"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               children: <Widget>[
                 Container(
                   color: Constants.LIGHT_GREY,
