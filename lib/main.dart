@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/screen/alarm/push_auto_token.dart';
 import 'package:pophub/utils/log.dart';
 import 'assets/style.dart';
 import 'screen/user/login.dart';
@@ -41,7 +42,12 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
 
+  // FCM 알림 초기화
   initializeNotification();
+
+  // PushNotificationService 초기화
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.init();
 
   runApp(const MyApp());
 }
