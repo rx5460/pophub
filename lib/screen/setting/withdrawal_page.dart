@@ -41,7 +41,7 @@ class WithdrawalPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                '• 탈퇴 후에는 동일한 이메일 주소로 재가입이 가능합니다.\n'
+                '• 탈퇴 후에는 동일한 번호로 재가입이 가능합니다.\n'
                 '• 개인정보 삭제 이후에는 복구가 불가능하므로, 중요한 데이터는 미리 백업해 주세요.',
               ),
               const Spacer(),

@@ -5,6 +5,7 @@ class User {
   String gender = "";
   int age = 0;
   String file = "";
+  String role = "";
 
   static final User _singleton = User._internal();
 

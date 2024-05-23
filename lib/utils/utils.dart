@@ -29,3 +29,11 @@ void showAlert(BuildContext context, String title, String content,
     },
   );
 }
+
+bool isAdmin(String role) {
+  if (role == "General Member" || role == "Manager") {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 
 class GoodsOrder extends StatefulWidget {
-  const GoodsOrder({super.key});
+  final int count;
+  // ignore: prefer_const_constructors_in_immutables
+  GoodsOrder({super.key, required this.count});
 
   @override
   State<GoodsOrder> createState() => _GoodsOrderState();
 }
 
 class _GoodsOrderState extends State<GoodsOrder> {
+  String kakopayLink = "";
+
+  Future<void> testApi() async {
+    final data =
+        await Api.pay(User().userId, "zero22", widget.count, 33000, 3000, 0);
+    // Map<String, dynamic> valueMap = json.decode(data);
+    kakopayLink = data.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -329,8 +343,9 @@ class _GoodsOrderState extends State<GoodsOrder> {
                   ),
                   color: const Color(0xFFADD8E6)),
               child: InkWell(
-                onTap: () {
-                  setState(() {});
+                onTap: () async {
+                  testApi();
+                  Logger.debug("kakopayLink $kakopayLink");
                 },
                 child: const Center(
                   child: Text(

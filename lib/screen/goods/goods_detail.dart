@@ -476,7 +476,9 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const GoodsOrder()),
+                                                    GoodsOrder(
+                                                      count: count,
+                                                    )),
                                           );
                                         }
                                       });
