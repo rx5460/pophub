@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/utils/log.dart';
@@ -133,6 +135,32 @@ class Api {
   static Future<Map<String, dynamic>> nameCheck(String userName) async {
     final data = await getData('$domain/user/check/?userName=$userName', {});
     Logger.debug("### 닉네임 중복 확인 $data");
+    return data;
+  }
+
+  // 프로필 수정 (이미지 x)
+  static Future<Map<String, dynamic>> profileModify(
+      String userId, String userName) async {
+    final data = await postData('$domain/user/update_profile/', {
+      'userId': userId,
+      'userName': userName,
+    });
+    Logger.debug("### 프로필 수정 이미지x $data");
+    return data;
+  }
+
+  // 프로필 수정 (이미지 o)
+  static Future<Map<String, dynamic>> profileModifyImage(
+      String userId, String userName, File image) async {
+    final data = await postDataWithImage(
+        '$domain/user/update_profile/',
+        {
+          'userId': userId,
+          'userName': userName,
+        },
+        'file',
+        image);
+    Logger.debug("### 프로필 수정 이미지o $data");
     return data;
   }
 

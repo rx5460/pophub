@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/UserNotifier.dart';
+import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/utils.dart';
+import 'dart:io' show File;
+
+import 'package:provider/provider.dart';
 
 class AcountInfo extends StatefulWidget {
   const AcountInfo({super.key});
@@ -14,28 +20,72 @@ class _AcountInfoState extends State<AcountInfo> {
   TextEditingController nicknameController = TextEditingController();
   String? nicknameInput;
 
-  // XFile? _image; //이미지를 담을 변수 선언
-  // final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
-  // //이미지를 가져오는 함수
-  // Future getImage(ImageSource imageSource) async {
-  //   //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
-  //   final XFile? pickedFile = await picker.pickImage(source: imageSource);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-  //       // print(_image.path);
-  //     });
-  //   }
-  // }
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          _image = pickedImage;
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
 
   String? fileName;
+  bool checked = false;
 
   Future<void> nameCheckApi() async {
-    Map<String, dynamic> data = await Api.nameCheck(nicknameInput!);
+    Map<String, dynamic> data = await Api.nameCheck(nicknameInput ?? '');
+
+    if (!data.toString().contains("Exists")) {
+      showAlert(context, "안내", "닉네임이 사용 가능합니다.", () {
+        Navigator.of(context).pop();
+      });
+      setState(() {
+        checked = true;
+      });
+    } else {
+      showAlert(context, "경고", "닉네임이 중복되었습니다.", () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
+
+  Future<void> profileModify() async {
+    Map<String, dynamic> data =
+        await Api.profileModify(User().userId, nicknameInput!);
 
     if (!data.toString().contains("fail")) {
-      print(data);
+      showAlert(context, "안내", "정보가 수정되었습니다.", () {
+        Navigator.of(context).pop();
+      });
+      Navigator.of(context).pop();
+    } else {
+      showAlert(context, "경고", "정보를 수정하지 못했습니다.", () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
+
+  Future<void> profileModifyImage() async {
+    Map<String, dynamic> data = await Api.profileModifyImage(
+        User().userId, nicknameInput!, File(_image!.path));
+
+    if (!data.toString().contains("fail")) {
+      showAlert(context, "안내", "정보가 수정되었습니다..", () {
+        Navigator.of(context).pop();
+      });
+      Navigator.of(context).pop();
+    } else {
+      showAlert(context, "경고", "정보를 수정하지 못했습니다.", () {
+        Navigator.of(context).pop();
+      });
     }
   }
 
@@ -82,7 +132,9 @@ class _AcountInfoState extends State<AcountInfo> {
                         width: screenWidth * 0.4,
                         height: screenHeight * 0.2,
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(User().file),
+                          backgroundImage: _image == null
+                              ? NetworkImage(User().file)
+                              : FileImage(File(_image!.path)) as ImageProvider,
                           radius: 1000,
                         ),
                       ),
@@ -90,7 +142,7 @@ class _AcountInfoState extends State<AcountInfo> {
                         offset: Offset(screenWidth * 0.2 - 18, -48),
                         child: GestureDetector(
                           onTap: () {
-                            // getImage(ImageSource.gallery);
+                            _pickImage();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -128,9 +180,11 @@ class _AcountInfoState extends State<AcountInfo> {
                         controller: nicknameController,
                         onChanged: (value) {
                           setState(() {
+                            checked = false;
                             nicknameInput = value;
                           });
                         },
+                        readOnly: checked,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -176,14 +230,18 @@ class _AcountInfoState extends State<AcountInfo> {
                       ),
                       child: InkWell(
                         onTap: () {
-                          if (nicknameInput != '') {
+                          if (checked) {
+                            setState(() {
+                              checked = false;
+                            });
+                          } else if (nicknameInput != '') {
                             nameCheckApi();
                           }
                         },
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            '중복확인',
-                            style: TextStyle(
+                            checked ? '수정' : '중복확인',
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                               fontSize: 16,
@@ -210,7 +268,15 @@ class _AcountInfoState extends State<AcountInfo> {
                   // color: const Color(0xFFE6A3B3)
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MultiProvider(providers: [
+                                  ChangeNotifierProvider(
+                                      create: (_) => UserNotifier())
+                                ], child: const ResetPasswd())));
+                  },
                   child: const Center(
                     child: Text(
                       '비밀번호 재설정',
@@ -276,7 +342,19 @@ class _AcountInfoState extends State<AcountInfo> {
             ],
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if (checked) {
+                if (_image == null) {
+                  profileModify();
+                } else {
+                  profileModifyImage();
+                }
+              } else {
+                showAlert(context, "경고", "닉네임 중복확인을 해주세요.", () {
+                  Navigator.of(context).pop();
+                });
+              }
+            },
             child: Container(
               width: screenWidth,
               height: screenHeight * 0.1,

@@ -211,7 +211,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                           Text(
                                             (popup?.end != null &&
                                                     popup!.end!.isNotEmpty)
-                                                ? DateFormat("hh:mm").format(
+                                                ? DateFormat("HH:mm").format(
                                                     DateTime.parse(popup!.end!))
                                                 : '',
                                             style: const TextStyle(

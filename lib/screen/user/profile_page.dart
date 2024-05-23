@@ -318,15 +318,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   SizedBox(
                     width: screenWidth * 0.26,
+                    height: screenWidth * 0.26,
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(1000),
-                      ),
-                      child: Image.network(
-                        profile['userImage'] ?? '',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(1000),
+                        ),
+                        child: profile['userImage'] != null
+                            ? Image.network(
+                                profile['userImage'] ?? '',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset('assets/images/goods.png')),
                   ),
                 ],
               )

@@ -74,24 +74,25 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                                height: screenWidth * 0.2,
-                                width: screenWidth * 0.2,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(50),
-                                    ),
-                                    border: Border.all(
-                                        width: 2,
-                                        color: const Color(0xFFADD8E6))),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.asset(
-                                    'assets/images/logo.png',
-                                    width: screenWidth * 1,
-                                    height: screenWidth * 1,
-                                    fit: BoxFit.cover,
+                              height: screenWidth * 0.2,
+                              width: screenWidth * 0.2,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(50),
                                   ),
-                                )),
+                                  border: Border.all(
+                                      width: 2,
+                                      color: const Color(0xFFADD8E6))),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  width: screenWidth * 1,
+                                  height: screenWidth * 1,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
