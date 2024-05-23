@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pophub/model/user.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:http/http.dart' as http;
 
@@ -39,15 +40,29 @@ class _AlarmPageState extends State<AlarmPage>
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc('user') // Example User ID
+          .doc(User().userId)
           .collection(collection)
           .snapshots()
           .listen((snapshot) {
         for (var change in snapshot.docChanges) {
           if (change.type == DocumentChangeType.added) {
             var data = change.doc.data() as Map<String, dynamic>;
+            String notificationMessage;
+            switch (collection) {
+              case 'alarms':
+                notificationMessage = "전체";
+                break;
+              case 'orderAlarms':
+                notificationMessage = "주문";
+                break;
+              case 'waitAlarms':
+                notificationMessage = "대기";
+                break;
+              default:
+                notificationMessage = "알 수 없음";
+            }
             showNotification("${data['title']} \n ${data['label']}",
-                "새로운 ${collection.replaceFirst('Alarms', '').toLowerCase()} 알람이 왔습니다!");
+                "새로운 $notificationMessage 알람이 왔습니다!");
             setState(() {});
           }
         }
@@ -153,7 +168,7 @@ class _AlarmPageState extends State<AlarmPage>
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc('user')
+          .doc(User().userId)
           .collection(collection)
           .snapshots(),
       builder: (context, snapshot) {

@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
       User().phoneNumber = data['phoneNumber'];
       User().age = data['age'];
       User().gender = data['gender'];
-      User().file = data['userImage'];
+      User().file = data['userImage'] ?? '';
     } else {
       // 에러 처리
       profile = {};
