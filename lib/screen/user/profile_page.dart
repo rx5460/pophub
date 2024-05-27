@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
 import 'package:pophub/screen/setting/inquery_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
+import 'package:pophub/screen/store/store_add_page.dart';
+import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -30,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
       User().age = data['age'];
       User().gender = data['gender'];
       User().file = data['userImage'] ?? '';
+      User().role = data['userRole'] ?? '';
     } else {
       // 에러 처리
       profile = {};
@@ -275,10 +280,54 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 const InqueryPage()));
                                   },
                                 ),
-                                MenuList(
-                                  icon: Icons.message_outlined,
-                                  text: '업적',
-                                  onClick: () {},
+                                Visibility(
+                                  visible: User().role == "Manager",
+                                  child: MenuList(
+                                    icon: Icons.message_outlined,
+                                    text: '내 스토어',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MultiProvider(
+                                                      providers: [
+                                                        ChangeNotifierProvider(
+                                                            create: (_) =>
+                                                                StoreModel())
+                                                      ],
+                                                      child:
+                                                          StoreCreatePage())));
+                                    },
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: User().role == "President",
+                                  //TODO 테스트 코드
+
+                                  child: MenuList(
+                                    icon: Icons.message_outlined,
+                                    text: '팝업스토어 승인 대기',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MultiProvider(providers: [
+                                                    ChangeNotifierProvider(
+                                                        create: (_) =>
+                                                            StoreModel())
+                                                  ], child: StoreListPage())));
+                                    },
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: User().role == "General Member",
+                                  child: MenuList(
+                                    icon: Icons.message_outlined,
+                                    text: '업적',
+                                    onClick: () {},
+                                  ),
                                 ),
                                 MenuList(
                                   icon: Icons.message_outlined,

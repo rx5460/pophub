@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/http.dart';
 
@@ -151,7 +154,7 @@ class Api {
 
   // 프로필 수정 (이미지 o)
   static Future<Map<String, dynamic>> profileModifyImage(
-      String userId, String userName, File image) async {
+      String userId, String userName, image) async {
     final data = await postDataWithImage(
         '$domain/user/update_profile/',
         {
@@ -211,4 +214,76 @@ class Api {
   //   Logger.debug("### 아이디 조회 $data");
   //   return data;
   // }
+
+  // 프로필 추가 (이미지 x)
+  static Future<Map<String, dynamic>> profileAdd() async {
+    final data = await postData('$domain/user/create_profile/', {
+      'userId': "admin01",
+      'userName': "카지릭",
+      'phoneNumber': "01065168807",
+      'Gender': "M",
+      'Age': 26,
+      'file': '',
+    });
+    Logger.debug("### 프로필 수정 이미지x $data");
+    return data;
+  }
+
+  // 스토어 추가
+  static Future<Map<String, dynamic>> storeAdd(StoreModel store) async {
+    FormData formData = FormData();
+
+    // 파일 추가
+    for (var image in store.images) {
+      formData.files.add(MapEntry(
+        'files',
+        await MultipartFile.fromFile(image.path,
+            filename: image.path.split('/').last),
+      ));
+    }
+
+    formData.fields.addAll([
+      MapEntry('category_id', store.category),
+      MapEntry('user_name', User().userName),
+      MapEntry(
+        'store_name',
+        store.name,
+      ),
+      MapEntry('store_location', store.location),
+      MapEntry('store_contact_info', store.contact),
+      MapEntry('store_description', store.description),
+
+      // MapEntry('store_start_date', "2024-06-01"),
+      // MapEntry('store_end_date', "2024-10-01"),
+      MapEntry('store_start_date',
+          store.startDate.toIso8601String().split('T').first),
+      MapEntry(
+          'store_end_date', store.endDate.toIso8601String().split('T').first),
+      MapEntry('max_capacity', store.maxCapacity.toString()),
+      MapEntry('schedule[0][day_of_week]', "MON"),
+      MapEntry('schedule[0][open_time]', "12:00"),
+      MapEntry('schedule[0][close_time]', "00:00"),
+    ]);
+
+    final data = await postFormData('$domain/popup', formData);
+    Logger.debug("### 스토어 추가 $data");
+    return data;
+  }
+
+  //펜딩 리스트
+  static Future<List<PopupModel>> getPendingList() async {
+    try {
+      final List<dynamic> dataList =
+          await getListData('$domain/admin/popupPendingList', {});
+      Logger.debug("### 펜딩리스트  ${dataList.toString()}");
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리
+      print('Failed to fetch review list: $e');
+      throw Exception('Failed to fetch review list');
+    }
+  }
 }

@@ -51,6 +51,7 @@ Future<Map<String, dynamic>> postData(
       }
     }
   } catch (e) {
+    Logger.debug(e.toString());
     return {"data": "fail"};
   }
 }
@@ -155,6 +156,32 @@ Future<Map<String, dynamic>> postDataWithImage(
     }
   } catch (e) {
     print(e);
+    return {"data": "fail"};
+  }
+}
+
+Future<Map<String, dynamic>> postFormData(String url, FormData data) async {
+  try {
+    Response response = await dio.post(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
     return {"data": "fail"};
   }
 }

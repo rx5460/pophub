@@ -1,3 +1,5 @@
+import 'package:pophub/model/schedule_model.dart';
+
 class PopupModel {
   final String? username,
       name,
@@ -8,11 +10,10 @@ class PopupModel {
       start,
       end,
       id,
-      wait,
-      open,
-      close;
+      wait;
   final int? category, mark, veiw;
   final List? image;
+  final List<Schedule>? schedule; // 새로운 스케줄 리스트 필드
 
   PopupModel.fromJson(Map<String, dynamic> json)
       : username = json['user_name'],
@@ -29,6 +30,27 @@ class PopupModel {
         mark = json['store_mark_number'],
         veiw = json['store_view_count'],
         image = json['imageUrls'],
-        open = json['open_time'],
-        close = json['close_time'];
+        schedule = (json['schedule'] as List<dynamic>?)
+            ?.map((item) => Schedule.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user_name': username,
+      'store_name': name,
+      'store_location': location,
+      'store_contact_info': contact,
+      'store_description': description,
+      'store_status': status,
+      'store_start_date': start,
+      'store_end_date': end,
+      'store_wait_status': wait,
+      'store_id': id,
+      'category_id': category,
+      'store_mark_number': mark,
+      'store_view_count': veiw,
+      'imageUrls': image,
+      'schedule': schedule?.map((e) => e.toJson()).toList(),
+    };
+  }
 }

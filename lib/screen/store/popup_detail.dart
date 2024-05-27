@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
@@ -11,7 +13,9 @@ import 'package:intl/intl.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
-  const PopupDetail({Key? key, required this.storeId}) : super(key: key);
+  final String mode;
+  const PopupDetail({Key? key, required this.storeId, this.mode = "view"})
+      : super(key: key);
 
   @override
   State<PopupDetail> createState() => _PopupDetailState();
@@ -589,18 +593,25 @@ class _PopupDetailState extends State<PopupDetail> {
                           right: screenWidth * 0.05,
                           bottom: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: widget.mode == "view"
+                            ? MainAxisAlignment.spaceBetween
+                            : MainAxisAlignment.center,
                         children: [
                           Row(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  popupLike();
-                                },
-                                child: Icon(
-                                  like ? Icons.favorite : Icons.favorite_border,
-                                  size: 30,
-                                  color: like ? Colors.red : Colors.black,
+                              Visibility(
+                                visible: widget.mode == "view",
+                                child: GestureDetector(
+                                  onTap: () {
+                                    popupLike();
+                                  },
+                                  child: Icon(
+                                    like
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    size: 30,
+                                    color: like ? Colors.red : Colors.black,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -615,39 +626,76 @@ class _PopupDetailState extends State<PopupDetail> {
                               ),
                             ],
                           ),
-                          Container(
-                            width: screenWidth * 0.3,
-                            height: screenHeight * 0.05,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                border: Border.all(
-                                  width: 2,
-                                  color: const Color(0xFFADD8E6),
-                                ),
-                                color: const Color(0xFFADD8E6)),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ReserveDate(
-                                            popup: popup!.id!,
-                                          )),
-                                );
-                              },
-                              child: const Center(
-                                child: Text(
-                                  '예약하기',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    fontSize: 16,
+                          Visibility(
+                            visible: widget.mode == "view",
+                            child: Container(
+                              width: screenWidth * 0.3,
+                              height: screenHeight * 0.05,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  border: Border.all(
+                                    width: 2,
+                                    color: const Color(0xFFADD8E6),
+                                  ),
+                                  color: const Color(0xFFADD8E6)),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReserveDate(
+                                              popup: popup!.id!,
+                                            )),
+                                  );
+                                },
+                                child: const Center(
+                                  child: Text(
+                                    '예약하기',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                          Visibility(
+                              visible: widget.mode == "pending",
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    width: screenWidth * 0.45,
+                                    height: screenHeight * 0.06,
+                                    child: OutlinedButton(
+                                        onPressed: () => {},
+                                        child: Text("승인하기")),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    width: screenWidth * 0.45,
+                                    height: screenHeight * 0.06,
+                                    child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                          disabledForegroundColor: Colors.black,
+                                          backgroundColor: Colors.white,
+                                          side: BorderSide(
+                                            color: Constants.DEFAULT_COLOR,
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        onPressed: () => {},
+                                        child: Text(
+                                          "거절하기",
+                                          style: TextStyle(color: Colors.black),
+                                        )),
+                                  )
+                                ],
+                              )),
                         ],
                       ),
                     )),
