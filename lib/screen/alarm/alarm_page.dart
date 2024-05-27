@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pophub/model/user.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:http/http.dart' as http;
 
 class AlarmPage extends StatefulWidget {
   const AlarmPage({super.key});
@@ -24,7 +22,6 @@ class _AlarmPageState extends State<AlarmPage>
     _tabController = TabController(length: 3, vsync: this);
     initializeNotifications();
     setupListeners();
-    // requestFCMToken();
   }
 
   void initializeNotifications() {
@@ -80,30 +77,6 @@ class _AlarmPageState extends State<AlarmPage>
     var generalDetails = NotificationDetails(android: androidDetails);
     await _flutterLocalNotificationsPlugin.show(0, title, body, generalDetails);
   }
-
-  // Future<void> requestFCMToken() async {
-  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //   String? token = await messaging.getToken();
-  //   if (token != null) {
-  //     await sendTokenToServer(token);
-  //   }
-  // }
-
-  // Future<void> sendTokenToServer(String token) async {
-  //   final response = await http.post(
-  //     Uri.parse('http://pophub-fa05bf3eabc0.herokuapp.com/token_save'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: '{"token": "$token"}',
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     print('FCM 토큰이 저장됨.');
-  //   } else {
-  //     print('FCM 토큰 저장 실패');
-  //   }
-  // }
 
   @override
   void dispose() {
