@@ -38,16 +38,16 @@ void initializeNotification() async {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
   // await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  initializeNotification();
+  // initializeNotification();
 
   // PushNotificationService 초기화
-  final pushNotificationService = PushNotificationService();
-  await pushNotificationService.init();
+  // final pushNotificationService = PushNotificationService();
+  // await pushNotificationService.init();
 
   runApp(const MyApp());
 }
