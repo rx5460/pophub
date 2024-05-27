@@ -23,6 +23,8 @@ class _PopupDetailState extends State<PopupDetail> {
   PopupModel? popup;
   List<ReviewModel>? reviewList;
   bool isLoading = true;
+  double rating = 0;
+  bool like = false;
 
   Future<void> getPopupData() async {
     try {
@@ -45,6 +47,10 @@ class _PopupDetailState extends State<PopupDetail> {
       if (dataList.isNotEmpty) {
         setState(() {
           reviewList = dataList;
+          for (int i = 0; i < dataList.length; i++) {
+            rating += dataList[i].rating!;
+          }
+          rating = rating / dataList.length;
         });
       }
     } catch (error) {
@@ -68,6 +74,21 @@ class _PopupDetailState extends State<PopupDetail> {
       fetchReviewData();
     } else {
       Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> popupLike() async {
+    Map<String, dynamic> data =
+        await Api.storeLike(User().userName, widget.storeId);
+
+    if (data.toString().contains("추가")) {
+      setState(() {
+        like = true;
+      });
+    } else {
+      setState(() {
+        like = false;
+      });
     }
   }
 
@@ -281,42 +302,25 @@ class _PopupDetailState extends State<PopupDetail> {
                                         },
                                         child: SizedBox(
                                           width: screenWidth * 0.9,
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                    Icons.star,
+                                                children: List.generate(
+                                                  5,
+                                                  (starIndex) => Icon(
+                                                    starIndex <
+                                                            (rating) // null 대비
+                                                        ? Icons.star
+                                                        : Icons
+                                                            .star_border_outlined,
                                                     size: 20,
                                                     color: Colors.black,
                                                   ),
-                                                  Icon(
-                                                    Icons.star,
-                                                    size: 20,
-                                                    color: Colors.black,
-                                                  ),
-                                                  Icon(
-                                                    Icons.star_half_outlined,
-                                                    size: 20,
-                                                    color: Colors.black,
-                                                  ),
-                                                  Icon(
-                                                    Icons.star_border_outlined,
-                                                    size: 20,
-                                                    color: Colors.black,
-                                                  ),
-                                                  Icon(
-                                                    Icons.star_border_outlined,
-                                                    size: 20,
-                                                    color: Colors.black,
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                              Icon(
+                                              const Icon(
                                                 Icons.arrow_forward_ios,
                                                 size: 20,
                                               ),
@@ -359,11 +363,11 @@ class _PopupDetailState extends State<PopupDetail> {
                                                               CrossAxisAlignment
                                                                   .center,
                                                           children: [
-                                                            const Icon(
-                                                              Icons
-                                                                  .ac_unit_rounded,
-                                                              size: 20,
-                                                            ),
+                                                            // const Icon(
+                                                            //   Icons
+                                                            //       .ac_unit_rounded,
+                                                            //   size: 20,
+                                                            // ),
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsets
@@ -590,10 +594,13 @@ class _PopupDetailState extends State<PopupDetail> {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: () {},
-                                child: const Icon(
-                                  Icons.favorite_border,
+                                onTap: () {
+                                  popupLike();
+                                },
+                                child: Icon(
+                                  like ? Icons.favorite : Icons.favorite_border,
                                   size: 30,
+                                  color: like ? Colors.red : Colors.black,
                                 ),
                               ),
                               const SizedBox(

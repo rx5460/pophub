@@ -8,7 +8,9 @@ class PopupModel {
       start,
       end,
       id,
-      wait;
+      wait,
+      open,
+      close;
   final int? category, mark, veiw;
   final List? image;
 
@@ -26,5 +28,7 @@ class PopupModel {
         category = json['category_id'],
         mark = json['store_mark_number'],
         veiw = json['store_view_count'],
-        image = json['imageUrls'];
+        image = json['imageUrls'],
+        open = json['open_time'],
+        close = json['close_time'];
 }

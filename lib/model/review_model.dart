@@ -5,7 +5,7 @@ class ReviewModel {
   ReviewModel.fromJson(Map<String, dynamic> json)
       : review = json['review_id'],
         store = json['store_id'],
-        user = json['user_id'],
+        user = json['user_name'],
         rating = json['review_rating'],
         content = json['review_content'],
         date = json['review_date'],

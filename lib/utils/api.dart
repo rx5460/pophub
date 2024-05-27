@@ -92,7 +92,7 @@ class Api {
   }
 
   // 팝업스토어 예약
-  static Future<Map<String, dynamic>> popupReservation(
+  static Future<Map<String, dynamic>> popupWait(
       String popup, String visitorName, int count, String userId) async {
     final data = await postData('$domain/popup/reservation/$popup', {
       'user_id': userId,
@@ -179,6 +179,30 @@ class Api {
     return data;
   }
 
+  //팝업 예약
+  static Future<Map<String, dynamic>> popupReservation(String userName,
+      String popup, String date, String time, int count) async {
+    final data = await postData('$domain/popup/reservation/$popup/', {
+      'user_name': userName,
+      'reservation_date': date,
+      'reservation_time': time,
+      'capacity': count
+    });
+    print(popup);
+    Logger.debug("### 팝업 예약 $data");
+    return data;
+  }
+
+  //팝업 좋아여
+  static Future<Map<String, dynamic>> storeLike(
+      String userName, String popup) async {
+    final data = await postData('$domain/popup/like/$popup/', {
+      'user_name': userName,
+    });
+    print(popup);
+    Logger.debug("### 팝업 좋아요 $data");
+    return data;
+  }
   // 아이디 조회
   // static Future<Map<String, dynamic>> getId(
   //     String phoneNumber, String token) async {

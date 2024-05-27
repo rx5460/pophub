@@ -10,7 +10,8 @@ import 'dart:io' show File;
 import 'package:provider/provider.dart';
 
 class AcountInfo extends StatefulWidget {
-  const AcountInfo({super.key});
+  final VoidCallback refreshProfile;
+  const AcountInfo({super.key, required this.refreshProfile});
 
   @override
   State<AcountInfo> createState() => _AcountInfoState();
@@ -62,31 +63,24 @@ class _AcountInfoState extends State<AcountInfo> {
         await Api.profileModify(User().userId, nicknameInput!);
 
     if (!data.toString().contains("fail")) {
-      showAlert(context, "안내", "정보가 수정되었습니다.", () {
-        Navigator.of(context).pop();
-      });
+      widget.refreshProfile;
       Navigator.of(context).pop();
-    } else {
-      showAlert(context, "경고", "정보를 수정하지 못했습니다.", () {
-        Navigator.of(context).pop();
-      });
-    }
+    } else {}
   }
 
   Future<void> profileModifyImage() async {
     Map<String, dynamic> data = await Api.profileModifyImage(
         User().userId, nicknameInput!, File(_image!.path));
 
+    print(!data.toString().contains("fail"));
     if (!data.toString().contains("fail")) {
-      showAlert(context, "안내", "정보가 수정되었습니다..", () {
-        Navigator.of(context).pop();
-      });
-      Navigator.of(context).pop();
-    } else {
-      showAlert(context, "경고", "정보를 수정하지 못했습니다.", () {
-        Navigator.of(context).pop();
-      });
-    }
+      widget.refreshProfile();
+      closePage();
+    } else {}
+  }
+
+  void closePage() {
+    Navigator.pop(context);
   }
 
   @override

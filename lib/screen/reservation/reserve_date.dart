@@ -11,13 +11,36 @@ class ReserveDate extends StatefulWidget {
 }
 
 class _ReserveDateState extends State<ReserveDate> {
-  DateTime date = DateTime.now();
+  DateTime selectedDate = DateTime.now();
+  int selectedHour = TimeOfDay.now().hour;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+
+    List<DropdownMenuItem<int>> hourItems = List.generate(24, (index) {
+      return DropdownMenuItem(
+        value: index,
+        child: Text(index.toString().padLeft(2, '0')),
+      );
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -65,16 +88,7 @@ class _ReserveDateState extends State<ReserveDate> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    final DateTime? dateTime = await showDatePicker(
-                        context: context,
-                        initialDate: date,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(3000));
-                    if (dateTime != null) {
-                      setState(() {
-                        date = dateTime;
-                      });
-                    }
+                    _selectDate(context);
                   },
                   child: Container(
                     width: screenWidth * 0.9,
@@ -88,13 +102,29 @@ class _ReserveDateState extends State<ReserveDate> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(DateFormat("yyyy.MM.dd hh:mm").format(date)),
+                          Text(DateFormat("yyyy.MM.dd").format(selectedDate)),
                           const Icon(
                             Icons.keyboard_arrow_down_outlined,
                           )
                         ],
                       ),
                     ),
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.03,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButton<int>(
+                    value: selectedHour,
+                    items: hourItems,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedHour = value!;
+                      });
+                    },
+                    underline: Container(),
                   ),
                 ),
               ],
@@ -109,8 +139,10 @@ class _ReserveDateState extends State<ReserveDate> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ReserveCount(
-                            date: date,
+                            date: DateFormat("yyyy.MM.dd").format(selectedDate),
                             popup: widget.popup,
+                            time:
+                                "${selectedHour.toString().padLeft(2, '0')}:00",
                           )),
                 );
               },

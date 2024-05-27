@@ -18,6 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true; // 로딩 상태 변수 추가
 
   Future<void> profileApi() async {
+    setState(() {
+      isLoading = true;
+    });
     Map<String, dynamic> data = await Api.getProfile(User().userId);
 
     if (!data.toString().contains("fail")) {
@@ -49,25 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
 
-    if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            const Icon(Icons.settings_outlined),
-            SizedBox(
-              width: screenWidth * 0.05,
-            )
-          ],
-          backgroundColor: const Color(0xFFADD8E6),
-          elevation: 0,
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -86,256 +70,268 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: const Color(0xFFADD8E6),
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                width: screenWidth,
-                height: screenHeight * 0.2,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFADD8E6),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Transform.translate(
-            offset: Offset(0, screenHeight * 0.025),
-            child: Stack(
-              alignment: Alignment.bottomCenter,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Stack(
               children: [
-                SizedBox(
-                  width: screenWidth,
-                  height: screenHeight * 1,
-                  child: Center(
-                      child: Container(
-                    width: screenWidth * 0.9,
-                    height: screenHeight * 0.65,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 0.5,
-                        color: Colors.grey,
+                Column(
+                  children: [
+                    Container(
+                      width: screenWidth,
+                      height: screenHeight * 0.2,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFADD8E6),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
                       ),
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                      color: Colors.white,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: screenWidth * 0.1),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AcountInfo()),
-                              );
-                            },
-                            child: SizedBox(
-                              width: screenWidth * 0.4,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(width: 20),
-                                  Text(
-                                    // 닉네임으로 수정
-                                    profile['userName'] ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 20,
-                                  ),
-                                ],
-                              ),
+                    Expanded(
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Transform.translate(
+                  offset: Offset(0, screenHeight * 0.025),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      SizedBox(
+                        width: screenWidth,
+                        height: screenHeight * 1,
+                        child: Center(
+                            child: Container(
+                          width: screenWidth * 0.9,
+                          height: screenHeight * 0.65,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.5,
+                              color: Colors.grey,
                             ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            color: Colors.white,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: screenHeight * 0.03),
-                            child: Row(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: screenWidth * 0.1),
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                SizedBox(
-                                  width: (screenWidth * 0.3) - 2,
-                                  child: Column(
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AcountInfo(
+                                                refreshProfile: profileApi,
+                                              )),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width: screenWidth * 0.4,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          // 닉네임으로 수정
+                                          profile['userName'] ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: screenHeight * 0.03),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text(
-                                        profile['pointScore'].toString(),
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
+                                      SizedBox(
+                                        width: (screenWidth * 0.3) - 2,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              profile['pointScore'].toString(),
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            const Text(
+                                              '포인트',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const Text(
-                                        '포인트',
-                                        style: TextStyle(
-                                          fontSize: 16,
+                                      Container(
+                                        height: screenWidth * 0.15,
+                                        width: 1,
+                                        decoration: const BoxDecoration(
                                           color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: screenWidth * 0.15,
-                                  width: 1,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: (screenWidth * 0.3) - 2,
-                                  child: const Column(
-                                    children: [
-                                      Text(
-                                        '10',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '방문',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
+                                        width: (screenWidth * 0.3) - 2,
+                                        child: const Column(
+                                          children: [
+                                            Text(
+                                              '10',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              '방문',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: screenWidth * 0.15,
-                                  width: 1,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: (screenWidth * 0.3) - 2,
-                                  child: const Column(
-                                    children: [
-                                      Text(
-                                        '10',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
+                                      Container(
+                                        height: screenWidth * 0.15,
+                                        width: 1,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.grey,
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '리뷰',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
+                                        width: (screenWidth * 0.3) - 2,
+                                        child: const Column(
+                                          children: [
+                                            Text(
+                                              '10',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              '리뷰',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
+                                ),
+                                MenuList(
+                                  icon: Icons.message_outlined,
+                                  text: '공지사항',
+                                  onClick: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const NoticePage()));
+                                  },
+                                ),
+                                MenuList(
+                                  icon: Icons.message_outlined,
+                                  text: '문의내역',
+                                  onClick: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const InqueryPage()));
+                                  },
+                                ),
+                                MenuList(
+                                  icon: Icons.message_outlined,
+                                  text: '업적',
+                                  onClick: () {},
+                                ),
+                                MenuList(
+                                  icon: Icons.message_outlined,
+                                  text: '결제 내역',
+                                  onClick: () {},
+                                ),
+                                MenuList(
+                                  icon: Icons.message_outlined,
+                                  text: '장바구니',
+                                  onClick: () {},
                                 ),
                               ],
                             ),
                           ),
-                          MenuList(
-                            icon: Icons.message_outlined,
-                            text: '공지사항',
-                            onClick: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NoticePage()));
-                            },
-                          ),
-                          MenuList(
-                            icon: Icons.message_outlined,
-                            text: '문의내역',
-                            onClick: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => InqueryPage()));
-                            },
-                          ),
-                          MenuList(
-                            icon: Icons.message_outlined,
-                            text: '업적',
-                            onClick: () {},
-                          ),
-                          MenuList(
-                            icon: Icons.message_outlined,
-                            text: '결제 내역',
-                            onClick: () {},
-                          ),
-                          MenuList(
-                            icon: Icons.message_outlined,
-                            text: '장바구니',
-                            onClick: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  )),
-                )
+                        )),
+                      )
+                    ],
+                  ),
+                ),
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    // SizedBox(
+                    //   width: screenWidth,
+                    //   child: CircleAvatar(
+                    //     backgroundImage: NetworkImage(profile['userImage'] ?? ''),
+                    //     radius: 50,
+                    //   ),
+                    // ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: screenWidth * 0.26,
+                          height: screenWidth * 0.26,
+                          child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(1000),
+                              ),
+                              child: profile['userImage'] != null
+                                  ? Image.network(
+                                      profile['userImage'] ?? '',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset('assets/images/goods.png')),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ],
             ),
-          ),
-          Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              // SizedBox(
-              //   width: screenWidth,
-              //   child: CircleAvatar(
-              //     backgroundImage: NetworkImage(profile['userImage'] ?? ''),
-              //     radius: 50,
-              //   ),
-              // ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: screenWidth * 0.26,
-                    height: screenWidth * 0.26,
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(1000),
-                        ),
-                        child: profile['userImage'] != null
-                            ? Image.network(
-                                profile['userImage'] ?? '',
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset('assets/images/goods.png')),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

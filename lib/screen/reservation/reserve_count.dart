@@ -3,9 +3,11 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/api.dart';
 
 class ReserveCount extends StatefulWidget {
-  final DateTime date;
+  final String date;
   final String popup;
-  const ReserveCount({super.key, required this.date, required this.popup});
+  final String time;
+  const ReserveCount(
+      {super.key, required this.date, required this.popup, required this.time});
 
   @override
   State<ReserveCount> createState() => _ReserveCountState();
@@ -15,14 +17,17 @@ class _ReserveCountState extends State<ReserveCount> {
   int count = 1;
 
   Future<void> reservationApi() async {
-    Map<String, dynamic> data =
-        await Api.popupReservation(widget.popup, '', count, User().userId);
+    Map<String, dynamic> data = await Api.popupReservation(
+        User().userName, widget.popup, widget.date, widget.time, count);
 
     if (!data.toString().contains("fail")) {
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(builder: (context) => const ReserveDate()),
       // );
+
+      Navigator.pop(context);
+      Navigator.pop(context);
     } else {
       Navigator.of(context).pop();
     }
