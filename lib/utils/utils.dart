@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pophub/screen/custom/custom_alert.dart';
 
@@ -36,4 +38,58 @@ bool isAdmin(String role) {
   } else {
     return false;
   }
+}
+
+String getDayOfWeekAbbreviation(String dayOfWeek) {
+  switch (dayOfWeek.toLowerCase()) {
+    case 'monday':
+      return 'MON';
+    case 'tuesday':
+      return 'TUE';
+    case 'wednesday':
+      return 'WED';
+    case 'thursday':
+      return 'THU';
+    case 'friday':
+      return 'FRI';
+    case 'saturday':
+      return 'SAT';
+    case 'sunday':
+      return 'SUN';
+    default:
+      return dayOfWeek;
+  }
+}
+
+String formatTime(String timeString) {
+  // Check if the time string is in the format "HH시 mm분"
+  if (timeString.contains('시') && timeString.contains('분')) {
+    List<String> timeParts = timeString.split('시');
+    int hour = int.parse(timeParts[0]);
+    timeParts = timeParts[1].split('분');
+    int minute = int.parse(timeParts[0]);
+
+    // Normalize the time format to "HH:00"
+    return '${hour.toString().padLeft(2, '0')}:00';
+  } else {
+    // Assume the input time string is in the format "HH:mm"
+    List<String> timeParts = timeString.split(':');
+    int hour = int.parse(timeParts[0]);
+    int minute = int.parse(timeParts[1]);
+
+    // Normalize the time format to "HH:00"
+    return '${hour.toString().padLeft(2, '0')}:00';
+  }
+}
+
+String generateNickname() {
+  const length = 8;
+  const characters =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  Random random = Random();
+  String generatedNickname = String.fromCharCodes(Iterable.generate(
+    length,
+    (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+  ));
+  return generatedNickname;
 }

@@ -220,6 +220,18 @@ class _JoinUserState extends State<JoinUser> {
                                   horizontal: -4, vertical: 0),
                             ),
                             const Text('판매자'),
+                            Radio<String>(
+                              value: 'President',
+                              groupValue: userRole,
+                              onChanged: (value) {
+                                setState(() {
+                                  userRole = value;
+                                });
+                              },
+                              visualDensity: const VisualDensity(
+                                  horizontal: -4, vertical: 0),
+                            ),
+                            const Text('맛스타'),
                           ],
                         ),
                         const Spacer(flex: 40),

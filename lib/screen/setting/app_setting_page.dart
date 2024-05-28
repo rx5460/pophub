@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/main.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/setting/alarm_setting_page.dart';
 import 'package:pophub/screen/setting/withdrawal_page.dart';
+import 'package:pophub/screen/store/home_page.dart';
+import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/utils/http.dart';
 
 class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
@@ -11,6 +17,12 @@ class AppSetting extends StatefulWidget {
 }
 
 class _AppSettingState extends State<AppSetting> {
+  Future<void> logout(BuildContext context) async {
+    await secureStorage.deleteAll();
+    User().clear();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
   int count = 1;
   @override
   Widget build(BuildContext context) {
@@ -48,8 +60,7 @@ class _AppSettingState extends State<AppSetting> {
             title: Text('로그아웃'),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
-              // 로그아웃 처리
-              // 예: AuthService.logout();
+              logout(context);
             },
           ),
           ListTile(

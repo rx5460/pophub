@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     fetchPopupData();
   }
 
@@ -239,15 +238,25 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      '${popup.image![0]}',
-                                      // width: screenHeight * 0.07 - 5,
-                                      width: screenWidth * 0.5,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                  popup.image != null && popup.image!.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            '${popup.image![0]}',
+                                            width: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            'assets/images/logo.png',
+                                            width: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(

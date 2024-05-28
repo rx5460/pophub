@@ -95,21 +95,30 @@ Future<List<dynamic>> getListData(
   }
 }
 
-Future<Map<String, dynamic>> updateData(
+Future<Map<String, dynamic>> putData(
     String url, Map<String, dynamic> data) async {
-  final response = await http.put(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': _token ?? '',
-    },
-    body: jsonEncode(data),
-  );
-
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    throw Exception('Failed to update data');
+  try {
+    Response response = await dio.put(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
   }
 }
 

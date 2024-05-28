@@ -8,6 +8,7 @@ import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
+import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:intl/intl.dart';
 
@@ -29,6 +30,7 @@ class _PopupDetailState extends State<PopupDetail> {
   bool isLoading = true;
   double rating = 0;
   bool like = false;
+  bool allowSuccess = false;
 
   Future<void> getPopupData() async {
     try {
@@ -38,6 +40,32 @@ class _PopupDetailState extends State<PopupDetail> {
         popup = data;
         isLoading = false;
       });
+    } catch (error) {
+      // 오류 처리
+      print('Error fetching popup data: $error');
+    }
+  }
+
+  Future<void> popupStoreAllow(BuildContext context) async {
+    try {
+      final data = await Api.popupAllow(widget.storeId);
+
+      if (!data.toString().contains("fail")) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('승인 완료되었습니다.'),
+          ),
+        );
+        Navigator.of(context).pop();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => StoreListPage()));
+
+        setState(() {
+          allowSuccess = true;
+          isLoading = false;
+        });
+      } else {}
     } catch (error) {
       // 오류 처리
       print('Error fetching popup data: $error');
@@ -597,11 +625,11 @@ class _PopupDetailState extends State<PopupDetail> {
                             ? MainAxisAlignment.spaceBetween
                             : MainAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Visibility(
-                                visible: widget.mode == "view",
-                                child: GestureDetector(
+                          Visibility(
+                            visible: widget.mode == "view",
+                            child: Row(
+                              children: [
+                                GestureDetector(
                                   onTap: () {
                                     popupLike();
                                   },
@@ -613,18 +641,18 @@ class _PopupDetailState extends State<PopupDetail> {
                                     color: like ? Colors.red : Colors.black,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              const Text(
-                                '26',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                                const SizedBox(
+                                  width: 8,
                                 ),
-                              ),
-                            ],
+                                const Text(
+                                  '26',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Visibility(
                             visible: widget.mode == "view",
@@ -672,7 +700,37 @@ class _PopupDetailState extends State<PopupDetail> {
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
-                                        onPressed: () => {},
+                                        onPressed: () => {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text('팝업 승인'),
+                                                    content: const Text(
+                                                        '승인 하시겠습니까?'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Text('취소'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          // 여기서 실제 회원 탈퇴 로직을 구현
+                                                          popupStoreAllow(
+                                                              context);
+                                                        },
+                                                        child:
+                                                            const Text('승인하기'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              )
+                                            },
                                         child: Text("승인하기")),
                                   ),
                                   Container(

@@ -45,6 +45,8 @@ class _LoginState extends State<Login> {
         // User 싱글톤에 user_id 추가
         User().userId = data['user_id'];
 
+        //await Api.profileAdd();
+
         // TODO 김영수 : 로그인시 메인페이지로 이동하게 수정
         Navigator.push(
             context,

@@ -7,6 +7,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/http.dart';
+import 'package:pophub/utils/utils.dart';
 
 class Api {
   static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
@@ -218,9 +219,9 @@ class Api {
   // 프로필 추가 (이미지 x)
   static Future<Map<String, dynamic>> profileAdd() async {
     final data = await postData('$domain/user/create_profile/', {
-      'userId': "admin01",
-      'userName': "카지릭",
-      'phoneNumber': "01065168807",
+      'userId': User().userId,
+      'userName': generateNickname(),
+      'phoneNumber': User().phoneNumber,
       'Gender': "M",
       'Age': 26,
       'file': '',
@@ -249,21 +250,29 @@ class Api {
         'store_name',
         store.name,
       ),
-      MapEntry('store_location', store.location),
+      MapEntry('store_location', store.location + "/" + store.locationDetail),
       MapEntry('store_contact_info', store.contact),
       MapEntry('store_description', store.description),
-
-      // MapEntry('store_start_date', "2024-06-01"),
-      // MapEntry('store_end_date', "2024-10-01"),
       MapEntry('store_start_date',
           store.startDate.toIso8601String().split('T').first),
       MapEntry(
           'store_end_date', store.endDate.toIso8601String().split('T').first),
       MapEntry('max_capacity', store.maxCapacity.toString()),
-      MapEntry('schedule[0][day_of_week]', "MON"),
-      MapEntry('schedule[0][open_time]', "12:00"),
-      MapEntry('schedule[0][close_time]', "00:00"),
     ]);
+
+    for (int i = 0; i < store.schedule.length; i++) {
+      Schedule schedule = store.schedule[i];
+
+      formData.fields.addAll([
+        MapEntry('schedule[$i][day_of_week]',
+            getDayOfWeekAbbreviation(schedule.dayOfWeek))
+      ]);
+      formData.fields.addAll(
+          [MapEntry('schedule[$i][open_time]', formatTime(schedule.openTime))]);
+      formData.fields.addAll([
+        MapEntry('schedule[$i][close_time]', formatTime(schedule.closeTime))
+      ]);
+    }
 
     final data = await postFormData('$domain/popup', formData);
     Logger.debug("### 스토어 추가 $data");
@@ -271,7 +280,7 @@ class Api {
   }
 
   //펜딩 리스트
-  static Future<List<PopupModel>> getPendingList() async {
+  static Future<List<PopupModel>> pendingList() async {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/admin/popupPendingList', {});
@@ -285,5 +294,14 @@ class Api {
       print('Failed to fetch review list: $e');
       throw Exception('Failed to fetch review list');
     }
+  }
+
+  // 팝업 승인
+  static Future<Map<String, dynamic>> popupAllow(String storeId) async {
+    final data = await putData('$domain/admin/popupPendingCheck/', {
+      'store_id': storeId,
+    });
+    Logger.debug("### 팝업 승인 $data");
+    return data;
   }
 }

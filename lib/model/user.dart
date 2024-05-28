@@ -14,4 +14,14 @@ class User {
   }
 
   User._internal();
+
+  void clear() {
+    userId = "";
+    userName = "";
+    phoneNumber = "";
+    gender = "";
+    age = 0;
+    file = "";
+    role = "";
+  }
 }

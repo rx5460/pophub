@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Padding(
                             padding: EdgeInsets.only(top: screenWidth * 0.1),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
                                   onTap: () {
@@ -334,11 +334,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   text: '결제 내역',
                                   onClick: () {},
                                 ),
-                                MenuList(
-                                  icon: Icons.message_outlined,
-                                  text: '장바구니',
-                                  onClick: () {},
-                                ),
+                                // MenuList(
+                                //   icon: Icons.message_outlined,
+                                //   text: '장바구니',
+                                //   onClick: () {},
+                                // ),
                               ],
                             ),
                           ),

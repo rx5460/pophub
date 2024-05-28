@@ -32,6 +32,7 @@ class StoreModel with ChangeNotifier {
   String name = '';
   String description = '';
   String location = '';
+  String locationDetail = '';
   String contact = '';
   String category = '';
   DateTime startDate = DateTime.now();
@@ -67,6 +68,11 @@ class StoreModel with ChangeNotifier {
 
   void addSchedule(Schedule newSchedule) {
     schedule.add(newSchedule);
+    notifyListeners();
+  }
+
+  void removeSchedule() {
+    schedule = [];
     notifyListeners();
   }
 
