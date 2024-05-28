@@ -3,6 +3,8 @@ import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/login.dart';
 
 class WithdrawalPage extends StatelessWidget {
+  const WithdrawalPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -31,7 +33,7 @@ class WithdrawalPage extends StatelessWidget {
               const SizedBox(height: 8),
               const Text(
                 '• 보유 기간: 탈퇴 신청일로부터 1개월 동안 회원님의 개인정보를 보유합니다.\n'
-                '• 목적: 이 기간 동안 계정 복구 및 법적 의무 이행을 위해 개인정보를 보유합니다.\n'
+                '• 목적: 이 기간 동안 법적 의무 이행을 위해 개인정보를 보유합니다.\n'
                 '• 삭제: 보유 기간이 만료되면 회원님의 개인정보는 안전하게 삭제됩니다.',
               ),
               const SizedBox(height: 16),
@@ -40,10 +42,7 @@ class WithdrawalPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                '• 탈퇴 후에는 동일한 번호로 재가입이 가능합니다.\n'
-                '• 개인정보 삭제 이후에는 복구가 불가능하므로, 중요한 데이터는 미리 백업해 주세요.',
-              ),
+              const Text('• 탈퇴하면 보유 포인트는 사라지게 됩니다.\n'),
               const Spacer(),
               Center(
                 child: OutlinedButton(

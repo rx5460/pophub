@@ -250,7 +250,7 @@ class Api {
         'store_name',
         store.name,
       ),
-      MapEntry('store_location', store.location + "/" + store.locationDetail),
+      MapEntry('store_location', "${store.location}/${store.locationDetail}"),
       MapEntry('store_contact_info', store.contact),
       MapEntry('store_description', store.description),
       MapEntry('store_start_date',

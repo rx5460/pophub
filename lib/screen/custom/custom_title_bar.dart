@@ -10,7 +10,7 @@ class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
-      preferredSize: Size.fromHeight(kToolbarHeight),
+      preferredSize: const Size.fromHeight(kToolbarHeight),
       child: AppBar(
         title: Text(
           titleName,
@@ -33,5 +33,5 @@ class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

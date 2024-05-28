@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 
@@ -56,7 +55,11 @@ class NoticeTile extends StatelessWidget {
   final String date;
   final String content;
 
-  NoticeTile({required this.title, required this.date, required this.content});
+  const NoticeTile(
+      {super.key,
+      required this.title,
+      required this.date,
+      required this.content});
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/model/kopo_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -12,10 +13,10 @@ import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-import 'package:intl/intl.dart';
 
 class StoreCreatePage extends StatefulWidget {
+  const StoreCreatePage({super.key});
+
   @override
   _StoreCreatePageState createState() => _StoreCreatePageState();
 }
@@ -56,7 +57,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
       final XFile? pickedImage =
           await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedImage != null) {
+      if (pickedImage != null && mounted) {
         Provider.of<StoreModel>(context, listen: false)
             .addImage(File(pickedImage.path));
       }
@@ -65,7 +66,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+  Future<void> _selectDate(bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate
@@ -74,7 +75,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       if (isStartDate) {
         Provider.of<StoreModel>(context, listen: false).updateStartDate(picked);
       } else {
@@ -93,28 +94,32 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     }
   }
 
-  Future<void> _pickLocation(BuildContext context) async {
+  Future<void> _pickLocation() async {
+    if (!mounted) return;
+
     KopoModel? model = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RemediKopo(),
+        builder: (context) => const RemediKopo(),
       ),
     );
 
     if (model != null && model.address != null) {
-      Provider.of<StoreModel>(context, listen: false)
-          .updateLocation(model.address!);
+      if (mounted) {
+        Provider.of<StoreModel>(context, listen: false)
+            .updateLocation(model.address!);
+      }
     }
   }
 
   Future<void> storeAdd(StoreModel store) async {
     final data = await Api.storeAdd(store);
 
-    if (!data.toString().contains("fail")) {
+    if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
         Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProfilePage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ProfilePage()));
       });
     } else {}
   }
@@ -218,7 +223,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     title: const Text('스토어 위치'),
                     subtitle: Text(store.location),
                     trailing: const Icon(Icons.location_on),
-                    onTap: () => _pickLocation(context),
+                    onTap: () => _pickLocation(),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -306,7 +311,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                           title: const Text('운영 시작일'),
                           subtitle: Text(_dateFormat.format(store.startDate)),
                           trailing: const Icon(Icons.calendar_today),
-                          onTap: () => _selectDate(context, true),
+                          onTap: () => _selectDate(true),
                         ),
                       ),
                     ),
@@ -321,7 +326,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                           title: const Text('운영 종료일'),
                           subtitle: Text(_dateFormat.format(store.endDate)),
                           trailing: const Icon(Icons.calendar_today),
-                          onTap: () => _selectDate(context, false),
+                          onTap: () => _selectDate(false),
                         ),
                       ),
                     ),
@@ -330,8 +335,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 20),
                 const Text(
                   "연락처",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -370,7 +374,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   decoration: const InputDecoration(labelText: '카테고리'),
                   items: categoryList.map((categoryMap) {
                     String category = categoryMap.keys.first;
-                    int value = categoryMap[category]!;
                     return DropdownMenuItem<String>(
                       value: category,
                       child: Text(category),

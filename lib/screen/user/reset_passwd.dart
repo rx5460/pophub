@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
-import 'package:pophub/screen/user/join_user.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -58,10 +55,14 @@ class _ResetPasswdState extends State<ResetPasswd> {
 
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
-      ToastUtil.customToastMsg("전송되었습니다.", context);
+      if (mounted) {
+        ToastUtil.customToastMsg("전송되었습니다.", context);
+      }
       setState(() {});
     } else {
-      ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+      if (mounted) {
+        ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+      }
     }
   }
 
@@ -74,15 +75,17 @@ class _ResetPasswdState extends State<ResetPasswd> {
           isDialogShowing = true;
         });
 
-        showAlert(context, "확인", "인증되었습니다.", () {
-          Navigator.of(context).pop();
-          FocusManager.instance.primaryFocus?.unfocus();
-          userNoti.isVerify = true;
-          setState(() {
-            isDialogShowing = false;
+        if (mounted) {
+          showAlert(context, "확인", "인증되었습니다.", () {
+            Navigator.of(context).pop();
+            FocusManager.instance.primaryFocus?.unfocus();
+            userNoti.isVerify = true;
+            setState(() {
+              isDialogShowing = false;
+            });
+            userNoti.refresh();
           });
-          userNoti.refresh();
-        });
+        }
 
         // ResetPasswdApi();
       }
@@ -91,14 +94,16 @@ class _ResetPasswdState extends State<ResetPasswd> {
         setState(() {
           isDialogShowing = true;
         });
-        showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
-          Navigator.of(context).pop();
-          FocusManager.instance.primaryFocus?.unfocus();
+        if (mounted) {
+          showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+            Navigator.of(context).pop();
+            FocusManager.instance.primaryFocus?.unfocus();
 
-          setState(() {
-            isDialogShowing = false;
+            setState(() {
+              isDialogShowing = false;
+            });
           });
-        });
+        }
       }
     }
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");

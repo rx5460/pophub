@@ -3,6 +3,8 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 
 class AlarmSettingsPage extends StatefulWidget {
+  const AlarmSettingsPage({super.key});
+
   @override
   _AlarmSettingsPageState createState() => _AlarmSettingsPageState();
 }
@@ -27,16 +29,16 @@ class _AlarmSettingsPageState extends State<AlarmSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               '혜택 / 이벤트 및 기타 알림',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SwitchListTile(
-              title: Text('푸시 알림'),
+              title: const Text('푸시 알림'),
               value: _pushNotification,
               onChanged: (bool value) {
                 setState(() {
@@ -48,7 +50,7 @@ class _AlarmSettingsPageState extends State<AlarmSettingsPage> {
               inactiveTrackColor: Colors.grey,
             ),
             SwitchListTile(
-              title: Text('마케팅 수신 동의'),
+              title: const Text('마케팅 수신 동의'),
               value: _marketingConsent,
               onChanged: (bool value) {
                 setState(() {

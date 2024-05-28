@@ -40,12 +40,18 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   Future<void> certifiApi() async {
     final data = await Api.sendCertifi(phoneController.text.toString());
 
+    if (!mounted) return;
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
-      ToastUtil.customToastMsg("전송되었습니다.", context);
+      if (mounted) {
+        ToastUtil.customToastMsg("전송되었습니다.", context);
+      }
+
       setState(() {});
     } else {
-      ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+      if (mounted) {
+        ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+      }
     }
   }
 
@@ -57,30 +63,37 @@ class _CertifiPhoneState extends State<CertifiPhone> {
         setState(() {
           isDialogShowing = true;
         });
+        if (!mounted) return;
 
-        showAlert(context, "확인", "인증되었습니다.", () {
-          Navigator.of(context).pop();
-          FocusManager.instance.primaryFocus?.unfocus();
-          userNoti.isVerify = true;
-          setState(() {
-            isDialogShowing = false;
+        if (mounted) {
+          showAlert(context, "확인", "인증되었습니다.", () {
+            Navigator.of(context).pop();
+            FocusManager.instance.primaryFocus?.unfocus();
+            userNoti.isVerify = true;
+            setState(() {
+              isDialogShowing = false;
+            });
+            userNoti.refresh();
           });
-          userNoti.refresh();
-        });
+        }
       }
     } else {
       if (!isDialogShowing) {
         setState(() {
           isDialogShowing = true;
         });
-        showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
-          Navigator.of(context).pop();
-          FocusManager.instance.primaryFocus?.unfocus();
+        if (!mounted) return;
 
-          setState(() {
-            isDialogShowing = false;
+        if (mounted) {
+          showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+            Navigator.of(context).pop();
+            FocusManager.instance.primaryFocus?.unfocus();
+
+            setState(() {
+              isDialogShowing = false;
+            });
           });
-        });
+        }
       }
     }
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
@@ -186,7 +199,6 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       height: 55,
                       child: OutlinedButton(
                           onPressed: () => {
-                                ///TODO 황지민 : 테스트 코드
                                 if (userNotifier.isVerify)
                                   {
                                     User().phoneNumber = phoneController.text,

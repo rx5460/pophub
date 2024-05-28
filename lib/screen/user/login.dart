@@ -47,18 +47,21 @@ class _LoginState extends State<Login> {
 
         //await Api.profileAdd();
 
-        // TODO 김영수 : 로그인시 메인페이지로 이동하게 수정
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MultiProvider(providers: [
-                      ChangeNotifierProvider(create: (_) => UserNotifier())
-                    ], child: const BottomNavigationPage())));
+        if (mounted) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MultiProvider(providers: [
+                        ChangeNotifierProvider(create: (_) => UserNotifier())
+                      ], child: const BottomNavigationPage())));
+        }
       }
     } else {
-      showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
-        Navigator.of(context).pop();
-      });
+      if (mounted) {
+        showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
+          Navigator.of(context).pop();
+        });
+      }
     }
     userNotifier.refresh();
   }
@@ -99,7 +102,6 @@ class _LoginState extends State<Login> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // TODO 황지민 : 나중에 기능 살리기
                           TextButton(
                               onPressed: () => {
                                     Navigator.push(

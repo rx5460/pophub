@@ -1,12 +1,13 @@
+import 'dart:io' show File;
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
-import 'dart:io' show File;
-
 import 'package:provider/provider.dart';
 
 class AcountInfo extends StatefulWidget {
@@ -34,7 +35,7 @@ class _AcountInfoState extends State<AcountInfo> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
+      Logger.debug('Error picking image: $e');
     }
   }
 
@@ -44,17 +45,19 @@ class _AcountInfoState extends State<AcountInfo> {
   Future<void> nameCheckApi() async {
     Map<String, dynamic> data = await Api.nameCheck(nicknameInput ?? '');
 
-    if (!data.toString().contains("Exists")) {
-      showAlert(context, "안내", "닉네임이 사용 가능합니다.", () {
-        Navigator.of(context).pop();
-      });
-      setState(() {
-        checked = true;
-      });
-    } else {
-      showAlert(context, "경고", "닉네임이 중복되었습니다.", () {
-        Navigator.of(context).pop();
-      });
+    if (mounted) {
+      if (!data.toString().contains("Exists")) {
+        showAlert(context, "안내", "닉네임이 사용 가능합니다.", () {
+          Navigator.of(context).pop();
+        });
+        setState(() {
+          checked = true;
+        });
+      } else {
+        showAlert(context, "경고", "닉네임이 중복되었습니다.", () {
+          Navigator.of(context).pop();
+        });
+      }
     }
   }
 
@@ -64,7 +67,7 @@ class _AcountInfoState extends State<AcountInfo> {
 
     if (!data.toString().contains("fail")) {
       widget.refreshProfile;
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     } else {}
   }
 

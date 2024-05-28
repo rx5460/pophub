@@ -6,6 +6,8 @@ import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/utils/api.dart';
 
 class StoreListPage extends StatefulWidget {
+  const StoreListPage({super.key});
+
   @override
   _StoreListPageState createState() => _StoreListPageState();
 }
@@ -56,7 +58,7 @@ class _StoreListPageState extends State<StoreListPage> {
               );
             },
             child: Container(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   popup.image != null && popup.image!.isNotEmpty
@@ -76,25 +78,25 @@ class _StoreListPageState extends State<StoreListPage> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                  SizedBox(width: 16.0),
+                  const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           popup.name ?? 'No name',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,
                           ),
                         ),
                         Text(
-                          (popup?.start != null && popup!.start!.isNotEmpty)
+                          (popup.start != null && popup.start!.isNotEmpty)
                               ? DateFormat("yyyy.MM.dd")
-                                  .format(DateTime.parse(popup!.start!))
+                                  .format(DateTime.parse(popup.start!))
                               : '',
                         ),
-                        Text('${popup.location ?? 'No ID'}'),
+                        Text(popup.location ?? 'No ID'),
                       ],
                     ),
                   ),

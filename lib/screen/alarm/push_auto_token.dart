@@ -1,7 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'package:pophub/model/user.dart';
 
 class PushNotificationService {

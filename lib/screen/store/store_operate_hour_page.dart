@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
-import 'dart:io';
 
 class StoreOperatingHoursPage extends StatefulWidget {
   final StoreModel storeModel;
 
-  StoreOperatingHoursPage({required this.storeModel});
+  const StoreOperatingHoursPage({super.key, required this.storeModel});
 
   @override
   _StoreOperatingHoursPageState createState() =>
@@ -127,15 +126,21 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: CupertinoButton.filled(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('완료'),
-                ),
-              ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('완료'),
+                  )
+                  // CupertinoButton.filled(
+                  //   onPressed: () {
+                  //     Navigator.of(context).pop();
+                  //   },
+                  //   child: Text('완료'),
+                  // ),
+                  ),
             ],
           ),
         );
@@ -185,18 +190,18 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
     double screenHeight = screenSize.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text('운영 시간'),
+        title: const Text('운영 시간'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '운영일',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -220,19 +225,19 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                       },
                       child: Text(
                         day,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
                 }).toList(),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               '운영 시간',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 OutlinedButton(
@@ -240,46 +245,48 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    side: BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: Size(100, 50), // 최소 크기 설정
-                    padding: EdgeInsets.symmetric(
+                    side: const BorderSide(color: Constants.LIGHT_GREY),
+                    minimumSize: const Size(100, 50), // 최소 크기 설정
+                    padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12), // 패딩 설정
                   ),
                   child: Text(startTime == null
                       ? '시작 시간'
                       : '${startTime!.hour.toString().padLeft(2, '0')}시 ${startTime!.minute.toString().padLeft(2, '0')}분'),
                 ),
-                SizedBox(width: 10),
-                Text(':'),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
+                const Text(':'),
+                const SizedBox(width: 10),
                 OutlinedButton(
                   onPressed: () => _selectTime(context, false),
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    side: BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: Size(100, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    side: const BorderSide(color: Constants.LIGHT_GREY),
+                    minimumSize: const Size(100, 50),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                   ),
                   child: Text(endTime == null
                       ? '종료 시간'
                       : '${endTime!.hour.toString().padLeft(2, '0')}시 ${endTime!.minute.toString().padLeft(2, '0')}분'),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 OutlinedButton(
                   onPressed: _updateOperatingHours,
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    side: BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: Size(100, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    side: const BorderSide(color: Constants.LIGHT_GREY),
+                    minimumSize: const Size(100, 50),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                   ),
-                  child: Text('설정'),
+                  child: const Text('설정'),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: daysOfWeek.map((day) {
@@ -290,16 +297,17 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                 }).toList(),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: _complete,
-                child: Text('완료'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.lightBlue,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
+                child: const Text('완료'),
               ),
             ),
           ],

@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquery_answer_page.dart';
-import 'package:pophub/screen/setting/inquery_write_page.dart';
 
 class InqueryPage extends StatefulWidget {
   const InqueryPage({super.key});
@@ -39,7 +36,6 @@ class _InqueryPageState extends State<InqueryPage> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
         appBar: const CustomTitleBar(titleName: "문의 내역"),
@@ -84,13 +80,16 @@ class NoticeTile extends StatelessWidget {
   final String date;
   final String content;
 
-  NoticeTile({required this.title, required this.date, required this.content});
+  const NoticeTile(
+      {super.key,
+      required this.title,
+      required this.date,
+      required this.content});
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    double screenHeight = screenSize.height;
     return Container(
         child: DecoratedBox(
             decoration: BoxDecoration(
@@ -107,12 +106,12 @@ class NoticeTile extends StatelessWidget {
                   children: [
                     Text(date),
                     Container(
-                      margin: EdgeInsets.only(left: 10),
+                      margin: const EdgeInsets.only(left: 10),
                       width: 50.0,
                       height: 30,
                       child: OutlinedButton(
                         onPressed: () {},
-                        child: Text("접수"),
+                        child: const Text("접수"),
                       ),
                     ),
                   ],

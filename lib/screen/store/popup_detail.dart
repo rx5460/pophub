@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
@@ -10,7 +11,7 @@ import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:intl/intl.dart';
+import 'package:pophub/utils/log.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -23,6 +24,7 @@ class PopupDetail extends StatefulWidget {
 }
 
 class _PopupDetailState extends State<PopupDetail> {
+  late KakaoMapController mapController;
   int _current = 0;
   final CarouselController _controller = CarouselController();
   PopupModel? popup;
@@ -42,15 +44,15 @@ class _PopupDetailState extends State<PopupDetail> {
       });
     } catch (error) {
       // 오류 처리
-      print('Error fetching popup data: $error');
+      Logger.debug('Error fetching popup data: $error');
     }
   }
 
-  Future<void> popupStoreAllow(BuildContext context) async {
+  Future<void> popupStoreAllow() async {
     try {
       final data = await Api.popupAllow(widget.storeId);
 
-      if (!data.toString().contains("fail")) {
+      if (!data.toString().contains("fail") && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -58,8 +60,8 @@ class _PopupDetailState extends State<PopupDetail> {
           ),
         );
         Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => StoreListPage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const StoreListPage()));
 
         setState(() {
           allowSuccess = true;
@@ -68,7 +70,7 @@ class _PopupDetailState extends State<PopupDetail> {
       } else {}
     } catch (error) {
       // 오류 처리
-      print('Error fetching popup data: $error');
+      Logger.debug('Error fetching popup data: $error');
     }
   }
 
@@ -86,7 +88,7 @@ class _PopupDetailState extends State<PopupDetail> {
         });
       }
     } catch (error) {
-      print('Error fetching review data: $error');
+      Logger.debug('Error fetching review data: $error');
     }
   }
 
@@ -137,6 +139,7 @@ class _PopupDetailState extends State<PopupDetail> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+    Set<Marker> markers = {};
 
     return Scaffold(
       body: !isLoading
@@ -298,20 +301,22 @@ class _PopupDetailState extends State<PopupDetail> {
                                           width: 1,
                                           color: Colors.black,
                                         )),
-                                        // child: KakaoMap(
-                                        //   onMapCreated: ((controller) async {
-                                        //     mapController = controller;
+                                        child: KakaoMap(
+                                          onMapCreated: ((controller) async {
+                                            mapController = controller;
 
-                                        //     markers.add(Marker(
-                                        //       markerId: UniqueKey().toString(),
-                                        //       latLng: await mapController.getCenter(),
-                                        //     ));
+                                            markers.add(Marker(
+                                              markerId: UniqueKey().toString(),
+                                              latLng: await mapController
+                                                  .getCenter(),
+                                            ));
 
-                                        //     setState(() {});
-                                        //   }),
-                                        //   markers: markers.toList(),
-                                        //   center: LatLng(37.3608681, 126.9306506),
-                                        // ),
+                                            setState(() {});
+                                          }),
+                                          markers: markers.toList(),
+                                          center:
+                                              LatLng(37.3608681, 126.9306506),
+                                        ),
                                       ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 8.0),
@@ -616,147 +621,149 @@ class _PopupDetailState extends State<PopupDetail> {
                       ),
                     )),
                     child: Padding(
-                      padding: EdgeInsets.only(
-                          left: screenWidth * 0.05,
-                          right: screenWidth * 0.05,
-                          bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: widget.mode == "view"
-                            ? MainAxisAlignment.spaceBetween
-                            : MainAxisAlignment.center,
-                        children: [
-                          Visibility(
-                            visible: widget.mode == "view",
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    popupLike();
-                                  },
-                                  child: Icon(
-                                    like
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    size: 30,
-                                    color: like ? Colors.red : Colors.black,
+                        padding: EdgeInsets.only(
+                            left: screenWidth * 0.05,
+                            right: screenWidth * 0.05,
+                            bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      popupLike();
+                                    },
+                                    child: Icon(
+                                      like
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      size: 30,
+                                      color: like ? Colors.red : Colors.black,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                const Text(
-                                  '26',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                  const SizedBox(
+                                    width: 8,
                                   ),
-                                ),
-                              ],
+                                  const Text(
+                                    '26',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Visibility(
-                            visible: widget.mode == "view",
-                            child: Container(
-                              width: screenWidth * 0.3,
-                              height: screenHeight * 0.05,
-                              decoration: BoxDecoration(
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: const Spacer(),
+                            ),
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: Container(
+                                width: screenWidth * 0.3,
+                                height: screenHeight * 0.05,
+                                decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10)),
                                   border: Border.all(
                                     width: 2,
                                     color: const Color(0xFFADD8E6),
                                   ),
-                                  color: const Color(0xFFADD8E6)),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                                  color: const Color(0xFFADD8E6),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
                                         builder: (context) => ReserveDate(
-                                              popup: popup!.id!,
-                                            )),
-                                  );
-                                },
-                                child: const Center(
-                                  child: Text(
-                                    '예약하기',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                          popup: popup!.id!,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Center(
+                                    child: Text(
+                                      '예약하기',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Visibility(
+                            Visibility(
                               visible: widget.mode == "pending",
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5),
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
-                                        onPressed: () => {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text('팝업 승인'),
-                                                    content: const Text(
-                                                        '승인 하시겠습니까?'),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text('취소'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () async {
-                                                          // 여기서 실제 회원 탈퇴 로직을 구현
-                                                          popupStoreAllow(
-                                                              context);
-                                                        },
-                                                        child:
-                                                            const Text('승인하기'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              )
-                                            },
-                                        child: Text("승인하기")),
+                                      onPressed: () => {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('팝업 승인'),
+                                              content: const Text('승인 하시겠습니까?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('취소'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    popupStoreAllow();
+                                                  },
+                                                  child: const Text('승인하기'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      },
+                                      child: const Text("승인하기"),
+                                    ),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5),
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          disabledForegroundColor: Colors.black,
-                                          backgroundColor: Colors.white,
-                                          side: BorderSide(
-                                            color: Constants.DEFAULT_COLOR,
-                                            width: 1.0,
-                                          ),
+                                      style: OutlinedButton.styleFrom(
+                                        disabledForegroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                          color: Constants.DEFAULT_COLOR,
+                                          width: 1.0,
                                         ),
-                                        onPressed: () => {},
-                                        child: Text(
-                                          "거절하기",
-                                          style: TextStyle(color: Colors.black),
-                                        )),
-                                  )
+                                      ),
+                                      onPressed: () => {},
+                                      child: const Text(
+                                        "거절하기",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
                                 ],
-                              )),
-                        ],
-                      ),
-                    )),
+                              ),
+                            ),
+                          ],
+                        ))),
               ],
             )
           : const SizedBox(),

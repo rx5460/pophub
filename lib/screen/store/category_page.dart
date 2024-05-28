@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -135,7 +134,7 @@ class _CategoryPageState extends State<CategoryPage> {
               decoration: InputDecoration(
                 hintText: '어떤 정보를 찾아볼까요?',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     _search(_searchController.text);
                   },
@@ -143,10 +142,10 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
             ),
             if (_recentSearches.isNotEmpty) ...[
-              SizedBox(height: 16),
-              Text('최근 검색어',
+              const SizedBox(height: 16),
+              const Text('최근 검색어',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 children: _recentSearches
@@ -158,15 +157,17 @@ class _CategoryPageState extends State<CategoryPage> {
                             _recentSearches.remove(search);
                           });
                         },
-                        deleteIcon: Icon(Icons.clear, size: 20), // 삭제 아이콘 크기 설정
+                        deleteIcon:
+                            const Icon(Icons.clear, size: 20), // 삭제 아이콘 크기 설정
                         deleteIconColor: Colors.black, // 삭제 아이콘 색상 설정
-                        labelStyle:
-                            TextStyle(color: Colors.black), // 라벨 텍스트 스타일 설정
+                        labelStyle: const TextStyle(
+                            color: Colors.black), // 라벨 텍스트 스타일 설정
                         backgroundColor: Colors.white, // Chip 배경색 설정
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8.0), // Chip 패딩 설정
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0), // Chip 패딩 설정
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Constants.DEFAULT_COLOR),
+                          side:
+                              const BorderSide(color: Constants.DEFAULT_COLOR),
                           borderRadius: BorderRadius.circular(20), // Chip 모양 설정
                         ),
                       ),
@@ -174,13 +175,13 @@ class _CategoryPageState extends State<CategoryPage> {
                     .toList(),
               )
             ],
-            SizedBox(height: 16),
-            Text('카테고리',
+            const SizedBox(height: 16),
+            const Text('카테고리',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
                 child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
@@ -197,7 +198,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           border: Border.all(color: Constants.DEFAULT_COLOR),
                           borderRadius: BorderRadius.circular(10),
@@ -207,13 +208,13 @@ class _CategoryPageState extends State<CategoryPage> {
                           size: 35,
                         ), // 실제 아이콘으로 교체
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        categoryName!, // 맵에서 이름을 직접 참조
+                        categoryName, // 맵에서 이름을 직접 참조
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 10),
+                        style: const TextStyle(fontSize: 10),
                       ),
                     ],
                   ),

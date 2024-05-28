@@ -62,22 +62,18 @@ String getDayOfWeekAbbreviation(String dayOfWeek) {
 }
 
 String formatTime(String timeString) {
-  // Check if the time string is in the format "HH시 mm분"
   if (timeString.contains('시') && timeString.contains('분')) {
     List<String> timeParts = timeString.split('시');
     int hour = int.parse(timeParts[0]);
     timeParts = timeParts[1].split('분');
-    int minute = int.parse(timeParts[0]);
+    int.parse(timeParts[0]);
 
-    // Normalize the time format to "HH:00"
     return '${hour.toString().padLeft(2, '0')}:00';
   } else {
-    // Assume the input time string is in the format "HH:mm"
     List<String> timeParts = timeString.split(':');
     int hour = int.parse(timeParts[0]);
-    int minute = int.parse(timeParts[1]);
+    int.parse(timeParts[1]);
 
-    // Normalize the time format to "HH:00"
     return '${hour.toString().padLeft(2, '0')}:00';
   }
 }
