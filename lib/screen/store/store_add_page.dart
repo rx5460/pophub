@@ -124,6 +124,15 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     } else {}
   }
 
+  void _showOperatingHoursModal(BuildContext context, StoreModel storeModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StoreOperatingHoursModal(storeModel: storeModel);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -216,12 +225,13 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
                     title: const Text('스토어 위치'),
-                    subtitle: Text(store.location),
+                    subtitle:
+                        store.location.isNotEmpty ? Text(store.location) : null,
                     trailing: const Icon(Icons.location_on),
                     onTap: () => _pickLocation(),
                   ),
@@ -237,6 +247,22 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   "운영 시간",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    title: const Text('운영 시간 설정하기'),
+                    trailing: const Icon(Icons.access_time),
+                    onTap: () {
+                      _showOperatingHoursModal(context, store);
+                      // 운영 시간 설정 페이지로 이동 (여기서는 생략)
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Visibility(
                   visible: store.schedule.isNotEmpty,
                   child: SizedBox(
@@ -257,9 +283,10 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(schedule.dayOfWeek),
+                                  Text(getDayOfWeekAbbreviation(
+                                      schedule.dayOfWeek, "ko")),
                                   Text(
-                                      '${schedule.openTime} - ${schedule.closeTime}'),
+                                      '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
                                 ],
                               ),
                             );
@@ -267,30 +294,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         );
                       },
                     ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    title: const Text('운영 시간 설정하기'),
-                    trailing: const Icon(Icons.access_time),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StoreOperatingHoursPage(
-                              storeModel: store,
-                            ),
-                          )
-                          // MaterialPageRoute(
-                          //     builder: (context) => StoreOperatingHoursPage()),
-                          );
-                      // 운영 시간 설정 페이지로 이동 (여기서는 생략)
-                    },
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -304,7 +307,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
@@ -319,7 +322,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(

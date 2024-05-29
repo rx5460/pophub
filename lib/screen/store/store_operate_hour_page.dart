@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 
-class StoreOperatingHoursPage extends StatefulWidget {
+class StoreOperatingHoursModal extends StatefulWidget {
   final StoreModel storeModel;
 
-  const StoreOperatingHoursPage({super.key, required this.storeModel});
+  const StoreOperatingHoursModal({super.key, required this.storeModel});
 
   @override
-  _StoreOperatingHoursPageState createState() =>
-      _StoreOperatingHoursPageState();
+  _StoreOperatingHoursModalState createState() =>
+      _StoreOperatingHoursModalState();
 }
 
-class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
+class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
   final List<String> daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
   final Map<String, bool> selectedDays = {
     '월': false,
@@ -126,21 +126,15 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('완료'),
-                  )
-                  // CupertinoButton.filled(
-                  //   onPressed: () {
-                  //     Navigator.of(context).pop();
-                  //   },
-                  //   child: Text('완료'),
-                  // ),
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('완료'),
+                ),
+              ),
             ],
           ),
         );
@@ -167,6 +161,7 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
   }
 
   void _complete() {
+    _updateOperatingHours();
     final storeModel = widget.storeModel;
     storeModel.removeSchedule();
     operatingHours.forEach((day, hours) {
@@ -188,13 +183,19 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('운영 시간'),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      body: Padding(
+      backgroundColor: Colors.white,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.white,
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
@@ -217,6 +218,10 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                         backgroundColor: selectedDays[day]!
                             ? Constants.DEFAULT_COLOR
                             : Colors.white,
+                        side: const BorderSide(
+                          color: Constants.DEFAULT_COLOR,
+                          width: 1.0,
+                        ),
                       ),
                       onPressed: () {
                         setState(() {
@@ -232,78 +237,58 @@ class _StoreOperatingHoursPageState extends State<StoreOperatingHoursPage> {
                 }).toList(),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(
+              height: 20,
+            ),
             const Text(
               '운영 시간',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                OutlinedButton(
-                  onPressed: () => _selectTime(context, true),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: const BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: const Size(100, 50), // 최소 크기 설정
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12), // 패딩 설정
+            SizedBox(
+              width: screenWidth,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => _selectTime(context, true),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        side: const BorderSide(color: Constants.LIGHT_GREY),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12), // 패딩 설정
+                      ),
+                      child: Text(startTime == null
+                          ? '시작 시간'
+                          : '${startTime!.hour.toString().padLeft(2, '0')}시 ${startTime!.minute.toString().padLeft(2, '0')}분'),
+                    ),
                   ),
-                  child: Text(startTime == null
-                      ? '시작 시간'
-                      : '${startTime!.hour.toString().padLeft(2, '0')}시 ${startTime!.minute.toString().padLeft(2, '0')}분'),
-                ),
-                const SizedBox(width: 10),
-                const Text(':'),
-                const SizedBox(width: 10),
-                OutlinedButton(
-                  onPressed: () => _selectTime(context, false),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: const BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: const Size(100, 50),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                  const SizedBox(width: 10),
+                  const Text('~'),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => _selectTime(context, false),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        side: const BorderSide(color: Constants.LIGHT_GREY),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                      ),
+                      child: Text(endTime == null
+                          ? '종료 시간'
+                          : '${endTime!.hour.toString().padLeft(2, '0')}시 ${endTime!.minute.toString().padLeft(2, '0')}분'),
+                    ),
                   ),
-                  child: Text(endTime == null
-                      ? '종료 시간'
-                      : '${endTime!.hour.toString().padLeft(2, '0')}시 ${endTime!.minute.toString().padLeft(2, '0')}분'),
-                ),
-                const SizedBox(width: 10),
-                OutlinedButton(
-                  onPressed: _updateOperatingHours,
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: const BorderSide(color: Constants.LIGHT_GREY),
-                    minimumSize: const Size(100, 50),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                  ),
-                  child: const Text('설정'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                children: daysOfWeek.map((day) {
-                  return ListTile(
-                    title: Text('$day요일'),
-                    trailing: Text(operatingHours[day]!),
-                  );
-                }).toList(),
+                ],
               ),
             ),
             const SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
+              child: OutlinedButton(
                 onPressed: _complete,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.lightBlue,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),

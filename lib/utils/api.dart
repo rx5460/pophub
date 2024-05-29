@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/http.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 
 class Api {
@@ -75,14 +73,14 @@ class Api {
       return popupList;
     } catch (e) {
       // 오류 처리
-      print('Failed to fetch popup list: $e');
+      Logger.debug('Failed to fetch popup list: $e');
       throw Exception('Failed to fetch popup list');
     }
   }
 
   //팝업 상세 조회(팝업 단일 조회)
   static Future<PopupModel> getPopup(String storeId) async {
-    print(storeId);
+    Logger.debug(storeId);
     try {
       final Map<String, dynamic> data =
           await getData('$domain/popup/view/$storeId', {});
@@ -90,7 +88,7 @@ class Api {
       return PopupModel.fromJson(data);
     } catch (e) {
       // 오류 처리
-      print('팝업스토어 조회 오류: $e');
+      Logger.debug('팝업스토어 조회 오류: $e');
       throw Exception('Failed to fetch popup');
     }
   }
@@ -118,7 +116,7 @@ class Api {
       return reviewList;
     } catch (e) {
       // 오류 처리
-      print('Failed to fetch review list: $e');
+      Logger.debug('Failed to fetch review list: $e');
       throw Exception('Failed to fetch review list');
     }
   }
@@ -203,7 +201,7 @@ class Api {
     final data = await postData('$domain/popup/like/$popup/', {
       'user_name': userName,
     });
-    print(popup);
+    Logger.debug(popup);
     Logger.debug("### 팝업 좋아요 $data");
     return data;
   }
@@ -265,7 +263,7 @@ class Api {
 
       formData.fields.addAll([
         MapEntry('schedule[$i][day_of_week]',
-            getDayOfWeekAbbreviation(schedule.dayOfWeek))
+            getDayOfWeekAbbreviation(schedule.dayOfWeek, "en"))
       ]);
       formData.fields.addAll(
           [MapEntry('schedule[$i][open_time]', formatTime(schedule.openTime))]);
@@ -291,7 +289,7 @@ class Api {
       return popupList;
     } catch (e) {
       // 오류 처리
-      print('Failed to fetch review list: $e');
+      Logger.debug('Failed to fetch review list: $e');
       throw Exception('Failed to fetch review list');
     }
   }

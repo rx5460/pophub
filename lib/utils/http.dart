@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
-import 'package:http/http.dart' as http;
 import 'dart:io' show File;
+
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:pophub/utils/log.dart';
 
 // dio Options랑 secureStorage Options랑 이름 충돌나서 secure로 했쇼
@@ -22,12 +21,6 @@ Dio dio = Dio()
       },
     ),
   );
-
-String? _token;
-
-void setToken(String token) {
-  _token = token;
-}
 
 Future<Map<String, dynamic>> postData(
     String url, Map<String, dynamic> data) async {
