@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +9,13 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:http/http.dart' as http;
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -53,6 +57,42 @@ class _PopupDetailState extends State<PopupDetail> {
       final data = await Api.popupAllow(widget.storeId);
 
       if (!data.toString().contains("fail") && mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('승인 완료되었습니다.'),
+          ),
+        );
+
+        final alarmDetails = {
+          'title': '팝업 승인 완료',
+          'label': '성공적으로 팝업 등록이 완료되었습니다.',
+          'time': DateTime.now().toString(),
+          'active': true,
+        };
+
+        // 서버에 알람 추가
+        await http.post(
+          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'userId': User().userId,
+            'type': 'alarms',
+            'alarmDetails': alarmDetails,
+          }),
+        );
+
+        // Firestore에 알람 추가
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(User().userId)
+            .collection('alarms')
+            .add(alarmDetails);
+
+        // 로컬 알림 발송
+        await const AlarmPage().showNotification(
+            alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

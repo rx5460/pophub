@@ -8,6 +8,9 @@ class AlarmPage extends StatefulWidget {
 
   @override
   State<AlarmPage> createState() => _AlarmPageState();
+
+  showNotification(
+      Object? alarmDetail, Object? alarmDetail2, Object? alarmDetail3) {}
 }
 
 class _AlarmPageState extends State<AlarmPage>
@@ -168,8 +171,8 @@ class _AlarmPageState extends State<AlarmPage>
                       width: 65,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Image.network(
-                          'https://www.valuevenue.co.kr/upload_files/event/202401/t1024_67a306e93f0610cbdfb5921de98d34ad.png',
+                        child: Image.asset(
+                          'images/logo.png',
                           fit: BoxFit.cover,
                         ),
                       ),
