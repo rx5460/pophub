@@ -28,6 +28,19 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     Icons.person_outline,
   ];
   int _selectedIndex = 2; // 선택된 인덱스를 저장하는 변수 추가
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +49,17 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     // double screenHeight = screenSize.height;
     return WillPopScope(
       onWillPop: () {
-        return Future(() => false); //뒤로가기 막음
+        return Future(() => false); // 뒤로가기 막음
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: IndexedStack(
-          // IndexedStack을 사용하여 모든 페이지를 동시에 표시
-          index: _selectedIndex,
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
           children: _pages,
         ),
         bottomNavigationBar: Container(
@@ -65,9 +82,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                         highlightColor: Colors.white,
                         splashColor: Colors.white,
                         onTap: () {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
+                          _pageController.jumpToPage(index);
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -77,12 +92,14 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                               height: screenWidth * 0.2,
                               width: screenWidth * 0.2,
                               decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(50),
-                                  ),
-                                  border: Border.all(
-                                      width: 2,
-                                      color: const Color(0xFFADD8E6))),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(50),
+                                ),
+                                border: Border.all(
+                                  width: 2,
+                                  color: const Color(0xFFADD8E6),
+                                ),
+                              ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.asset(
@@ -101,9 +118,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                       highlightColor: Colors.white,
                       splashColor: Colors.white,
                       onTap: () {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
+                        _pageController.jumpToPage(index);
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
