@@ -51,22 +51,16 @@ Future<Map<String, dynamic>> postData(
 
 Future<Map<String, dynamic>> getData(
     String url, Map<String, dynamic> queryParams) async {
-  print(url);
   try {
-    Response response = await dio.get(
-      url,
-      queryParameters: queryParams,
-    );
+    final response = await dio.get(url, queryParameters: queryParams);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      if (response.data is String) {
-        return {"data": response.data};
-      }
-      return response.data;
+      return response.data is String ? {"data": response.data} : response.data;
     } else {
       throw Exception('Failed to load data');
     }
   } catch (e) {
-    throw Exception('Failed to get data: $e');
+    Logger.debug(e.toString());
+    return {"data": "fail"};
   }
 }
 

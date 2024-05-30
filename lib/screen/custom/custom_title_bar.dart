@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleName;
   final bool useBack;
+  final VoidCallback? onBackPressed;
 
-  const CustomTitleBar({Key? key, this.titleName = "", this.useBack = true})
-      : super(key: key);
+  const CustomTitleBar({
+    Key? key,
+    this.titleName = "",
+    this.useBack = true,
+    this.onBackPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,11 @@ class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
                   Icons.arrow_back_ios,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  if (onBackPressed != null) {
+                    onBackPressed!();
+                  } else {
+                    Navigator.pop(context);
+                  }
                 },
               )
             : Container(),

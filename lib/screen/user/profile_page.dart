@@ -7,6 +7,7 @@ import 'package:pophub/screen/setting/notice_page.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
+import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late Map<String, dynamic> profile;
+  Map<String, dynamic>? profile; // profile 변수를 nullable로 선언
   bool isLoading = true; // 로딩 상태 변수 추가
 
   Future<void> profileApi() async {
@@ -37,7 +38,14 @@ class _ProfilePageState extends State<ProfilePage> {
       User().role = data['userRole'] ?? '';
     } else {
       // 에러 처리
-      profile = {};
+      if (mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfileAdd(
+                      refreshProfile: profileApi,
+                    )));
+      }
     }
 
     setState(() {
@@ -148,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         const SizedBox(width: 20),
                                         Text(
                                           // 닉네임으로 수정
-                                          profile['userName'] ?? '',
+                                          profile?['userName'] ?? '',
                                           style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
@@ -174,7 +182,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              profile['pointScore'].toString(),
+                                              profile?['pointScore']
+                                                      .toString() ??
+                                                  '',
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w700,
@@ -297,7 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 StoreModel())
                                                       ],
                                                       child:
-                                                          StoreCreatePage())));
+                                                          const StoreCreatePage())));
                                     },
                                   ),
                                 ),
@@ -313,11 +323,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  MultiProvider(providers: [
-                                                    ChangeNotifierProvider(
-                                                        create: (_) =>
-                                                            StoreModel())
-                                                  ], child: StoreListPage())));
+                                                  MultiProvider(
+                                                      providers: [
+                                                        ChangeNotifierProvider(
+                                                            create: (_) =>
+                                                                StoreModel())
+                                                      ],
+                                                      child:
+                                                          const StoreListPage())));
                                     },
                                   ),
                                 ),
@@ -368,9 +381,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(1000),
                               ),
-                              child: profile['userImage'] != null
+                              child: profile?['userImage'] != null
                                   ? Image.network(
-                                      profile['userImage'] ?? '',
+                                      profile?['userImage'] ?? '',
                                       fit: BoxFit.cover,
                                     )
                                   : Image.asset('assets/images/goods.png')),

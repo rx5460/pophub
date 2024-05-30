@@ -215,15 +215,19 @@ class Api {
   // }
 
   // 프로필 추가 (이미지 x)
-  static Future<Map<String, dynamic>> profileAdd() async {
-    final data = await postData('$domain/user/create_profile/', {
-      'userId': User().userId,
-      'userName': generateNickname(),
-      'phoneNumber': User().phoneNumber,
-      'Gender': "M",
-      'Age': 26,
-      'file': '',
-    });
+  static Future<Map<String, dynamic>> profileAdd(
+      String nickName, String gender, String age, image) async {
+    final data = await postDataWithImage(
+        '$domain/user/create_profile/',
+        {
+          'userId': User().userId,
+          'userName': nickName,
+          'phoneNumber': User().phoneNumber,
+          'Gender': gender,
+          'Age': age,
+        },
+        'file',
+        image);
     Logger.debug("### 프로필 수정 이미지x $data");
     return data;
   }
