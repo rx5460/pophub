@@ -40,11 +40,14 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
   void initState() {
     super.initState();
     final storeModel = widget.storeModel;
-    for (var schedule in storeModel.schedule) {
-      String dayKor = _translateDay(schedule.dayOfWeek);
-      if (daysOfWeek.contains(dayKor)) {
-        selectedDays[dayKor] = true;
-        operatingHours[dayKor] = '${schedule.openTime} : ${schedule.closeTime}';
+    if (storeModel.schedule != null) {
+      for (var schedule in storeModel.schedule!) {
+        String dayKor = _translateDay(schedule.dayOfWeek);
+        if (daysOfWeek.contains(dayKor)) {
+          selectedDays[dayKor] = true;
+          operatingHours[dayKor] =
+              '${schedule.openTime} : ${schedule.closeTime}';
+        }
       }
     }
   }

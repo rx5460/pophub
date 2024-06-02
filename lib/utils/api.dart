@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
+import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/utils/http.dart';
@@ -78,12 +82,29 @@ class Api {
     }
   }
 
-  //팝업 상세 조회(팝업 단일 조회)
-  static Future<PopupModel> getPopup(String storeId) async {
+  static Future<PopupModel> getPopup(String storeId, bool getLocation) async {
     Logger.debug(storeId);
     try {
-      final Map<String, dynamic> data =
+      Map<String, dynamic> data =
           await getData('$domain/popup/view/$storeId', {});
+
+      if (getLocation) {
+        PopupModel popupModel = PopupModel.fromJson(data);
+
+        final locationData =
+            await Api.getAddress(popupModel.location.toString().split("/")[0]);
+
+        var documents = locationData['documents'];
+        if (documents != null && documents.isNotEmpty) {
+          var firstDocument = documents[0];
+          var x = firstDocument['x'];
+          var y = firstDocument['y'];
+          data['x'] = x;
+          data['y'] = y;
+        } else {
+          Logger.debug('No documents found');
+        }
+      }
 
       return PopupModel.fromJson(data);
     } catch (e) {
@@ -236,13 +257,16 @@ class Api {
   static Future<Map<String, dynamic>> storeAdd(StoreModel store) async {
     FormData formData = FormData();
 
-    // 파일 추가
-    for (var image in store.images) {
-      formData.files.add(MapEntry(
-        'files',
-        await MultipartFile.fromFile(image.path,
-            filename: image.path.split('/').last),
-      ));
+    //파일 추가
+    for (var imageMap in store.images) {
+      if (imageMap['type'] == 'file') {
+        var file = imageMap['data'] as File;
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file.path,
+              filename: file.path.split('/').last),
+        ));
+      }
     }
 
     formData.fields.addAll([
@@ -262,18 +286,21 @@ class Api {
       MapEntry('max_capacity', store.maxCapacity.toString()),
     ]);
 
-    for (int i = 0; i < store.schedule.length; i++) {
-      Schedule schedule = store.schedule[i];
+    if (store.schedule != null) {
+      for (int i = 0; i < store.schedule!.length; i++) {
+        Schedule schedule = store.schedule![i];
 
-      formData.fields.addAll([
-        MapEntry('schedule[$i][day_of_week]',
-            getDayOfWeekAbbreviation(schedule.dayOfWeek, "en"))
-      ]);
-      formData.fields.addAll(
-          [MapEntry('schedule[$i][open_time]', formatTime(schedule.openTime))]);
-      formData.fields.addAll([
-        MapEntry('schedule[$i][close_time]', formatTime(schedule.closeTime))
-      ]);
+        formData.fields.addAll([
+          MapEntry('schedule[$i][day_of_week]',
+              getDayOfWeekAbbreviation(schedule.dayOfWeek, "en"))
+        ]);
+        formData.fields.addAll([
+          MapEntry('schedule[$i][open_time]', formatTime(schedule.openTime))
+        ]);
+        formData.fields.addAll([
+          MapEntry('schedule[$i][close_time]', formatTime(schedule.closeTime))
+        ]);
+      }
     }
 
     final data = await postFormData('$domain/popup', formData);
@@ -304,6 +331,139 @@ class Api {
       'store_id': storeId,
     });
     Logger.debug("### 팝업 승인 $data");
+    return data;
+  }
+
+  // 내 팝업스토어 조회
+  static Future<List<dynamic>> getMyPopup(String userName) async {
+    final data = await getListData('$domain/popup/president/$userName', {});
+    Logger.debug("### 내 팝업스토어 조회 $data");
+    return data;
+  }
+
+  // 카카오 api 조회
+  static Future<Map<String, dynamic>> getAddress(String location) async {
+    String encode = Uri.encodeComponent(location);
+    final data = await getKaKaoApi(
+        'https://dapi.kakao.com/v2/local/search/address.json?nalyze_type=similar&page=1&size=10&query=$encode',
+        {});
+    Logger.debug("### 카카오 api 조회 $data");
+    return data;
+  }
+
+// 전체 공지사항 조회
+  static Future<List<NoticeModel>> getNoticeList() async {
+    try {
+      final dynamic firstItem = await getFirstItem('$domain/admin/notice');
+      List<NoticeModel> noticeList;
+
+      if (firstItem is List<dynamic>) {
+        List<dynamic> dataList = firstItem;
+        noticeList =
+            dataList.map((data) => NoticeModel.fromJson(data)).toList();
+      } else if (firstItem is Map<String, dynamic>) {
+        Map<String, dynamic> dataMap = firstItem;
+        noticeList = [NoticeModel.fromJson(dataMap)];
+      } else {
+        throw Exception('Invalid data format');
+      }
+
+      Logger.debug("### 공지사항 조회 $noticeList");
+
+      return noticeList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch popup list: $e');
+      throw Exception('Failed to fetch popup list');
+    }
+  }
+
+  static Future<dynamic> getFirstItem(String url) async {
+    final List<dynamic> dataList = await getListData(url, {});
+    if (dataList.isNotEmpty) {
+      return dataList.first;
+    } else {
+      throw Exception('Data list is empty');
+    }
+  }
+
+  // 문의 내역
+  static Future<List<dynamic>> getInqueryList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/admin/notice',
+        {},
+      );
+
+      Logger.debug("### 공지사항 조회 $dataList");
+
+      // List<PopupModel> popupList =
+      //     dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return dataList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch popup list: $e');
+      throw Exception('Failed to fetch popup list');
+    }
+  }
+
+  // 스토어 추가
+  static Future<Map<String, dynamic>> storeModify(StoreModel store) async {
+    FormData formData = FormData();
+
+    //파일 추가
+    for (var imageMap in store.images) {
+      if (imageMap['type'] == 'file') {
+        var file = imageMap['data'] as File;
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file.path,
+              filename: file.path.split('/').last),
+        ));
+      }
+    }
+
+    formData.fields.addAll([
+      MapEntry('category_id', store.category),
+      MapEntry('user_name', User().userName),
+      MapEntry(
+        'store_name',
+        store.name,
+      ),
+      MapEntry(
+          'store_location',
+          store.location.contains("/")
+              ? store.location
+              : "${store.location}/${store.locationDetail}"),
+      MapEntry('store_contact_info', store.contact),
+      MapEntry('store_description', store.description),
+      MapEntry('store_start_date',
+          store.startDate.toIso8601String().split('T').first),
+      MapEntry(
+          'store_end_date', store.endDate.toIso8601String().split('T').first),
+      MapEntry('max_capacity', store.maxCapacity.toString()),
+    ]);
+
+    if (store.schedule != null) {
+      for (int i = 0; i < store.schedule!.length; i++) {
+        Schedule schedule = store.schedule![i];
+
+        formData.fields.addAll([
+          MapEntry('schedule[$i][day_of_week]',
+              getDayOfWeekAbbreviation(schedule.dayOfWeek, "en"))
+        ]);
+        formData.fields.addAll([
+          MapEntry('schedule[$i][open_time]', formatTime(schedule.openTime))
+        ]);
+        formData.fields.addAll([
+          MapEntry('schedule[$i][close_time]', formatTime(schedule.closeTime))
+        ]);
+      }
+    }
+
+    final data =
+        await putFormData('$domain/popup/update/${store.id}', formData);
+    Logger.debug("### 스토어 수정 $data");
     return data;
   }
 }

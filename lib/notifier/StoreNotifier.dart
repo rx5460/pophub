@@ -1,33 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-
-class Schedule {
-  final String dayOfWeek;
-  final String openTime;
-  final String closeTime;
-
-  Schedule(
-      {required this.dayOfWeek,
-      required this.openTime,
-      required this.closeTime});
-
-  factory Schedule.fromJson(Map<String, dynamic> json) {
-    return Schedule(
-      dayOfWeek: json['day_of_week'],
-      openTime: json['open_time'],
-      closeTime: json['close_time'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'day_of_week': dayOfWeek,
-      'open_time': openTime,
-      'close_time': closeTime,
-    };
-  }
-}
+import 'package:pophub/model/schedule_model.dart';
 
 class StoreModel with ChangeNotifier {
   String name = '';
@@ -38,9 +10,10 @@ class StoreModel with ChangeNotifier {
   String category = '';
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  List<File> images = [];
+  List<Map<String, dynamic>> images = [];
   int maxCapacity = 0;
-  List<Schedule> schedule = [];
+  List<Schedule>? schedule = [];
+  String id = '';
 
   void updateLocation(String newLocation) {
     location = newLocation;
@@ -57,18 +30,20 @@ class StoreModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void addImage(File image) {
+  void addImage(Map<String, dynamic> image) {
     images.add(image);
     notifyListeners();
   }
 
-  void removeImage(File image) {
+  void removeImage(Map<String, dynamic> image) {
     images.remove(image);
     notifyListeners();
   }
 
   void addSchedule(Schedule newSchedule) {
-    schedule.add(newSchedule);
+    if (schedule != null) {
+      schedule!.add(newSchedule);
+    }
     notifyListeners();
   }
 
@@ -78,16 +53,20 @@ class StoreModel with ChangeNotifier {
   }
 
   void updateSchedule(String dayOfWeek, String openTime, String closeTime) {
-    for (var s in schedule) {
-      if (s.dayOfWeek == dayOfWeek) {
-        s = Schedule(
-            dayOfWeek: dayOfWeek, openTime: openTime, closeTime: closeTime);
-        notifyListeners();
-        return;
+    if (schedule != null) {
+      for (var s in schedule!) {
+        if (s.dayOfWeek == dayOfWeek) {
+          s = Schedule(
+              dayOfWeek: dayOfWeek, openTime: openTime, closeTime: closeTime);
+          notifyListeners();
+          return;
+        }
       }
+      if (schedule != null) {
+        schedule!.add(Schedule(
+            dayOfWeek: dayOfWeek, openTime: openTime, closeTime: closeTime));
+      }
+      notifyListeners();
     }
-    schedule.add(Schedule(
-        dayOfWeek: dayOfWeek, openTime: openTime, closeTime: closeTime));
-    notifyListeners();
   }
 }

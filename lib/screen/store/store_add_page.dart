@@ -5,17 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/kopo_model.dart';
+import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/store/store_operate_hour_page.dart';
-import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class StoreCreatePage extends StatefulWidget {
-  const StoreCreatePage({super.key});
+  final String mode;
+  final PopupModel? popup;
+
+  const StoreCreatePage({super.key, this.mode = "add", this.popup});
 
   @override
   _StoreCreatePageState createState() => _StoreCreatePageState();
@@ -25,6 +31,49 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   @override
   void initState() {
     super.initState();
+    _initializeFields();
+  }
+
+  void _initializeFields() {
+    _nameController.text = widget.popup?.name ?? '';
+    _descriptionController.text = widget.popup?.description ?? '';
+    _locationController.text = widget.popup?.location ?? '';
+    _contactController.text = widget.popup?.contact ?? '';
+    _maxCapacityController.text = widget.popup?.view?.toString() ?? '';
+
+    Provider.of<StoreModel>(context, listen: false).name =
+        widget.popup?.name ?? '';
+    Provider.of<StoreModel>(context, listen: false).description =
+        widget.popup?.description ?? '';
+    Provider.of<StoreModel>(context, listen: false).location =
+        widget.popup?.location ?? '';
+    Provider.of<StoreModel>(context, listen: false).contact =
+        widget.popup?.contact ?? '';
+    Provider.of<StoreModel>(context, listen: false).maxCapacity =
+        widget.popup?.view ?? 0;
+
+    Provider.of<StoreModel>(context, listen: false).startDate =
+        DateTime.parse(widget.popup?.start ?? DateTime.now().toString());
+    Provider.of<StoreModel>(context, listen: false).endDate =
+        DateTime.parse(widget.popup?.end ?? DateTime.now().toString());
+    Provider.of<StoreModel>(context, listen: false).schedule =
+        widget.popup!.schedule;
+    Provider.of<StoreModel>(context, listen: false).id = widget.popup!.id!;
+
+    // if (widget.popup?.schedule != null) {
+    //   widget.popup!.schedule?.forEach((schedule) {
+    //     Logger.debug("### $schedule");
+    //     Provider.of<StoreModel>(context, listen: false).updateSchedule(
+    //         schedule.dayOfWeek, schedule.openTime, schedule.closeTime);
+    //   });
+    // }
+
+    Provider.of<StoreModel>(context, listen: false).category =
+        widget.popup?.category?.toString() ?? '';
+    Provider.of<StoreModel>(context, listen: false).images = widget.popup?.image
+            ?.map((imageUrl) => {'type': 'url', 'data': imageUrl})
+            .toList() ??
+        [];
   }
 
   List<Map<String, int>> categoryList = [
@@ -59,7 +108,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
 
       if (pickedImage != null && mounted) {
         Provider.of<StoreModel>(context, listen: false)
-            .addImage(File(pickedImage.path));
+            .addImage({'type': 'file', 'data': File(pickedImage.path)});
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -118,8 +167,30 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
         Navigator.of(context).pop();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ProfilePage()));
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
+      });
+    } else {}
+  }
+
+  Future<void> storeModify(StoreModel store) async {
+    final data = await Api.storeModify(store);
+
+    if (!data.toString().contains("fail") && mounted) {
+      showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
+        Navigator.of(context).pop();
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
       });
     } else {}
   }
@@ -139,7 +210,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "스토어 등록"),
+      appBar: const CustomTitleBar(titleName: "스토어 수정"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
@@ -163,11 +234,17 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Image.file(
-                                      image,
-                                      width: 60,
-                                      height: 60,
-                                    ),
+                                    child: image['type'] == 'file'
+                                        ? Image.file(
+                                            image['data'],
+                                            width: 60,
+                                            height: 60,
+                                          )
+                                        : Image.network(
+                                            image['data'],
+                                            width: 60,
+                                            height: 60,
+                                          ),
                                   ),
                                   Positioned(
                                     right: 0,
@@ -264,34 +341,36 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 ),
                 const SizedBox(height: 10),
                 Visibility(
-                  visible: store.schedule.isNotEmpty,
+                  visible: store.schedule != null,
                   child: SizedBox(
                     width: screenWidth * 0.5,
                     height: screenHeight * 0.32,
                     child: Consumer<StoreModel>(
                       builder: (context, store, child) {
-                        return ListView.builder(
-                          itemCount: store.schedule.length,
-                          itemBuilder: (context, index) {
-                            Schedule schedule = store.schedule[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                                horizontal: 16.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(getDayOfWeekAbbreviation(
-                                      schedule.dayOfWeek, "ko")),
-                                  Text(
-                                      '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
-                                ],
-                              ),
-                            );
-                          },
-                        );
+                        return store.schedule != null
+                            ? ListView.builder(
+                                itemCount: store.schedule!.length,
+                                itemBuilder: (context, index) {
+                                  Schedule schedule = store.schedule![index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(getDayOfWeekAbbreviation(
+                                            schedule.dayOfWeek, "ko")),
+                                        Text(
+                                            '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container();
                       },
                     ),
                   ),
@@ -375,22 +454,17 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: '카테고리'),
+                  value: store.category,
                   items: categoryList.map((categoryMap) {
                     String category = categoryMap.keys.first;
                     return DropdownMenuItem<String>(
-                      value: category,
+                      value: categoryMap[category].toString(),
                       child: Text(category),
                     );
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      for (var categoryMap in categoryList) {
-                        if (categoryMap.containsKey(value)) {
-                          //store.category = value;
-                          store.category = categoryMap[value]!.toString();
-                          break;
-                        }
-                      }
+                      store.category = value;
                     }
                   },
                 ),
@@ -399,8 +473,11 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
-                      // 완료 버튼 누를 때 처리 로직
-                      storeAdd(store);
+                      if (widget.mode == "modify") {
+                        storeModify(store);
+                      } else if (widget.mode == "add") {
+                        storeAdd(store);
+                      }
                     },
                     child: const Text('완료'),
                   ),

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
 import 'package:pophub/screen/setting/inquery_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
+import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -45,6 +48,46 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (context) => ProfileAdd(
                       refreshProfile: profileApi,
                     )));
+      }
+    }
+
+    setState(() {
+      isLoading = false; // 로딩 상태 변경
+    });
+  }
+
+  Future<void> checkStoreApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<dynamic> data = await Api.getMyPopup(User().userName);
+
+    if (!data.toString().contains("fail") &&
+        !data.toString().contains("없습니다")) {
+      //TODO : 황지민 팝업 가져오는경우 처리
+      PopupModel popup;
+      popup = PopupModel.fromJson(data[0]);
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PopupDetail(
+              storeId: popup.id!,
+              mode: "modify",
+            ),
+          ),
+        );
+      }
+
+      Logger.debug(data.toString());
+    } else {
+      if (mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => StoreModel())
+                    ], child: const StoreCreatePage(mode: "create"))));
       }
     }
 
@@ -296,18 +339,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     icon: Icons.message_outlined,
                                     text: '내 스토어',
                                     onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          const StoreCreatePage())));
+                                      checkStoreApi();
                                     },
                                   ),
                                 ),

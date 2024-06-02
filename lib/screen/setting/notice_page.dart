@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 
 class NoticePage extends StatefulWidget {
   const NoticePage({super.key});
@@ -18,6 +20,22 @@ class Notice {
 }
 
 class _NoticePageState extends State<NoticePage> {
+  @override
+  void initState() {
+    getPopupData();
+    super.initState();
+  }
+
+  Future<void> getPopupData() async {
+    try {
+      final data = await Api.getNoticeList();
+      Logger.debug("### $data");
+    } catch (error) {
+      // 오류 처리
+      Logger.debug('Error fetching popup data: $error');
+    }
+  }
+
   ///TODO : 황지민 api 붙이기
   List<Notice> notices = [
     Notice(

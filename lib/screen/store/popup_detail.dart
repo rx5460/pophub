@@ -1,21 +1,25 @@
 import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
+import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -37,19 +41,45 @@ class _PopupDetailState extends State<PopupDetail> {
   double rating = 0;
   bool like = false;
   bool allowSuccess = false;
+  LatLng center = LatLng(37.5586677131962, 126.953450474616);
+  Set<Marker> markers = {};
 
   Future<void> getPopupData() async {
     try {
-      PopupModel? data = await Api.getPopup(widget.storeId);
+      PopupModel? data = await Api.getPopup(widget.storeId, true);
 
       setState(() {
         popup = data;
+        center = LatLng(double.parse(popup!.y.toString()),
+            double.parse(popup!.x.toString()));
+        markers.add(Marker(markerId: '마커', latLng: center));
         isLoading = false;
       });
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching popup data: $error');
     }
+  }
+
+  Future<void> getAddressData() async {
+    final data = await Api.getAddress(popup!.location.toString());
+
+    // JSON 문자열을 파싱합니다.
+    // var jsonData = json.decode(data);
+
+    // x와 y 좌표를 추출합니다.
+    var documents = data['documents'];
+    if (documents != null && documents.isNotEmpty) {
+      var firstDocument = documents[0];
+      var x = firstDocument['x'];
+      var y = firstDocument['y'];
+
+      setState(() {});
+    } else {
+      print('No documents found');
+    }
+
+    Logger.debug("### $data");
   }
 
   Future<void> popupStoreAllow() async {
@@ -168,10 +198,17 @@ class _PopupDetailState extends State<PopupDetail> {
 
   @override
   void initState() {
+    initializeData();
     super.initState();
+  }
 
-    getPopupData();
-    fetchReviewData();
+  Future<void> initializeData() async {
+    await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
+    await getAddressData(); // getPopupData가 완료된 후 getAddressData를 호출합니다.
+    fetchReviewData(); // fetchReviewData를 호출합니다.
+
+    Logger.debug("###### $markers");
+    Logger.debug("###### $center");
   }
 
   @override
@@ -345,17 +382,19 @@ class _PopupDetailState extends State<PopupDetail> {
                                           onMapCreated: ((controller) async {
                                             mapController = controller;
 
+                                            await getAddressData();
                                             markers.add(Marker(
                                               markerId: UniqueKey().toString(),
-                                              latLng: await mapController
-                                                  .getCenter(),
+                                              latLng: center,
                                             ));
+
+                                            Logger.debug(center.toString());
+                                            Logger.debug(markers.toString());
 
                                             setState(() {});
                                           }),
                                           markers: markers.toList(),
-                                          center:
-                                              LatLng(37.3608681, 126.9306506),
+                                          center: center,
                                         ),
                                       ),
                                       const Padding(
@@ -802,6 +841,37 @@ class _PopupDetailState extends State<PopupDetail> {
                                 ],
                               ),
                             ),
+                            Visibility(
+                              visible: widget.mode == "modify",
+                              child: Container(
+                                width: screenWidth * 0.9,
+                                height: screenHeight * 0.06,
+                                padding:
+                                    const EdgeInsets.only(left: 5, right: 5),
+                                child: OutlinedButton(
+                                    onPressed: () => {
+                                          if (mounted)
+                                            {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MultiProvider(
+                                                              providers: [
+                                                                ChangeNotifierProvider(
+                                                                    create: (_) =>
+                                                                        StoreModel())
+                                                              ],
+                                                              child:
+                                                                  StoreCreatePage(
+                                                                mode: "modify",
+                                                                popup: popup,
+                                                              ))))
+                                            }
+                                        },
+                                    child: const Text("수정하기")),
+                              ),
+                            )
                           ],
                         ))),
               ],

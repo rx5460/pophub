@@ -33,6 +33,15 @@ class _InqueryPageState extends State<InqueryPage> {
     ),
   ];
 
+  // Future<void> getPopupData() async {
+  //   try {
+  //     final data = await Api.getNoticeList();
+  //   } catch (error) {
+  //     // 오류 처리
+  //     Logger.debug('Error fetching popup data: $error');
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -64,7 +73,8 @@ class _InqueryPageState extends State<InqueryPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => InquiryAnswerPage()))
+                                    builder: (context) =>
+                                        const InquiryAnswerPage()))
                             // builder: (context) => InquiryWritePage()))
                           },
                       //    child: const Text("문의 하기")),
@@ -90,40 +100,39 @@ class NoticeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    return Container(
-        child: DecoratedBox(
-            decoration: BoxDecoration(
-                border: Border.all(
-                  color: Constants.LIGHT_GREY,
-                  width: 0.5,
-                ),
-                borderRadius: const BorderRadius.all(Radius.zero)),
-            child: ExpansionTile(
-              title: Text(title),
-              subtitle: SizedBox(
-                width: screenWidth * 0.8,
-                child: Row(
-                  children: [
-                    Text(date),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      width: 50.0,
-                      height: 30,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        child: const Text("접수"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              children: <Widget>[
+    return DecoratedBox(
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: Constants.LIGHT_GREY,
+              width: 0.5,
+            ),
+            borderRadius: const BorderRadius.all(Radius.zero)),
+        child: ExpansionTile(
+          title: Text(title),
+          subtitle: SizedBox(
+            width: screenWidth * 0.8,
+            child: Row(
+              children: [
+                Text(date),
                 Container(
-                  color: Constants.LIGHT_GREY,
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(content),
+                  margin: const EdgeInsets.only(left: 10),
+                  width: 50.0,
+                  height: 30,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text("접수"),
+                  ),
                 ),
               ],
-            )));
+            ),
+          ),
+          children: <Widget>[
+            Container(
+              color: Constants.LIGHT_GREY,
+              padding: const EdgeInsets.all(16.0),
+              child: Text(content),
+            ),
+          ],
+        ));
   }
 }

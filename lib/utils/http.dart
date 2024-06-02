@@ -1,6 +1,7 @@
 import 'dart:io' show File;
 
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:pophub/utils/log.dart';
 
@@ -159,6 +160,65 @@ Future<Map<String, dynamic>> postDataWithImage(
 Future<Map<String, dynamic>> postFormData(String url, FormData data) async {
   try {
     Response response = await dio.post(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
+  }
+}
+
+Future<Map<String, dynamic>> getKaKaoApi(
+    String url, Map<String, dynamic> queryParams) async {
+  try {
+    await dotenv.load(fileName: 'assets/config/.env');
+
+    Dio kakaoDio = Dio()
+      ..interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) async {
+            options.headers['Content-Type'] = 'application/json; charset=UTF-8';
+            options.headers['Authorization'] =
+                'KakaoAK ${dotenv.env['KAKAO_API_KEY'] ?? ''}'; // Correct header key
+
+            return handler.next(options);
+          },
+        ),
+      );
+
+    Response response = await kakaoDio.get(
+      url,
+      queryParameters: queryParams,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.data);
+      return response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    throw Exception('Failed to get data: $e');
+  }
+}
+
+Future<Map<String, dynamic>> putFormData(String url, FormData data) async {
+  try {
+    Response response = await dio.put(
       url,
       data: data,
     );
