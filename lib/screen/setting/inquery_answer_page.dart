@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:pophub/assets/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 
 class InquiryAnswerPage extends StatefulWidget {
+  const InquiryAnswerPage({super.key});
+
   @override
   _InquiryAnswerPageState createState() => _InquiryAnswerPageState();
 }
@@ -53,10 +54,10 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('문의가 성공적으로 전송되었습니다.')));
+            .showSnackBar(const SnackBar(content: Text('문의가 성공적으로 전송되었습니다.')));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('문의 전송에 실패하였습니다.')));
+            .showSnackBar(const SnackBar(content: Text('문의 전송에 실패하였습니다.')));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -82,63 +83,63 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('문의 제목',
+              const Text('문의 제목',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(hintText: '문의 제목을 입력하세요'),
+                decoration: const InputDecoration(hintText: '문의 제목을 입력하세요'),
               ),
-              SizedBox(height: 16),
-              Text('문의 내용',
+              const SizedBox(height: 16),
+              const Text('문의 내용',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _contentController,
-                decoration: InputDecoration(hintText: '문의 내용을 입력하세요'),
+                decoration: const InputDecoration(hintText: '문의 내용을 입력하세요'),
                 maxLines: 6,
               ),
-              SizedBox(height: 16),
-              Container(
+              const SizedBox(height: 16),
+              SizedBox(
                 width: screenWidth,
                 height: 40,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Color(0xffd9d9d9),
+                      color: const Color(0xffd9d9d9),
                       width: 0.5,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         top: 10, bottom: 5, left: 10, right: 10),
                     child: Text(
                         _pickedFile != null ? _pickedFile!.name : '첨부된 파일 없음'),
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Text('답변 제목',
+              const SizedBox(height: 16),
+              const Text('답변 제목',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(hintText: '답변 제목을 입력하세요'),
+                decoration: const InputDecoration(hintText: '답변 제목을 입력하세요'),
               ),
-              SizedBox(height: 16),
-              Text('답변 내용',
+              const SizedBox(height: 16),
+              const Text('답변 내용',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _contentController,
-                decoration: InputDecoration(hintText: '답변 내용을 입력하세요'),
+                decoration: const InputDecoration(hintText: '답변 내용을 입력하세요'),
                 maxLines: 6,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: _submitInquiry,
-                child: Text('완료'),
+                child: const Text('완료'),
               ),
             ],
           ),

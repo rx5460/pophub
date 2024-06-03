@@ -1,8 +1,8 @@
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
-import 'package:http/http.dart' as http;
 import 'dart:io' show File;
+
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:pophub/utils/log.dart';
 
 // dio Options랑 secureStorage Options랑 이름 충돌나서 secure로 했쇼
@@ -22,12 +22,6 @@ Dio dio = Dio()
       },
     ),
   );
-
-String? _token;
-
-void setToken(String token) {
-  _token = token;
-}
 
 Future<Map<String, dynamic>> postData(
     String url, Map<String, dynamic> data) async {
@@ -58,47 +52,15 @@ Future<Map<String, dynamic>> postData(
 
 Future<Map<String, dynamic>> getData(
     String url, Map<String, dynamic> queryParams) async {
-  print(url);
   try {
-    Response response = await dio.get(
-      url,
-      queryParameters: queryParams,
-    );
+    final response = await dio.get(url, queryParameters: queryParams);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      if (response.data is String) {
-        return {"data": response.data};
-      }
-      return response.data;
+      return response.data is String ? {"data": response.data} : response.data;
     } else {
       throw Exception('Failed to load data');
     }
   } catch (e) {
-    throw Exception('Failed to get data: $e');
-  }
-}
-
-Future<Map<String, dynamic>> getDataWithBody(
-    String url, Map<String, dynamic> data) async {
-  try {
-    Options options = Options(
-      method: 'GET',
-      contentType: 'application/json',
-    );
-
-    Response response = await dio.request(
-      url,
-      data: jsonEncode(data),
-      options: options,
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return response.data is String ? {"data": response.data} : response.data;
-    } else {
-      return response.data is String
-          ? {"data": response.statusCode}
-          : response.data;
-    }
-  } catch (e) {
+    Logger.debug(e.toString());
     return {"data": "fail"};
   }
 }
@@ -112,6 +74,11 @@ Future<List<dynamic>> getListData(
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data);
+      if (response.data.runtimeType == String) {
+        List<String> result = [];
+        result.add(response.data);
+        return result;
+      }
       return response.data;
     } else {
       throw Exception('Failed to load data');
@@ -198,6 +165,65 @@ Future<Map<String, dynamic>> postDataWithImage(
 Future<Map<String, dynamic>> postFormData(String url, FormData data) async {
   try {
     Response response = await dio.post(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
+  }
+}
+
+Future<Map<String, dynamic>> getKaKaoApi(
+    String url, Map<String, dynamic> queryParams) async {
+  try {
+    await dotenv.load(fileName: 'assets/config/.env');
+
+    Dio kakaoDio = Dio()
+      ..interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) async {
+            options.headers['Content-Type'] = 'application/json; charset=UTF-8';
+            options.headers['Authorization'] =
+                'KakaoAK ${dotenv.env['KAKAO_API_KEY'] ?? ''}'; // Correct header key
+
+            return handler.next(options);
+          },
+        ),
+      );
+
+    Response response = await kakaoDio.get(
+      url,
+      queryParameters: queryParams,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.data);
+      return response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    throw Exception('Failed to get data: $e');
+  }
+}
+
+Future<Map<String, dynamic>> putFormData(String url, FormData data) async {
+  try {
+    Response response = await dio.put(
       url,
       data: data,
     );

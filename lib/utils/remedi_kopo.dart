@@ -10,7 +10,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class RemediKopo extends StatefulWidget {
   static const String PATH = '/alter_kopo';
 
-  RemediKopo(
+  const RemediKopo(
       {Key? key,
       this.title = '주소검색',
       this.colour = Colors.white,
@@ -32,6 +32,7 @@ class RemediKopoState extends State<RemediKopo> {
 
   @override
   void initState() {
+    super.initState();
     _webViewController = WebViewController()
       ..addJavaScriptChannel("onComplete",
           onMessageReceived: (JavaScriptMessage message) {
@@ -83,11 +84,11 @@ class RemediKopoState extends State<RemediKopo> {
           backgroundColor: widget.colour,
           title: Text(
             widget.title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
             ),
           ),
-          iconTheme: IconThemeData().copyWith(color: Colors.black),
+          iconTheme: const IconThemeData().copyWith(color: Colors.black),
         ),
         body: WebViewWidget(controller: _webViewController)
 

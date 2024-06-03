@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquery_answer_page.dart';
-import 'package:pophub/screen/setting/inquery_write_page.dart';
 
 class InqueryPage extends StatefulWidget {
   const InqueryPage({super.key});
@@ -36,10 +33,18 @@ class _InqueryPageState extends State<InqueryPage> {
     ),
   ];
 
+  // Future<void> getPopupData() async {
+  //   try {
+  //     final data = await Api.getNoticeList();
+  //   } catch (error) {
+  //     // 오류 처리
+  //     Logger.debug('Error fetching popup data: $error');
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
         appBar: const CustomTitleBar(titleName: "문의 내역"),
@@ -68,7 +73,8 @@ class _InqueryPageState extends State<InqueryPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => InquiryAnswerPage()))
+                                    builder: (context) =>
+                                        const InquiryAnswerPage()))
                             // builder: (context) => InquiryWritePage()))
                           },
                       //    child: const Text("문의 하기")),
@@ -84,47 +90,49 @@ class NoticeTile extends StatelessWidget {
   final String date;
   final String content;
 
-  NoticeTile({required this.title, required this.date, required this.content});
+  const NoticeTile(
+      {super.key,
+      required this.title,
+      required this.date,
+      required this.content});
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    double screenHeight = screenSize.height;
-    return Container(
-        child: DecoratedBox(
-            decoration: BoxDecoration(
-                border: Border.all(
-                  color: Constants.LIGHT_GREY,
-                  width: 0.5,
-                ),
-                borderRadius: const BorderRadius.all(Radius.zero)),
-            child: ExpansionTile(
-              title: Text(title),
-              subtitle: SizedBox(
-                width: screenWidth * 0.8,
-                child: Row(
-                  children: [
-                    Text(date),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: 50.0,
-                      height: 30,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        child: Text("접수"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              children: <Widget>[
+    return DecoratedBox(
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: Constants.LIGHT_GREY,
+              width: 0.5,
+            ),
+            borderRadius: const BorderRadius.all(Radius.zero)),
+        child: ExpansionTile(
+          title: Text(title),
+          subtitle: SizedBox(
+            width: screenWidth * 0.8,
+            child: Row(
+              children: [
+                Text(date),
                 Container(
-                  color: Constants.LIGHT_GREY,
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(content),
+                  margin: const EdgeInsets.only(left: 10),
+                  width: 50.0,
+                  height: 30,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text("접수"),
+                  ),
                 ),
               ],
-            )));
+            ),
+          ),
+          children: <Widget>[
+            Container(
+              color: Constants.LIGHT_GREY,
+              padding: const EdgeInsets.all(16.0),
+              child: Text(content),
+            ),
+          ],
+        ));
   }
 }

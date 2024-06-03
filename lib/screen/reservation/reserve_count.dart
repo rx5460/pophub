@@ -20,16 +20,17 @@ class _ReserveCountState extends State<ReserveCount> {
     Map<String, dynamic> data = await Api.popupReservation(
         User().userName, widget.popup, widget.date, widget.time, count);
 
-    if (!data.toString().contains("fail")) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const ReserveDate()),
-      // );
+    if (mounted) {
+      if (!data.toString().contains("fail")) {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const ReserveDate()),
+        // );
 
-      Navigator.pop(context);
-      Navigator.pop(context);
-    } else {
-      Navigator.of(context).pop();
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context).pop();
+      }
     }
   }
 

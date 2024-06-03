@@ -40,44 +40,68 @@ bool isAdmin(String role) {
   }
 }
 
-String getDayOfWeekAbbreviation(String dayOfWeek) {
-  switch (dayOfWeek.toLowerCase()) {
-    case 'monday':
-      return 'MON';
-    case 'tuesday':
-      return 'TUE';
-    case 'wednesday':
-      return 'WED';
-    case 'thursday':
-      return 'THU';
-    case 'friday':
-      return 'FRI';
-    case 'saturday':
-      return 'SAT';
-    case 'sunday':
-      return 'SUN';
-    default:
-      return dayOfWeek;
+String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
+  if (lang == "ko") {
+    switch (dayOfWeek.toLowerCase()) {
+      case 'monday':
+      case 'mon':
+        return '월요일';
+      case 'tuesday':
+      case 'tue':
+        return '화요일';
+      case 'wednesday':
+      case 'wed':
+        return '수요일';
+      case 'thursday':
+      case 'thu':
+        return '목요일';
+      case 'friday':
+      case 'fri':
+        return '금요일';
+      case 'saturday':
+      case 'sat':
+        return '토요일';
+      case 'sunday':
+      case 'sun':
+        return '일요일';
+      default:
+        return dayOfWeek;
+    }
+  } else {
+    switch (dayOfWeek.toLowerCase()) {
+      case "monday":
+        return "Mon";
+      case "tuesday":
+        return "Tue";
+      case "wednesday":
+        return "Wed";
+      case "thursday":
+        return "Thu";
+      case "friday":
+        return "Fri";
+      case "saturday":
+        return "Sat";
+      case "sunday":
+        return "Sun";
+      default:
+        return dayOfWeek;
+    }
   }
 }
 
 String formatTime(String timeString) {
-  // Check if the time string is in the format "HH시 mm분"
   if (timeString.contains('시') && timeString.contains('분')) {
     List<String> timeParts = timeString.split('시');
     int hour = int.parse(timeParts[0]);
     timeParts = timeParts[1].split('분');
-    int minute = int.parse(timeParts[0]);
+    int.parse(timeParts[0]);
 
-    // Normalize the time format to "HH:00"
     return '${hour.toString().padLeft(2, '0')}:00';
   } else {
-    // Assume the input time string is in the format "HH:mm"
     List<String> timeParts = timeString.split(':');
     int hour = int.parse(timeParts[0]);
-    int minute = int.parse(timeParts[1]);
+    int.parse(timeParts[1]);
 
-    // Normalize the time format to "HH:00"
     return '${hour.toString().padLeft(2, '0')}:00';
   }
 }

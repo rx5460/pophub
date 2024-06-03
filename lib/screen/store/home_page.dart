@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:intl/intl.dart';
+import 'package:pophub/utils/log.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (error) {
-      print('Error fetching popup data: $error');
+      Logger.debug('Error fetching popup data: $error');
     }
   }
 

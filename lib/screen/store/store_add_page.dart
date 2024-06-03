@@ -1,21 +1,28 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/model/kopo_model.dart';
+import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/store/store_operate_hour_page.dart';
-import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-import 'package:intl/intl.dart';
 
 class StoreCreatePage extends StatefulWidget {
+  final String mode;
+  final PopupModel? popup;
+
+  const StoreCreatePage({super.key, this.mode = "add", this.popup});
+
   @override
   _StoreCreatePageState createState() => _StoreCreatePageState();
 }
@@ -24,6 +31,46 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   @override
   void initState() {
     super.initState();
+    _initializeFields();
+  }
+
+  void _initializeFields() {
+    if (widget.popup != null) {
+      _nameController.text = widget.popup?.name ?? '';
+      _descriptionController.text = widget.popup?.description ?? '';
+      _locationController.text = widget.popup?.location ?? '';
+      _contactController.text = widget.popup?.contact ?? '';
+      _maxCapacityController.text = widget.popup?.view?.toString() ?? '';
+
+      Provider.of<StoreModel>(context, listen: false).name =
+          widget.popup?.name ?? '';
+      Provider.of<StoreModel>(context, listen: false).description =
+          widget.popup?.description ?? '';
+      Provider.of<StoreModel>(context, listen: false).location =
+          widget.popup?.location ?? '';
+      Provider.of<StoreModel>(context, listen: false).contact =
+          widget.popup?.contact ?? '';
+      Provider.of<StoreModel>(context, listen: false).maxCapacity =
+          widget.popup?.view ?? 0;
+
+      Provider.of<StoreModel>(context, listen: false).startDate =
+          DateTime.parse(widget.popup?.start ?? DateTime.now().toString());
+      Provider.of<StoreModel>(context, listen: false).endDate =
+          DateTime.parse(widget.popup?.end ?? DateTime.now().toString());
+
+      Provider.of<StoreModel>(context, listen: false).schedule =
+          widget.popup!.schedule;
+
+      Provider.of<StoreModel>(context, listen: false).id = widget.popup!.id!;
+
+      Provider.of<StoreModel>(context, listen: false).category =
+          widget.popup?.category?.toString() ?? '';
+      Provider.of<StoreModel>(context, listen: false).images = widget
+              .popup?.image
+              ?.map((imageUrl) => {'type': 'url', 'data': imageUrl})
+              .toList() ??
+          [];
+    }
   }
 
   List<Map<String, int>> categoryList = [
@@ -56,16 +103,16 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
       final XFile? pickedImage =
           await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedImage != null) {
+      if (pickedImage != null && mounted) {
         Provider.of<StoreModel>(context, listen: false)
-            .addImage(File(pickedImage.path));
+            .addImage({'type': 'file', 'data': File(pickedImage.path)});
       }
     } catch (e) {
       print('Error picking image: $e');
     }
   }
 
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+  Future<void> _selectDate(bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate
@@ -74,7 +121,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       if (isStartDate) {
         Provider.of<StoreModel>(context, listen: false).updateStartDate(picked);
       } else {
@@ -93,30 +140,65 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     }
   }
 
-  Future<void> _pickLocation(BuildContext context) async {
+  Future<void> _pickLocation() async {
+    if (!mounted) return;
+
     KopoModel? model = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RemediKopo(),
+        builder: (context) => const RemediKopo(),
       ),
     );
 
     if (model != null && model.address != null) {
-      Provider.of<StoreModel>(context, listen: false)
-          .updateLocation(model.address!);
+      if (mounted) {
+        Provider.of<StoreModel>(context, listen: false)
+            .updateLocation(model.address!);
+      }
     }
   }
 
   Future<void> storeAdd(StoreModel store) async {
     final data = await Api.storeAdd(store);
 
-    if (!data.toString().contains("fail")) {
+    if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
         Navigator.of(context).pop();
+
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProfilePage()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
       });
     } else {}
+  }
+
+  Future<void> storeModify(StoreModel store) async {
+    final data = await Api.storeModify(store);
+
+    if (!data.toString().contains("fail") && mounted) {
+      showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
+        Navigator.of(context).pop();
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
+      });
+    } else {}
+  }
+
+  void _showOperatingHoursModal(BuildContext context, StoreModel storeModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StoreOperatingHoursModal(storeModel: storeModel);
+      },
+    );
   }
 
   @override
@@ -125,7 +207,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "스토어 등록"),
+      appBar: CustomTitleBar(
+          titleName: widget.mode == "modify" ? "스토어 수정" : "스토어 추가"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
@@ -149,11 +232,17 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Image.file(
-                                      image,
-                                      width: 60,
-                                      height: 60,
-                                    ),
+                                    child: image['type'] == 'file'
+                                        ? Image.file(
+                                            image['data'],
+                                            width: 60,
+                                            height: 60,
+                                          )
+                                        : Image.network(
+                                            image['data'],
+                                            width: 60,
+                                            height: 60,
+                                          ),
                                   ),
                                   Positioned(
                                     right: 0,
@@ -211,14 +300,15 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
                     title: const Text('스토어 위치'),
-                    subtitle: Text(store.location),
+                    subtitle:
+                        store.location.isNotEmpty ? Text(store.location) : null,
                     trailing: const Icon(Icons.location_on),
-                    onTap: () => _pickLocation(context),
+                    onTap: () => _pickLocation(),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -232,60 +322,72 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   "운영 시간",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                Visibility(
-                  visible: store.schedule.isNotEmpty,
-                  child: SizedBox(
-                    width: screenWidth * 0.5,
-                    height: screenHeight * 0.32,
-                    child: Consumer<StoreModel>(
-                      builder: (context, store, child) {
-                        return ListView.builder(
-                          itemCount: store.schedule.length,
-                          itemBuilder: (context, index) {
-                            Schedule schedule = store.schedule[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                                horizontal: 16.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(schedule.dayOfWeek),
-                                  Text(
-                                      '${schedule.openTime} - ${schedule.closeTime}'),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
                     title: const Text('운영 시간 설정하기'),
                     trailing: const Icon(Icons.access_time),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StoreOperatingHoursPage(
-                              storeModel: store,
-                            ),
-                          )
-                          // MaterialPageRoute(
-                          //     builder: (context) => StoreOperatingHoursPage()),
-                          );
-                      // 운영 시간 설정 페이지로 이동 (여기서는 생략)
+                      _showOperatingHoursModal(context, store);
                     },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: store.schedule!.isNotEmpty,
+                  child: SizedBox(
+                    width: screenWidth * 0.5,
+                    height:
+                        screenHeight * (store.schedule!.length * 0.2) * 0.25,
+                    child: Consumer<StoreModel>(
+                      builder: (context, store, child) {
+                        return store.schedule != null
+                            ? ListView.builder(
+                                itemCount: store.schedule!.length,
+                                itemBuilder: (context, index) {
+                                  Schedule schedule = store.schedule![index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(getDayOfWeekAbbreviation(
+                                                schedule.dayOfWeek, "ko")),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                                '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
+                                          ],
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            store.removeScheduleAt(index);
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(0),
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container();
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -299,14 +401,14 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
                           title: const Text('운영 시작일'),
                           subtitle: Text(_dateFormat.format(store.startDate)),
                           trailing: const Icon(Icons.calendar_today),
-                          onTap: () => _selectDate(context, true),
+                          onTap: () => _selectDate(true),
                         ),
                       ),
                     ),
@@ -314,14 +416,14 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
                           title: const Text('운영 종료일'),
                           subtitle: Text(_dateFormat.format(store.endDate)),
                           trailing: const Icon(Icons.calendar_today),
-                          onTap: () => _selectDate(context, false),
+                          onTap: () => _selectDate(false),
                         ),
                       ),
                     ),
@@ -330,8 +432,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 20),
                 const Text(
                   "연락처",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -366,35 +467,53 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: '카테고리'),
-                  items: categoryList.map((categoryMap) {
-                    String category = categoryMap.keys.first;
-                    int value = categoryMap[category]!;
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      for (var categoryMap in categoryList) {
-                        if (categoryMap.containsKey(value)) {
-                          //store.category = value;
-                          store.category = categoryMap[value]!.toString();
-                          break;
-                        }
-                      }
-                    }
-                  },
-                ),
+                store.category.isNotEmpty
+                    ? DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(labelText: '카테고리'),
+                        value: store.category,
+                        items: categoryList.map((categoryMap) {
+                          String category = categoryMap.keys.first;
+                          return DropdownMenuItem<String>(
+                            value: categoryMap[category].toString(),
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            store.category = value;
+                          }
+                        },
+                      )
+                    : DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(labelText: '카테고리'),
+                        items: categoryList.map((categoryMap) {
+                          String category = categoryMap.keys.first;
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            for (var categoryMap in categoryList) {
+                              if (categoryMap.containsKey(value)) {
+                                store.category = categoryMap[value]!.toString();
+                                break;
+                              }
+                            }
+                          }
+                        },
+                      ),
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
-                      // 완료 버튼 누를 때 처리 로직
-                      storeAdd(store);
+                      if (widget.mode == "modify") {
+                        storeModify(store);
+                      } else if (widget.mode == "add") {
+                        storeAdd(store);
+                      }
                     },
                     child: const Text('완료'),
                   ),

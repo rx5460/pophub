@@ -1,16 +1,26 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
+import 'package:pophub/screen/store/pending_reject_page.dart';
+import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:intl/intl.dart';
+import 'package:pophub/utils/log.dart';
+import 'package:provider/provider.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -23,6 +33,7 @@ class PopupDetail extends StatefulWidget {
 }
 
 class _PopupDetailState extends State<PopupDetail> {
+  late KakaoMapController mapController;
   int _current = 0;
   final CarouselController _controller = CarouselController();
   PopupModel? popup;
@@ -31,28 +42,88 @@ class _PopupDetailState extends State<PopupDetail> {
   double rating = 0;
   bool like = false;
   bool allowSuccess = false;
+  LatLng center = LatLng(37.5586677131962, 126.953450474616);
+  Set<Marker> markers = {};
 
-//수정 필요
   Future<void> getPopupData() async {
     try {
-      PopupModel? data = await Api.getPopup(widget.storeId, User().userName);
-      print('좋아요 : ${data.bookmark}');
+      PopupModel? data = await Api.getPopup(widget.storeId, true);
+
       setState(() {
         popup = data;
-        like = data.bookmark!;
+        center = LatLng(double.parse(popup!.y.toString()),
+            double.parse(popup!.x.toString()));
+        markers.add(Marker(markerId: '마커', latLng: center));
         isLoading = false;
       });
     } catch (error) {
       // 오류 처리
-      print('Error fetching popup data: $error');
+      Logger.debug('Error fetching popup data: $error');
     }
   }
 
-  Future<void> popupStoreAllow(BuildContext context) async {
+  Future<void> getAddressData() async {
+    final data = await Api.getAddress(popup!.location.toString());
+
+    // JSON 문자열을 파싱합니다.
+    // var jsonData = json.decode(data);
+
+    // x와 y 좌표를 추출합니다.
+    var documents = data['documents'];
+    if (documents != null && documents.isNotEmpty) {
+      var firstDocument = documents[0];
+      var x = firstDocument['x'];
+      var y = firstDocument['y'];
+
+      setState(() {});
+    } else {
+      print('No documents found');
+    }
+
+    Logger.debug("### $data");
+  }
+
+  Future<void> popupStoreAllow() async {
     try {
       final data = await Api.popupAllow(widget.storeId);
 
-      if (!data.toString().contains("fail")) {
+      if (!data.toString().contains("fail") && mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('승인 완료되었습니다.'),
+          ),
+        );
+
+        final alarmDetails = {
+          'title': '팝업 승인 완료',
+          'label': '성공적으로 팝업 등록이 완료되었습니다.',
+          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+          'active': true,
+        };
+
+        // 서버에 알람 추가
+        await http.post(
+          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'userId': widget.storeId,
+            'type': 'alarms',
+            'alarmDetails': alarmDetails,
+          }),
+        );
+
+        // Firestore에 알람 추가
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.storeId)
+            .collection('alarms')
+            .add(alarmDetails);
+
+        // 로컬 알림 발송
+        await const AlarmPage().showNotification(
+            alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -60,8 +131,8 @@ class _PopupDetailState extends State<PopupDetail> {
           ),
         );
         Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => StoreListPage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const StoreListPage()));
 
         setState(() {
           allowSuccess = true;
@@ -70,7 +141,7 @@ class _PopupDetailState extends State<PopupDetail> {
       } else {}
     } catch (error) {
       // 오류 처리
-      print('Error fetching popup data: $error');
+      Logger.debug('Error fetching popup data: $error');
     }
   }
 
@@ -88,7 +159,7 @@ class _PopupDetailState extends State<PopupDetail> {
         });
       }
     } catch (error) {
-      print('Error fetching review data: $error');
+      Logger.debug('Error fetching review data: $error');
     }
   }
 
@@ -128,10 +199,17 @@ class _PopupDetailState extends State<PopupDetail> {
 
   @override
   void initState() {
+    initializeData();
     super.initState();
+  }
 
-    getPopupData();
-    fetchReviewData();
+  Future<void> initializeData() async {
+    await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
+    await getAddressData(); // getPopupData가 완료된 후 getAddressData를 호출합니다.
+    fetchReviewData(); // fetchReviewData를 호출합니다.
+
+    Logger.debug("###### $markers");
+    Logger.debug("###### $center");
   }
 
   @override
@@ -139,6 +217,7 @@ class _PopupDetailState extends State<PopupDetail> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+    Set<Marker> markers = {};
 
     return Scaffold(
       body: !isLoading
@@ -300,20 +379,24 @@ class _PopupDetailState extends State<PopupDetail> {
                                           width: 1,
                                           color: Colors.black,
                                         )),
-                                        // child: KakaoMap(
-                                        //   onMapCreated: ((controller) async {
-                                        //     mapController = controller;
+                                        child: KakaoMap(
+                                          onMapCreated: ((controller) async {
+                                            mapController = controller;
 
-                                        //     markers.add(Marker(
-                                        //       markerId: UniqueKey().toString(),
-                                        //       latLng: await mapController.getCenter(),
-                                        //     ));
+                                            await getAddressData();
+                                            markers.add(Marker(
+                                              markerId: UniqueKey().toString(),
+                                              latLng: center,
+                                            ));
 
-                                        //     setState(() {});
-                                        //   }),
-                                        //   markers: markers.toList(),
-                                        //   center: LatLng(37.3608681, 126.9306506),
-                                        // ),
+                                            Logger.debug(center.toString());
+                                            Logger.debug(markers.toString());
+
+                                            setState(() {});
+                                          }),
+                                          markers: markers.toList(),
+                                          center: center,
+                                        ),
                                       ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 8.0),
@@ -618,81 +701,85 @@ class _PopupDetailState extends State<PopupDetail> {
                       ),
                     )),
                     child: Padding(
-                      padding: EdgeInsets.only(
-                          left: screenWidth * 0.05,
-                          right: screenWidth * 0.05,
-                          bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: widget.mode == "view"
-                            ? MainAxisAlignment.spaceBetween
-                            : MainAxisAlignment.center,
-                        children: [
-                          Visibility(
-                            visible: widget.mode == "view",
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    popupLike();
-                                  },
-                                  child: Icon(
-                                    like
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    size: 30,
-                                    color: like ? Colors.red : Colors.black,
+                        padding: EdgeInsets.only(
+                            left: screenWidth * 0.05,
+                            right: screenWidth * 0.05,
+                            bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      popupLike();
+                                    },
+                                    child: Icon(
+                                      like
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      size: 30,
+                                      color: like ? Colors.red : Colors.black,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                const Text(
-                                  '26',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                  const SizedBox(
+                                    width: 8,
                                   ),
-                                ),
-                              ],
+                                  const Text(
+                                    '26',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Visibility(
-                            visible: widget.mode == "view",
-                            child: Container(
-                              width: screenWidth * 0.3,
-                              height: screenHeight * 0.05,
-                              decoration: BoxDecoration(
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: const Spacer(),
+                            ),
+                            Visibility(
+                              visible: widget.mode == "view",
+                              child: Container(
+                                width: screenWidth * 0.3,
+                                height: screenHeight * 0.05,
+                                decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10)),
                                   border: Border.all(
                                     width: 2,
                                     color: const Color(0xFFADD8E6),
                                   ),
-                                  color: const Color(0xFFADD8E6)),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                                  color: const Color(0xFFADD8E6),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
                                         builder: (context) => ReserveDate(
-                                              popup: popup!.id!,
-                                            )),
-                                  );
-                                },
-                                child: const Center(
-                                  child: Text(
-                                    '예약하기',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                          popup: popup!.id!,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Center(
+                                    child: Text(
+                                      '예약하기',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Visibility(
+                            Visibility(
                               visible: widget.mode == "pending",
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -703,38 +790,33 @@ class _PopupDetailState extends State<PopupDetail> {
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
-                                        onPressed: () => {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text('팝업 승인'),
-                                                    content: const Text(
-                                                        '승인 하시겠습니까?'),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text('취소'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () async {
-                                                          // 여기서 실제 회원 탈퇴 로직을 구현
-                                                          popupStoreAllow(
-                                                              context);
-                                                        },
-                                                        child:
-                                                            const Text('승인하기'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              )
-                                            },
-                                        child: const Text("승인하기")),
+                                      onPressed: () => {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('팝업 승인'),
+                                              content: const Text('승인 하시겠습니까?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('취소'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    popupStoreAllow();
+                                                  },
+                                                  child: const Text('승인하기'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      },
+                                      child: const Text("승인하기"),
+                                    ),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.only(
@@ -742,25 +824,73 @@ class _PopupDetailState extends State<PopupDetail> {
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          disabledForegroundColor: Colors.black,
-                                          backgroundColor: Colors.white,
-                                          side: const BorderSide(
-                                            color: Constants.DEFAULT_COLOR,
-                                            width: 1.0,
-                                          ),
+                                      style: OutlinedButton.styleFrom(
+                                        disabledForegroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                          color: Constants.DEFAULT_COLOR,
+                                          width: 1.0,
                                         ),
-                                        onPressed: () => {},
-                                        child: const Text(
-                                          "거절하기",
-                                          style: TextStyle(color: Colors.black),
-                                        )),
-                                  )
+                                      ),
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider(
+                                                              create: (_) =>
+                                                                  StoreModel())
+                                                        ],
+                                                        child:
+                                                            PendingRejectPage(
+                                                          id: popup!.id
+                                                              .toString(),
+                                                        ))))
+                                      },
+                                      child: const Text(
+                                        "거절하기",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
                                 ],
-                              )),
-                        ],
-                      ),
-                    )),
+                              ),
+                            ),
+                            Visibility(
+                              visible: widget.mode == "modify",
+                              child: Container(
+                                width: screenWidth * 0.9,
+                                height: screenHeight * 0.06,
+                                padding:
+                                    const EdgeInsets.only(left: 5, right: 5),
+                                child: OutlinedButton(
+                                    onPressed: () => {
+                                          if (mounted)
+                                            {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MultiProvider(
+                                                              providers: [
+                                                                ChangeNotifierProvider(
+                                                                    create: (_) =>
+                                                                        StoreModel())
+                                                              ],
+                                                              child:
+                                                                  StoreCreatePage(
+                                                                mode: "modify",
+                                                                popup: popup,
+                                                              ))))
+                                            }
+                                        },
+                                    child: const Text("수정하기")),
+                              ),
+                            )
+                          ],
+                        ))),
               ],
             )
           : const SizedBox(),

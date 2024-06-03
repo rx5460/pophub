@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
 import 'package:pophub/screen/setting/inquery_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
+import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
+import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late Map<String, dynamic> profile;
+  Map<String, dynamic>? profile; // profile 변수를 nullable로 선언
   bool isLoading = true; // 로딩 상태 변수 추가
 
   Future<void> profileApi() async {
@@ -37,7 +42,59 @@ class _ProfilePageState extends State<ProfilePage> {
       User().role = data['userRole'] ?? '';
     } else {
       // 에러 처리
-      profile = {};
+      if (mounted) {
+        if (User().userId != "") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileAdd(
+                        refreshProfile: profileApi,
+                      )));
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Login()));
+        }
+      }
+    }
+
+    setState(() {
+      isLoading = false; // 로딩 상태 변경
+    });
+  }
+
+  Future<void> checkStoreApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<dynamic> data = await Api.getMyPopup(User().userName);
+
+    if (!data.toString().contains("fail") &&
+        !data.toString().contains("없습니다")) {
+      //TODO : 황지민 팝업 가져오는경우 처리
+      PopupModel popup;
+      popup = PopupModel.fromJson(data[0]);
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PopupDetail(
+              storeId: popup.id!,
+              mode: "modify",
+            ),
+          ),
+        );
+      }
+
+      Logger.debug(data.toString());
+    } else {
+      if (mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => StoreModel())
+                    ], child: const StoreCreatePage(mode: "add"))));
+      }
     }
 
     setState(() {
@@ -140,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   },
                                   child: SizedBox(
-                                    // width: screenWidth * 0.5,
+                                    width: screenWidth * 0.4,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -148,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         const SizedBox(width: 20),
                                         Text(
                                           // 닉네임으로 수정
-                                          profile['userName'] ?? '',
+                                          profile?['userName'] ?? '',
                                           style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
@@ -174,7 +231,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              profile['pointScore'].toString(),
+                                              profile?['pointScore']
+                                                      .toString() ??
+                                                  '',
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w700,
@@ -286,18 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     icon: Icons.message_outlined,
                                     text: '내 스토어',
                                     onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          StoreCreatePage())));
+                                      checkStoreApi();
                                     },
                                   ),
                                 ),
@@ -313,11 +361,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  MultiProvider(providers: [
-                                                    ChangeNotifierProvider(
-                                                        create: (_) =>
-                                                            StoreModel())
-                                                  ], child: StoreListPage())));
+                                                  MultiProvider(
+                                                      providers: [
+                                                        ChangeNotifierProvider(
+                                                            create: (_) =>
+                                                                StoreModel())
+                                                      ],
+                                                      child:
+                                                          const StoreListPage())));
                                     },
                                   ),
                                 ),
@@ -368,9 +419,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(1000),
                               ),
-                              child: profile['userImage'] != null
+                              child: profile?['userImage'] != null
                                   ? Image.network(
-                                      profile['userImage'] ?? '',
+                                      profile?['userImage'] ?? '',
                                       fit: BoxFit.cover,
                                     )
                                   : Image.asset('assets/images/goods.png')),

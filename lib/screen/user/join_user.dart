@@ -38,19 +38,25 @@ class _JoinUserState extends State<JoinUser> {
     final data = await Api.signUp(
         idController.text, pwController.text, userRole.toString());
 
+    if (!mounted) return;
+
     if (data.toString().contains("완료")) {
       joinComplete = true;
       showAlert(context, "확인", "회원가입이 완료되었습니다.", () {
-        Navigator.of(context).pop();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Login()),
-        );
+        if (mounted) {
+          Navigator.of(context).pop();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Login()),
+          );
+        }
       });
     } else {
       joinComplete = false;
       showAlert(context, "경고", "회원가입에 실패했습니다.", () {
-        Navigator.of(context).pop();
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       });
     }
     userNotifier.refresh();
@@ -220,18 +226,18 @@ class _JoinUserState extends State<JoinUser> {
                                   horizontal: -4, vertical: 0),
                             ),
                             const Text('판매자'),
-                            Radio<String>(
-                              value: 'President',
-                              groupValue: userRole,
-                              onChanged: (value) {
-                                setState(() {
-                                  userRole = value;
-                                });
-                              },
-                              visualDensity: const VisualDensity(
-                                  horizontal: -4, vertical: 0),
-                            ),
-                            const Text('맛스타'),
+                            // Radio<String>(
+                            //   value: 'President',
+                            //   groupValue: userRole,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       userRole = value;
+                            //     });
+                            //   },
+                            //   visualDensity: const VisualDensity(
+                            //       horizontal: -4, vertical: 0),
+                            // ),
+                            // const Text('맛스타'),
                           ],
                         ),
                         const Spacer(flex: 40),

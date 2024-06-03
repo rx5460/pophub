@@ -10,10 +10,11 @@ class PopupModel {
       start,
       end,
       id,
-      wait;
-  final int? category, mark, veiw;
+      wait,
+      x,
+      y;
+  final int? category, mark, view;
   final List? image;
-  final bool? bookmark;
   final List<Schedule>? schedule; // 새로운 스케줄 리스트 필드
 
   PopupModel.fromJson(Map<String, dynamic> json)
@@ -29,12 +30,13 @@ class PopupModel {
         id = json['store_id'],
         category = json['category_id'],
         mark = json['store_mark_number'],
-        veiw = json['store_view_count'],
+        view = json['store_view_count'],
         image = json['imageUrls'],
-        bookmark = json['is_bookmarked'],
-        schedule = (json['schedule'] as List<dynamic>?)
+        schedule = (json['store_schedules'] as List<dynamic>?)
             ?.map((item) => Schedule.fromJson(item as Map<String, dynamic>))
-            .toList();
+            .toList(),
+        x = json['x'],
+        y = json['y'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -50,10 +52,11 @@ class PopupModel {
       'store_id': id,
       'category_id': category,
       'store_mark_number': mark,
-      'store_view_count': veiw,
+      'store_view_count': view,
       'imageUrls': image,
-      'is_bookmarked': bookmark,
-      'schedule': schedule?.map((e) => e.toJson()).toList(),
+      'store_schedules': schedule?.map((e) => e.toJson()).toList(),
+      'x': x,
+      'y': y
     };
   }
 }

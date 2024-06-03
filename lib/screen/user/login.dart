@@ -4,13 +4,12 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/user/find_id.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
-import 'package:pophub/screen/user/purchase_page.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -47,18 +46,21 @@ class _LoginState extends State<Login> {
 
         //await Api.profileAdd();
 
-        // TODO 김영수 : 로그인시 메인페이지로 이동하게 수정
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MultiProvider(providers: [
-                      ChangeNotifierProvider(create: (_) => UserNotifier())
-                    ], child: const BottomNavigationPage())));
+        if (mounted) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MultiProvider(providers: [
+                        ChangeNotifierProvider(create: (_) => UserNotifier())
+                      ], child: const BottomNavigationPage())));
+        }
       }
     } else {
-      showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
-        Navigator.of(context).pop();
-      });
+      if (mounted) {
+        showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
+          Navigator.of(context).pop();
+        });
+      }
     }
     userNotifier.refresh();
   }
@@ -74,10 +76,20 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
                   child: Column(
                     children: <Widget>[
-                      const CustomTitleBar(
-                        titleName: "로그인",
-                        useBack: false,
-                      ),
+                      CustomTitleBar(
+                          titleName: "로그인",
+                          onBackPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider(
+                                                  create: (_) => UserNotifier())
+                                            ],
+                                            child:
+                                                const BottomNavigationPage())));
+                          }),
                       Image.asset(
                         'assets/images/logo.png',
                         height: 150,
@@ -99,7 +111,6 @@ class _LoginState extends State<Login> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // TODO 황지민 : 나중에 기능 살리기
                           TextButton(
                               onPressed: () => {
                                     Navigator.push(

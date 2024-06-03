@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pophub/model/user.dart';
 
@@ -8,6 +8,9 @@ class AlarmPage extends StatefulWidget {
 
   @override
   State<AlarmPage> createState() => _AlarmPageState();
+
+  showNotification(
+      Object? alarmDetail, Object? alarmDetail2, Object? alarmDetail3) {}
 }
 
 class _AlarmPageState extends State<AlarmPage>
@@ -109,19 +112,19 @@ class _AlarmPageState extends State<AlarmPage>
           labelStyle: const TextStyle(fontSize: 20),
           tabs: [
             Tab(
-                child: Container(
-              child: Center(child: Text('전체')),
+                child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.33,
+              child: const Center(child: Text('전체')),
             )),
             Tab(
-                child: Container(
-              child: Center(child: Text('주문')),
+                child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.33,
+              child: const Center(child: Text('주문')),
             )),
             Tab(
-                child: Container(
-              child: Center(child: Text('대기')),
+                child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.33,
+              child: const Center(child: Text('대기')),
             )),
           ],
         ),
@@ -164,25 +167,25 @@ class _AlarmPageState extends State<AlarmPage>
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Container(
+                    child: SizedBox(
                       width: 65,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Image.network(
-                          'https://www.valuevenue.co.kr/upload_files/event/202401/t1024_67a306e93f0610cbdfb5921de98d34ad.png',
+                        child: Image.asset(
+                          'assets/images/logo.png',
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
                           data['title'] ?? 'No title',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(data['label'] ?? 'No label'),
                         Text(data['time'] ?? 'No time'),
@@ -190,7 +193,7 @@ class _AlarmPageState extends State<AlarmPage>
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     onPressed: () {
                       document.reference.delete();
                     },
