@@ -32,12 +32,14 @@ class _PopupDetailState extends State<PopupDetail> {
   bool like = false;
   bool allowSuccess = false;
 
+//수정 필요
   Future<void> getPopupData() async {
     try {
-      PopupModel? data = await Api.getPopup(widget.storeId);
-
+      PopupModel? data = await Api.getPopup(widget.storeId, User().userName);
+      print('좋아요 : ${data.bookmark}');
       setState(() {
         popup = data;
+        like = data.bookmark!;
         isLoading = false;
       });
     } catch (error) {
@@ -696,7 +698,8 @@ class _PopupDetailState extends State<PopupDetail> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5),
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
@@ -731,23 +734,24 @@ class _PopupDetailState extends State<PopupDetail> {
                                                 },
                                               )
                                             },
-                                        child: Text("승인하기")),
+                                        child: const Text("승인하기")),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5),
                                     width: screenWidth * 0.45,
                                     height: screenHeight * 0.06,
                                     child: OutlinedButton(
                                         style: OutlinedButton.styleFrom(
                                           disabledForegroundColor: Colors.black,
                                           backgroundColor: Colors.white,
-                                          side: BorderSide(
+                                          side: const BorderSide(
                                             color: Constants.DEFAULT_COLOR,
                                             width: 1.0,
                                           ),
                                         ),
                                         onPressed: () => {},
-                                        child: Text(
+                                        child: const Text(
                                           "거절하기",
                                           style: TextStyle(color: Colors.black),
                                         )),

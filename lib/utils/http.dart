@@ -77,6 +77,32 @@ Future<Map<String, dynamic>> getData(
   }
 }
 
+Future<Map<String, dynamic>> getDataWithBody(
+    String url, Map<String, dynamic> data) async {
+  try {
+    Options options = Options(
+      method: 'GET',
+      contentType: 'application/json',
+    );
+
+    Response response = await dio.request(
+      url,
+      data: jsonEncode(data),
+      options: options,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data is String ? {"data": response.data} : response.data;
+    } else {
+      return response.data is String
+          ? {"data": response.statusCode}
+          : response.data;
+    }
+  } catch (e) {
+    return {"data": "fail"};
+  }
+}
+
 Future<List<dynamic>> getListData(
     String url, Map<String, dynamic> queryParams) async {
   try {

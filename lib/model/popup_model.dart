@@ -13,6 +13,7 @@ class PopupModel {
       wait;
   final int? category, mark, veiw;
   final List? image;
+  final bool? bookmark;
   final List<Schedule>? schedule; // 새로운 스케줄 리스트 필드
 
   PopupModel.fromJson(Map<String, dynamic> json)
@@ -30,6 +31,7 @@ class PopupModel {
         mark = json['store_mark_number'],
         veiw = json['store_view_count'],
         image = json['imageUrls'],
+        bookmark = json['is_bookmarked'],
         schedule = (json['schedule'] as List<dynamic>?)
             ?.map((item) => Schedule.fromJson(item as Map<String, dynamic>))
             .toList();
@@ -50,6 +52,7 @@ class PopupModel {
       'store_mark_number': mark,
       'store_view_count': veiw,
       'imageUrls': image,
+      'is_bookmarked': bookmark,
       'schedule': schedule?.map((e) => e.toJson()).toList(),
     };
   }

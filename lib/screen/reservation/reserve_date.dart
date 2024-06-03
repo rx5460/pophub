@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/screen/reservation/reserve_count.dart';
+import 'package:pophub/utils/api.dart';
 
 class ReserveDate extends StatefulWidget {
   final String popup;
@@ -26,6 +27,24 @@ class _ReserveDateState extends State<ReserveDate> {
         selectedDate = pickedDate;
       });
     }
+  }
+
+  Future<void> getReserveStatus() async {
+    try {
+      dynamic data = await Api.getReserveStatus(widget.popup);
+      print(widget.popup);
+      print(data);
+    } catch (error) {
+      // 오류 처리
+      print('Error fetching popup data: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getReserveStatus();
   }
 
   @override

@@ -81,11 +81,11 @@ class Api {
   }
 
   //팝업 상세 조회(팝업 단일 조회)
-  static Future<PopupModel> getPopup(String storeId) async {
+  static Future<PopupModel> getPopup(String storeId, String user) async {
     print(storeId);
     try {
-      final Map<String, dynamic> data =
-          await getData('$domain/popup/view/$storeId', {});
+      final Map<String, dynamic> data = await getDataWithBody(
+          '$domain/popup/view/$storeId', {"user_name": user});
 
       return PopupModel.fromJson(data);
     } catch (e) {
@@ -250,7 +250,7 @@ class Api {
         'store_name',
         store.name,
       ),
-      MapEntry('store_location', store.location + "/" + store.locationDetail),
+      MapEntry('store_location', "${store.location}/${store.locationDetail}"),
       MapEntry('store_contact_info', store.contact),
       MapEntry('store_description', store.description),
       MapEntry('store_start_date',
@@ -302,6 +302,14 @@ class Api {
       'store_id': storeId,
     });
     Logger.debug("### 팝업 승인 $data");
+    return data;
+  }
+
+  //팝업 예약 상태 조회
+  static Future<Map<String, dynamic>> getReserveStatus(String popup) async {
+    final data = await postData('$domain/popup/reservation/$popup', {});
+    Logger.debug("### 예약 상태 조회 $data");
+
     return data;
   }
 }

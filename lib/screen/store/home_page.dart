@@ -70,13 +70,13 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(builder: (context) => const AlarmPage()),
               );
             },
-            child: Icon(
+            child: const Icon(
               Icons.notifications_outlined,
               size: 32,
               color: Color.fromARGB(255, 106, 105, 105),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
         ],
@@ -245,6 +245,7 @@ class _HomePageState extends State<HomePage> {
                                           child: Image.network(
                                             '${popup.image![0]}',
                                             width: screenWidth * 0.5,
+                                            height: screenWidth * 0.5,
                                             fit: BoxFit.cover,
                                           ),
                                         )
