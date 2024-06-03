@@ -249,7 +249,7 @@ class Api {
         },
         'file',
         image);
-    Logger.debug("### 프로필 수정 이미지o $data");
+    Logger.debug("### 프로필 추가 이미지o $data");
     return data;
   }
 
@@ -263,7 +263,7 @@ class Api {
       'Gender': gender,
       'Age': age,
     });
-    Logger.debug("### 프로필 수정 이미지x $data");
+    Logger.debug("### 프로필 추가 이미지x $data");
     return data;
   }
 
@@ -478,6 +478,17 @@ class Api {
     final data =
         await putFormData('$domain/popup/update/${store.id}', formData);
     Logger.debug("### 스토어 수정 $data");
+    return data;
+  }
+
+  // 팝업 승인 거절
+  static Future<Map<String, dynamic>> popupDeny(
+      String storeId, String content) async {
+    final data = await postData('$domain/admin/popupPendingDeny/', {
+      'store_id': storeId,
+      'denial_reason': content,
+    });
+    Logger.debug("### 팝업 승인 거절 $data");
     return data;
   }
 }

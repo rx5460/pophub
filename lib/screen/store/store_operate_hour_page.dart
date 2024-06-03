@@ -48,25 +48,26 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
           operatingHours[dayKor] =
               '${schedule.openTime} : ${schedule.closeTime}';
         }
+        setState(() {});
       }
     }
   }
 
   String _translateDay(String day) {
     switch (day) {
-      case 'Monday':
+      case 'Monday' || "Mon":
         return '월';
-      case 'Tuesday':
+      case 'Tuesday' || "Tue":
         return '화';
-      case 'Wednesday':
+      case 'Wednesday' || "Wed":
         return '수';
-      case 'Thursday':
+      case 'Thursday' || "Thu":
         return '목';
-      case 'Friday':
+      case 'Friday' || "Fri":
         return '금';
-      case 'Saturday':
+      case 'Saturday' || "Sat":
         return '토';
-      case 'Sunday':
+      case 'Sunday' || "Sun":
         return '일';
       default:
         return '';
@@ -288,16 +289,42 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: OutlinedButton(
-                onPressed: _complete,
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            Row(
+              children: [
+                SizedBox(
+                  width: screenWidth * 0.35,
+                  child: OutlinedButton(
+                    onPressed: _complete,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
+                    ),
+                    child: const Text('완료'),
+                  ),
                 ),
-                child: const Text('완료'),
-              ),
-            ),
+                SizedBox(
+                  width: screenWidth * 0.01,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.35,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Constants.LIGHT_GREY),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
+                    ),
+                    child: const Text(
+                      '닫기',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),

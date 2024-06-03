@@ -15,6 +15,7 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
+import 'package:pophub/screen/store/pending_reject_page.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
@@ -831,7 +832,23 @@ class _PopupDetailState extends State<PopupDetail> {
                                           width: 1.0,
                                         ),
                                       ),
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider(
+                                                              create: (_) =>
+                                                                  StoreModel())
+                                                        ],
+                                                        child:
+                                                            PendingRejectPage(
+                                                          id: popup!.id
+                                                              .toString(),
+                                                        ))))
+                                      },
                                       child: const Text(
                                         "거절하기",
                                         style: TextStyle(color: Colors.black),

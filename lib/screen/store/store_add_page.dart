@@ -35,45 +35,50 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   }
 
   void _initializeFields() {
-    _nameController.text = widget.popup?.name ?? '';
-    _descriptionController.text = widget.popup?.description ?? '';
-    _locationController.text = widget.popup?.location ?? '';
-    _contactController.text = widget.popup?.contact ?? '';
-    _maxCapacityController.text = widget.popup?.view?.toString() ?? '';
+    if (widget.popup != null) {
+      _nameController.text = widget.popup?.name ?? '';
+      _descriptionController.text = widget.popup?.description ?? '';
+      _locationController.text = widget.popup?.location ?? '';
+      _contactController.text = widget.popup?.contact ?? '';
+      _maxCapacityController.text = widget.popup?.view?.toString() ?? '';
 
-    Provider.of<StoreModel>(context, listen: false).name =
-        widget.popup?.name ?? '';
-    Provider.of<StoreModel>(context, listen: false).description =
-        widget.popup?.description ?? '';
-    Provider.of<StoreModel>(context, listen: false).location =
-        widget.popup?.location ?? '';
-    Provider.of<StoreModel>(context, listen: false).contact =
-        widget.popup?.contact ?? '';
-    Provider.of<StoreModel>(context, listen: false).maxCapacity =
-        widget.popup?.view ?? 0;
+      Provider.of<StoreModel>(context, listen: false).name =
+          widget.popup?.name ?? '';
+      Provider.of<StoreModel>(context, listen: false).description =
+          widget.popup?.description ?? '';
+      Provider.of<StoreModel>(context, listen: false).location =
+          widget.popup?.location ?? '';
+      Provider.of<StoreModel>(context, listen: false).contact =
+          widget.popup?.contact ?? '';
+      Provider.of<StoreModel>(context, listen: false).maxCapacity =
+          widget.popup?.view ?? 0;
 
-    Provider.of<StoreModel>(context, listen: false).startDate =
-        DateTime.parse(widget.popup?.start ?? DateTime.now().toString());
-    Provider.of<StoreModel>(context, listen: false).endDate =
-        DateTime.parse(widget.popup?.end ?? DateTime.now().toString());
-    Provider.of<StoreModel>(context, listen: false).schedule =
-        widget.popup!.schedule;
-    Provider.of<StoreModel>(context, listen: false).id = widget.popup!.id!;
+      Provider.of<StoreModel>(context, listen: false).startDate =
+          DateTime.parse(widget.popup?.start ?? DateTime.now().toString());
+      Provider.of<StoreModel>(context, listen: false).endDate =
+          DateTime.parse(widget.popup?.end ?? DateTime.now().toString());
 
-    // if (widget.popup?.schedule != null) {
-    //   widget.popup!.schedule?.forEach((schedule) {
-    //     Logger.debug("### $schedule");
-    //     Provider.of<StoreModel>(context, listen: false).updateSchedule(
-    //         schedule.dayOfWeek, schedule.openTime, schedule.closeTime);
-    //   });
-    // }
+      Provider.of<StoreModel>(context, listen: false).schedule =
+          widget.popup!.schedule;
 
-    Provider.of<StoreModel>(context, listen: false).category =
-        widget.popup?.category?.toString() ?? '';
-    Provider.of<StoreModel>(context, listen: false).images = widget.popup?.image
-            ?.map((imageUrl) => {'type': 'url', 'data': imageUrl})
-            .toList() ??
-        [];
+      Provider.of<StoreModel>(context, listen: false).id = widget.popup!.id!;
+
+      // if (widget.popup?.schedule != null) {
+      //   widget.popup!.schedule?.forEach((schedule) {
+      //     Logger.debug("### $schedule");
+      //     Provider.of<StoreModel>(context, listen: false).updateSchedule(
+      //         schedule.dayOfWeek, schedule.openTime, schedule.closeTime);
+      //   });
+      // }
+
+      Provider.of<StoreModel>(context, listen: false).category =
+          widget.popup?.category?.toString() ?? '';
+      Provider.of<StoreModel>(context, listen: false).images = widget
+              .popup?.image
+              ?.map((imageUrl) => {'type': 'url', 'data': imageUrl})
+              .toList() ??
+          [];
+    }
   }
 
   List<Map<String, int>> categoryList = [
@@ -210,7 +215,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "스토어 수정"),
+      appBar: CustomTitleBar(
+          titleName: widget.mode == "modify" ? "스토어 수정" : "스토어 추가"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
@@ -452,27 +458,49 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: '카테고리'),
-                  value: store.category,
-                  items: categoryList.map((categoryMap) {
-                    String category = categoryMap.keys.first;
-                    return DropdownMenuItem<String>(
-                      value: categoryMap[category].toString(),
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      store.category = value;
-                    }
-                  },
-                ),
+                store.category.isNotEmpty
+                    ? DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(labelText: '카테고리'),
+                        value: store.category,
+                        items: categoryList.map((categoryMap) {
+                          String category = categoryMap.keys.first;
+                          return DropdownMenuItem<String>(
+                            value: categoryMap[category].toString(),
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            store.category = value;
+                          }
+                        },
+                      )
+                    : DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(labelText: '카테고리'),
+                        items: categoryList.map((categoryMap) {
+                          String category = categoryMap.keys.first;
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            for (var categoryMap in categoryList) {
+                              if (categoryMap.containsKey(value)) {
+                                store.category = categoryMap[value]!.toString();
+                                break;
+                              }
+                            }
+                          }
+                        },
+                      ),
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
+                      print("Dddd adv");
                       if (widget.mode == "modify") {
                         storeModify(store);
                       } else if (widget.mode == "add") {

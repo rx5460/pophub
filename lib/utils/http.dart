@@ -74,6 +74,11 @@ Future<List<dynamic>> getListData(
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data);
+      if (response.data.runtimeType == String) {
+        List<String> result = [];
+        result.add(response.data);
+        return result;
+      }
       return response.data;
     } else {
       throw Exception('Failed to load data');

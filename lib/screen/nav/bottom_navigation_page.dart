@@ -5,6 +5,7 @@ import 'package:pophub/screen/store/favorites_page.dart';
 import 'package:pophub/screen/store/home_page.dart';
 import 'package:pophub/screen/store/map_page.dart';
 import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 
@@ -131,7 +132,14 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                             // 에러 처리
                             if (mounted) {
                               if (User().userId != "") {
-                                _pageController.jumpToPage(index);
+                                if (context.mounted) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileAdd(
+                                                refreshProfile: () {},
+                                              )));
+                                }
                               } else {
                                 if (context.mounted) {
                                   Navigator.push(

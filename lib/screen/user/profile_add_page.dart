@@ -7,6 +7,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
@@ -76,7 +77,18 @@ class _ProfileAddState extends State<ProfileAdd> {
             phoneController.text);
 
     if (!data.toString().contains("fail")) {
-      widget.refreshProfile();
+      if (widget.refreshProfile != () {}) {
+        widget.refreshProfile();
+      } else {
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProfilePage(),
+            ),
+          );
+        }
+      }
       if (mounted) Navigator.of(context).pop();
     } else {
       if (mounted) {
@@ -116,7 +128,7 @@ class _ProfileAddState extends State<ProfileAdd> {
             }),
         body: Padding(
           padding: const EdgeInsets.only(
-              left: Constants.DEFAULT_PADDING,
+              left: Constants.DEFAULT_PADDING * 1.2,
               right: Constants.DEFAULT_PADDING,
               bottom: Constants.DEFAULT_PADDING),
           child: Column(children: [

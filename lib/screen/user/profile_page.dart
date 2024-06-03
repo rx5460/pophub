@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
             MaterialPageRoute(
                 builder: (context) => MultiProvider(providers: [
                       ChangeNotifierProvider(create: (_) => StoreModel())
-                    ], child: const StoreCreatePage(mode: "create"))));
+                    ], child: const StoreCreatePage(mode: "add"))));
       }
     }
 
@@ -104,8 +104,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    profileApi(); // API 호출
     super.initState();
+    profileApi(); // API 호출
   }
 
   @override
