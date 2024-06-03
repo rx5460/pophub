@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/store/category_page.dart';
 import 'package:pophub/screen/store/favorites_page.dart';
 import 'package:pophub/screen/store/home_page.dart';
 import 'package:pophub/screen/store/map_page.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_page.dart';
+import 'package:pophub/utils/api.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});
@@ -117,8 +120,31 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                   : InkWell(
                       highlightColor: Colors.white,
                       splashColor: Colors.white,
-                      onTap: () {
-                        _pageController.jumpToPage(index);
+                      onTap: () async {
+                        if (index == 4) {
+                          Map<String, dynamic> data =
+                              await Api.getProfile(User().userId);
+
+                          if (!data.toString().contains("fail")) {
+                            _pageController.jumpToPage(index);
+                          } else {
+                            // 에러 처리
+                            if (mounted) {
+                              if (User().userId != "") {
+                                _pageController.jumpToPage(index);
+                              } else {
+                                if (context.mounted) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Login()));
+                                }
+                              }
+                            }
+                          }
+                        } else {
+                          _pageController.jumpToPage(index);
+                        }
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,

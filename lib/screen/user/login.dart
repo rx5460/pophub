@@ -76,10 +76,20 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
                   child: Column(
                     children: <Widget>[
-                      const CustomTitleBar(
-                        titleName: "로그인",
-                        useBack: false,
-                      ),
+                      CustomTitleBar(
+                          titleName: "로그인",
+                          onBackPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider(
+                                                  create: (_) => UserNotifier())
+                                            ],
+                                            child:
+                                                const BottomNavigationPage())));
+                          }),
                       Image.asset(
                         'assets/images/logo.png',
                         height: 150,

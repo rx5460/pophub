@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
-import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/alarm/push_auto_token.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/utils/log.dart';
 
 import 'assets/style.dart';
-import 'screen/user/login.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   developer.log("백그라운드 메시지 처리: ${message.notification!.body!}",
@@ -58,6 +57,9 @@ Future<void> main() async {
     appKey: dotenv.env['APP_KEY'] ?? '',
   );
 
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   runApp(const MyApp());
 }
 
@@ -71,59 +73,15 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'pophub',
       theme: theme,
-      home: const MainPagePage(),
+      home: const BottomNavigationPage(),
     );
   }
 }
 
-class MainPagePage extends StatefulWidget {
-  const MainPagePage({super.key});
 
-  @override
-  State<MainPagePage> createState() => _MainPagePageState();
-}
 
-class _MainPagePageState extends State<MainPagePage> {
-  // TODO 김영수 : 앱 시작시 메인 페이지로 이동하게
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            body: Center(
-                child: Container(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 100,
-              width: 100,
-            ),
-            Container(
-              width: double.infinity,
-              height: 55,
-              margin: const EdgeInsets.only(top: 30),
-              child: OutlinedButton(
-                  onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()))
-                      },
-                  child: const Text("로그인")),
-            ),
-          ],
-        ),
-      ),
-    ))));
-  }
-}
 //스플래시 만들다 실패한거
 // class _MainPagePageState extends State<MainPagePage> {
 //   @override

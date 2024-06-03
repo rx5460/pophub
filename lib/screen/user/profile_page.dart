@@ -9,6 +9,7 @@ import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/acount_info.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -42,12 +43,17 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       // 에러 처리
       if (mounted) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProfileAdd(
-                      refreshProfile: profileApi,
-                    )));
+        if (User().userId != "") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileAdd(
+                        refreshProfile: profileApi,
+                      )));
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Login()));
+        }
       }
     }
 
@@ -98,8 +104,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    super.initState();
     profileApi(); // API 호출
+    super.initState();
   }
 
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/setting/alarm_setting_page.dart';
 import 'package:pophub/screen/setting/withdrawal_page.dart';
-import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/http.dart';
 
 class AppSetting extends StatefulWidget {
@@ -20,7 +20,9 @@ class _AppSettingState extends State<AppSetting> {
 
     if (mounted) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Login()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => const BottomNavigationPage()));
     }
   }
 
@@ -39,7 +41,8 @@ class _AppSettingState extends State<AppSetting> {
               // 알림 설정 페이지로 이동
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AlarmSettingsPage()),
+                MaterialPageRoute(
+                    builder: (context) => const AlarmSettingsPage()),
               );
             },
           ),

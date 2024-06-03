@@ -23,6 +23,7 @@ class ProfileAdd extends StatefulWidget {
 class _ProfileAddState extends State<ProfileAdd> {
   TextEditingController nicknameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   String? nicknameInput;
   bool nicknameChecked = false;
   String? _gender = 'M'; // 기본 선택 옵션을 "남자"로 설정
@@ -63,12 +64,16 @@ class _ProfileAddState extends State<ProfileAdd> {
     }
   }
 
-  Future<void> profileModify() async {
-    Map<String, dynamic> data = await Api.profileAdd(
-        nicknameInput!,
-        _gender.toString(),
-        ageController.text,
-        _image == null ? null : File(_image!.path));
+  Future<void> profileAdd() async {
+    Map<String, dynamic> data = _image == null
+        ? await Api.profileAdd(nicknameInput!, _gender.toString(),
+            ageController.text, phoneController.text)
+        : await Api.profileAddWithImage(
+            nicknameInput!,
+            _gender.toString(),
+            ageController.text,
+            _image == null ? null : File(_image!.path),
+            phoneController.text);
 
     if (!data.toString().contains("fail")) {
       widget.refreshProfile();
@@ -312,6 +317,51 @@ class _ProfileAddState extends State<ProfileAdd> {
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.02),
+                        SizedBox(height: screenHeight * 0.01),
+                        const Text(
+                          "핸드폰 번호",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        SizedBox(
+                          width: screenWidth * 0.85,
+                          child: TextField(
+                            controller: phoneController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2.0,
+                                  color: Color(0xFFADD8E6),
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2.0,
+                                  color: Color(0xFFADD8E6),
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              labelText: '번호',
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18,
+                                fontFamily: 'recipe',
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
                         const Text(
                           "성별",
                           style: TextStyle(
@@ -374,8 +424,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                 if (nicknameChecked &&
                                     nicknameInput != null &&
                                     nicknameInput!.isNotEmpty &&
-                                    ageController.text.isNotEmpty) {
-                                  profileModify();
+                                    ageController.text.isNotEmpty &&
+                                    phoneController.text.isNotEmpty) {
+                                  profileAdd();
                                 } else {
                                   showAlert(context, "경고",
                                       "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {

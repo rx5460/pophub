@@ -235,20 +235,34 @@ class Api {
   //   return data;
   // }
 
-  // 프로필 추가 (이미지 x)
-  static Future<Map<String, dynamic>> profileAdd(
-      String nickName, String gender, String age, image) async {
+  // 프로필 추가 (이미지 o)
+  static Future<Map<String, dynamic>> profileAddWithImage(
+      String nickName, String gender, String age, image, String phone) async {
     final data = await postDataWithImage(
         '$domain/user/create_profile/',
         {
           'userId': User().userId,
           'userName': nickName,
-          'phoneNumber': User().phoneNumber,
+          'phoneNumber': phone,
           'Gender': gender,
           'Age': age,
         },
         'file',
         image);
+    Logger.debug("### 프로필 수정 이미지o $data");
+    return data;
+  }
+
+  // 프로필 추가 (이미지 x)
+  static Future<Map<String, dynamic>> profileAdd(
+      String nickName, String gender, String age, String phone) async {
+    final data = await postData('$domain/user/create_profile/', {
+      'userId': User().userId,
+      'userName': nickName,
+      'phoneNumber': phone,
+      'Gender': gender,
+      'Age': age,
+    });
     Logger.debug("### 프로필 수정 이미지x $data");
     return data;
   }
