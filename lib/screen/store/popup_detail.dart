@@ -97,7 +97,7 @@ class _PopupDetailState extends State<PopupDetail> {
         final alarmDetails = {
           'title': '팝업 승인 완료',
           'label': '성공적으로 팝업 등록이 완료되었습니다.',
-          'time': DateTime.now().toString(),
+          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
           'active': true,
         };
 
@@ -106,7 +106,7 @@ class _PopupDetailState extends State<PopupDetail> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userId': User().userId,
+            'userId': widget.storeId,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
@@ -115,7 +115,7 @@ class _PopupDetailState extends State<PopupDetail> {
         // Firestore에 알람 추가
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(User().userId)
+            .doc(widget.storeId)
             .collection('alarms')
             .add(alarmDetails);
 

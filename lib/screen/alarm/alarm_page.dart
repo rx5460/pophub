@@ -172,7 +172,7 @@ class _AlarmPageState extends State<AlarmPage>
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Image.asset(
-                          'images/logo.png',
+                          'assets/images/logo.png',
                           fit: BoxFit.cover,
                         ),
                       ),
