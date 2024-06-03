@@ -367,29 +367,13 @@ class Api {
 
 // 전체 공지사항 조회
   static Future<List<NoticeModel>> getNoticeList() async {
-    try {
-      final dynamic firstItem = await getFirstItem('$domain/admin/notice');
-      List<NoticeModel> noticeList;
+    final dataList = await getListData('$domain/admin/notice', {});
 
-      if (firstItem is List<dynamic>) {
-        List<dynamic> dataList = firstItem;
-        noticeList =
-            dataList.map((data) => NoticeModel.fromJson(data)).toList();
-      } else if (firstItem is Map<String, dynamic>) {
-        Map<String, dynamic> dataMap = firstItem;
-        noticeList = [NoticeModel.fromJson(dataMap)];
-      } else {
-        throw Exception('Invalid data format');
-      }
+    List<NoticeModel> noticeList =
+        dataList.map((data) => NoticeModel.fromJson(data)).toList();
+    Logger.debug("### 공지사항 조회 $noticeList");
 
-      Logger.debug("### 공지사항 조회 $noticeList");
-
-      return noticeList;
-    } catch (e) {
-      // 오류 처리
-      Logger.debug('Failed to fetch popup list: $e');
-      throw Exception('Failed to fetch popup list');
-    }
+    return noticeList;
   }
 
   static Future<dynamic> getFirstItem(String url) async {
@@ -421,7 +405,7 @@ class Api {
     }
   }
 
-  // 스토어 추가
+  // 스토어 수정
   static Future<Map<String, dynamic>> storeModify(StoreModel store) async {
     FormData formData = FormData();
 
@@ -433,6 +417,15 @@ class Api {
           'files',
           await MultipartFile.fromFile(file.path,
               filename: file.path.split('/').last),
+        ));
+      } else if (imageMap['type'] == 'url') {
+        var url = imageMap['data'] as String;
+        var response = await Dio().get<List<int>>(url,
+            options: Options(responseType: ResponseType.bytes));
+        formData.files.add(MapEntry(
+          'files',
+          MultipartFile.fromBytes(response.data!,
+              filename: url.split('/').last),
         ));
       }
     }
@@ -475,9 +468,10 @@ class Api {
       }
     }
 
-    final data =
+    Map<String, dynamic> data =
         await putFormData('$domain/popup/update/${store.id}', formData);
     Logger.debug("### 스토어 수정 $data");
+    Logger.debug("### 스토어 수정 $formData");
     return data;
   }
 
