@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:http/http.dart' as http;
 
 class PendingRejectPage extends StatefulWidget {
   String id = "";
@@ -26,6 +32,35 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
             content: Text('거절 완료되었습니다.'),
           ),
         );
+
+        final alarmDetails = {
+          'title': '팝업 거절 완료',
+          'label': '당사의 팝업 등록이 거절되었습니다.',
+          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+          'active': true,
+        };
+
+        // 서버에 알람 추가
+        await http.post(
+          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'userId': widget.id,
+            'type': 'alarms',
+            'alarmDetails': alarmDetails,
+          }),
+        );
+
+        // Firestore에 알람 추가
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.id)
+            .collection('alarms')
+            .add(alarmDetails);
+
+        // 로컬 알림 발송
+        await const AlarmPage().showNotification(
+            alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
 
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
