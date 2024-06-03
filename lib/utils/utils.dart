@@ -43,39 +43,46 @@ bool isAdmin(String role) {
 String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
   if (lang == "ko") {
     switch (dayOfWeek.toLowerCase()) {
-      case "monday":
-        return "월요일";
-      case "tuesday":
-        return "화요일";
-      case "wednesday":
-        return "수요일";
-      case "thursday":
-        return "목요일";
-      case "friday":
-        return "금요일";
-      case "saturday":
-        return "토요일";
-      case "sunday":
-        return "일요일";
+      case 'monday':
+      case 'mon':
+        return '월요일';
+      case 'tuesday':
+      case 'tue':
+        return '화요일';
+      case 'wednesday':
+      case 'wed':
+        return '수요일';
+      case 'thursday':
+      case 'thu':
+        return '목요일';
+      case 'friday':
+      case 'fri':
+        return '금요일';
+      case 'saturday':
+      case 'sat':
+        return '토요일';
+      case 'sunday':
+      case 'sun':
+        return '일요일';
       default:
         return dayOfWeek;
     }
   } else {
     switch (dayOfWeek.toLowerCase()) {
       case "monday":
-        return "MON";
+        return "Mon";
       case "tuesday":
-        return "TUE";
+        return "Tue";
       case "wednesday":
-        return "WED";
+        return "Wed";
       case "thursday":
-        return "THU";
+        return "Thu";
       case "friday":
-        return "FRI";
+        return "Fri";
       case "saturday":
-        return "SAT";
+        return "Sat";
       case "sunday":
-        return "SUN";
+        return "Sun";
       default:
         return dayOfWeek;
     }

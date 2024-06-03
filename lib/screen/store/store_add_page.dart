@@ -63,14 +63,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
 
       Provider.of<StoreModel>(context, listen: false).id = widget.popup!.id!;
 
-      // if (widget.popup?.schedule != null) {
-      //   widget.popup!.schedule?.forEach((schedule) {
-      //     Logger.debug("### $schedule");
-      //     Provider.of<StoreModel>(context, listen: false).updateSchedule(
-      //         schedule.dayOfWeek, schedule.openTime, schedule.closeTime);
-      //   });
-      // }
-
       Provider.of<StoreModel>(context, listen: false).category =
           widget.popup?.category?.toString() ?? '';
       Provider.of<StoreModel>(context, listen: false).images = widget
@@ -341,16 +333,16 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     trailing: const Icon(Icons.access_time),
                     onTap: () {
                       _showOperatingHoursModal(context, store);
-                      // 운영 시간 설정 페이지로 이동 (여기서는 생략)
                     },
                   ),
                 ),
                 const SizedBox(height: 10),
                 Visibility(
-                  visible: store.schedule != null,
+                  visible: store.schedule!.isNotEmpty,
                   child: SizedBox(
                     width: screenWidth * 0.5,
-                    height: screenHeight * 0.32,
+                    height:
+                        screenHeight * (store.schedule!.length * 0.2) * 0.25,
                     child: Consumer<StoreModel>(
                       builder: (context, store, child) {
                         return store.schedule != null
@@ -367,10 +359,27 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(getDayOfWeekAbbreviation(
-                                            schedule.dayOfWeek, "ko")),
-                                        Text(
-                                            '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
+                                        Row(
+                                          children: [
+                                            Text(getDayOfWeekAbbreviation(
+                                                schedule.dayOfWeek, "ko")),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                                '${formatTime(schedule.openTime)} ~ ${formatTime(schedule.closeTime)}'),
+                                          ],
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            store.removeScheduleAt(index);
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(0),
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   );
@@ -500,7 +509,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
-                      print("Dddd adv");
                       if (widget.mode == "modify") {
                         storeModify(store);
                       } else if (widget.mode == "add") {

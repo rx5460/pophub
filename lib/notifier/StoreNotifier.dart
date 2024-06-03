@@ -69,4 +69,9 @@ class StoreModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void removeScheduleAt(int index) {
+    schedule?.removeAt(index);
+    notifyListeners();
+  }
 }

@@ -55,19 +55,26 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
 
   String _translateDay(String day) {
     switch (day) {
-      case 'Monday' || "Mon":
+      case 'Monday':
+      case 'Mon':
         return '월';
-      case 'Tuesday' || "Tue":
+      case 'Tuesday':
+      case 'Tue':
         return '화';
-      case 'Wednesday' || "Wed":
+      case 'Wednesday':
+      case 'Wed':
         return '수';
-      case 'Thursday' || "Thu":
+      case 'Thursday':
+      case 'Thu':
         return '목';
-      case 'Friday' || "Fri":
+      case 'Friday':
+      case 'Fri':
         return '금';
-      case 'Saturday' || "Sat":
+      case 'Saturday':
+      case 'Sat':
         return '토';
-      case 'Sunday' || "Sun":
+      case 'Sunday':
+      case 'Sun':
         return '일';
       default:
         return '';
@@ -182,6 +189,29 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
     Navigator.pop(context);
   }
 
+  void _selectWeekdays() {
+    setState(() {
+      bool allSelected =
+          ['월', '화', '수', '목', '금'].every((day) => selectedDays[day]!);
+      selectedDays.forEach((day, selected) {
+        if (['월', '화', '수', '목', '금'].contains(day)) {
+          selectedDays[day] = !allSelected;
+        }
+      });
+    });
+  }
+
+  void _selectWeekend() {
+    setState(() {
+      bool allSelected = ['토', '일'].every((day) => selectedDays[day]!);
+      selectedDays.forEach((day, selected) {
+        if (['토', '일'].contains(day)) {
+          selectedDays[day] = !allSelected;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -240,6 +270,51 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                   );
                 }).toList(),
               ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Container(
+                  width: screenWidth * 0.2,
+                  height: screenHeight * 0.05,
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(
+                        color: Constants.DEFAULT_COLOR,
+                        width: 1.0,
+                      ),
+                    ),
+                    onPressed: _selectWeekdays,
+                    child: const Text(
+                      '평일',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: screenWidth * 0.2,
+                  height: screenHeight * 0.05,
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(
+                        color: Constants.DEFAULT_COLOR,
+                        width: 1.0,
+                      ),
+                    ),
+                    onPressed: _selectWeekend,
+                    child: const Text(
+                      '주말',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
