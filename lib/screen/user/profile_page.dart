@@ -3,7 +3,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
-import 'package:pophub/screen/setting/inquery_page.dart';
+import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
@@ -336,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const InqueryPage()));
+                                                const InquiryPage()));
                                   },
                                 ),
                                 Visibility(

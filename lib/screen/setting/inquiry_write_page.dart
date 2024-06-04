@@ -1,7 +1,11 @@
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 
 class InquiryWritePage extends StatefulWidget {
   const InquiryWritePage({super.key});
@@ -13,7 +17,9 @@ class InquiryWritePage extends StatefulWidget {
 class _InquiryWritePageState extends State<InquiryWritePage> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  PlatformFile? _pickedFile;
+  String category = "";
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
   @override
   void dispose() {
@@ -22,46 +28,45 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
     super.dispose();
   }
 
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        _pickedFile = result.files.first;
-      });
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          _image = pickedImage;
+        });
+      }
+    } catch (e) {
+      Logger.debug('Error picking image: $e');
     }
   }
 
-  Future<void> _submitInquiry() async {
+  List<Map<String, int>> categoryList = [
+    {'기술 문의': 00},
+    {'상품 문의': 01},
+    {'고객 서비스 문의': 02},
+    {'주문/배송 문의': 03},
+    {'회원 가입/로그인 문의': 04},
+  ];
+
+  Future<void> inquiryAdd() async {
     String title = _titleController.text;
     String content = _contentController.text;
-    String fileName = _pickedFile?.name ?? '';
 
-    try {
-      FormData formData = FormData.fromMap({
-        'title': title,
-        'content': content,
-        if (_pickedFile != null)
-          'file': await MultipartFile.fromFile(_pickedFile!.path!,
-              filename: fileName),
-      });
+    Map<String, dynamic> data = _image == null
+        ? await Api.inquiryAdd(title, content, category)
+        : await Api.inquiryAddWithImage(
+            title, content, category, File(_image!.path));
 
-      Dio dio = Dio();
-      Response response = await dio.post(
-        'https://example.com/api/inquiry',
-        data: formData,
-      );
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('문의가 성공적으로 전송되었습니다.')));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('문의 전송에 실패하였습니다.')));
+    if (!data.toString().contains("fail")) {
+      if (mounted) Navigator.of(context).pop();
+    } else {
+      if (mounted) {
+        showAlert(context, "경고", "문의 추가에 실패했습니다.", () {
+          Navigator.of(context).pop();
+        });
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('오류가 발생하였습니다: $e')));
     }
   }
 
@@ -98,8 +103,31 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
               maxLines: 6,
             ),
             const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: '카테고리'),
+              items: categoryList.map((categoryMap) {
+                String category = categoryMap.keys.first;
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  for (var categoryMap in categoryList) {
+                    if (categoryMap.containsKey(value)) {
+                      setState(() {
+                        category = categoryMap[value]!.toString();
+                      });
+                      break;
+                    }
+                  }
+                }
+              },
+            ),
+            const SizedBox(height: 16),
             OutlinedButton(
-              onPressed: _pickFile,
+              onPressed: _pickImage,
               style: OutlinedButton.styleFrom(
                 minimumSize: Size(screenWidth / 2, 50),
               ),
@@ -120,13 +148,11 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
                     child: Padding(
                       padding: const EdgeInsets.only(
                           top: 10, bottom: 5, left: 10, right: 10),
-                      child: Text(_pickedFile != null
-                          ? _pickedFile!.name
-                          : '첨부된 파일 없음'),
+                      child: Text(_image != null ? _image!.name : '첨부된 파일 없음'),
                     ))),
             const Spacer(),
             OutlinedButton(
-              onPressed: _submitInquiry,
+              onPressed: inquiryAdd,
               child: const Text('완료'),
             ),
           ],

@@ -76,7 +76,7 @@ class Api {
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리
+      // 오류 처리–
       Logger.debug('Failed to fetch popup list: $e');
       throw Exception('Failed to fetch popup list');
     }
@@ -386,10 +386,10 @@ class Api {
   }
 
   // 문의 내역
-  static Future<List<dynamic>> getInqueryList() async {
+  static Future<List<dynamic>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/admin/notice',
+        '$domain/user/search_inquiry/?userName=$userName',
         {},
       );
 
@@ -491,6 +491,36 @@ class Api {
     final data = await postData('$domain/popup/reservation/$popup', {});
     Logger.debug("### 예약 상태 조회 $data");
 
+    return data;
+  }
+
+  // 문의내역 추가 (이미지 o)
+  static Future<Map<String, dynamic>> inquiryAddWithImage(
+      String title, String content, String category, image) async {
+    final data = await postDataWithImage(
+        '$domain/user/create_inquiry/',
+        {
+          'userName': User().userName,
+          'categoryId': category,
+          'title': title,
+          'content': content,
+        },
+        'file',
+        image);
+    Logger.debug("### 문의내역 추가 이미지o $data");
+    return data;
+  }
+
+  // 문의내역 추가 (이미지 x)
+  static Future<Map<String, dynamic>> inquiryAdd(
+      String title, String content, String category) async {
+    final data = await postData('$domain/user/create_inquiry/', {
+      'userName': User().userName,
+      'categoryId': category,
+      'title': title,
+      'content': content,
+    });
+    Logger.debug("### 문의내역 추가 이미지x $data");
     return data;
   }
 }

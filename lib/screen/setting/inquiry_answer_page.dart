@@ -36,6 +36,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
     String title = _titleController.text;
     String content = _contentController.text;
     String fileName = _pickedFile?.name ?? '';
+    String category = _contentController.text;
 
     try {
       FormData formData = FormData.fromMap({
