@@ -85,11 +85,13 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> popupStoreAllow() async {
     try {
-      final data = await Api.popupAllow(widget.storeId);
+      final Map<String, dynamic> response =
+          await Api.popupAllow(widget.storeId);
+      final applicantUsername = response['username'];
 
-      if (!data.toString().contains("fail") && mounted) {
-        final applicantUsername = data[User().userName];
-
+      if (applicantUsername != null &&
+          applicantUsername.isNotEmpty &&
+          mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
