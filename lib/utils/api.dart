@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:pophub/model/inquiry_detail_model.dart';
+import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
@@ -386,22 +388,22 @@ class Api {
   }
 
   // 문의 내역
-  static Future<List<dynamic>> getInquiryList(String userName) async {
+  static Future<List<InquiryModel>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
         '$domain/user/search_inquiry/?userName=$userName',
         {},
       );
 
-      Logger.debug("### 공지사항 조회 $dataList");
+      Logger.debug("### 문의 내역 조회 $dataList");
 
-      // List<PopupModel> popupList =
-      //     dataList.map((data) => PopupModel.fromJson(data)).toList();
-      return dataList;
+      List<InquiryModel> inquiryList =
+          dataList.map((data) => InquiryModel.fromJson(data)).toList();
+      return inquiryList;
     } catch (e) {
       // 오류 처리
-      Logger.debug('Failed to fetch popup list: $e');
-      throw Exception('Failed to fetch popup list');
+      Logger.debug('Failed to fetch inquiry list: $e');
+      throw Exception('Failed to fetch inquiry list');
     }
   }
 
@@ -522,5 +524,16 @@ class Api {
     });
     Logger.debug("### 문의내역 추가 이미지x $data");
     return data;
+  }
+
+  //문의 내역 상세 조회
+  static Future<InquiryDetailModel> getInquiry(int inquiryId) async {
+    final data =
+        await getData('$domain/user/search_inquiry/?inquiryId=$inquiryId', {});
+    Logger.debug("### 문의 내역 상세 조회 $data");
+
+    InquiryDetailModel inquirtModel = InquiryDetailModel.fromJson(data);
+
+    return inquirtModel;
   }
 }

@@ -77,7 +77,7 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
     double screenHeight = screenSize.height;
     return Scaffold(
       appBar: const CustomTitleBar(titleName: "문의 하기"),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.only(
             left: screenWidth * 0.05,
             right: screenWidth * 0.05,
@@ -150,7 +150,7 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
                           top: 10, bottom: 5, left: 10, right: 10),
                       child: Text(_image != null ? _image!.name : '첨부된 파일 없음'),
                     ))),
-            const Spacer(),
+            const SizedBox(height: 16),
             OutlinedButton(
               onPressed: inquiryAdd,
               child: const Text('완료'),
