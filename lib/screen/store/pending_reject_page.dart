@@ -26,11 +26,10 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
     try {
       final Map<String, dynamic> response =
           await Api.popupDeny(widget.id, denyController.text);
+      final data = await Api.popupDeny(widget.id, denyController.text);
       final applicantUsername = response['username'];
 
-      if (applicantUsername != null &&
-          applicantUsername.isNotEmpty &&
-          mounted) {
+      if (!data.toString().contains("fail") && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

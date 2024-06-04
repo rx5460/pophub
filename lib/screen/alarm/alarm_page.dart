@@ -145,7 +145,7 @@ class _AlarmPageState extends State<AlarmPage>
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userId)
+          .doc(User().userName)
           .collection(collection)
           .snapshots(),
       builder: (context, snapshot) {
