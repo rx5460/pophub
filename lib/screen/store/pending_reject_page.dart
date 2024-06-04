@@ -25,7 +25,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
   Future<void> popupStoreDeny() async {
     try {
       final response = await Api.popupDeny(widget.id, denyController.text);
-      final applicantUsername = response.toString();
+      final applicantUsername = jsonDecode(response.toString())['data'];
 
       if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();

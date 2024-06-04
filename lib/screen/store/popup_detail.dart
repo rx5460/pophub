@@ -86,7 +86,7 @@ class _PopupDetailState extends State<PopupDetail> {
   Future<void> popupStoreAllow() async {
     try {
       final response = await Api.popupAllow(widget.storeId);
-      final applicantUsername = response.toString();
+      final applicantUsername = jsonDecode(response.toString())['data'];
 
       if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
