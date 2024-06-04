@@ -88,6 +88,8 @@ class _PopupDetailState extends State<PopupDetail> {
       final data = await Api.popupAllow(widget.storeId);
 
       if (!data.toString().contains("fail") && mounted) {
+        final applicantUsername = data[User().userName];
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -100,6 +102,7 @@ class _PopupDetailState extends State<PopupDetail> {
           'label': '성공적으로 팝업 등록이 완료되었습니다.',
           'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
           'active': true,
+          'storeId': widget.storeId,
         };
 
         // 서버에 알람 추가
@@ -107,7 +110,7 @@ class _PopupDetailState extends State<PopupDetail> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userId': widget.storeId,
+            'userId': applicantUsername,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
@@ -116,7 +119,7 @@ class _PopupDetailState extends State<PopupDetail> {
         // Firestore에 알람 추가
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(widget.storeId)
+            .doc(applicantUsername)
             .collection('alarms')
             .add(alarmDetails);
 
@@ -138,7 +141,9 @@ class _PopupDetailState extends State<PopupDetail> {
           allowSuccess = true;
           isLoading = false;
         });
-      } else {}
+      } else {
+        Logger.debug("승인에 실패했습니다.");
+      }
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching popup data: $error');

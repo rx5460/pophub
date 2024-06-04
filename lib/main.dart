@@ -43,13 +43,13 @@ void initializeNotification() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
-  // // FCM 알림 초기화
-  // initializeNotification();
+  // FCM 알림 초기화
+  initializeNotification();
 
-  // final pushNotificationService = PushNotificationService();
-  // await pushNotificationService.init();
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.init();
 
   await dotenv.load(fileName: 'assets/config/.env');
 

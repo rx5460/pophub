@@ -37,10 +37,11 @@ class _AlarmPageState extends State<AlarmPage>
 
   void setupListeners() {
     List<String> collections = ['alarms', 'orderAlarms', 'waitAlarms'];
+
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userId)
+          .doc(User().userName)
           .collection(collection)
           .snapshots()
           .listen((snapshot) {
