@@ -85,12 +85,10 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> popupStoreAllow() async {
     try {
-      final Map<String, dynamic> response =
-          await Api.popupAllow(widget.storeId);
-      final data = await Api.popupAllow(widget.storeId);
-      final applicantUsername = response['userName'];
+      final response = await Api.popupAllow(widget.storeId);
+      final applicantUsername = response.toString();
 
-      if (!data.toString().contains("fail") && mounted) {
+      if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -111,7 +109,7 @@ class _PopupDetailState extends State<PopupDetail> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userName': applicantUsername,
+            'userId': applicantUsername,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
@@ -125,7 +123,7 @@ class _PopupDetailState extends State<PopupDetail> {
             .add(alarmDetails);
 
         // 로컬 알림 발송
-        await const AlarmPage().showNotification(
+        await AlarmPage().showNotification(
             alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
 
         Navigator.of(context).pop();

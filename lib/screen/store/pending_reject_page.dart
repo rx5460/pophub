@@ -24,12 +24,10 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
   Future<void> popupStoreDeny() async {
     try {
-      final Map<String, dynamic> response =
-          await Api.popupDeny(widget.id, denyController.text);
-      final data = await Api.popupDeny(widget.id, denyController.text);
-      final applicantUsername = response['username'];
+      final response = await Api.popupDeny(widget.id, denyController.text);
+      final applicantUsername = response.toString();
 
-      if (!data.toString().contains("fail") && mounted) {
+      if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
