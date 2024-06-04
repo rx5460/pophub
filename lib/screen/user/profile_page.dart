@@ -318,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.task,
                                   text: '공지사항',
                                   onClick: () {
                                     Navigator.push(
@@ -375,13 +375,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Visibility(
                                   visible: User().role == "General Member",
                                   child: MenuList(
-                                    icon: Icons.message_outlined,
+                                    icon: Icons.star,
                                     text: '업적',
                                     onClick: () {},
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.credit_card,
                                   text: '결제 내역',
                                   onClick: () {},
                                 ),
