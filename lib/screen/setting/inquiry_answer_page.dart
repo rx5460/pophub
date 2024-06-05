@@ -1,69 +1,62 @@
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/setting/inquiry_page.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/utils.dart';
 
 class InquiryAnswerPage extends StatefulWidget {
-  const InquiryAnswerPage({super.key});
+  final int inquiryId;
+  const InquiryAnswerPage({super.key, required this.inquiryId});
 
   @override
   _InquiryAnswerPageState createState() => _InquiryAnswerPageState();
 }
 
 class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-  PlatformFile? _pickedFile;
+  final _answerContentController = TextEditingController();
+  InquiryModel? inquiry;
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        _pickedFile = result.files.first;
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    getInquiryData();
   }
 
   Future<void> _submitInquiry() async {
-    String title = _titleController.text;
-    String content = _contentController.text;
-    String fileName = _pickedFile?.name ?? '';
-    String category = _contentController.text;
+    String content = _answerContentController.text;
 
-    try {
-      FormData formData = FormData.fromMap({
-        'title': title,
-        'content': content,
-        if (_pickedFile != null)
-          'file': await MultipartFile.fromFile(_pickedFile!.path!,
-              filename: fileName),
-      });
+    Map<String, dynamic> data =
+        await Api.inquiryAnswer(widget.inquiryId, content);
 
-      Dio dio = Dio();
-      Response response = await dio.post(
-        'https://example.com/api/inquiry',
-        data: formData,
-      );
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('문의가 성공적으로 전송되었습니다.')));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('문의 전송에 실패하였습니다.')));
+    if (!data.toString().contains("fail")) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const InquiryPage(),
+          ),
+        );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('오류가 발생하였습니다: $e')));
+    } else {
+      if (mounted) {
+        showAlert(context, "경고", "문의 추가에 실패했습니다.", () {
+          Navigator.of(context).pop();
+        });
+      }
     }
+  }
+
+  Future<void> getInquiryData() async {
+    final content = await Api.getInquiry(widget.inquiryId);
+    setState(() {
+      inquiry = content;
+    });
   }
 
   @override
@@ -87,53 +80,69 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
               const Text('문의 제목',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(hintText: '문의 제목을 입력하세요'),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  width: screenWidth,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  child: Text(
+                    inquiry != null ? inquiry!.title.toString() : "",
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               const Text('문의 내용',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              TextField(
-                controller: _contentController,
-                decoration: const InputDecoration(hintText: '문의 내용을 입력하세요'),
-                maxLines: 6,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: screenWidth,
-                height: 40,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color(0xffd9d9d9),
-                      width: 0.5,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, bottom: 5, left: 10, right: 10),
-                    child: Text(
-                        _pickedFile != null ? _pickedFile!.name : '첨부된 파일 없음'),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text('답변 제목',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(hintText: '답변 제목을 입력하세요'),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                    width: screenWidth,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          inquiry != null ? inquiry!.content.toString() : "",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        inquiry != null
+                            ? inquiry!.image != null
+                                ? Image.network(
+                                    inquiry!.image.toString(),
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Container()
+                            : Container(),
+                      ],
+                    )),
               ),
               const SizedBox(height: 16),
               const Text('답변 내용',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextField(
-                controller: _contentController,
+                controller: _answerContentController,
                 decoration: const InputDecoration(hintText: '답변 내용을 입력하세요'),
                 maxLines: 6,
               ),

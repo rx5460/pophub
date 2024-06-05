@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:pophub/model/inquiry_detail_model.dart';
+import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -93,8 +93,10 @@ class Api {
       if (getLocation) {
         PopupModel popupModel = PopupModel.fromJson(data);
 
-        final locationData =
-            await Api.getAddress(popupModel.location.toString().split("/")[0]);
+        final locationData = await Api.getAddress(
+            popupModel.location.toString().split("/")[0] != ""
+                ? popupModel.location.toString().split("/")[0]
+                : "서울특별시 강남구 강남대로 지하396");
 
         var documents = locationData['documents'];
         if (documents != null && documents.isNotEmpty) {
@@ -527,12 +529,55 @@ class Api {
   }
 
   //문의 내역 상세 조회
-  static Future<InquiryDetailModel> getInquiry(int inquiryId) async {
+  static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
         await getData('$domain/user/search_inquiry/?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
-    InquiryDetailModel inquirtModel = InquiryDetailModel.fromJson(data);
+    InquiryModel inquirtModel = InquiryModel.fromJson(data);
+
+    return inquirtModel;
+  }
+
+  // 문의 답변
+  static Future<Map<String, dynamic>> inquiryAnswer(
+      int inquiryId, String content) async {
+    final data = await postData('$domain/admin/answer/', {
+      'inquiryId': inquiryId,
+      'userName': User().userName,
+      'content': content,
+    });
+    Logger.debug("### 문의 답변 $data");
+    return data;
+  }
+
+  //문의 내역 전체 조회
+  static Future<List<InquiryModel>> getAllInquiryList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/admin/search_inquiry',
+        {},
+      );
+
+      Logger.debug("### 문의 내역 전체 조회 $dataList");
+
+      List<InquiryModel> inquiryList =
+          dataList.map((data) => InquiryModel.fromJson(data)).toList();
+      return inquiryList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch inquiry list: $e');
+      throw Exception('Failed to fetch inquiry list');
+    }
+  }
+
+  //답변 조회
+  static Future<AnswerModel> getAnswer(int inquiryId) async {
+    final data =
+        await getData('$domain/user/search_answer/?inquiryId=$inquiryId', {});
+    Logger.debug("### 답변 조회 $data");
+
+    AnswerModel inquirtModel = AnswerModel.fromJson(data);
 
     return inquirtModel;
   }

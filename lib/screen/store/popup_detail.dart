@@ -62,27 +62,6 @@ class _PopupDetailState extends State<PopupDetail> {
     }
   }
 
-  Future<void> getAddressData() async {
-    final data = await Api.getAddress(popup!.location.toString());
-
-    // JSON 문자열을 파싱합니다.
-    // var jsonData = json.decode(data);
-
-    // x와 y 좌표를 추출합니다.
-    var documents = data['documents'];
-    if (documents != null && documents.isNotEmpty) {
-      var firstDocument = documents[0];
-      var x = firstDocument['x'];
-      var y = firstDocument['y'];
-
-      setState(() {});
-    } else {
-      print('No documents found');
-    }
-
-    Logger.debug("### $data");
-  }
-
   Future<void> popupStoreAllow() async {
     try {
       final response = await Api.popupAllow(widget.storeId);
@@ -212,7 +191,6 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> initializeData() async {
     await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
-    await getAddressData(); // getPopupData가 완료된 후 getAddressData를 호출합니다.
     fetchReviewData(); // fetchReviewData를 호출합니다.
 
     Logger.debug("###### $markers");
@@ -390,7 +368,6 @@ class _PopupDetailState extends State<PopupDetail> {
                                           onMapCreated: ((controller) async {
                                             mapController = controller;
 
-                                            await getAddressData();
                                             markers.add(Marker(
                                               markerId: UniqueKey().toString(),
                                               latLng: center,

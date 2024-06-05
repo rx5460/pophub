@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
@@ -60,7 +61,14 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
             title, content, category, File(_image!.path));
 
     if (!data.toString().contains("fail")) {
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const InquiryPage(),
+          ),
+        );
+      }
     } else {
       if (mounted) {
         showAlert(context, "경고", "문의 추가에 실패했습니다.", () {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/model/inquiry_detail_model.dart';
+import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/setting/inquiry_answer_page.dart';
 import 'package:pophub/screen/setting/inquiry_write_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -24,15 +26,16 @@ class _InquiryPageState extends State<InquiryPage> {
 
   List<InquiryModel> inquiryList = [];
   Future<void> getInquiryData() async {
-    try {
-      final data = await Api.getInquiryList(User().userName);
+    Logger.debug("### ${User().role}");
+    final data = User().role == "President"
+        ? await Api.getAllInquiryList()
+        : await Api.getInquiryList(User().userName);
 
+    if (data.toString().contains("fail")) {
+    } else {
       setState(() {
         inquiryList = data;
       });
-    } catch (error) {
-      // 오류 처리
-      Logger.debug('Error fetching inquiry data: $error');
     }
   }
 
@@ -47,28 +50,57 @@ class _InquiryPageState extends State<InquiryPage> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: inquiryList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InquiryTile(inquiry: inquiryList[index]);
-                },
+              child: inquiryList.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: inquiryList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InquiryTile(inquiry: inquiryList[index]);
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                      "문의 내역이 없습니다.",
+                      style: TextStyle(fontSize: 16),
+                    )),
+            ),
+            Visibility(
+              visible: User().role != "President",
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: screenHeight * 0.02, right: screenHeight * 0.02),
+                child: OutlinedButton(
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InquiryWritePage(),
+                      ),
+                    ),
+                  },
+                  child: const Text("문의 하기"),
+                ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: screenHeight * 0.02, right: screenHeight * 0.02),
-              child: OutlinedButton(
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InquiryWritePage(),
-                    ),
-                  ),
-                },
-                child: const Text("문의 하기"),
-              ),
-            )
+            // Visibility(
+            //   visible: User().role == "President",
+            //   child: Padding(
+            //     padding: EdgeInsets.only(
+            //         left: screenHeight * 0.02, right: screenHeight * 0.02),
+            //     child: OutlinedButton(
+            //       onPressed: () => {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => const InquiryAnswerPage(
+            //               inquiryId: 1,
+            //             ),
+            //           ),
+            //         ),
+            //       },
+            //       child: const Text("문의 답변 하기"),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),
@@ -88,7 +120,8 @@ class InquiryTile extends StatefulWidget {
 class _InquiryTileState extends State<InquiryTile> {
   bool _isExpanded = false;
   bool _isLoading = false;
-  InquiryDetailModel? _content;
+  InquiryModel? inquiryDetail;
+  AnswerModel? answerDetail;
 
   Future<void> _fetchContent() async {
     setState(() {
@@ -97,8 +130,16 @@ class _InquiryTileState extends State<InquiryTile> {
 
     try {
       final content = await Api.getInquiry(widget.inquiry.inquiryId);
+
+      if (widget.inquiry.status == "complete" ||
+          widget.inquiry.answerStatus == "complete") {
+        final answer = await Api.getAnswer(widget.inquiry.inquiryId);
+        setState(() {
+          answerDetail = answer;
+        });
+      }
       setState(() {
-        _content = content;
+        inquiryDetail = content;
         _isLoading = false;
       });
     } catch (error) {
@@ -115,6 +156,7 @@ class _InquiryTileState extends State<InquiryTile> {
 
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(
@@ -125,7 +167,57 @@ class _InquiryTileState extends State<InquiryTile> {
       ),
       child: ExpansionTile(
         title: Text(widget.inquiry.title),
-        subtitle: Text(widget.inquiry.category),
+        subtitle: Row(
+          children: [
+            Text(DateFormat("yyyy.MM.dd")
+                .format(DateTime.parse(widget.inquiry.writeDate))),
+            SizedBox(
+              width: screenWidth * 0.02,
+            ),
+            SizedBox(
+                width: screenWidth * 0.2,
+                height: screenHeight * 0.04,
+                child: ((widget.inquiry.status == "pending" ||
+                            widget.inquiry.answerStatus == "pending") &&
+                        User().role == "President")
+                    ? OutlinedButton(
+                        onPressed: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InquiryAnswerPage(
+                                inquiryId: widget.inquiry.inquiryId,
+                              ),
+                            ),
+                          ),
+                        },
+                        child: const Text('답변하기'),
+                      )
+                    : widget.inquiry.status == "complete" ||
+                            widget.inquiry.answerStatus == "complete"
+                        ? OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(
+                                color: Colors.black,
+                                width: 1.0,
+                              ),
+                            ),
+                            onPressed: () => {},
+                            child: const Text(
+                              '완료',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
+                        : OutlinedButton(
+                            style: OutlinedButton.styleFrom(),
+                            onPressed: () => {},
+                            child: const Text(
+                              '접수',
+                            ),
+                          )),
+          ],
+        ),
         onExpansionChanged: (expanded) {
           if (expanded && !_isExpanded) {
             _fetchContent();
@@ -137,12 +229,10 @@ class _InquiryTileState extends State<InquiryTile> {
         children: [
           if (_isLoading)
             Container(
-              width: screenWidth,
-              color: Constants.LIGHT_GREY,
               padding: const EdgeInsets.all(16.0),
               child: const CircularProgressIndicator(),
             )
-          else if (_content != null)
+          else if (inquiryDetail != null)
             Container(
               width: screenWidth,
               color: Constants.LIGHT_GREY,
@@ -150,20 +240,45 @@ class _InquiryTileState extends State<InquiryTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_content!.content.toString()),
+                  Text(inquiryDetail!.content.toString()),
                   Visibility(
-                    visible: _content!.image != "",
+                    visible: inquiryDetail!.image != "",
                     child: SizedBox(
                       height: screenHeight * 0.01,
                     ),
                   ),
-                  _content!.image != ""
+                  inquiryDetail!.image != ""
                       ? Image.network(
-                          _content!.image.toString(),
+                          inquiryDetail!.image.toString(),
                           width: MediaQuery.of(context).size.width,
                           fit: BoxFit.fill,
                         )
                       : Container(),
+                  Visibility(
+                    visible: inquiryDetail!.answerStatus == "complete",
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: screenHeight * 0.02,
+                          ),
+                          const Text(
+                            "문의 답변 드립니다.",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(DateFormat("yyyy.MM.dd").format(
+                              DateTime.parse(widget.inquiry.writeDate))),
+                          SizedBox(
+                            height: screenHeight * 0.02,
+                          ),
+                          SizedBox(
+                            width: screenWidth * 0.02,
+                          ),
+                          answerDetail != null
+                              ? Text(answerDetail!.content.toString())
+                              : Container()
+                        ]),
+                  )
                 ],
               ),
             )
