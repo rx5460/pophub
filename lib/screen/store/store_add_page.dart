@@ -13,6 +13,7 @@ import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/store/store_operate_hour_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -206,6 +207,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+
     return Scaffold(
       appBar: CustomTitleBar(
           titleName: widget.mode == "modify" ? "스토어 수정" : "스토어 추가"),
@@ -213,6 +215,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
           builder: (context, store, child) {
+            Logger.debug(store.category);
             return ListView(
               children: [
                 SingleChildScrollView(
@@ -468,43 +471,44 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
-                store.category.isNotEmpty
-                    ? DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(labelText: '카테고리'),
-                        value: store.category,
-                        items: categoryList.map((categoryMap) {
-                          String category = categoryMap.keys.first;
-                          return DropdownMenuItem<String>(
-                            value: categoryMap[category].toString(),
-                            child: Text(category),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            store.category = value;
-                          }
-                        },
-                      )
-                    : DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(labelText: '카테고리'),
-                        items: categoryList.map((categoryMap) {
-                          String category = categoryMap.keys.first;
-                          return DropdownMenuItem<String>(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            for (var categoryMap in categoryList) {
-                              if (categoryMap.containsKey(value)) {
-                                store.category = categoryMap[value]!.toString();
-                                break;
-                              }
-                            }
-                          }
-                        },
-                      ),
+                // store.category.isNotEmpty
+                //     ? DropdownButtonFormField<String>(
+                //         decoration: const InputDecoration(labelText: '카테고리'),
+                //         value: store.category,
+                //         items: categoryList.map((categoryMap) {
+                //           String category = categoryMap.keys.first;
+                //           return DropdownMenuItem<String>(
+                //             value: categoryMap[category].toString(),
+                //             child: Text(category),
+                //           );
+                //         }).toList(),
+                //         onChanged: (value) {
+                //           if (value != null) {
+                //             store.category = value;
+                //           }
+                //         },
+                //       )
+                //     :
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(labelText: '카테고리'),
+                  items: categoryList.map((categoryMap) {
+                    String category = categoryMap.keys.first;
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      for (var categoryMap in categoryList) {
+                        if (categoryMap.containsKey(value)) {
+                          store.category = categoryMap[value]!.toString();
+                          break;
+                        }
+                      }
+                    }
+                  },
+                ),
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),

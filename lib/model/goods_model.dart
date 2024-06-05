@@ -1,6 +1,6 @@
 class GoodsModel {
   int price, quantity;
-  final String userName, productName, description;
+  final String? userName, productName, description;
   final List? image;
 
   GoodsModel.fromJson(Map<String, dynamic> json)
@@ -9,7 +9,7 @@ class GoodsModel {
         price = json['product_price'],
         description = json['product_description'],
         quantity = json['remaining_quantity'],
-        image = json['files'];
+        image = json['imageUrls'];
 
   Map<String, dynamic> toJson() {
     return {
