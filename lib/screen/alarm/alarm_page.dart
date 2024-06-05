@@ -18,12 +18,14 @@ class _AlarmPageState extends State<AlarmPage>
   TabController? _tabController;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  bool _pushNotificationEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     initializeNotifications();
+    loadNotificationSettings();
     setupListeners();
   }
 
@@ -33,6 +35,17 @@ class _AlarmPageState extends State<AlarmPage>
     var initializationSettings =
         InitializationSettings(android: androidInitialization);
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void loadNotificationSettings() async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(User().userName)
+        .get();
+
+    setState(() {
+      _pushNotificationEnabled = userDoc['pushNotification'] ?? false;
+    });
   }
 
   void setupListeners() {
@@ -46,7 +59,8 @@ class _AlarmPageState extends State<AlarmPage>
           .snapshots()
           .listen((snapshot) {
         for (var change in snapshot.docChanges) {
-          if (change.type == DocumentChangeType.added) {
+          if (change.type == DocumentChangeType.added &&
+              _pushNotificationEnabled) {
             var data = change.doc.data() as Map<String, dynamic>;
             String notificationMessage;
             switch (collection) {

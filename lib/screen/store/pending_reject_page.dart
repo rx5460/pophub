@@ -51,7 +51,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userId': applicantUsername,
+            'userName': applicantUsername,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
