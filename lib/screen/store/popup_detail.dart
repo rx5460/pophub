@@ -126,7 +126,7 @@ class _PopupDetailState extends State<PopupDetail> {
             .add(alarmDetails);
 
         // 로컬 알림 발송
-        await AlarmPage().showNotification(
+        await const AlarmPage().showNotification(
             alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
 
         Navigator.of(context).pop();

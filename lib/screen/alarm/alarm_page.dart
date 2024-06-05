@@ -18,14 +18,14 @@ class _AlarmPageState extends State<AlarmPage>
   TabController? _tabController;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  bool _pushNotificationEnabled = false;
+  // bool _pushNotificationEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     initializeNotifications();
-    loadNotificationSettings();
+    // loadNotificationSettings();
     setupListeners();
   }
 
@@ -37,16 +37,16 @@ class _AlarmPageState extends State<AlarmPage>
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  void loadNotificationSettings() async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(User().userName)
-        .get();
+  // void loadNotificationSettings() async {
+  //   DocumentSnapshot userDoc = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(User().userId)
+  //       .get();
 
-    setState(() {
-      _pushNotificationEnabled = userDoc['pushNotification'] ?? false;
-    });
-  }
+  //   setState(() {
+  //     _pushNotificationEnabled = userDoc['pushNotification'] ?? false;
+  //   });
+  // }
 
   void setupListeners() {
     List<String> collections = ['alarms', 'orderAlarms', 'waitAlarms'];
@@ -54,13 +54,14 @@ class _AlarmPageState extends State<AlarmPage>
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userName)
+          .doc(User().userId)
           .collection(collection)
           .snapshots()
           .listen((snapshot) {
         for (var change in snapshot.docChanges) {
-          if (change.type == DocumentChangeType.added &&
-              _pushNotificationEnabled) {
+          // if (change.type == DocumentChangeType.added &&
+          //     _pushNotificationEnabled) {
+          if (change.type == DocumentChangeType.added) {
             var data = change.doc.data() as Map<String, dynamic>;
             String notificationMessage;
             switch (collection) {
@@ -159,7 +160,7 @@ class _AlarmPageState extends State<AlarmPage>
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userName)
+          .doc(User().userId)
           .collection(collection)
           .snapshots(),
       builder: (context, snapshot) {
