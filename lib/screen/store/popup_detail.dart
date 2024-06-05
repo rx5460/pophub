@@ -647,7 +647,7 @@ class _PopupDetailState extends State<PopupDetail> {
                               ],
                             ),
                             Positioned(
-                              top: -AppBar().preferredSize.height + 5,
+                              top: -AppBar().preferredSize.height + 20,
                               left: 0,
                               right: 0,
                               child: Container(
@@ -889,13 +889,34 @@ class _PopupDetailState extends State<PopupDetail> {
           return Builder(
             builder: (context) {
               return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(
-                  img,
                   width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.fill,
-                ),
-              );
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        img,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.fill,
+                      ),
+                      Positioned(
+                        top: 0, // 그림자의 위치 조정
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 30, // 그림자의 높이 조정
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ));
             },
           );
         },
