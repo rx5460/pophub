@@ -41,11 +41,11 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
       Provider.of<GoodsNotifier>(context, listen: false).description =
           widget.popup?.description ?? '';
 
-      Provider.of<GoodsNotifier>(context, listen: false).images = widget
-              .popup?.image
-              .map((imageUrl) => {'type': 'url', 'data': imageUrl})
-              .toList() ??
-          [];
+      // Provider.of<GoodsNotifier>(context, listen: false).images = widget
+      //         .popup?.image
+      //         .map((imageUrl) => {'type': 'url', 'data': imageUrl})
+      //         .toList() ??
+      //     [];
     }
   }
 
@@ -206,15 +206,16 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                 ),
                 const SizedBox(height: 10),
                 TextField(
-                  controller: _quantityController,
-                  decoration: const InputDecoration(labelText: '수량'),
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(1000),
-                  ],
-                  onChanged: (value) => goods.quantity = value,
-                ),
+                    controller: _quantityController,
+                    decoration: const InputDecoration(labelText: '수량'),
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(1000),
+                    ],
+                    onChanged: (value) => {}
+                    //goods.quantity = value,
+                    ),
                 const SizedBox(height: 20),
                 const Text(
                   "굿즈 설명",
