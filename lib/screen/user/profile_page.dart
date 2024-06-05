@@ -3,7 +3,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
-import 'package:pophub/screen/setting/inquery_page.dart';
+import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
@@ -318,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.task,
                                   text: '공지사항',
                                   onClick: () {
                                     Navigator.push(
@@ -336,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const InqueryPage()));
+                                                const InquiryPage()));
                                   },
                                 ),
                                 Visibility(
@@ -375,13 +375,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Visibility(
                                   visible: User().role == "General Member",
                                   child: MenuList(
-                                    icon: Icons.message_outlined,
+                                    icon: Icons.star,
                                     text: '업적',
                                     onClick: () {},
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.credit_card,
                                   text: '결제 내역',
                                   onClick: () {},
                                 ),

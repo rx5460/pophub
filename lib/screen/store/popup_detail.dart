@@ -62,32 +62,15 @@ class _PopupDetailState extends State<PopupDetail> {
     }
   }
 
-  Future<void> getAddressData() async {
-    final data = await Api.getAddress(popup!.location.toString());
-
-    // JSON 문자열을 파싱합니다.
-    // var jsonData = json.decode(data);
-
-    // x와 y 좌표를 추출합니다.
-    var documents = data['documents'];
-    if (documents != null && documents.isNotEmpty) {
-      var firstDocument = documents[0];
-      var x = firstDocument['x'];
-      var y = firstDocument['y'];
-
-      setState(() {});
-    } else {
-      print('No documents found');
-    }
-
-    Logger.debug("### $data");
-  }
-
   Future<void> popupStoreAllow() async {
     try {
-      final data = await Api.popupAllow(widget.storeId);
+      final response = await Api.popupAllow(widget.storeId);
+      final responseString = response.toString();
+      final applicantUsername =
+          RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
+              ''; // userName 찾는 정규식
 
-      if (!data.toString().contains("fail") && mounted) {
+      if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -100,6 +83,7 @@ class _PopupDetailState extends State<PopupDetail> {
           'label': '성공적으로 팝업 등록이 완료되었습니다.',
           'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
           'active': true,
+          'storeId': widget.storeId,
         };
 
         // 서버에 알람 추가
@@ -107,7 +91,7 @@ class _PopupDetailState extends State<PopupDetail> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userId': widget.storeId,
+            'userName': applicantUsername,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
@@ -116,7 +100,7 @@ class _PopupDetailState extends State<PopupDetail> {
         // Firestore에 알람 추가
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(widget.storeId)
+            .doc(applicantUsername)
             .collection('alarms')
             .add(alarmDetails);
 
@@ -138,7 +122,9 @@ class _PopupDetailState extends State<PopupDetail> {
           allowSuccess = true;
           isLoading = false;
         });
-      } else {}
+      } else {
+        Logger.debug("승인에 실패했습니다.");
+      }
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching popup data: $error');
@@ -205,7 +191,6 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> initializeData() async {
     await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
-    await getAddressData(); // getPopupData가 완료된 후 getAddressData를 호출합니다.
     fetchReviewData(); // fetchReviewData를 호출합니다.
 
     Logger.debug("###### $markers");
@@ -383,11 +368,11 @@ class _PopupDetailState extends State<PopupDetail> {
                                         //   onMapCreated: ((controller) async {
                                         //     mapController = controller;
 
-                                        //     await getAddressData();
-                                        //     markers.add(Marker(
-                                        //       markerId: UniqueKey().toString(),
-                                        //       latLng: center,
-                                        //     ));
+                                            await getAddressData();
+                                            markers.add(Marker(
+                                              markerId: UniqueKey().toString(),
+                                              latLng: center,
+                                            ));
 
                                         //     Logger.debug(center.toString());
                                         //     Logger.debug(markers.toString());

@@ -43,13 +43,13 @@ void initializeNotification() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
-  // // FCM 알림 초기화
-  // initializeNotification();
+  // FCM 알림 초기화
+  initializeNotification();
 
-  // final pushNotificationService = PushNotificationService();
-  // await pushNotificationService.init();
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.init();
 
   await dotenv.load(fileName: 'assets/config/.env');
 
@@ -79,66 +79,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-//스플래시 만들다 실패한거
-// class _MainPagePageState extends State<MainPagePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         body: Center(
-//           child: Container(
-//             color: Colors.white,
-//             child: Padding(
-//               padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
-//               child: Stack(
-//                 alignment: Alignment.center,
-//                 children: [
-//                   AnimatedPositioned(
-//                     duration: const Duration(seconds: 1),
-//                     curve: Curves.easeInOut,
-//                     left: -100,
-//                     child: Image.asset(
-//                       'assets/images/pop.png',
-//                       height: 100,
-//                       width: 100,
-//                     ),
-//                   ),
-
-//                   AnimatedPositioned(
-//                     duration: const Duration(seconds: 1),
-//                     curve: Curves.easeInOut,
-//                     right: -100,
-//                     child: Image.asset(
-//                       'assets/images/hub.png',
-//                       height: 100,
-//                       width: 100,
-//                     ),
-//                   ),
-//                   Container(
-//                     width: double.infinity,
-//                     height: 55,
-//                     margin: const EdgeInsets.only(top: 30),
-//                     child: OutlinedButton(
-//                       onPressed: () => {
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) => const Login(),
-//                           ),
-//                         ),
-//                       },
-//                       child: const Text("로그인"),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

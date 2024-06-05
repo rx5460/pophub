@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
@@ -23,9 +24,13 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
   Future<void> popupStoreDeny() async {
     try {
-      final data = await Api.popupDeny(widget.id, denyController.text);
+      final response = await Api.popupDeny(widget.id, denyController.text);
+      final responseString = response.toString();
+      final applicantUsername =
+          RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
+              ''; // userName 찾는 정규식
 
-      if (!data.toString().contains("fail") && mounted) {
+      if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -34,10 +39,11 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         );
 
         final alarmDetails = {
-          'title': '팝업 거절 완료',
+          'title': '팝업 등록 거절됨',
           'label': '당사의 팝업 등록이 거절되었습니다.',
           'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
           'active': true,
+          'storeId': widget.id,
         };
 
         // 서버에 알람 추가
@@ -45,7 +51,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
           Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'userId': widget.id,
+            'userName': applicantUsername,
             'type': 'alarms',
             'alarmDetails': alarmDetails,
           }),
@@ -54,7 +60,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         // Firestore에 알람 추가
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(widget.id)
+            .doc(applicantUsername)
             .collection('alarms')
             .add(alarmDetails);
 
@@ -71,7 +77,9 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         Navigator.of(context).pop();
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const StoreListPage()));
-      } else {}
+      } else {
+        Logger.debug("거절에 실패했습니다.");
+      }
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching popup data: $error');

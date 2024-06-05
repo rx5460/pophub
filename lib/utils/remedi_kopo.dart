@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pophub/model/kopo_model.dart';
+import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -80,15 +81,8 @@ class RemediKopoState extends State<RemediKopo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: widget.colour,
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          iconTheme: const IconThemeData().copyWith(color: Colors.black),
+        appBar: const CustomTitleBar(
+          titleName: "주소 검색",
         ),
         body: WebViewWidget(controller: _webViewController)
 

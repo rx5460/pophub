@@ -73,13 +73,13 @@ Future<List<dynamic>> getListData(
       queryParameters: queryParams,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.data);
-      if (response.data.runtimeType == String) {
-        List<String> result = [];
+      if (response.data is List) {
+        return response.data;
+      } else {
+        List<dynamic> result = [];
         result.add(response.data);
         return result;
       }
-      return response.data;
     } else {
       throw Exception('Failed to load data');
     }

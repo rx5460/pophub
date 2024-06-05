@@ -342,12 +342,13 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   child: SizedBox(
                     width: screenWidth * 0.5,
                     height:
-                        screenHeight * (store.schedule!.length * 0.2) * 0.25,
+                        screenHeight * (store.schedule!.length * 0.2) * 0.22,
                     child: Consumer<StoreModel>(
                       builder: (context, store, child) {
                         return store.schedule != null
                             ? ListView.builder(
                                 itemCount: store.schedule!.length,
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   Schedule schedule = store.schedule![index];
                                   return Padding(

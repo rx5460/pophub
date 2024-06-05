@@ -18,12 +18,14 @@ class _AlarmPageState extends State<AlarmPage>
   TabController? _tabController;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  // bool _pushNotificationEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     initializeNotifications();
+    // loadNotificationSettings();
     setupListeners();
   }
 
@@ -35,8 +37,20 @@ class _AlarmPageState extends State<AlarmPage>
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
+  // void loadNotificationSettings() async {
+  //   DocumentSnapshot userDoc = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(User().userId)
+  //       .get();
+
+  //   setState(() {
+  //     _pushNotificationEnabled = userDoc['pushNotification'] ?? false;
+  //   });
+  // }
+
   void setupListeners() {
     List<String> collections = ['alarms', 'orderAlarms', 'waitAlarms'];
+
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
@@ -45,6 +59,8 @@ class _AlarmPageState extends State<AlarmPage>
           .snapshots()
           .listen((snapshot) {
         for (var change in snapshot.docChanges) {
+          // if (change.type == DocumentChangeType.added &&
+          //     _pushNotificationEnabled) {
           if (change.type == DocumentChangeType.added) {
             var data = change.doc.data() as Map<String, dynamic>;
             String notificationMessage;
@@ -61,7 +77,7 @@ class _AlarmPageState extends State<AlarmPage>
               default:
                 notificationMessage = "알 수 없음";
             }
-            showNotification("${data['title']} \n ${data['label']}",
+            showNotification("${data['title']}\n${data['label']}",
                 "새로운 $notificationMessage 알람이 왔습니다!");
             setState(() {});
           }

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:pophub/model/answer_model.dart';
+import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
@@ -76,7 +78,7 @@ class Api {
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리
+      // 오류 처리–
       Logger.debug('Failed to fetch popup list: $e');
       throw Exception('Failed to fetch popup list');
     }
@@ -91,8 +93,10 @@ class Api {
       if (getLocation) {
         PopupModel popupModel = PopupModel.fromJson(data);
 
-        final locationData =
-            await Api.getAddress(popupModel.location.toString().split("/")[0]);
+        final locationData = await Api.getAddress(
+            popupModel.location.toString().split("/")[0] != ""
+                ? popupModel.location.toString().split("/")[0]
+                : "서울특별시 강남구 강남대로 지하396");
 
         var documents = locationData['documents'];
         if (documents != null && documents.isNotEmpty) {
@@ -367,29 +371,13 @@ class Api {
 
 // 전체 공지사항 조회
   static Future<List<NoticeModel>> getNoticeList() async {
-    try {
-      final dynamic firstItem = await getFirstItem('$domain/admin/notice');
-      List<NoticeModel> noticeList;
+    final dataList = await getListData('$domain/admin/notice', {});
 
-      if (firstItem is List<dynamic>) {
-        List<dynamic> dataList = firstItem;
-        noticeList =
-            dataList.map((data) => NoticeModel.fromJson(data)).toList();
-      } else if (firstItem is Map<String, dynamic>) {
-        Map<String, dynamic> dataMap = firstItem;
-        noticeList = [NoticeModel.fromJson(dataMap)];
-      } else {
-        throw Exception('Invalid data format');
-      }
+    List<NoticeModel> noticeList =
+        dataList.map((data) => NoticeModel.fromJson(data)).toList();
+    Logger.debug("### 공지사항 조회 $noticeList");
 
-      Logger.debug("### 공지사항 조회 $noticeList");
-
-      return noticeList;
-    } catch (e) {
-      // 오류 처리
-      Logger.debug('Failed to fetch popup list: $e');
-      throw Exception('Failed to fetch popup list');
-    }
+    return noticeList;
   }
 
   static Future<dynamic> getFirstItem(String url) async {
@@ -402,26 +390,26 @@ class Api {
   }
 
   // 문의 내역
-  static Future<List<dynamic>> getInqueryList() async {
+  static Future<List<InquiryModel>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/admin/notice',
+        '$domain/user/search_inquiry/?userName=$userName',
         {},
       );
 
-      Logger.debug("### 공지사항 조회 $dataList");
+      Logger.debug("### 문의 내역 조회 $dataList");
 
-      // List<PopupModel> popupList =
-      //     dataList.map((data) => PopupModel.fromJson(data)).toList();
-      return dataList;
+      List<InquiryModel> inquiryList =
+          dataList.map((data) => InquiryModel.fromJson(data)).toList();
+      return inquiryList;
     } catch (e) {
       // 오류 처리
-      Logger.debug('Failed to fetch popup list: $e');
-      throw Exception('Failed to fetch popup list');
+      Logger.debug('Failed to fetch inquiry list: $e');
+      throw Exception('Failed to fetch inquiry list');
     }
   }
 
-  // 스토어 추가
+  // 스토어 수정
   static Future<Map<String, dynamic>> storeModify(StoreModel store) async {
     FormData formData = FormData();
 
@@ -433,6 +421,15 @@ class Api {
           'files',
           await MultipartFile.fromFile(file.path,
               filename: file.path.split('/').last),
+        ));
+      } else if (imageMap['type'] == 'url') {
+        var url = imageMap['data'] as String;
+        var response = await Dio().get<List<int>>(url,
+            options: Options(responseType: ResponseType.bytes));
+        formData.files.add(MapEntry(
+          'files',
+          MultipartFile.fromBytes(response.data!,
+              filename: url.split('/').last),
         ));
       }
     }
@@ -475,9 +472,10 @@ class Api {
       }
     }
 
-    final data =
+    Map<String, dynamic> data =
         await putFormData('$domain/popup/update/${store.id}', formData);
     Logger.debug("### 스토어 수정 $data");
+    Logger.debug("### 스토어 수정 $formData");
     return data;
   }
 
@@ -505,5 +503,89 @@ class Api {
     final data = await postData('$domain/product/store/$popup', {});
     Logger.debug("### 팝업별 굿즈 조회 $data");
     return data;
+  }
+
+  // 문의내역 추가 (이미지 o)
+  static Future<Map<String, dynamic>> inquiryAddWithImage(
+      String title, String content, String category, image) async {
+    final data = await postDataWithImage(
+        '$domain/user/create_inquiry/',
+        {
+          'userName': User().userName,
+          'categoryId': category,
+          'title': title,
+          'content': content,
+        },
+        'file',
+        image);
+    Logger.debug("### 문의내역 추가 이미지o $data");
+    return data;
+  }
+
+  // 문의내역 추가 (이미지 x)
+  static Future<Map<String, dynamic>> inquiryAdd(
+      String title, String content, String category) async {
+    final data = await postData('$domain/user/create_inquiry/', {
+      'userName': User().userName,
+      'categoryId': category,
+      'title': title,
+      'content': content,
+    });
+    Logger.debug("### 문의내역 추가 이미지x $data");
+    return data;
+  }
+
+  //문의 내역 상세 조회
+  static Future<InquiryModel> getInquiry(int inquiryId) async {
+    final data =
+        await getData('$domain/user/search_inquiry/?inquiryId=$inquiryId', {});
+    Logger.debug("### 문의 내역 상세 조회 $data");
+
+    InquiryModel inquirtModel = InquiryModel.fromJson(data);
+
+    return inquirtModel;
+  }
+
+  // 문의 답변
+  static Future<Map<String, dynamic>> inquiryAnswer(
+      int inquiryId, String content) async {
+    final data = await postData('$domain/admin/answer/', {
+      'inquiryId': inquiryId,
+      'userName': User().userName,
+      'content': content,
+    });
+    Logger.debug("### 문의 답변 $data");
+    return data;
+  }
+
+  //문의 내역 전체 조회
+  static Future<List<InquiryModel>> getAllInquiryList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/admin/search_inquiry',
+        {},
+      );
+
+      Logger.debug("### 문의 내역 전체 조회 $dataList");
+
+      List<InquiryModel> inquiryList =
+          dataList.map((data) => InquiryModel.fromJson(data)).toList();
+      return inquiryList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch inquiry list: $e');
+      throw Exception('Failed to fetch inquiry list');
+    }
+  }
+
+  //답변 조회
+  static Future<AnswerModel> getAnswer(int inquiryId) async {
+    final data =
+        await getData('$domain/user/search_answer/?inquiryId=$inquiryId', {});
+    Logger.debug("### 답변 조회 $data");
+
+    AnswerModel inquirtModel = AnswerModel.fromJson(data);
+
+    return inquirtModel;
   }
 }

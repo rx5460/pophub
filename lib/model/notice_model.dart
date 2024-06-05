@@ -1,5 +1,6 @@
 class NoticeModel {
-  final String? id, title, content, name, time;
+  final int id;
+  final String title, content, name, time;
 
   NoticeModel.fromJson(Map<String, dynamic> json)
       : id = json['notice_id'],
