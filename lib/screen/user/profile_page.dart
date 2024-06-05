@@ -350,7 +350,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: User().role == "President",
+                                  visible: User().role == "Manager",
                                   //TODO 테스트 코드
 
                                   child: MenuList(

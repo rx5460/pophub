@@ -215,7 +215,7 @@ class _JoinUserState extends State<JoinUser> {
                               margin: const EdgeInsets.only(left: 10),
                             ),
                             Radio<String>(
-                              value: 'Manager',
+                              value: 'President',
                               groupValue: userRole,
                               onChanged: (value) {
                                 setState(() {
@@ -227,7 +227,7 @@ class _JoinUserState extends State<JoinUser> {
                             ),
                             const Text('판매자'),
                             // Radio<String>(
-                            //   value: 'President',
+                            //   value: 'Manager',
                             //   groupValue: userRole,
                             //   onChanged: (value) {
                             //     setState(() {
