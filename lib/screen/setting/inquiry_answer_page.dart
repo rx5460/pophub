@@ -1,9 +1,18 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/model/inquiry_model.dart';
+import 'package:pophub/notifier/UserNotifier.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
+import 'package:http/http.dart' as http;
+import 'package:pophub/model/user.dart';
 
 class InquiryAnswerPage extends StatefulWidget {
   final int inquiryId;
@@ -43,9 +52,38 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
           ),
         );
       }
+
+      final alarmDetails = {
+        'title': '문의 답변 완료',
+        'label': '해당 문의에 관리자가 답변했습니다.',
+        'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+        'active': true,
+        'inquiryId': widget.inquiryId
+      };
+
+      // 서버에 알람 추가
+      await http.post(
+        Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userName': User().userName,
+          'type': 'alarms',
+          'alarmDetails': alarmDetails,
+        }),
+      );
+      // Firestore에 알람 추가
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(User().userName)
+          .collection('alarms')
+          .add(alarmDetails);
+
+      // 로컬 알림 발송
+      await const AlarmPage().showNotification(
+          alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
     } else {
       if (mounted) {
-        showAlert(context, "경고", "문의 추가에 실패했습니다.", () {
+        showAlert(context, "경고", "답변 추가에 실패했습니다.", () {
           Navigator.of(context).pop();
         });
       }
