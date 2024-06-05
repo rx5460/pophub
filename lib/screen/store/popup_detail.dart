@@ -86,7 +86,10 @@ class _PopupDetailState extends State<PopupDetail> {
   Future<void> popupStoreAllow() async {
     try {
       final response = await Api.popupAllow(widget.storeId);
-      final applicantUsername = jsonDecode(response.toString())['data'];
+      final responseString = response.toString();
+      final applicantUsername =
+          RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
+              ''; // userName 찾는 정규식
 
       if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
