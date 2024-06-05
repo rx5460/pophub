@@ -368,12 +368,6 @@ class _PopupDetailState extends State<PopupDetail> {
                                         //   onMapCreated: ((controller) async {
                                         //     mapController = controller;
 
-                                            await getAddressData();
-                                            markers.add(Marker(
-                                              markerId: UniqueKey().toString(),
-                                              latLng: center,
-                                            ));
-
                                         //     Logger.debug(center.toString());
                                         //     Logger.debug(markers.toString());
 
