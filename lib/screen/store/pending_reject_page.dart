@@ -39,7 +39,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         );
 
         final alarmDetails = {
-          'title': '팝업 거절 완료',
+          'title': '팝업 등록 거절됨',
           'label': '당사의 팝업 등록이 거절되었습니다.',
           'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
           'active': true,

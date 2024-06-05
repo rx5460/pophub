@@ -77,7 +77,7 @@ class _AlarmPageState extends State<AlarmPage>
               default:
                 notificationMessage = "알 수 없음";
             }
-            showNotification("${data['title']} \n ${data['label']}",
+            showNotification("${data['title']}\n${data['label']}",
                 "새로운 $notificationMessage 알람이 왔습니다!");
             setState(() {});
           }
