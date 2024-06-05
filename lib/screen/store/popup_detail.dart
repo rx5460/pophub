@@ -379,24 +379,24 @@ class _PopupDetailState extends State<PopupDetail> {
                                           width: 1,
                                           color: Colors.black,
                                         )),
-                                        child: KakaoMap(
-                                          onMapCreated: ((controller) async {
-                                            mapController = controller;
+                                        // child: KakaoMap(
+                                        //   onMapCreated: ((controller) async {
+                                        //     mapController = controller;
 
-                                            await getAddressData();
-                                            markers.add(Marker(
-                                              markerId: UniqueKey().toString(),
-                                              latLng: center,
-                                            ));
+                                        //     await getAddressData();
+                                        //     markers.add(Marker(
+                                        //       markerId: UniqueKey().toString(),
+                                        //       latLng: center,
+                                        //     ));
 
-                                            Logger.debug(center.toString());
-                                            Logger.debug(markers.toString());
+                                        //     Logger.debug(center.toString());
+                                        //     Logger.debug(markers.toString());
 
-                                            setState(() {});
-                                          }),
-                                          markers: markers.toList(),
-                                          center: center,
-                                        ),
+                                        //     setState(() {});
+                                        //   }),
+                                        //   markers: markers.toList(),
+                                        //   center: center,
+                                        // ),
                                       ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 8.0),

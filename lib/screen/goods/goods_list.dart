@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 
 class GoodsList extends StatefulWidget {
   final PopupModel popup;
@@ -11,6 +13,26 @@ class GoodsList extends StatefulWidget {
 }
 
 class _GoodsListState extends State<GoodsList> {
+  Future<void> getPopupData() async {
+    try {
+      dynamic data = await Api.getPopupGoods(widget.popup.id!);
+
+      setState(() {
+        print(data);
+      });
+    } catch (error) {
+      // 오류 처리
+      Logger.debug('Error fetching goods data: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPopupData();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;

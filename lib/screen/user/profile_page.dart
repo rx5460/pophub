@@ -197,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   },
                                   child: SizedBox(
-                                    width: screenWidth * 0.4,
+                                    // width: screenWidth * 0.4,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

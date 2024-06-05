@@ -499,4 +499,11 @@ class Api {
 
     return data;
   }
+
+  // 특정 팝업 굿즈 조회
+  static Future<Map<String, dynamic>> getPopupGoods(String popup) async {
+    final data = await postData('$domain/product/store/$popup', {});
+    Logger.debug("### 팝업별 굿즈 조회 $data");
+    return data;
+  }
 }
