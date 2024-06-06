@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/utils/api.dart';
@@ -26,6 +27,19 @@ class _HomePageState extends State<HomePage> {
     'assets/images/Untitled.png',
     'assets/images/Untitled.png',
   ];
+  Future<void> profileApi() async {
+    Map<String, dynamic> data = await Api.getProfile(User().userId);
+
+    if (!data.toString().contains("fail")) {
+      User().userName = data['userName'];
+      User().phoneNumber = data['phoneNumber'];
+      User().age = data['age'];
+      User().gender = data['gender'];
+      User().file = data['userImage'] ?? '';
+      User().role = data['userRole'] ?? '';
+    }
+  }
+
   Future<void> fetchPopupData() async {
     try {
       List<PopupModel>? dataList = await Api.getPopupList();
@@ -44,6 +58,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchPopupData();
+    profileApi();
   }
 
   @override

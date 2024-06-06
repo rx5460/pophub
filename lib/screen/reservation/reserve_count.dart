@@ -17,6 +17,7 @@ class _ReserveCountState extends State<ReserveCount> {
   int count = 1;
 
   Future<void> reservationApi() async {
+    print(User().userName);
     Map<String, dynamic> data = await Api.popupReservation(
         User().userName, widget.popup, widget.date, widget.time, count);
 
@@ -111,11 +112,11 @@ class _ReserveCountState extends State<ReserveCount> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                count += 1;
+                                if (count != 0) count -= 1;
                               });
                             },
                             child: const Icon(
-                              Icons.add,
+                              Icons.remove,
                               size: 34,
                             ),
                           ),
@@ -129,14 +130,14 @@ class _ReserveCountState extends State<ReserveCount> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                if (count != 0) count -= 1;
+                                count += 1;
                               });
                             },
                             child: const Icon(
-                              Icons.remove,
+                              Icons.add,
                               size: 34,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )

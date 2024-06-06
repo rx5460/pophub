@@ -14,6 +14,7 @@ import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject_page.dart';
@@ -22,6 +23,7 @@ import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -46,10 +48,12 @@ class _PopupDetailState extends State<PopupDetail> {
   bool allowSuccess = false;
   LatLng center = LatLng(37.5586677131962, 126.953450474616);
   Set<Marker> markers = {};
+  bool timeVisible = false;
 
   Future<void> getPopupData() async {
     try {
-      PopupModel? data = await Api.getPopup(widget.storeId, true);
+      PopupModel? data =
+          await Api.getPopup(widget.storeId, true, User().userName);
 
       setState(() {
         popup = data;
@@ -57,6 +61,7 @@ class _PopupDetailState extends State<PopupDetail> {
             double.parse(popup!.x.toString()));
         markers.add(Marker(markerId: '마커', latLng: center));
         isLoading = false;
+        like = data.bookmark!;
       });
     } catch (error) {
       // 오류 처리
@@ -270,26 +275,28 @@ class _PopupDetailState extends State<PopupDetail> {
                                     ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: screenWidth * 0.05,
-                                      right: screenWidth * 0.05),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 12.0),
-                                        child: Text(
-                                          popup?.name ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w900,
-                                          ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.05,
+                                          right: screenWidth * 0.05,
+                                          bottom: 12.0),
+                                      child: Text(
+                                        popup?.name ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w900,
                                         ),
                                       ),
-                                      Row(
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: screenWidth * 0.05,
+                                        right: screenWidth * 0.05,
+                                      ),
+                                      child: Row(
                                         children: [
                                           Text(
                                             (popup?.start != null &&
@@ -323,57 +330,156 @@ class _PopupDetailState extends State<PopupDetail> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            (popup?.start != null &&
-                                                    popup!.start!.isNotEmpty)
-                                                ? DateFormat("hh:mm").format(
-                                                    DateTime.parse(
-                                                        popup!.start!))
-                                                : '',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                    ),
+                                    for (int i = 0; i < 7; i++)
+                                      if (popup!.schedule![i].dayOfWeek ==
+                                          DateFormat('EEE')
+                                              .format(DateTime.now()))
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: screenWidth * 0.05,
+                                            right: screenWidth * 0.05,
                                           ),
-                                          const Text(
-                                            ' ~ ',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          Text(
-                                            (popup?.end != null &&
-                                                    popup!.end!.isNotEmpty)
-                                                ? DateFormat("HH:mm").format(
-                                                    DateTime.parse(popup!.end!))
-                                                : '',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            size: 20,
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 12, bottom: 12),
-                                        width: screenWidth * 0.9,
-                                        child: Text(
-                                          popup?.description ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                DateFormat('HH:mm')
+                                                    .format(
+                                                        DateFormat('HH:mm:ss')
+                                                            .parse(popup!
+                                                                .schedule![i]
+                                                                .openTime))
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              const Text(
+                                                '~',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                DateFormat('HH:mm')
+                                                    .format(
+                                                        DateFormat('HH:mm:ss')
+                                                            .parse(popup!
+                                                                .schedule![i]
+                                                                .closeTime))
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    timeVisible = !timeVisible;
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  timeVisible
+                                                      ? Icons.keyboard_arrow_up
+                                                      : Icons
+                                                          .keyboard_arrow_down,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                    Visibility(
+                                        visible: timeVisible,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: screenWidth * 0.05,
+                                              right: screenWidth * 0.05),
+                                          child: Column(
+                                            children: [
+                                              for (int i = 0; i < 7; i++)
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 30,
+                                                      child: Text(
+                                                        popup!.schedule![i]
+                                                            .dayOfWeek,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      DateFormat('HH:mm')
+                                                          .format(DateFormat(
+                                                                  'HH:mm:ss')
+                                                              .parse(popup!
+                                                                  .schedule![i]
+                                                                  .openTime))
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    const Text(
+                                                      '~',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      DateFormat('HH:mm')
+                                                          .format(DateFormat(
+                                                                  'HH:mm:ss')
+                                                              .parse(popup!
+                                                                  .schedule![i]
+                                                                  .closeTime))
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                            ],
+                                          ),
+                                        )),
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.05,
+                                          right: screenWidth * 0.05,
+                                          top: 12,
+                                          bottom: 12),
+                                      width: screenWidth * 0.9,
+                                      child: Text(
+                                        popup?.description ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                      Container(
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: screenWidth * 0.05,
+                                        right: screenWidth * 0.05,
+                                      ),
+                                      child: Container(
                                         height: screenHeight * 0.2,
                                         width: screenWidth * 0.9,
                                         decoration: BoxDecoration(
@@ -394,22 +500,31 @@ class _PopupDetailState extends State<PopupDetail> {
                                         //   center: center,
                                         // ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.location_on_outlined,
-                                              size: 20,
-                                            ),
-                                            Text('서울특별시 마포구 양화로 162')
-                                          ],
-                                        ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.05,
+                                          right: screenWidth * 0.05,
+                                          top: 8.0),
+                                      child: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 20,
+                                          ),
+                                          Text('서울특별시 마포구 양화로 162')
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 30,
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: screenWidth * 0.05,
+                                        right: screenWidth * 0.05,
                                       ),
-                                      GestureDetector(
+                                      child: GestureDetector(
                                         onTap: () {
                                           writeReview();
                                         },
@@ -441,239 +556,259 @@ class _PopupDetailState extends State<PopupDetail> {
                                           ),
                                         ),
                                       ),
-                                      Column(
-                                        children: [
-                                          // 최근 리뷰 3개 만 보여줌
-                                          for (int index = 0;
-                                              index < (reviewList?.length ?? 0);
-                                              index++)
-                                            if (reviewList != null)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 12),
-                                                child: Container(
-                                                  width: screenWidth * 0.9,
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: Colors.grey),
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                15)),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            // const Icon(
-                                                            //   Icons
-                                                            //       .ac_unit_rounded,
-                                                            //   size: 20,
-                                                            // ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                          8.0),
-                                                              child: Text(
-                                                                reviewList![index]
-                                                                        .user ??
-                                                                    '',
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children:
-                                                              List.generate(
-                                                            5,
-                                                            (starIndex) => Icon(
-                                                              starIndex <
-                                                                      (reviewList![index]
-                                                                              .rating ??
-                                                                          0) // null 대비
-                                                                  ? Icons.star
-                                                                  : Icons
-                                                                      .star_border_outlined,
-                                                              size: 20,
-                                                              color:
-                                                                  Colors.black,
+                                    ),
+                                    Column(
+                                      children: [
+                                        // 최근 리뷰 3개 만 보여줌
+                                        for (int index = 0;
+                                            index < (reviewList?.length ?? 0);
+                                            index++)
+                                          if (reviewList != null)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 12),
+                                              child: Container(
+                                                width: screenWidth * 0.9,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 1,
+                                                      color: Colors.grey),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          // const Icon(
+                                                          //   Icons
+                                                          //       .ac_unit_rounded,
+                                                          //   size: 20,
+                                                          // ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 8.0),
+                                                            child: Text(
+                                                              reviewList![index]
+                                                                      .user ??
+                                                                  '',
+                                                              style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Text(reviewList![index]
-                                                                .content ??
-                                                            ''),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 30, bottom: 10),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          GoodsList(
-                                                            popup: popup!,
-                                                          )),
-                                                );
-                                              },
-                                              child: SizedBox(
-                                                width: screenWidth * 0.9,
-                                                child: const Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      '굿즈',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        ],
                                                       ),
-                                                    ),
-                                                    Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      size: 20,
-                                                    ),
-                                                  ],
+                                                      Row(
+                                                        children: List.generate(
+                                                          5,
+                                                          (starIndex) => Icon(
+                                                            starIndex <
+                                                                    (reviewList![index]
+                                                                            .rating ??
+                                                                        0) // null 대비
+                                                                ? Icons.star
+                                                                : Icons
+                                                                    .star_border_outlined,
+                                                            size: 20,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(reviewList![index]
+                                                              .content ??
+                                                          ''),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 30, bottom: 10),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        GoodsList(
+                                                          popup: popup!,
+                                                        )),
+                                              );
+                                            },
+                                            child: SizedBox(
+                                              width: screenWidth * 0.9,
+                                              child: const Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    '굿즈',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    size: 20,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              for (int index = 0;
-                                                  index <
-                                                      (goodsList?.length ?? 0);
-                                                  index++)
-                                                if (goodsList != null)
-                                                  SizedBox(
-                                                    width: screenWidth * 0.5,
-                                                    height: screenWidth * 0.8,
-                                                    // ListView
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 0,
-                                                          right: screenWidth *
-                                                              0.05),
-                                                      child: GestureDetector(
-                                                        onTap: () {},
-                                                        child: SizedBox(
-                                                          width:
-                                                              screenWidth * 0.5,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                child: Image
-                                                                    .network(
-                                                                  '${goodsList![index].image![0]}',
-                                                                  // width: screenHeight * 0.07 - 5,
-                                                                  width:
-                                                                      screenWidth *
-                                                                          0.5,
-                                                                  height:
-                                                                      screenWidth *
-                                                                          0.5,
-                                                                  fit: BoxFit
-                                                                      .cover,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            if (goodsList != null)
+                                              SizedBox(
+                                                  width: screenWidth,
+                                                  height: screenWidth * 0.8,
+                                                  // ListView
+                                                  child: ListView.builder(
+                                                      itemCount:
+                                                          goodsList?.length ??
+                                                              0, // null 체크 추가
+                                                      // physics: const NeverScrollableScrollPhysics(),
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final goods =
+                                                            goodsList![index];
+
+                                                        // 팝업 데이터를 표시하는 위젯을 반환합니다.
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left:
+                                                                  screenWidth *
+                                                                      0.05,
+                                                              right: goodsList!
+                                                                          .length ==
+                                                                      index + 1
+                                                                  ? screenWidth *
+                                                                      0.05
+                                                                  : 0),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          GoodsDetail(
+                                                                    goodsId: goods
+                                                                        .product,
+                                                                  ),
                                                                 ),
-                                                                //     Image.asset(
-                                                                //   'assets/images/Untitled.png',
-                                                                //   width:
-                                                                //       screenWidth *
-                                                                //           0.5,
-                                                                // ),
-                                                                //   fit: BoxFit.cover,)
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
+                                                              );
+                                                            },
+                                                            child: SizedBox(
+                                                              width:
+                                                                  screenWidth *
+                                                                      0.5,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    child: Image
+                                                                        .network(
+                                                                      '${goods.image![0]}',
+                                                                      // width: screenHeight * 0.07 - 5,
+                                                                      width:
+                                                                          screenWidth *
+                                                                              0.5,
+                                                                      height:
+                                                                          screenWidth *
+                                                                              0.5,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                    //     Image.asset(
+                                                                    //   'assets/images/Untitled.png',
+                                                                    //   width:
+                                                                    //       screenWidth *
+                                                                    //           0.5,
+                                                                    // ),
+                                                                    //   fit: BoxFit.cover,)
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
                                                                         .only(
                                                                         top:
                                                                             8.0),
-                                                                child: Text(
-                                                                  goodsList![
-                                                                          index]
-                                                                      .productName,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
+                                                                    child: Text(
+                                                                      goods
+                                                                          .productName,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w900,
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
+                                                                  Text(
+                                                                    '${goods.quantity.toString()}개',
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          11,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w900,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              Text(
-                                                                '${goodsList![index].quantity.toString()}개',
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 11,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w900,
-                                                                ),
-                                                              ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 30,
-                                      ),
-                                    ],
-                                  ),
+                                                        );
+                                                      })),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -742,9 +877,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                   const SizedBox(
                                     width: 8,
                                   ),
-                                  const Text(
-                                    '26',
-                                    style: TextStyle(
+                                  Text(
+                                    popup!.mark.toString(),
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -776,7 +911,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ReserveDate(
-                                          popup: popup!.id!,
+                                          popup: popup!,
                                         ),
                                       ),
                                     );

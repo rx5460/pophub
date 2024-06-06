@@ -1,10 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/screen/goods/goods_order.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 
 class GoodsDetail extends StatefulWidget {
-  const GoodsDetail({Key? key}) : super(key: key);
+  final String goodsId;
+  const GoodsDetail({Key? key, required this.goodsId}) : super(key: key);
 
   @override
   State<GoodsDetail> createState() => _GoodsDetailState();
@@ -15,13 +19,27 @@ class _GoodsDetailState extends State<GoodsDetail> {
   final CarouselController _controller = CarouselController();
   bool isLoading = false;
   bool isBuying = false;
+  GoodsModel? goods;
   int count = 1;
 
-  List imageList = [
-    'assets/images/Untitled.png',
-    'assets/images/goods.png',
-    'assets/images/Untitled.png',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    getGoodsData();
+  }
+
+  Future<void> getGoodsData() async {
+    try {
+      GoodsModel? data = await Api.getPopupGoodsDetail(widget.goodsId);
+      setState(() {
+        goods = data;
+        isLoading = true;
+      });
+    } catch (error) {
+      // 오류 처리
+      Logger.debug('Error fetching goods data: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +49,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
     return Scaffold(
       body: !isLoading
-          ? Stack(
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Stack(
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,7 +93,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                             ),
                                             child: Center(
                                               child: Text(
-                                                '${(_current + 1).toString()}/${imageList.length}',
+                                                '${(_current + 1).toString()}/${goods?.image?.length ?? 0}',
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w700,
@@ -92,64 +113,20 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 12.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  '굿즈 이름',
-                                                  style: TextStyle(
-                                                    fontSize: 22,
-                                                    fontWeight: FontWeight.w900,
-                                                  ),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    // 수정 예정
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.yellow,
-                                                      size: 20,
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.yellow,
-                                                      size: 20,
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.yellow,
-                                                      size: 20,
-                                                    ),
-                                                    Icon(
-                                                      Icons.star_half_outlined,
-                                                      color: Colors.yellow,
-                                                      size: 20,
-                                                    ),
-                                                    Icon(
-                                                      Icons.star_outline,
-                                                      color: Colors.yellow,
-                                                      size: 20,
-                                                    ),
-                                                    Text(
-                                                      '(100)',
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black,
-                                                      ),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12.0),
+                                            child: Text(
+                                              goods?.productName ?? '',
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w900,
+                                              ),
                                             ),
                                           ),
-                                          const Text(
-                                            '10,000원',
-                                            style: TextStyle(
+                                          Text(
+                                            '${goods!.price.toString()}원',
+                                            style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -179,9 +156,9 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                             padding: const EdgeInsets.only(
                                                 top: 12, bottom: 12),
                                             width: screenWidth * 0.9,
-                                            child: const Text(
-                                              '굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다굿즈 설명이 들어감네다',
-                                              style: TextStyle(
+                                            child: Text(
+                                              goods!.description,
+                                              style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w600,
                                               ),
@@ -346,7 +323,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
                             isBuying
                                 ? const SizedBox()
                                 : Row(
-                                    // crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       GestureDetector(
                                         onTap: () {},
@@ -380,22 +356,22 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            const Column(
+                                            Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "굿즈 이름",
-                                                    style: TextStyle(
+                                                    goods!.productName,
+                                                    style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w900),
                                                   ),
                                                   Text(
-                                                    '10,000원',
-                                                    style: TextStyle(
+                                                    '${goods!.price.toString()}원',
+                                                    style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -523,30 +499,30 @@ class _GoodsDetailState extends State<GoodsDetail> {
                     ),
                   ),
               ],
-            )
-          : const SizedBox(),
+            ),
     );
   }
 
   Widget sliderWidget() {
     return CarouselSlider(
       carouselController: _controller,
-      items: imageList.map(
-        (img) {
-          return Builder(
-            builder: (context) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  img,
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.fill,
-                ),
+      items: goods?.image?.map(
+            (img) {
+              return Builder(
+                builder: (context) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      img,
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.fill,
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
-      ).toList(),
+          ).toList() ??
+          [],
       options: CarouselOptions(
         height: 300,
         viewportFraction: 1.0,

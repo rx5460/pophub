@@ -87,7 +87,9 @@ class _GoodsListState extends State<GoodsList> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const GoodsDetail(),
+                              builder: (context) => GoodsDetail(
+                                goodsId: goodsList![index].product,
+                              ),
                             ),
                           );
                         },
@@ -103,7 +105,7 @@ class _GoodsListState extends State<GoodsList> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
-                                      '${goodsList![index].image![1]}',
+                                      '${goodsList![index].image![0]}',
                                       // width: screenHeight * 0.07 - 5,
                                       width: screenWidth * 0.35,
                                       height: screenWidth * 0.35,
@@ -120,7 +122,7 @@ class _GoodsListState extends State<GoodsList> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    goodsList![index].productName!,
+                                    goodsList![index].productName,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 18,

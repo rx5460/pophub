@@ -1,6 +1,7 @@
 import 'package:pophub/model/schedule_model.dart';
 
 class PopupModel {
+  final bool? bookmark;
   final String? username,
       name,
       location,
@@ -18,7 +19,8 @@ class PopupModel {
   final List<Schedule>? schedule; // 새로운 스케줄 리스트 필드
 
   PopupModel.fromJson(Map<String, dynamic> json)
-      : username = json['user_name'],
+      : bookmark = json['is_bookmarked'],
+        username = json['user_name'],
         name = json['store_name'],
         location = json['store_location'],
         contact = json['store_contact_info'],

@@ -6,6 +6,7 @@ import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/model/user.dart';
@@ -86,11 +87,13 @@ class Api {
     }
   }
 
-  static Future<PopupModel> getPopup(String storeId, bool getLocation) async {
+  static Future<PopupModel> getPopup(
+      String storeId, bool getLocation, String userName) async {
     Logger.debug(storeId);
+    print(storeId);
     try {
       Map<String, dynamic> data =
-          await getData('$domain/popup/view/$storeId', {});
+          await getData('$domain/popup/view/$storeId/$userName', {});
 
       if (getLocation) {
         PopupModel popupModel = PopupModel.fromJson(data);
@@ -217,7 +220,12 @@ class Api {
       'reservation_time': time,
       'capacity': count
     });
-    print(popup);
+    print({
+      'user_name': userName,
+      'reservation_date': date,
+      'reservation_time': time,
+      'capacity': count
+    });
     Logger.debug("### 팝업 예약 $data");
     return data;
   }
@@ -493,11 +501,20 @@ class Api {
   }
 
   //팝업 예약 상태 조회
-  static Future<Map<String, dynamic>> getReserveStatus(String popup) async {
-    final data = await postData('$domain/popup/reservation/$popup', {});
-    Logger.debug("### 예약 상태 조회 $data");
+  static Future<List<ReservationModel>> getReserveStatus(String popup) async {
+    try {
+      final dataList =
+          await getListData('$domain/popup/reservationStatus/$popup', {});
+      Logger.debug("### 예약 상태 조회 $dataList");
 
-    return data;
+      List<ReservationModel> reservationList =
+          dataList.map((data) => ReservationModel.fromJson(data)).toList();
+      return reservationList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch reservation list: $e');
+      throw Exception('Failed to fetch reservation list');
+    }
   }
 
   // 문의내역 추가 (이미지 o)
