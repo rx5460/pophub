@@ -138,6 +138,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                                       MaterialPageRoute(
                                           builder: (context) => ProfileAdd(
                                                 refreshProfile: () {},
+                                                useCallback: false,
                                               )));
                                 }
                               } else {

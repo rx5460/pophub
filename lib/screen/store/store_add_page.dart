@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/kopo_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/schedule_model.dart';
@@ -13,7 +14,6 @@ import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/store/store_operate_hour_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +29,12 @@ class StoreCreatePage extends StatefulWidget {
 }
 
 class _StoreCreatePageState extends State<StoreCreatePage> {
+  List<CategoryModel> category = [];
   @override
   void initState() {
     super.initState();
     _initializeFields();
+    getCategory();
   }
 
   void _initializeFields() {
@@ -74,21 +76,19 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     }
   }
 
-  List<Map<String, int>> categoryList = [
-    {'의류': 10},
-    {'액세서리': 11},
-    {'신발': 12},
-    {'가방/지갑': 13},
-    {'뷰티/화장품': 14},
-    {'가전제품': 15},
-    {'생활용품': 16},
-    {'푸드/음료': 17},
-    {'문구/책/잡화': 18},
-    {'전자기기/액세서리': 19},
-    {'건강/웰빙': 20},
-    {'패션/라이프스타일': 21},
-    {'예술/공예': 22},
-  ];
+  Future<void> getCategory() async {
+    final data = await Api.getCategory();
+    setState(() {
+      category = data.where((item) => item.categoryId >= 10).toList();
+      if (widget.popup != null) {
+        selectedCategory = category.firstWhere(
+          (item) =>
+              item.categoryId.toString() == widget.popup?.category.toString(),
+        );
+      }
+    });
+    print("Data $data");
+  }
 
   final ImagePicker _picker = ImagePicker();
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -98,6 +98,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   final _locationController = TextEditingController();
   final _contactController = TextEditingController();
   final _maxCapacityController = TextEditingController();
+  CategoryModel? selectedCategory;
 
   Future<void> _pickImage() async {
     try {
@@ -237,7 +238,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
           builder: (context, store, child) {
-            Logger.debug(store.category);
             return ListView(
               children: [
                 SingleChildScrollView(
@@ -472,22 +472,34 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   onChanged: (value) => store.contact = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "시간별 최대 인원",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _maxCapacityController,
-                  decoration: const InputDecoration(labelText: '시간별 최대 인원'),
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(1000),
-                  ],
-                  onChanged: (value) => store.maxCapacity = int.parse(value),
-                ),
-                const SizedBox(height: 20),
+                Visibility(
+                    visible: widget.mode == "add",
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "시간별 최대 인원",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                            controller: _maxCapacityController,
+                            decoration:
+                                const InputDecoration(labelText: '시간별 최대 인원'),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(1000),
+                            ],
+                            onChanged: (value) => {
+                                  if (value != '')
+                                    {store.maxCapacity = int.parse(value)},
+                                }),
+                        const SizedBox(height: 20),
+                      ],
+                    )),
+
                 const Text(
                   "카테고리",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -511,26 +523,25 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 //         },
                 //       )
                 //     :
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<CategoryModel>(
                   decoration: const InputDecoration(labelText: '카테고리'),
-                  items: categoryList.map((categoryMap) {
-                    String category = categoryMap.keys.first;
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
+                  value: selectedCategory,
+                  items: category.map((categoryModel) {
+                    return DropdownMenuItem<CategoryModel>(
+                      value: categoryModel,
+                      child: Text(categoryModel.categoryName),
                     );
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      for (var categoryMap in categoryList) {
-                        if (categoryMap.containsKey(value)) {
-                          store.category = categoryMap[value]!.toString();
-                          break;
-                        }
-                      }
+                      setState(() {
+                        selectedCategory = value;
+                        store.category = value.categoryId.toString();
+                      });
                     }
                   },
                 ),
+
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),

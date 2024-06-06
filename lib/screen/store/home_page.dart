@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
+import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,6 +62,26 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     fetchPopupData();
     profileApi();
+  }
+
+  Future<void> getPopupByStoreName(String storeName) async {
+    final data = await Api.getPopupByName(storeName);
+    if (!data.toString().contains("fail") && mounted) {
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (_) => StoreModel())
+                        ],
+                        child: StoreListPage(
+                          popups: data,
+                          titleName: "검색 결과",
+                        ))));
+      }
+    } else {}
+    setState(() {});
   }
 
   @override
@@ -140,7 +163,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     suffixIcon: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        getPopupByStoreName(searchController.text);
+                      },
                       icon: const Icon(
                         Icons.search_sharp,
                         color: Colors.black,

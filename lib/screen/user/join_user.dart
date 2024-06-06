@@ -92,6 +92,7 @@ class _JoinUserState extends State<JoinUser> {
                           ],
                           child: ProfileAdd(
                             refreshProfile: () {},
+                            useCallback: false,
                           ))));
         }
       }

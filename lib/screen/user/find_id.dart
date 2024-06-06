@@ -25,6 +25,7 @@ class _FindIdState extends State<FindId> {
   final _certifiFormkey = GlobalKey<FormState>();
   bool isDialogShowing = false;
   String userId = "";
+  bool findSuccess = false;
 
   late final TextEditingController phoneController = TextEditingController();
   late final TextEditingController certifiController = TextEditingController();
@@ -75,7 +76,7 @@ class _FindIdState extends State<FindId> {
           });
         }
 
-        findIdApi();
+        await findIdApi();
       }
     } else {
       if (!isDialogShowing) {
@@ -103,8 +104,13 @@ class _FindIdState extends State<FindId> {
     if (!data.toString().contains("fail")) {
       setState(() {
         userId = data["userId"];
+        findSuccess = true;
       });
-    } else {}
+    } else {
+      setState(() {
+        findSuccess = false;
+      });
+    }
   }
 
   @override
@@ -197,7 +203,7 @@ class _FindIdState extends State<FindId> {
                       ],
                     ),
                     Visibility(
-                      visible: userId != "",
+                      visible: findSuccess,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -210,6 +216,14 @@ class _FindIdState extends State<FindId> {
                         ],
                       ),
                     ),
+                    Visibility(
+                        child: Visibility(
+                            visible:
+                                findSuccess == false && userNotifier.isVerify,
+                            child: Center(
+                              child: Text(
+                                  "${phoneController.text.toString()} 번호에 해당하는 아이디가 없습니다."),
+                            ))),
                     const Spacer(),
                     SizedBox(
                         width: double.infinity,

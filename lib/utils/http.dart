@@ -290,3 +290,30 @@ Future<Map<String, dynamic>> postNoAuthData(
     return {"data": "fail"};
   }
 }
+
+Future<Map<String, dynamic>> deleteData(
+    String url, Map<String, dynamic> data) async {
+  try {
+    Response response = await dio.delete(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
+  }
+}

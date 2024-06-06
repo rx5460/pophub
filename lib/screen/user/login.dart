@@ -137,7 +137,7 @@ class _LoginState extends State<Login> {
                                                           UserNotifier())
                                                 ], child: const ResetPasswd())))
                                   },
-                              child: const Text("비밀번호 찾기")),
+                              child: const Text("비밀번호 재설정")),
                         ],
                       ),
                       Container(

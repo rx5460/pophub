@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pophub/model/answer_model.dart';
+import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
@@ -243,8 +244,7 @@ class Api {
 
   //아이디 조회
   static Future<Map<String, dynamic>> getId(String phoneNumber) async {
-    final data = await getNoAuthData(
-        '$domain/user/search_id/?phoneNumber=$phoneNumber', {});
+    final data = await getNoAuthData('$domain/user/search_id/$phoneNumber', {});
     Logger.debug("### 아이디 조회 $data");
     return data;
   }
@@ -734,5 +734,58 @@ class Api {
     });
     Logger.debug("### 회원탈퇴 $data");
     return data;
+  }
+
+  // 카테고리 리스트 조회
+  static Future<List<CategoryModel>> getCategory() async {
+    final dataList = await getListData('$domain/admin/category', {});
+
+    List<CategoryModel> categoryList =
+        dataList.map((data) => CategoryModel.fromJson(data)).toList();
+    Logger.debug("### 카테고리 리스트 조회 $dataList");
+    return categoryList;
+  }
+
+  // 팝업 삭제
+  static Future<Map<String, dynamic>> popupDelete(String storeId) async {
+    final data = await deleteData('$domain/popup/delete/$storeId', {});
+    Logger.debug("### 팝업 삭제 $data");
+    return data;
+  }
+
+  // 스토어 이름으로 팝업 검색
+  static Future<List<PopupModel>> getPopupByName(String storeName) async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/searchStoreName/?store_name=$storeName',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to fetch getPopupByName list: $e');
+      throw Exception('Failed to fetch getPopupByName list');
+    }
+  }
+
+  // 카테고리로 팝업 검색
+  static Future<List<PopupModel>> getPopupByCategory(int category) async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/searchCategory/$category',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to fetch getPopupByCategory list: $e');
+      throw Exception('Failed to fetch getPopupByCategory list');
+    }
   }
 }

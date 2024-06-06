@@ -12,7 +12,6 @@ import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -49,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
               MaterialPageRoute(
                   builder: (context) => ProfileAdd(
                         refreshProfile: profileApi,
+                        useCallback: true,
                       )));
         } else {
           Navigator.push(
@@ -84,8 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         );
       }
-
-      Logger.debug(data.toString());
     } else {
       if (mounted) {
         Navigator.push(
@@ -318,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.task,
+                                  icon: Icons.info_outline,
                                   text: '공지사항',
                                   onClick: () {
                                     Navigator.push(
@@ -329,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.help_outline,
                                   text: '문의내역',
                                   onClick: () {
                                     Navigator.push(
@@ -340,7 +338,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                 ),
                                 Visibility(
-                                  visible: User().role == "Manager",
+                                  visible: User().role == "President",
                                   child: MenuList(
                                     icon: Icons.message_outlined,
                                     text: '내 스토어',
@@ -351,24 +349,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Visibility(
                                   visible: User().role == "Manager",
-                                  //TODO 테스트 코드
-
                                   child: MenuList(
-                                    icon: Icons.message_outlined,
+                                    icon: Icons.assignment_turned_in_outlined,
                                     text: '팝업스토어 승인 대기',
-                                    onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          const StoreListPage())));
+                                    onClick: () async {
+                                      final data = await Api.pendingList();
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider(
+                                                              create: (_) =>
+                                                                  StoreModel())
+                                                        ],
+                                                        child: StoreListPage(
+                                                          popups: data,
+                                                          titleName: "승인 리스트",
+                                                        ))));
+                                      }
                                     },
                                   ),
                                 ),
