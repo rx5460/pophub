@@ -65,7 +65,7 @@ class _AppSettingState extends State<AppSetting> {
             },
           ),
           ListTile(
-            title: const Text('회원 탈퇴'),
+            title: const Text('회원탈퇴'),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(

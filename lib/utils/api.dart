@@ -697,4 +697,14 @@ class Api {
     GoodsModel goodsModel = GoodsModel.fromJson(data[0]);
     return goodsModel;
   }
+
+  // 회원탈퇴
+  static Future<Map<String, dynamic>> userDelete() async {
+    final data = await postData('$domain/user/user_delete/', {
+      'userId': User().userId,
+      'phoneNumber': User().phoneNumber,
+    });
+    Logger.debug("### 회원탈퇴 $data");
+    return data;
+  }
 }
