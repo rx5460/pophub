@@ -12,7 +12,6 @@ import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -85,8 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         );
       }
-
-      Logger.debug(data.toString());
     } else {
       if (mounted) {
         Navigator.push(

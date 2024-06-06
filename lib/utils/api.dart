@@ -235,8 +235,7 @@ class Api {
 
   //아이디 조회
   static Future<Map<String, dynamic>> getId(String phoneNumber) async {
-    final data = await getNoAuthData(
-        '$domain/user/search_id/?phoneNumber=$phoneNumber', {});
+    final data = await getNoAuthData('$domain/user/search_id/$phoneNumber', {});
     Logger.debug("### 아이디 조회 $data");
     return data;
   }

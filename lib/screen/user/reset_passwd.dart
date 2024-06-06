@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -62,7 +65,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
 
   Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
     final data = await Api.sendVerify(certifi, realAuthCode);
-    // = {"data": "Successful"};
+    //= {"data": "Successful"};
 
     if (!data.toString().contains("fail")) {
       if (!isDialogShowing) {
@@ -110,10 +113,14 @@ class _ResetPasswdState extends State<ResetPasswd> {
       final passwdData =
           await Api.changePasswd(userId, pwController.text.toString());
       if (!passwdData.toString().contains("fail")) {
+        await secureStorage.deleteAll();
+        User().clear();
         if (mounted) {
           showAlert(context, "확인", "비밀번호 재설정이 완료되었습니다.", () {
-            Navigator.of(context).pop();
-            setState(() {});
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BottomNavigationPage()));
           });
         }
       }

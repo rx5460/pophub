@@ -13,7 +13,6 @@ import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/screen/store/store_operate_hour_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -237,7 +236,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
           builder: (context, store, child) {
-            Logger.debug(store.category);
             return ListView(
               children: [
                 SingleChildScrollView(
@@ -472,22 +470,34 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   onChanged: (value) => store.contact = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "시간별 최대 인원",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _maxCapacityController,
-                  decoration: const InputDecoration(labelText: '시간별 최대 인원'),
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(1000),
-                  ],
-                  onChanged: (value) => store.maxCapacity = int.parse(value),
-                ),
-                const SizedBox(height: 20),
+                Visibility(
+                    visible: widget.mode == "add",
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "시간별 최대 인원",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                            controller: _maxCapacityController,
+                            decoration:
+                                const InputDecoration(labelText: '시간별 최대 인원'),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(1000),
+                            ],
+                            onChanged: (value) => {
+                                  if (value != '')
+                                    {store.maxCapacity = int.parse(value)},
+                                }),
+                        const SizedBox(height: 20),
+                      ],
+                    )),
+
                 const Text(
                   "카테고리",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

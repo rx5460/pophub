@@ -10,7 +10,6 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/utils/api.dart';
-import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -112,7 +111,6 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   Future<void> goodsAdd(GoodsNotifier goods) async {
     goods.userName = User().userName;
-    Logger.debug(goods.toString());
     final data = await Api.goodsAdd(goods, widget.storeId);
 
     if (!data.toString().contains("fail") && mounted) {
