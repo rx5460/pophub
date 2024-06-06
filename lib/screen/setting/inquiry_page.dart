@@ -27,7 +27,7 @@ class _InquiryPageState extends State<InquiryPage> {
   List<InquiryModel> inquiryList = [];
   Future<void> getInquiryData() async {
     Logger.debug("### ${User().role}");
-    final data = User().role == "President"
+    final data = User().role == "Manager"
         ? await Api.getAllInquiryList()
         : await Api.getInquiryList(User().userName);
 
@@ -64,7 +64,7 @@ class _InquiryPageState extends State<InquiryPage> {
                     )),
             ),
             Visibility(
-              visible: User().role != "President",
+              visible: User().role != "Manager",
               child: Padding(
                 padding: EdgeInsets.only(
                     left: screenHeight * 0.02, right: screenHeight * 0.02),
@@ -82,7 +82,7 @@ class _InquiryPageState extends State<InquiryPage> {
               ),
             ),
             // Visibility(
-            //   visible: User().role == "President",
+            //   visible: User().role == "Manager",
             //   child: Padding(
             //     padding: EdgeInsets.only(
             //         left: screenHeight * 0.02, right: screenHeight * 0.02),
@@ -179,7 +179,7 @@ class _InquiryTileState extends State<InquiryTile> {
                 height: screenHeight * 0.04,
                 child: ((widget.inquiry.status == "pending" ||
                             widget.inquiry.answerStatus == "pending") &&
-                        User().role == "President")
+                        User().role == "Manager")
                     ? OutlinedButton(
                         onPressed: () => {
                           Navigator.push(
@@ -242,12 +242,12 @@ class _InquiryTileState extends State<InquiryTile> {
                 children: [
                   Text(inquiryDetail!.content.toString()),
                   Visibility(
-                    visible: inquiryDetail!.image != "",
+                    visible: inquiryDetail!.image != null,
                     child: SizedBox(
                       height: screenHeight * 0.01,
                     ),
                   ),
-                  inquiryDetail!.image != ""
+                  inquiryDetail!.image != null
                       ? Image.network(
                           inquiryDetail!.image.toString(),
                           width: MediaQuery.of(context).size.width,

@@ -7,7 +7,6 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
-import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
@@ -81,15 +80,14 @@ class _ProfileAddState extends State<ProfileAdd> {
         widget.refreshProfile();
       } else {
         if (mounted) {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const ProfilePage(),
+              builder: (context) => const BottomNavigationPage(),
             ),
           );
         }
       }
-      if (mounted) Navigator.of(context).pop();
     } else {
       if (mounted) {
         showAlert(context, "경고", "프로필 추가에 실패했습니다.", () {

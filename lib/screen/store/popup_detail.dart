@@ -577,7 +577,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                   index++)
                                                 if (goodsList != null)
                                                   SizedBox(
-                                                    width: screenWidth * 0.9,
+                                                    width: screenWidth * 0.5,
                                                     height: screenWidth * 0.8,
                                                     // ListView
                                                     child: Padding(
@@ -605,7 +605,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                             10),
                                                                 child: Image
                                                                     .network(
-                                                                  '${goodsList![index].image![1]}',
+                                                                  '${goodsList![index].image![0]}',
                                                                   // width: screenHeight * 0.07 - 5,
                                                                   width:
                                                                       screenWidth *

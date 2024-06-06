@@ -32,14 +32,6 @@ void showAlert(BuildContext context, String title, String content,
   );
 }
 
-bool isAdmin(String role) {
-  if (role == "General Member" || role == "Manager") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
   if (lang == "ko") {
     switch (dayOfWeek.toLowerCase()) {

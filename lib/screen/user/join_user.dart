@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class JoinUser extends StatefulWidget {
   const JoinUser({super.key});
@@ -26,6 +29,8 @@ class _JoinUserState extends State<JoinUser> {
   late final TextEditingController confirmPwController =
       TextEditingController();
 
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
   @override
   void dispose() {
     idController.dispose();
@@ -43,13 +48,14 @@ class _JoinUserState extends State<JoinUser> {
     if (data.toString().contains("완료")) {
       joinComplete = true;
       showAlert(context, "확인", "회원가입이 완료되었습니다.", () {
-        if (mounted) {
-          Navigator.of(context).pop();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Login()),
-          );
-        }
+        loginApi();
+        // if (mounted) {
+        //   Navigator.of(context).pop();
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const Login()),
+        //   );
+        // }
       });
     } else {
       joinComplete = false;
@@ -58,6 +64,43 @@ class _JoinUserState extends State<JoinUser> {
           Navigator.of(context).pop();
         }
       });
+    }
+    userNotifier.refresh();
+  }
+
+  Future<void> loginApi() async {
+    Map<String, dynamic> data =
+        await Api.login(idController.text, pwController.text);
+
+    if (!data.toString().contains("fail")) {
+      if (data['token'].isNotEmpty) {
+        // 토큰 추가
+        await _storage.write(key: 'token', value: data['token']);
+        // User 싱글톤에 user_id 추가
+        User().userId = data['user_id'];
+
+        //await Api.profileAdd();
+
+        if (mounted) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(
+                                create: (_) => UserNotifier())
+                          ],
+                          child: ProfileAdd(
+                            refreshProfile: () {},
+                          ))));
+        }
+      }
+    } else {
+      if (mounted) {
+        showAlert(context, "경고", "로그인 처리에 실패하였습니다.", () {
+          Navigator.of(context).pop();
+        });
+      }
     }
     userNotifier.refresh();
   }
@@ -215,7 +258,7 @@ class _JoinUserState extends State<JoinUser> {
                               margin: const EdgeInsets.only(left: 10),
                             ),
                             Radio<String>(
-                              value: 'Manager',
+                              value: 'President',
                               groupValue: userRole,
                               onChanged: (value) {
                                 setState(() {
@@ -227,7 +270,7 @@ class _JoinUserState extends State<JoinUser> {
                             ),
                             const Text('판매자'),
                             // Radio<String>(
-                            //   value: 'President',
+                            //   value: 'Manager',
                             //   groupValue: userRole,
                             //   onChanged: (value) {
                             //     setState(() {

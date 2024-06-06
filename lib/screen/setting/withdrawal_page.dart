@@ -1,9 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/http.dart';
+import 'package:pophub/utils/utils.dart';
 
-class WithdrawalPage extends StatelessWidget {
+class WithdrawalPage extends StatefulWidget {
   const WithdrawalPage({super.key});
+
+  @override
+  _WithdrawalPageState createState() => _WithdrawalPageState();
+}
+
+class _WithdrawalPageState extends State<WithdrawalPage> {
+  Future<void> resetPasswdApi() async {
+    final data = await Api.userDelete();
+    if (!data.toString().contains("fail")) {
+      await secureStorage.deleteAll();
+      User().clear();
+      if (mounted) {
+        showAlert(context, "성공", "회원탈퇴에 성공했습니다.", () {
+          // 여기서 실제 회원탈퇴 로직을 구현
+
+          Navigator.of(context).pop();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BottomNavigationPage()));
+        });
+      }
+    } else {
+      if (mounted) {
+        showAlert(context, "실패", "회원탈퇴에 실패하였습니다.", () {});
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +43,7 @@ class WithdrawalPage extends StatelessWidget {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "회원 탈퇴"),
+      appBar: const CustomTitleBar(titleName: "회원탈퇴"),
       body: Padding(
           padding: EdgeInsets.only(
               left: screenWidth * 0.05,
@@ -27,7 +59,7 @@ class WithdrawalPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                '회원 탈퇴 시 개인정보는 다음과 같이 처리됩니다.',
+                '회원탈퇴 시 개인정보는 다음과 같이 처리됩니다.',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -47,13 +79,13 @@ class WithdrawalPage extends StatelessWidget {
               Center(
                 child: OutlinedButton(
                   onPressed: () {
-                    // 회원 탈퇴 처리 로직
+                    // 회원탈퇴 처리 로직
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('회원 탈퇴'),
-                          content: const Text('정말로 회원 탈퇴를 하시겠습니까?'),
+                          title: const Text('회원탈퇴'),
+                          content: const Text('정말로 회원탈퇴를 하시겠습니까?'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
@@ -63,18 +95,7 @@ class WithdrawalPage extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // 여기서 실제 회원 탈퇴 로직을 구현
-                                Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('회원 탈퇴가 완료되었습니다.'),
-                                  ),
-                                );
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
+                                resetPasswdApi();
                               },
                               child: const Text('탈퇴하기'),
                             ),
@@ -86,7 +107,7 @@ class WithdrawalPage extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('탈퇴 하기',
+                  child: const Text('탈퇴하기',
                       style: TextStyle(
                         fontSize: 18,
                       )),

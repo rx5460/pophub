@@ -9,6 +9,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
@@ -54,8 +55,8 @@ class Api {
 
   // 비밀번호 변경
   static changePasswd(String userId, String userPassword) async {
-    final data = await postData('$domain/user/change_password',
-        {'userId': userId, "authPassword": userPassword});
+    final data = await postNoAuthData('$domain/user/change_password',
+        {'userId': userId, "userPassword": userPassword});
     Logger.debug("### 비밀번호 변경 $data");
     return data;
   }
@@ -231,14 +232,14 @@ class Api {
     Logger.debug("### 팝업 좋아요 $data");
     return data;
   }
-  // 아이디 조회
-  // static Future<Map<String, dynamic>> getId(
-  //     String phoneNumber, String token) async {
-  //   final data =
-  //       await getNoAuthData('$domain/user/search_id/:$phoneNumber', {});
-  //   Logger.debug("### 아이디 조회 $data");
-  //   return data;
-  // }
+
+  //아이디 조회
+  static Future<Map<String, dynamic>> getId(String phoneNumber) async {
+    final data = await getNoAuthData(
+        '$domain/user/search_id/?phoneNumber=$phoneNumber', {});
+    Logger.debug("### 아이디 조회 $data");
+    return data;
+  }
 
   // 프로필 추가 (이미지 o)
   static Future<Map<String, dynamic>> profileAddWithImage(
@@ -599,5 +600,122 @@ class Api {
       Logger.debug('Failed to fetch goods list: $e');
       throw Exception('Failed to fetch goods list');
     }
+  }
+
+  //굿즈 등록
+  static Future<Map<String, dynamic>> goodsAdd(
+      GoodsNotifier goods, String storeId) async {
+    FormData formData = FormData();
+
+    //파일 추가
+    for (var imageMap in goods.images) {
+      if (imageMap['type'] == 'file') {
+        var file = imageMap['data'] as File;
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file.path,
+              filename: file.path.split('/').last),
+        ));
+      } else if (imageMap['type'] == 'url') {
+        var url = imageMap['data'] as String;
+        var response = await Dio().get<List<int>>(url,
+            options: Options(responseType: ResponseType.bytes));
+        formData.files.add(MapEntry(
+          'files',
+          MultipartFile.fromBytes(response.data!,
+              filename: url.split('/').last),
+        ));
+      }
+    }
+
+    formData.fields.addAll([
+      MapEntry('user_name', goods.userName),
+      MapEntry('product_name', goods.productName),
+      MapEntry(
+        'product_price',
+        goods.price.toString(),
+      ),
+      MapEntry(
+        'product_description',
+        goods.description,
+      ),
+      MapEntry(
+        'remaining_quantity',
+        goods.quantity.toString(),
+      ),
+    ]);
+
+    Map<String, dynamic> data =
+        await postFormData('$domain/product/create/$storeId', formData);
+    Logger.debug("### 굿즈 추가 $data");
+    return data;
+  }
+
+  //굿즈 수정
+  static Future<Map<String, dynamic>> goodsModify(
+      GoodsNotifier goods, String productId) async {
+    FormData formData = FormData();
+
+    //파일 추가
+    for (var imageMap in goods.images) {
+      if (imageMap['type'] == 'file') {
+        var file = imageMap['data'] as File;
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file.path,
+              filename: file.path.split('/').last),
+        ));
+      } else if (imageMap['type'] == 'url') {
+        var url = imageMap['data'] as String;
+        var response = await Dio().get<List<int>>(url,
+            options: Options(responseType: ResponseType.bytes));
+        formData.files.add(MapEntry(
+          'files',
+          MultipartFile.fromBytes(response.data!,
+              filename: url.split('/').last),
+        ));
+      }
+    }
+
+    formData.fields.addAll([
+      MapEntry('user_name', User().userName),
+      MapEntry('product_name', goods.productName),
+      MapEntry(
+        'product_price',
+        goods.price.toString(),
+      ),
+      MapEntry(
+        'product_description',
+        goods.description,
+      ),
+      MapEntry(
+        'remaining_quantity',
+        goods.quantity.toString(),
+      ),
+    ]);
+
+    Map<String, dynamic> data =
+        await putFormData('$domain/product/update/$productId', formData);
+    Logger.debug("### 굿즈 수정 $data");
+    return data;
+  }
+
+  // 특정 팝업 굿즈 상세 조회
+  static Future<GoodsModel> getPopupGoodsDetail(String productId) async {
+    final data = await getListData('$domain/product/view/$productId', {});
+    Logger.debug("### 특정 팝업 굿즈 상세 조회 $data");
+
+    GoodsModel goodsModel = GoodsModel.fromJson(data[0]);
+    return goodsModel;
+  }
+
+  // 회원탈퇴
+  static Future<Map<String, dynamic>> userDelete() async {
+    final data = await postData('$domain/user/user_delete/', {
+      'userId': User().userId,
+      'phoneNumber': User().phoneNumber,
+    });
+    Logger.debug("### 회원탈퇴 $data");
+    return data;
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
-import 'package:pophub/notifier/GoodsNotifier.dart';
-import 'package:pophub/screen/goods/goods_add_page.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -122,7 +120,7 @@ class _GoodsListState extends State<GoodsList> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    goodsList![index].productName,
+                                    goodsList![index].productName!,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 18,
@@ -157,20 +155,20 @@ class _GoodsListState extends State<GoodsList> {
               ],
             ),
             const Spacer(),
-            OutlinedButton(
-              onPressed: () {
-                if (mounted) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MultiProvider(providers: [
-                                ChangeNotifierProvider(
-                                    create: (_) => GoodsNotifier())
-                              ], child: const GoodsCreatePage(mode: "add"))));
-                }
-              },
-              child: const Text('굿즈 추가하기'),
-            ),
+            // OutlinedButton(
+            //   onPressed: () {
+            //     if (mounted) {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => MultiProvider(providers: [
+            //                     ChangeNotifierProvider(
+            //                         create: (_) => GoodsNotifier())
+            //                   ], child: const GoodsCreatePage(mode: "add"))));
+            //     }
+            //   },
+            //   child: const Text('굿즈 추가하기'),
+            // ),
           ],
         ),
       ),

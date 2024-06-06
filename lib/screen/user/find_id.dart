@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
 import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +24,6 @@ class _FindIdState extends State<FindId> {
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
   bool isDialogShowing = false;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  String token = "";
   String userId = "";
 
   late final TextEditingController phoneController = TextEditingController();
@@ -38,11 +36,6 @@ class _FindIdState extends State<FindId> {
     phoneController.dispose();
     certifiController.dispose();
     super.dispose();
-  }
-
-  Future<void> _showToken() async {
-    token = (await _storage.read(key: 'token'))!;
-    setState(() {});
   }
 
   Future<void> certifiApi() async {
@@ -82,7 +75,7 @@ class _FindIdState extends State<FindId> {
           });
         }
 
-        // findIdApi();
+        findIdApi();
       }
     } else {
       if (!isDialogShowing) {
@@ -104,18 +97,18 @@ class _FindIdState extends State<FindId> {
     Logger.debug("${userNoti.isVerify} userNotifier.isVerify");
   }
 
-  // Future<void> findIdApi() async {
-  //   final data = await Api.getId(phoneController.text.toString(), token);
-  //   userId = data.toString();
-  //   Logger.debug("### userId = ${userId}");
-  //   if (!data.toString().contains("fail")) {
-  //     setState(() {});
-  //   } else {}
-  // }
+  Future<void> findIdApi() async {
+    final data = await Api.getId(phoneController.text.toString());
+    Logger.debug("### userId = $userId");
+    if (!data.toString().contains("fail")) {
+      setState(() {
+        userId = data["userId"];
+      });
+    } else {}
+  }
 
   @override
   void initState() {
-    _showToken();
     super.initState();
   }
 
@@ -260,7 +253,14 @@ class _FindIdState extends State<FindId> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const Login()))
+                                                        MultiProvider(
+                                                            providers: [
+                                                              ChangeNotifierProvider(
+                                                                  create: (_) =>
+                                                                      UserNotifier())
+                                                            ],
+                                                            child:
+                                                                const ResetPasswd())))
                                           }
                                         },
                                     style: OutlinedButton.styleFrom(
@@ -275,7 +275,7 @@ class _FindIdState extends State<FindId> {
                                         shape: const RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10)))),
-                                    child: const Text("비밀번호 찾기")),
+                                    child: const Text("비밀번호 재설정")),
                               ),
                             )
                           ],

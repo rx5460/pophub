@@ -4,15 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/goods_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
+import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class GoodsCreatePage extends StatefulWidget {
   final String mode;
-  final GoodsModel? popup;
+  final String storeId;
+  final GoodsModel? goods;
 
-  const GoodsCreatePage({super.key, this.mode = "add", this.popup});
+  final String? productId;
+
+  const GoodsCreatePage({
+    super.key,
+    this.mode = "add",
+    this.goods,
+    required this.storeId,
+    this.productId,
+  });
 
   @override
   _GoodsCreatePageState createState() => _GoodsCreatePageState();
@@ -26,26 +41,28 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
   }
 
   void _initializeFields() {
-    if (widget.popup != null) {
-      _nameController.text = widget.popup?.productName ?? '';
-      _priceController.text = widget.popup?.price.toString() ?? '0';
-      _quantityController.text = widget.popup?.quantity.toString() ?? '0';
-      _descriptionController.text = widget.popup?.description ?? '';
+    if (widget.goods != null) {
+      _nameController.text = widget.goods?.productName ?? '';
+      _priceController.text = widget.goods?.price.toString() ?? '0';
+      _quantityController.text = widget.goods?.quantity.toString() ?? '0';
+      _descriptionController.text = widget.goods?.description ?? '';
 
-      Provider.of<GoodsNotifier>(context, listen: false).productName =
-          widget.popup?.productName ?? '';
-      Provider.of<GoodsNotifier>(context, listen: false).price =
-          widget.popup?.price ?? 0;
-      Provider.of<GoodsNotifier>(context, listen: false).quantity =
-          widget.popup?.quantity ?? 0;
-      Provider.of<GoodsNotifier>(context, listen: false).description =
-          widget.popup?.description ?? '';
+      if (widget.goods != null) {
+        Provider.of<GoodsNotifier>(context, listen: false).productName =
+            widget.goods?.productName ?? '';
+        Provider.of<GoodsNotifier>(context, listen: false).price =
+            widget.goods?.price ?? 0;
+        Provider.of<GoodsNotifier>(context, listen: false).quantity =
+            widget.goods?.quantity ?? 0;
+        Provider.of<GoodsNotifier>(context, listen: false).description =
+            widget.goods?.description ?? '';
 
-      // Provider.of<GoodsNotifier>(context, listen: false).images = widget
-      //         .popup?.image
-      //         .map((imageUrl) => {'type': 'url', 'data': imageUrl})
-      //         .toList() ??
-      //     [];
+        Provider.of<GoodsNotifier>(context, listen: false).images = widget
+                .goods!.image
+                ?.map((imageUrl) => {'type': 'url', 'data': imageUrl})
+                .toList() ??
+            [];
+      }
     }
   }
 
@@ -58,12 +75,35 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? pickedImage =
-          await _picker.pickImage(source: ImageSource.gallery);
+      if (Provider.of<GoodsNotifier>(context, listen: false).images.length <
+          5) {
+        final XFile? pickedImage =
+            await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedImage != null && mounted) {
-        Provider.of<GoodsNotifier>(context, listen: false)
-            .addImage({'type': 'file', 'data': File(pickedImage.path)});
+        if (pickedImage != null && mounted) {
+          Provider.of<GoodsNotifier>(context, listen: false)
+              .addImage({'type': 'file', 'data': File(pickedImage.path)});
+        }
+      } else {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('경고'),
+                content: const Text('사진은 최대 5개까지 등록할 수 있습니다.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('확인'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -71,37 +111,39 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
   }
 
   Future<void> goodsAdd(GoodsNotifier goods) async {
-    // final data = await Api.goodsAdd(goods);
+    goods.userName = User().userName;
+    Logger.debug(goods.toString());
+    final data = await Api.goodsAdd(goods, widget.storeId);
 
-    // if (!data.toString().contains("fail") && mounted) {
-    //   showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
-    //     Navigator.of(context).pop();
+    if (!data.toString().contains("fail") && mounted) {
+      showAlert(context, "성공", "굿즈가 등록되었습니다.", () {
+        Navigator.of(context).pop();
 
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => MultiProvider(providers: [
-    //                   ChangeNotifierProvider(create: (_) => UserNotifier())
-    //                 ], child: const BottomNavigationPage())));
-    //   });
-    // } else {}
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
+      });
+    } else {}
   }
 
   Future<void> goodsModify(GoodsNotifier goods) async {
-    // final data = await Api.goodsModify(goods);
+    final data = await Api.goodsModify(goods, widget.productId.toString());
 
-    // if (!data.toString().contains("fail") && mounted) {
-    //   showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
-    //     Navigator.of(context).pop();
+    if (!data.toString().contains("fail") && mounted) {
+      showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
+        Navigator.of(context).pop();
 
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => MultiProvider(providers: [
-    //                   ChangeNotifierProvider(create: (_) => UserNotifier())
-    //                 ], child: const BottomNavigationPage())));
-    //   });
-    // } else {}
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(providers: [
+                      ChangeNotifierProvider(create: (_) => UserNotifier())
+                    ], child: const BottomNavigationPage())));
+      });
+    } else {}
   }
 
   @override
@@ -197,7 +239,7 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(11),
                   ],
-                  onChanged: (value) => goods.description = value,
+                  onChanged: (value) => goods.price = int.parse(value),
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -206,16 +248,15 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                 ),
                 const SizedBox(height: 10),
                 TextField(
-                    controller: _quantityController,
-                    decoration: const InputDecoration(labelText: '수량'),
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(1000),
-                    ],
-                    onChanged: (value) => {}
-                    //goods.quantity = value,
-                    ),
+                  controller: _quantityController,
+                  decoration: const InputDecoration(labelText: '수량'),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(1000),
+                  ],
+                  onChanged: (value) => goods.quantity = int.parse(value),
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   "굿즈 설명",
@@ -230,6 +271,19 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                   onChanged: (value) => goods.description = value,
                 ),
                 const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      if (widget.mode == "modify") {
+                        goodsModify(goods);
+                      } else if (widget.mode == "add") {
+                        goodsAdd(goods);
+                      }
+                    },
+                    child: const Text('완료'),
+                  ),
+                ),
               ],
             );
           },
