@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pophub/model/answer_model.dart';
+import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -498,13 +499,6 @@ class Api {
     return data;
   }
 
-  // 특정 팝업 굿즈 조회
-  static Future<Map<String, dynamic>> getPopupGoods(String popup) async {
-    final data = await postData('$domain/product/store/$popup', {});
-    Logger.debug("### 팝업별 굿즈 조회 $data");
-    return data;
-  }
-
   // 문의내역 추가 (이미지 o)
   static Future<Map<String, dynamic>> inquiryAddWithImage(
       String title, String content, String category, image) async {
@@ -587,5 +581,23 @@ class Api {
     AnswerModel inquirtModel = AnswerModel.fromJson(data);
 
     return inquirtModel;
+  }
+
+  //특정 팝업스토어 굿즈 조회
+  static Future<List<GoodsModel>> getPopupGoodsList(String popup) async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/product/store/$popup',
+        {},
+      );
+
+      List<GoodsModel> goodsList =
+          dataList.map((data) => GoodsModel.fromJson(data)).toList();
+      return goodsList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to fetch goods list: $e');
+      throw Exception('Failed to fetch goods list');
+    }
   }
 }

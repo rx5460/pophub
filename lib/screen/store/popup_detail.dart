@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
@@ -38,6 +39,7 @@ class _PopupDetailState extends State<PopupDetail> {
   final CarouselController _controller = CarouselController();
   PopupModel? popup;
   List<ReviewModel>? reviewList;
+  List<GoodsModel>? goodsList;
   bool isLoading = true;
   double rating = 0;
   bool like = false;
@@ -183,6 +185,20 @@ class _PopupDetailState extends State<PopupDetail> {
     }
   }
 
+  Future<void> fetchGoodsData() async {
+    try {
+      List<GoodsModel>? dataList = await Api.getPopupGoodsList(widget.storeId);
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          goodsList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching goods data: $error');
+    }
+  }
+
   @override
   void initState() {
     initializeData();
@@ -192,6 +208,7 @@ class _PopupDetailState extends State<PopupDetail> {
   Future<void> initializeData() async {
     await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
     fetchReviewData(); // fetchReviewData를 호출합니다.
+    fetchGoodsData();
 
     Logger.debug("###### $markers");
     Logger.debug("###### $center");
@@ -554,81 +571,100 @@ class _PopupDetailState extends State<PopupDetail> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              SizedBox(
-                                                width: screenWidth * 0.9,
-                                                height: screenWidth * 0.8,
-                                                // ListView
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 0,
-                                                      right:
-                                                          screenWidth * 0.05),
-                                                  child: GestureDetector(
-                                                    onTap: () {},
-                                                    child: SizedBox(
-                                                      width: screenWidth * 0.5,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            child:
-                                                                // Image.network(
-                                                                //   '${popup.image![0]}',
-                                                                //   // width: screenHeight * 0.07 - 5,
-                                                                //   width: screenWidth * 0.5,
-                                                                //   fit: BoxFit.cover,
+                                              for (int index = 0;
+                                                  index <
+                                                      (goodsList?.length ?? 0);
+                                                  index++)
+                                                if (goodsList != null)
+                                                  SizedBox(
+                                                    width: screenWidth * 0.9,
+                                                    height: screenWidth * 0.8,
+                                                    // ListView
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 0,
+                                                          right: screenWidth *
+                                                              0.05),
+                                                      child: GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width:
+                                                              screenWidth * 0.5,
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                child: Image
+                                                                    .network(
+                                                                  '${goodsList![index].image![1]}',
+                                                                  // width: screenHeight * 0.07 - 5,
+                                                                  width:
+                                                                      screenWidth *
+                                                                          0.5,
+                                                                  height:
+                                                                      screenWidth *
+                                                                          0.5,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                //     Image.asset(
+                                                                //   'assets/images/Untitled.png',
+                                                                //   width:
+                                                                //       screenWidth *
+                                                                //           0.5,
                                                                 // ),
-                                                                Image.asset(
-                                                              'assets/images/Untitled.png',
-                                                              width:
-                                                                  screenWidth *
-                                                                      0.5,
-                                                            ),
-                                                            //   fit: BoxFit.cover,)
-                                                          ),
-                                                          const Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 8.0),
-                                                            child: Text(
-                                                              '굿즈 이름',
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w900,
+                                                                //   fit: BoxFit.cover,)
                                                               ),
-                                                            ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        top:
+                                                                            8.0),
+                                                                child: Text(
+                                                                  goodsList![
+                                                                          index]
+                                                                      .productName,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w900,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                '${goodsList![index].quantity.toString()}개',
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 11,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                          const Text(
-                                                            '수량',
-                                                            style: TextStyle(
-                                                              fontSize: 11,
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w900,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
                                             ],
                                           ),
                                         ],

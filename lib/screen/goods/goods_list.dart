@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/goods/goods_add_page.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
+import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
+import 'package:provider/provider.dart';
 
 class GoodsList extends StatefulWidget {
   final PopupModel popup;
@@ -13,15 +17,19 @@ class GoodsList extends StatefulWidget {
 }
 
 class _GoodsListState extends State<GoodsList> {
-  Future<void> getPopupData() async {
-    try {
-      dynamic data = await Api.getPopupGoods(widget.popup.id!);
+  List<GoodsModel>? goodsList;
 
-      setState(() {
-        print(data);
-      });
+  Future<void> fetchGoodsData() async {
+    try {
+      List<GoodsModel>? dataList =
+          await Api.getPopupGoodsList(widget.popup.id!);
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          goodsList = dataList;
+        });
+      }
     } catch (error) {
-      // 오류 처리
       Logger.debug('Error fetching goods data: $error');
     }
   }
@@ -30,7 +38,7 @@ class _GoodsListState extends State<GoodsList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPopupData();
+    fetchGoodsData();
   }
 
   @override
@@ -72,74 +80,80 @@ class _GoodsListState extends State<GoodsList> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: screenHeight * 0.03),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GoodsDetail(),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: screenWidth * 0.35,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'assets/images/goods.png',
-                                  width: screenWidth * 0.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0, top: 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '굿즈 이름',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  '가격',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
+                for (int index = 0; index < (goodsList?.length ?? 0); index++)
+                  if (goodsList != null)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.03),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GoodsDetail(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: screenWidth * 0.35,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      '${goodsList![index].image![1]}',
+                                      // width: screenHeight * 0.07 - 5,
+                                      width: screenWidth * 0.35,
+                                      height: screenWidth * 0.35,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                              Text(
-                                '수량',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0, top: 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    goodsList![index].productName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      '${goodsList![index].price.toString()}개',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${goodsList![index].quantity.toString()}개',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
               ],
             ),
             const Spacer(),
