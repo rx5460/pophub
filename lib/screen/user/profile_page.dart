@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               MaterialPageRoute(
                   builder: (context) => ProfileAdd(
                         refreshProfile: profileApi,
+                        useCallback: true,
                       )));
         } else {
           Navigator.push(
@@ -340,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                 ),
                                 Visibility(
-                                  visible: User().role == "Manager",
+                                  visible: User().role == "President",
                                   child: MenuList(
                                     icon: Icons.message_outlined,
                                     text: '내 스토어',

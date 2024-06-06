@@ -14,7 +14,9 @@ import 'package:provider/provider.dart';
 
 class ProfileAdd extends StatefulWidget {
   final VoidCallback refreshProfile;
-  const ProfileAdd({super.key, required this.refreshProfile});
+  final bool useCallback;
+  const ProfileAdd(
+      {super.key, required this.refreshProfile, required this.useCallback});
 
   @override
   State<ProfileAdd> createState() => _ProfileAddState();
@@ -65,21 +67,42 @@ class _ProfileAddState extends State<ProfileAdd> {
   }
 
   Future<void> profileAdd() async {
+    print(User().userName);
     Map<String, dynamic> data = _image == null
-        ? await Api.profileAdd(nicknameInput!, _gender.toString(),
-            ageController.text, phoneController.text)
+        ? await Api.profileAdd(
+            User().role == "President"
+                ? User().userId
+                : nicknameInput != null
+                    ? nicknameInput.toString()
+                    : User().userId,
+            User().role == "President" ? '0' : _gender.toString(),
+            User().role == "President"
+                ? '0'
+                : ageController.text != ""
+                    ? ageController.text
+                    : '0',
+            phoneController.text)
         : await Api.profileAddWithImage(
-            nicknameInput!,
-            _gender.toString(),
-            ageController.text,
+            User().role == "President"
+                ? User().userId
+                : nicknameInput != null
+                    ? nicknameInput.toString()
+                    : "",
+            User().role == "President" ? '0' : _gender.toString(),
+            User().role == "President"
+                ? '0'
+                : ageController.text != ""
+                    ? ageController.text
+                    : '0',
             _image == null ? null : File(_image!.path),
             phoneController.text);
 
     if (!data.toString().contains("fail")) {
-      if (widget.refreshProfile != () {}) {
+      if (widget.useCallback) {
         widget.refreshProfile();
       } else {
         if (mounted) {
+          Navigator.of(context).pop();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -190,144 +213,151 @@ class _ProfileAddState extends State<ProfileAdd> {
                             ),
                           ),
                         ),
-                        SizedBox(height: screenHeight * 0.02),
-                        const Text(
-                          "닉네임",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        SizedBox(
-                          width: screenWidth * 0.85,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: screenWidth * 0.6,
-                                height: screenHeight * 0.07,
-                                child: TextField(
-                                  controller: nicknameController,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      nicknameChecked = false;
-                                      nicknameInput = value;
-                                    });
-                                  },
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2.0,
-                                        color: Color(0xFFADD8E6),
+                        Visibility(
+                            visible: User().role == "General Member",
+                            child: Column(
+                              children: [
+                                SizedBox(height: screenHeight * 0.02),
+                                const Text(
+                                  "닉네임",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: screenHeight * 0.01),
+                                SizedBox(
+                                  width: screenWidth * 0.85,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: screenWidth * 0.6,
+                                        height: screenHeight * 0.07,
+                                        child: TextField(
+                                          controller: nicknameController,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              nicknameChecked = false;
+                                              nicknameInput = value;
+                                            });
+                                          },
+                                          decoration: const InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Color(0xFFADD8E6),
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Color(0xFFADD8E6),
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            labelText: '닉네임',
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 18,
+                                              fontFamily: 'recipe',
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
+                                      Container(
+                                        width: screenWidth * 0.22,
+                                        height: screenHeight * 0.07,
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                          border: Border.all(
+                                            width: 2,
+                                            color: const Color(0xFFE6A3B3),
+                                          ),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (nicknameChecked) {
+                                              setState(() {
+                                                nicknameChecked = false;
+                                              });
+                                            } else if (nicknameInput != null &&
+                                                nicknameInput!.isNotEmpty) {
+                                              nameCheckApi();
+                                            }
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              nicknameChecked ? '수정' : '중복확인',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2.0,
-                                        color: Color(0xFFADD8E6),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: screenHeight * 0.01),
+                                const Text(
+                                  "나이",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: screenHeight * 0.02),
+                                SizedBox(
+                                  width: screenWidth * 0.85,
+                                  child: TextField(
+                                    controller: ageController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          width: 2.0,
+                                          color: Color(0xFFADD8E6),
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          width: 2.0,
+                                          color: Color(0xFFADD8E6),
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
                                       ),
-                                    ),
-                                    labelText: '닉네임',
-                                    labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 18,
-                                      fontFamily: 'recipe',
+                                      labelText: '나이',
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 18,
+                                        fontFamily: 'recipe',
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                width: screenWidth * 0.22,
-                                height: screenHeight * 0.07,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  border: Border.all(
-                                    width: 2,
-                                    color: const Color(0xFFE6A3B3),
-                                  ),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    if (nicknameChecked) {
-                                      setState(() {
-                                        nicknameChecked = false;
-                                      });
-                                    } else if (nicknameInput != null &&
-                                        nicknameInput!.isNotEmpty) {
-                                      nameCheckApi();
-                                    }
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      nicknameChecked ? '수정' : '중복확인',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        const Text(
-                          "나이",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
-                        SizedBox(
-                          width: screenWidth * 0.85,
-                          child: TextField(
-                            controller: ageController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2.0,
-                                  color: Color(0xFFADD8E6),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2.0,
-                                  color: Color(0xFFADD8E6),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              labelText: '나이',
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontFamily: 'recipe',
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
-                        SizedBox(height: screenHeight * 0.01),
+                                SizedBox(height: screenHeight * 0.02),
+                                SizedBox(height: screenHeight * 0.01),
+                              ],
+                            )),
                         const Text(
                           "핸드폰 번호",
                           style: TextStyle(
@@ -371,77 +401,95 @@ class _ProfileAddState extends State<ProfileAdd> {
                             ),
                           ),
                         ),
-                        SizedBox(height: screenHeight * 0.02),
-                        const Text(
-                          "성별",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(
-                            height: screenHeight * 0.003,
-                            width: screenWidth * 0.003),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            // 남자 선택
-                            Radio<String>(
-                              value: 'M',
-                              groupValue: _gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  _gender = value;
-                                });
-                              },
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _gender = 'M';
-                                });
-                              },
-                              child: const Text('남자'),
-                            ),
-                            const SizedBox(width: 20), // 라디오 버튼 간의 간격
-                            // 여자 선택
-                            Radio<String>(
-                              value: 'F',
-                              groupValue: _gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  _gender = value;
-                                });
-                              },
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _gender = 'F';
-                                });
-                              },
-                              child: const Text('여자'),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.03),
+                        Visibility(
+                            visible: User().role == "General Member",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: screenHeight * 0.02),
+                                const Text(
+                                  "성별",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(
+                                    height: screenHeight * 0.003,
+                                    width: screenWidth * 0.003),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    // 남자 선택
+                                    Radio<String>(
+                                      value: 'M',
+                                      groupValue: _gender,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _gender = value;
+                                        });
+                                      },
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _gender = 'M';
+                                        });
+                                      },
+                                      child: const Text('남자'),
+                                    ),
+                                    const SizedBox(width: 20), // 라디오 버튼 간의 간격
+                                    // 여자 선택
+                                    Radio<String>(
+                                      value: 'F',
+                                      groupValue: _gender,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _gender = value;
+                                        });
+                                      },
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _gender = 'F';
+                                        });
+                                      },
+                                      child: const Text('여자'),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: screenHeight * 0.03),
+                              ],
+                            )),
                         const Spacer(),
                         SizedBox(
                           width: screenWidth * 0.85,
                           height: screenHeight * 0.07,
                           child: OutlinedButton(
                               onPressed: () {
-                                if (nicknameChecked &&
-                                    nicknameInput != null &&
-                                    nicknameInput!.isNotEmpty &&
-                                    ageController.text.isNotEmpty &&
-                                    phoneController.text.isNotEmpty) {
-                                  profileAdd();
+                                if (User().role == "General Member") {
+                                  if (nicknameChecked &&
+                                      nicknameInput != null &&
+                                      nicknameInput!.isNotEmpty &&
+                                      ageController.text.isNotEmpty &&
+                                      phoneController.text.isNotEmpty) {
+                                    profileAdd();
+                                  } else {
+                                    showAlert(context, "경고",
+                                        "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {
+                                      Navigator.of(context).pop();
+                                    });
+                                  }
                                 } else {
-                                  showAlert(context, "경고",
-                                      "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {
-                                    Navigator.of(context).pop();
-                                  });
+                                  if (phoneController.text.isNotEmpty) {
+                                    profileAdd();
+                                  } else {
+                                    showAlert(context, "경고",
+                                        "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {
+                                      Navigator.of(context).pop();
+                                    });
+                                  }
                                 }
                               },
                               child: const Text("완료")),

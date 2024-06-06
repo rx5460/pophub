@@ -75,7 +75,6 @@ class _AcountInfoState extends State<AcountInfo> {
     Map<String, dynamic> data = await Api.profileModifyImage(
         User().userId, nicknameInput!, File(_image!.path));
 
-    print(!data.toString().contains("fail"));
     if (!data.toString().contains("fail")) {
       widget.refreshProfile();
       closePage();
@@ -130,7 +129,10 @@ class _AcountInfoState extends State<AcountInfo> {
                         height: screenHeight * 0.2,
                         child: CircleAvatar(
                           backgroundImage: _image == null
-                              ? NetworkImage(User().file)
+                              ? User().file != ""
+                                  ? FileImage(File(User().file))
+                                  : const AssetImage('assets/images/logo.png')
+                                      as ImageProvider
                               : FileImage(File(_image!.path)) as ImageProvider,
                           radius: 1000,
                         ),
@@ -289,24 +291,27 @@ class _AcountInfoState extends State<AcountInfo> {
               SizedBox(
                 height: screenHeight * 0.03,
               ),
-              Container(
-                width: screenWidth * 0.85,
-                height: screenHeight * 0.07,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(
-                    width: 2,
-                    color: const Color(0xFFADD8E6),
+              Visibility(
+                visible: User().role == "General Memeber",
+                child: Container(
+                  width: screenWidth * 0.85,
+                  height: screenHeight * 0.07,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xFFADD8E6),
+                    ),
+                    // color: const Color(0xFFE6A3B3)
                   ),
-                  // color: const Color(0xFFE6A3B3)
-                ),
-                child: Center(
-                  child: Text(
-                    '성별 : ${User().gender}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontSize: 16,
+                  child: Center(
+                    child: Text(
+                      '성별 : ${User().gender}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -314,24 +319,27 @@ class _AcountInfoState extends State<AcountInfo> {
               SizedBox(
                 height: screenHeight * 0.03,
               ),
-              Container(
-                width: screenWidth * 0.85,
-                height: screenHeight * 0.07,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(
-                    width: 2,
-                    color: const Color(0xFFADD8E6),
+              Visibility(
+                visible: User().role == "General Memeber",
+                child: Container(
+                  width: screenWidth * 0.85,
+                  height: screenHeight * 0.07,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xFFADD8E6),
+                    ),
+                    // color: const Color(0xFFE6A3B3)
                   ),
-                  // color: const Color(0xFFE6A3B3)
-                ),
-                child: Center(
-                  child: Text(
-                    '나이 : ${User().age}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontSize: 16,
+                  child: Center(
+                    child: Text(
+                      '나이 : ${User().age}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
