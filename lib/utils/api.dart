@@ -55,8 +55,8 @@ class Api {
 
   // 비밀번호 변경
   static changePasswd(String userId, String userPassword) async {
-    final data = await postData('$domain/user/change_password',
-        {'userId': userId, "authPassword": userPassword});
+    final data = await postNoAuthData('$domain/user/change_password',
+        {'userId': userId, "userPassword": userPassword});
     Logger.debug("### 비밀번호 변경 $data");
     return data;
   }
@@ -232,14 +232,14 @@ class Api {
     Logger.debug("### 팝업 좋아요 $data");
     return data;
   }
-  // 아이디 조회
-  // static Future<Map<String, dynamic>> getId(
-  //     String phoneNumber, String token) async {
-  //   final data =
-  //       await getNoAuthData('$domain/user/search_id/:$phoneNumber', {});
-  //   Logger.debug("### 아이디 조회 $data");
-  //   return data;
-  // }
+
+  //아이디 조회
+  static Future<Map<String, dynamic>> getId(String phoneNumber) async {
+    final data = await getNoAuthData(
+        '$domain/user/search_id/?phoneNumber=$phoneNumber', {});
+    Logger.debug("### 아이디 조회 $data");
+    return data;
+  }
 
   // 프로필 추가 (이미지 o)
   static Future<Map<String, dynamic>> profileAddWithImage(

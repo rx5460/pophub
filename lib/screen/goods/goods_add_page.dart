@@ -75,12 +75,35 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? pickedImage =
-          await _picker.pickImage(source: ImageSource.gallery);
+      if (Provider.of<GoodsNotifier>(context, listen: false).images.length <
+          5) {
+        final XFile? pickedImage =
+            await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedImage != null && mounted) {
-        Provider.of<GoodsNotifier>(context, listen: false)
-            .addImage({'type': 'file', 'data': File(pickedImage.path)});
+        if (pickedImage != null && mounted) {
+          Provider.of<GoodsNotifier>(context, listen: false)
+              .addImage({'type': 'file', 'data': File(pickedImage.path)});
+        }
+      } else {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('경고'),
+                content: const Text('사진은 최대 5개까지 등록할 수 있습니다.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('확인'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     } catch (e) {
       print('Error picking image: $e');

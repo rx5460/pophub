@@ -242,12 +242,12 @@ class _InquiryTileState extends State<InquiryTile> {
                 children: [
                   Text(inquiryDetail!.content.toString()),
                   Visibility(
-                    visible: inquiryDetail!.image != "",
+                    visible: inquiryDetail!.image != null,
                     child: SizedBox(
                       height: screenHeight * 0.01,
                     ),
                   ),
-                  inquiryDetail!.image != ""
+                  inquiryDetail!.image != null
                       ? Image.network(
                           inquiryDetail!.image.toString(),
                           width: MediaQuery.of(context).size.width,

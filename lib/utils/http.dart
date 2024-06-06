@@ -246,3 +246,47 @@ Future<Map<String, dynamic>> putFormData(String url, FormData data) async {
     return {"data": "fail"};
   }
 }
+
+Future<Map<String, dynamic>> getNoAuthData(
+    String url, Map<String, dynamic> queryParams) async {
+  try {
+    Dio noAuthDio = Dio();
+    final response = await noAuthDio.get(url, queryParameters: queryParams);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data is String ? {"data": response.data} : response.data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
+  }
+}
+
+Future<Map<String, dynamic>> postNoAuthData(
+    String url, Map<String, dynamic> data) async {
+  try {
+    Dio noAuthDio = Dio();
+    Response response = await noAuthDio.post(
+      url,
+      data: data,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.statusCode);
+      if (response.data is String) {
+        return {"data": response.data};
+      } else {
+        return response.data;
+      }
+    } else {
+      if (response.data is String) {
+        return {"data": response.statusCode};
+      } else {
+        return response.data;
+      }
+    }
+  } catch (e) {
+    Logger.debug(e.toString());
+    return {"data": "fail"};
+  }
+}
