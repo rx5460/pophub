@@ -19,8 +19,10 @@ import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject_page.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class PopupDetail extends StatefulWidget {
@@ -58,6 +60,24 @@ class _PopupDetailState extends State<PopupDetail> {
         markers.add(Marker(markerId: '마커', latLng: center));
         isLoading = false;
       });
+    } catch (error) {
+      // 오류 처리
+      Logger.debug('Error fetching popup data: $error');
+    }
+  }
+
+  Future<void> popupDelete() async {
+    try {
+      final data = await Api.popupDelete(widget.storeId);
+
+      if (!data.toString().contains("fail") && mounted) {
+        showAlert(context, "성공", "팝업스토어가 삭제되었습니다.", () {
+          Navigator.of(context).pop();
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()));
+        });
+      }
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching popup data: $error');
@@ -696,6 +716,22 @@ class _PopupDetailState extends State<PopupDetail> {
                                       color: Colors.white,
                                     ),
                                   ),
+                                  actions: [
+                                    PopupMenuButton(
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.white,
+                                      ),
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          child: const Text('스토어 삭제'),
+                                          onTap: () {
+                                            popupDelete();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

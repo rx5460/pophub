@@ -728,4 +728,11 @@ class Api {
     Logger.debug("### 카테고리 리스트 조회 $dataList");
     return categoryList;
   }
+
+  // 팝업 삭제
+  static Future<Map<String, dynamic>> popupDelete(String storeId) async {
+    final data = await deleteData('$domain/popup/delete/$storeId', {});
+    Logger.debug("### 팝업 삭제 $data");
+    return data;
+  }
 }
