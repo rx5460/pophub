@@ -6,6 +6,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
+import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -24,12 +25,15 @@ class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
   String? searchInput;
   List<PopupModel>? poppularList;
+  bool _isExpanded = false;
+  bool addGoodsVisible = false;
 
   List imageList = [
     'assets/images/Untitled.png',
     'assets/images/Untitled.png',
     'assets/images/Untitled.png',
   ];
+
   Future<void> profileApi() async {
     Map<String, dynamic> data = await Api.getProfile(User().userId);
 
@@ -64,6 +68,21 @@ class _HomePageState extends State<HomePage> {
     profileApi();
   }
 
+  Future<void> checkStoreApi() async {
+    List<dynamic> data = await Api.getMyPopup(User().userName);
+
+    if (!data.toString().contains("fail") &&
+        !data.toString().contains("없습니다")) {
+      setState(() {
+        addGoodsVisible = true;
+      });
+    } else {
+      setState(() {
+        addGoodsVisible = false;
+      });
+    }
+  }
+
   Future<void> getPopupByStoreName(String storeName) async {
     final data = await Api.getPopupByName(storeName);
     if (!data.toString().contains("fail") && mounted) {
@@ -84,22 +103,136 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  Widget _buildCollapsedFloatingButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        setState(() {
+          _isExpanded = true;
+        });
+      },
+      backgroundColor: const Color(0xFF1C77E4),
+      shape: const CircleBorder(),
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildExpandedFloatingButtons() {
+    return Transform.translate(
+      offset: Offset(MediaQuery.of(context).size.width * 0.04, 0),
+      child: Stack(
+        fit: StackFit.expand, // Stack이 화면 전체를 차지하도록 설정
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isExpanded = false;
+              });
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white.withOpacity(0.85), // 반투명 배경
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.04),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    addGoodsVisible
+                        ? _buildFloatingButtonWithText(
+                            onPressed: () {
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => const CheckListAdd(),
+                              //     ));
+                            },
+                            icon: Icons.check_box_outlined,
+                            text: '굿즈',
+                          )
+                        : const SizedBox(),
+                    addGoodsVisible
+                        ? const SizedBox(height: 16)
+                        : const SizedBox(),
+                    _buildFloatingButtonWithText(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MultiProvider(
+                                        providers: [
+                                          ChangeNotifierProvider(
+                                              create: (_) => StoreModel())
+                                        ],
+                                        child: const StoreCreatePage(
+                                            mode: "add"))));
+                      },
+                      icon: Icons.calendar_today,
+                      text: '팝업스토어',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingButtonWithText({
+    required Function onPressed,
+    required IconData icon,
+    required String text,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(width: 8),
+        FloatingActionButton(
+          onPressed: onPressed as void Function()?,
+          heroTag: null,
+          backgroundColor: const Color(0xFF1C77E4),
+          shape: const CircleBorder(),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
+    bool isUserGeneral = User().role == 'general';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: Colors.white, surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         title: Image.asset(
           'assets/images/logo.png',
           width: screenWidth * 0.14,
         ),
-        // centerTitle: true,
         actions: [
           GestureDetector(
             onTap: () {
@@ -119,6 +252,11 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButton: User().role == 'President'
+          ? (_isExpanded
+              ? _buildExpandedFloatingButtons()
+              : _buildCollapsedFloatingButton())
+          : null,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
