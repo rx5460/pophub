@@ -352,19 +352,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: MenuList(
                                     icon: Icons.assignment_turned_in_outlined,
                                     text: '팝업스토어 승인 대기',
-                                    onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          const StoreListPage())));
+                                    onClick: () async {
+                                      final data = await Api.pendingList();
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider(
+                                                              create: (_) =>
+                                                                  StoreModel())
+                                                        ],
+                                                        child: StoreListPage(
+                                                          popups: data,
+                                                          titleName: "승인 리스트",
+                                                        ))));
+                                      }
                                     },
                                   ),
                                 ),

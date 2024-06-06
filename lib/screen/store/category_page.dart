@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -40,9 +43,12 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Future<void> _addRecentSearch(String search) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _recentSearches.add(search);
-    await prefs.setStringList('recentSearches', _recentSearches);
-    _loadRecentSearches();
+    if (!_recentSearches.contains(search)) {
+      _recentSearches.add(search);
+
+      await prefs.setStringList('recentSearches', _recentSearches);
+      _loadRecentSearches();
+    }
   }
 
   void _search(String query) async {
@@ -53,6 +59,19 @@ class _CategoryPageState extends State<CategoryPage> {
   Future<void> getPopupByStoreName(String storeName) async {
     final data = await Api.getPopupByName(storeName);
     if (!data.toString().contains("fail") && mounted) {
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (_) => StoreModel())
+                        ],
+                        child: StoreListPage(
+                          popups: data,
+                          titleName: "검색 결과",
+                        ))));
+      }
     } else {}
     setState(() {});
   }
@@ -60,6 +79,17 @@ class _CategoryPageState extends State<CategoryPage> {
   void _searchByCategory(int category) async {
     final data = await Api.getPopupByCategory(category);
     if (!data.toString().contains("fail") && mounted) {
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (_) => StoreModel())
+                        ],
+                        child:
+                            StoreListPage(popups: data, titleName: "검색 결과"))));
+      }
     } else {}
     setState(() {});
   }
@@ -73,66 +103,66 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '어떤 정보를 찾아볼까요?',
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    _search(_searchController.text);
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '어떤 정보를 찾아볼까요?',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      _search(_searchController.text);
+                    },
+                  ),
                 ),
               ),
-            ),
-            if (_recentSearches.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Text('최근 검색어',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8.0,
-                children: _recentSearches
-                    .map(
-                      (search) => Chip(
-                        label: Text(search),
-                        onDeleted: () {
-                          setState(() {
-                            _recentSearches.remove(search);
-                          });
-                        },
-                        deleteIcon:
-                            const Icon(Icons.clear, size: 20), // 삭제 아이콘 크기 설정
-                        deleteIconColor: Colors.black, // 삭제 아이콘 색상 설정
-                        labelStyle: const TextStyle(
-                            color: Colors.black), // 라벨 텍스트 스타일 설정
-                        backgroundColor: Colors.white, // Chip 배경색 설정
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0), // Chip 패딩 설정
-                        shape: RoundedRectangleBorder(
-                          side:
-                              const BorderSide(color: Constants.DEFAULT_COLOR),
-                          borderRadius: BorderRadius.circular(20), // Chip 모양 설정
+              if (_recentSearches.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Text('최근 검색어',
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8.0,
+                  children: _recentSearches
+                      .map(
+                        (search) => Chip(
+                          label: Text(search),
+                          onDeleted: () {
+                            setState(() {
+                              _recentSearches.remove(search);
+                            });
+                          },
+                          deleteIcon: const Icon(Icons.clear, size: 20),
+                          deleteIconColor: Colors.black,
+                          labelStyle: const TextStyle(color: Colors.black),
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Constants.DEFAULT_COLOR),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              )
-            ],
-            const SizedBox(height: 16),
-            const Text('카테고리',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
+                      )
+                      .toList(),
+                )
+              ],
+              const SizedBox(height: 16),
+              const Text('카테고리',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  childAspectRatio: 1.5, // Adjust to control item height
+                  childAspectRatio: 1.4,
                 ),
                 itemCount: category.length,
                 itemBuilder: (context, index) {
@@ -142,22 +172,37 @@ class _CategoryPageState extends State<CategoryPage> {
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Constants.DEFAULT_COLOR),
+                        color: Colors.white,
+                        border: Border.all(
+                            color: Constants.DEFAULT_COLOR, width: 2),
                         borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: Center(
                         child: Text(
                           item.categoryName,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ),
                   );
                 },
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

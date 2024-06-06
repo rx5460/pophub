@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:http/http.dart' as http;
 
 class PendingRejectPage extends StatefulWidget {
   String id = "";
@@ -75,8 +74,15 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
           ),
         );
         Navigator.of(context).pop();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const StoreListPage()));
+
+        final data = await Api.pendingList();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StoreListPage(
+                      popups: data,
+                      titleName: "승인 리스트",
+                    )));
       } else {
         Logger.debug("거절에 실패했습니다.");
       }

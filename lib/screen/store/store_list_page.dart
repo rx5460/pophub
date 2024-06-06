@@ -3,35 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
-import 'package:pophub/utils/api.dart';
 
-class StoreListPage extends StatefulWidget {
-  const StoreListPage({super.key});
+class StoreListPage extends StatelessWidget {
+  final List<PopupModel> popups;
+  final String titleName;
 
-  @override
-  _StoreListPageState createState() => _StoreListPageState();
-}
-
-class _StoreListPageState extends State<StoreListPage> {
-  List<PopupModel> popups = [];
-
-  @override
-  void initState() {
-    pendingList();
-    super.initState();
-  }
-
-  Future<void> pendingList() async {
-    final data = await Api.pendingList();
-
-    if (!data.toString().contains("fail")) {
-      setState(() {
-        popups = data;
-      });
-    } else {
-      // Error handling code
-    }
-  }
+  const StoreListPage(
+      {super.key, required this.popups, this.titleName = "팝업스토어"});
 
   @override
   Widget build(BuildContext context) {
@@ -40,72 +18,79 @@ class _StoreListPageState extends State<StoreListPage> {
     double screenHeight = screenSize.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomTitleBar(titleName: "승인 리스트"),
-      body: ListView.builder(
-        itemCount: popups.length,
-        itemBuilder: (context, index) {
-          final popup = popups[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PopupDetail(
-                    storeId: popup.id!,
-                    mode: "pending",
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  popup.image != null && popup.image!.isNotEmpty
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            '${popup.image![0]}',
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
+      appBar: CustomTitleBar(titleName: titleName),
+      body: popups.isEmpty
+          ? const Center(
+              child: Text(
+                '검색한 결과가 없습니다.',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            )
+          : ListView.builder(
+              itemCount: popups.length,
+              itemBuilder: (context, index) {
+                final popup = popups[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PopupDetail(
+                          storeId: popup.id!,
+                          mode: "pending",
                         ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
                       children: [
-                        Text(
-                          popup.name ?? 'No name',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
+                        popup.image != null && popup.image!.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  '${popup.image![0]}',
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                        const SizedBox(width: 16.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                popup.name ?? 'No name',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Text(
+                                (popup.start != null && popup.start!.isNotEmpty)
+                                    ? DateFormat("yyyy.MM.dd")
+                                        .format(DateTime.parse(popup.start!))
+                                    : '',
+                              ),
+                              Text(popup.location ?? 'No ID'),
+                            ],
                           ),
                         ),
-                        Text(
-                          (popup.start != null && popup.start!.isNotEmpty)
-                              ? DateFormat("yyyy.MM.dd")
-                                  .format(DateTime.parse(popup.start!))
-                              : '',
-                        ),
-                        Text(popup.location ?? 'No ID'),
                       ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

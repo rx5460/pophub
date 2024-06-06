@@ -137,8 +137,15 @@ class _PopupDetailState extends State<PopupDetail> {
           ),
         );
         Navigator.of(context).pop();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const StoreListPage()));
+
+        final data = await Api.pendingList();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StoreListPage(
+                      popups: data,
+                      titleName: "승인 리스트",
+                    )));
 
         setState(() {
           allowSuccess = true;
