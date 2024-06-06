@@ -80,6 +80,12 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     final data = await Api.getCategory();
     setState(() {
       category = data.where((item) => item.categoryId >= 10).toList();
+      if (widget.popup != null) {
+        selectedCategory = category.firstWhere(
+          (item) =>
+              item.categoryId.toString() == widget.popup?.category.toString(),
+        );
+      }
     });
     print("Data $data");
   }
@@ -92,6 +98,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   final _locationController = TextEditingController();
   final _contactController = TextEditingController();
   final _maxCapacityController = TextEditingController();
+  CategoryModel? selectedCategory;
 
   Future<void> _pickImage() async {
     try {
@@ -518,6 +525,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 //     :
                 DropdownButtonFormField<CategoryModel>(
                   decoration: const InputDecoration(labelText: '카테고리'),
+                  value: selectedCategory,
                   items: category.map((categoryModel) {
                     return DropdownMenuItem<CategoryModel>(
                       value: categoryModel,
@@ -526,7 +534,10 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      store.category = value.categoryId.toString();
+                      setState(() {
+                        selectedCategory = value;
+                        store.category = value.categoryId.toString();
+                      });
                     }
                   },
                 ),

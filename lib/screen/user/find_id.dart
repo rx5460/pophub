@@ -76,7 +76,7 @@ class _FindIdState extends State<FindId> {
           });
         }
 
-        findIdApi();
+        await findIdApi();
       }
     } else {
       if (!isDialogShowing) {
@@ -218,7 +218,8 @@ class _FindIdState extends State<FindId> {
                     ),
                     Visibility(
                         child: Visibility(
-                            visible: findSuccess == false,
+                            visible:
+                                findSuccess == false && userNotifier.isVerify,
                             child: Center(
                               child: Text(
                                   "${phoneController.text.toString()} 번호에 해당하는 아이디가 없습니다."),

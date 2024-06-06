@@ -129,7 +129,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   crossAxisCount: 4,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  childAspectRatio: 1, // Adjust to control item height
+                  childAspectRatio: 1.5, // Adjust to control item height
                 ),
                 itemCount: category.length,
                 itemBuilder: (context, index) {

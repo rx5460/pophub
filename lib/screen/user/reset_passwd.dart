@@ -6,7 +6,7 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
@@ -117,10 +117,8 @@ class _ResetPasswdState extends State<ResetPasswd> {
         User().clear();
         if (mounted) {
           showAlert(context, "확인", "비밀번호 재설정이 완료되었습니다.", () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BottomNavigationPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Login()));
           });
         }
       }
@@ -230,7 +228,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       Visibility(
-                        visible: isDialogShowing,
+                        visible: isDialogShowing && userNotifier.isVerify,
                         child: Form(
                           key: _pwFormkey,
                           child: CustomTextFormFeild(

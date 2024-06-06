@@ -316,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 MenuList(
-                                  icon: Icons.task,
+                                  icon: Icons.info_outline,
                                   text: '공지사항',
                                   onClick: () {
                                     Navigator.push(
@@ -327,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                 ),
                                 MenuList(
-                                  icon: Icons.message_outlined,
+                                  icon: Icons.help_outline,
                                   text: '문의내역',
                                   onClick: () {
                                     Navigator.push(
@@ -349,10 +349,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Visibility(
                                   visible: User().role == "Manager",
-                                  //TODO 테스트 코드
-
                                   child: MenuList(
-                                    icon: Icons.message_outlined,
+                                    icon: Icons.assignment_turned_in_outlined,
                                     text: '팝업스토어 승인 대기',
                                     onClick: () {
                                       Navigator.push(
