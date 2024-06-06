@@ -25,7 +25,6 @@ import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -358,7 +357,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                         ],
                                       ),
                                     ),
-                                    for (int i = 0; i < 7; i++)
+                                    for (int i = 0;
+                                        i < popup!.schedule!.length;
+                                        i++)
                                       if (popup!.schedule![i].dayOfWeek ==
                                           DateFormat('EEE')
                                               .format(DateTime.now()))
@@ -427,7 +428,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                               right: screenWidth * 0.05),
                                           child: Column(
                                             children: [
-                                              for (int i = 0; i < 7; i++)
+                                              for (int i = 0;
+                                                  i < popup!.schedule!.length;
+                                                  i++)
                                                 Row(
                                                   children: [
                                                     SizedBox(
