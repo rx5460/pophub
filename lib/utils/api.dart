@@ -735,4 +735,40 @@ class Api {
     Logger.debug("### 팝업 삭제 $data");
     return data;
   }
+
+  // 스토어 이름으로 팝업 검색
+  static Future<List<PopupModel>> getPopupByName(String storeName) async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/searchStoreName/?store_name=$storeName',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to fetch getPopupByName list: $e');
+      throw Exception('Failed to fetch getPopupByName list');
+    }
+  }
+
+  // 카테고리로 팝업 검색
+  static Future<List<PopupModel>> getPopupByCategory(int category) async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/searchCategory/$category',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to fetch getPopupByCategory list: $e');
+      throw Exception('Failed to fetch getPopupByCategory list');
+    }
+  }
 }

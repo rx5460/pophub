@@ -46,19 +46,22 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   void _search(String query) async {
+    getPopupByStoreName(query);
     await _addRecentSearch(query);
   }
 
-  void _searchByCategory(String category) async {
-    // Perform search by category with Dio
-    // try {
-    //   var response = await Dio().get('https://api.example.com/search',
-    //       queryParameters: {'category': category});
-    //   // Handle the response as needed
-    //   print(response.data);
-    // } catch (e) {
-    //   print(e);
-    // }
+  Future<void> getPopupByStoreName(String storeName) async {
+    final data = await Api.getPopupByName(storeName);
+    if (!data.toString().contains("fail") && mounted) {
+    } else {}
+    setState(() {});
+  }
+
+  void _searchByCategory(int category) async {
+    final data = await Api.getPopupByCategory(category);
+    if (!data.toString().contains("fail") && mounted) {
+    } else {}
+    setState(() {});
   }
 
   @override
@@ -135,7 +138,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 itemBuilder: (context, index) {
                   var item = category[index];
                   return GestureDetector(
-                    onTap: () => _searchByCategory(item.categoryName),
+                    onTap: () => _searchByCategory(item.categoryId),
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
