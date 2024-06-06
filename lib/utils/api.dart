@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pophub/model/answer_model.dart';
+import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/notice_model.dart';
@@ -716,5 +717,15 @@ class Api {
     });
     Logger.debug("### 회원탈퇴 $data");
     return data;
+  }
+
+  // 카테고리 리스트 조회
+  static Future<List<CategoryModel>> getCategory() async {
+    final dataList = await getListData('$domain/admin/category', {});
+
+    List<CategoryModel> categoryList =
+        dataList.map((data) => CategoryModel.fromJson(data)).toList();
+    Logger.debug("### 카테고리 리스트 조회 $dataList");
+    return categoryList;
   }
 }

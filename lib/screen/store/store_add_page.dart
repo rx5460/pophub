@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/kopo_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/schedule_model.dart';
@@ -28,10 +29,12 @@ class StoreCreatePage extends StatefulWidget {
 }
 
 class _StoreCreatePageState extends State<StoreCreatePage> {
+  List<CategoryModel> category = [];
   @override
   void initState() {
     super.initState();
     _initializeFields();
+    getCategory();
   }
 
   void _initializeFields() {
@@ -73,21 +76,13 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     }
   }
 
-  List<Map<String, int>> categoryList = [
-    {'의류': 10},
-    {'액세서리': 11},
-    {'신발': 12},
-    {'가방/지갑': 13},
-    {'뷰티/화장품': 14},
-    {'가전제품': 15},
-    {'생활용품': 16},
-    {'푸드/음료': 17},
-    {'문구/책/잡화': 18},
-    {'전자기기/액세서리': 19},
-    {'건강/웰빙': 20},
-    {'패션/라이프스타일': 21},
-    {'예술/공예': 22},
-  ];
+  Future<void> getCategory() async {
+    final data = await Api.getCategory();
+    setState(() {
+      category = data.where((item) => item.categoryId >= 10).toList();
+    });
+    print("Data $data");
+  }
 
   final ImagePicker _picker = ImagePicker();
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -521,26 +516,21 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 //         },
                 //       )
                 //     :
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<CategoryModel>(
                   decoration: const InputDecoration(labelText: '카테고리'),
-                  items: categoryList.map((categoryMap) {
-                    String category = categoryMap.keys.first;
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
+                  items: category.map((categoryModel) {
+                    return DropdownMenuItem<CategoryModel>(
+                      value: categoryModel,
+                      child: Text(categoryModel.categoryName),
                     );
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      for (var categoryMap in categoryList) {
-                        if (categoryMap.containsKey(value)) {
-                          store.category = categoryMap[value]!.toString();
-                          break;
-                        }
-                      }
+                      store.category = value.categoryId.toString();
                     }
                   },
                 ),
+
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
