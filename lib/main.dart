@@ -26,7 +26,7 @@ void initializeNotification() async {
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(const AndroidNotificationChannel(
-          'high_importance_channel', 'high_importance_notification',
+          'PopHub_channel', 'PopHub Notification',
           importance: Importance.max));
 
   await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
@@ -43,13 +43,13 @@ void initializeNotification() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  // initializeNotification();
+  initializeNotification();
 
-  // final pushNotificationService = PushNotificationService();
-  // await pushNotificationService.init();
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.init();
 
   await dotenv.load(fileName: 'assets/config/.env');
 

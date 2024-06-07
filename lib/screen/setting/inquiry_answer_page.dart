@@ -40,6 +40,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
   Future<void> _submitInquiry() async {
     String content = _answerContentController.text;
 
+    // 서버로부터 데이터를 받아옴
     Map<String, dynamic> data =
         await Api.inquiryAnswer(widget.inquiryId, content);
 
@@ -53,12 +54,15 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
         );
       }
 
-      final alarmDetails = {
+      // 서버로부터 받은 데이터에서 userName 추출
+      String userName = data['userName'];
+
+      final Map<String, String> alarmDetails = {
         'title': '문의 답변 완료',
         'label': '해당 문의에 관리자가 답변했습니다.',
         'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
-        'active': true,
-        'inquiryId': widget.inquiryId
+        'active': 'true',
+        'inquiryId': widget.inquiryId.toString(),
       };
 
       // 서버에 알람 추가
@@ -66,21 +70,22 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
         Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'userName': User().userName,
+          'userName': userName,
           'type': 'alarms',
           'alarmDetails': alarmDetails,
         }),
       );
+
       // Firestore에 알람 추가
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userName)
+          .doc(userName)
           .collection('alarms')
           .add(alarmDetails);
 
       // 로컬 알림 발송
-      await const AlarmPage().showNotification(
-          alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
+      await const AlarmPage().showNotification(alarmDetails['title']!,
+          alarmDetails['label']!, alarmDetails['time']!);
     } else {
       if (mounted) {
         showAlert(context, "경고", "답변 추가에 실패했습니다.", () {

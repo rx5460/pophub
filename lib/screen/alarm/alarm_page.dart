@@ -9,8 +9,22 @@ class AlarmPage extends StatefulWidget {
   @override
   State<AlarmPage> createState() => _AlarmPageState();
 
-  showNotification(
-      Object? alarmDetail, Object? alarmDetail2, Object? alarmDetail3) {}
+  Future<void> showNotification(String title, String body, String time) async {
+    var androidDetails = const AndroidNotificationDetails(
+      "channelId",
+      "Local Notification",
+      channelDescription: "Your description",
+      importance: Importance.high,
+    );
+    var generalDetails = NotificationDetails(android: androidDetails);
+    await FlutterLocalNotificationsPlugin().show(
+      0,
+      title,
+      body,
+      generalDetails,
+      payload: time,
+    );
+  }
 }
 
 class _AlarmPageState extends State<AlarmPage>
@@ -18,14 +32,12 @@ class _AlarmPageState extends State<AlarmPage>
   TabController? _tabController;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  // bool _pushNotificationEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     initializeNotifications();
-    // loadNotificationSettings();
     setupListeners();
   }
 
@@ -37,30 +49,17 @@ class _AlarmPageState extends State<AlarmPage>
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  // void loadNotificationSettings() async {
-  //   DocumentSnapshot userDoc = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(User().userId)
-  //       .get();
-
-  //   setState(() {
-  //     _pushNotificationEnabled = userDoc['pushNotification'] ?? false;
-  //   });
-  // }
-
   void setupListeners() {
     List<String> collections = ['alarms', 'orderAlarms', 'waitAlarms'];
 
     for (var collection in collections) {
       FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userId)
+          .doc(User().userName)
           .collection(collection)
           .snapshots()
           .listen((snapshot) {
         for (var change in snapshot.docChanges) {
-          // if (change.type == DocumentChangeType.added &&
-          //     _pushNotificationEnabled) {
           if (change.type == DocumentChangeType.added) {
             var data = change.doc.data() as Map<String, dynamic>;
             String notificationMessage;
@@ -78,7 +77,7 @@ class _AlarmPageState extends State<AlarmPage>
                 notificationMessage = "알 수 없음";
             }
             showNotification("${data['title']}\n${data['label']}",
-                "새로운 $notificationMessage 알람이 왔습니다!");
+                "새로운 $notificationMessage 알람이 왔습니다!", data['time']);
             setState(() {});
           }
         }
@@ -86,7 +85,7 @@ class _AlarmPageState extends State<AlarmPage>
     }
   }
 
-  Future<void> showNotification(String title, String body) async {
+  Future<void> showNotification(String title, String body, String time) async {
     var androidDetails = const AndroidNotificationDetails(
       "channelId",
       "Local Notification",
@@ -160,7 +159,7 @@ class _AlarmPageState extends State<AlarmPage>
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
-          .doc(User().userId)
+          .doc(User().userName)
           .collection(collection)
           .snapshots(),
       builder: (context, snapshot) {

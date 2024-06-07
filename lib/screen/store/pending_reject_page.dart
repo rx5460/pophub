@@ -37,11 +37,11 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
           ),
         );
 
-        final alarmDetails = {
+        final Map<String, String> alarmDetails = {
           'title': '팝업 등록 거절됨',
           'label': '당사의 팝업 등록이 거절되었습니다.',
           'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
-          'active': true,
+          'active': 'true',
           'storeId': widget.id,
         };
 
@@ -64,8 +64,8 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
             .add(alarmDetails);
 
         // 로컬 알림 발송
-        await const AlarmPage().showNotification(
-            alarmDetails['title'], alarmDetails['label'], alarmDetails['time']);
+        await const AlarmPage().showNotification(alarmDetails['title']!,
+            alarmDetails['label']!, alarmDetails['time']!);
 
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
