@@ -1,15 +1,14 @@
 import 'dart:developer' as developer;
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
-import 'package:pophub/screen/alarm/push_auto_token.dart';
 import 'package:pophub/screen/nav/bottom_navigation_page.dart';
 import 'package:pophub/utils/log.dart';
-
+import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'assets/style.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -22,34 +21,68 @@ void initializeNotification() async {
 
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  const channel = AndroidNotificationChannel(
+    'PopHub_channel',
+    'PopHub Notification',
+    importance: Importance.max,
+  );
+
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-          'PopHub_channel', 'PopHub Notification',
-          importance: Importance.max));
+      ?.createNotificationChannel(channel);
 
-  await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
+  const initializationSettings = InitializationSettings(
     android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-  ));
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isNotified = prefs.getBool('isNotified') ?? false;
+
+    if (!isNotified) {
+      developer.log("포그라운드 메시지 처리: ${message.notification!.body!}",
+          name: 'app.foreground');
+      _showNotification(message, flutterLocalNotificationsPlugin);
+
+      // 플래그 설정
+      await prefs.setBool('isNotified', true);
+    }
+  });
+}
+
+Future<void> _showNotification(
+    RemoteMessage message, FlutterLocalNotificationsPlugin plugin) async {
+  const androidDetails = AndroidNotificationDetails(
+    "PopHub_channel",
+    "PopHub Notification",
+    importance: Importance.high,
+  );
+  const generalDetails = NotificationDetails(android: androidDetails);
+
+  await plugin.show(
+    message.hashCode, // 각 메시지에 대한 고유 해시코드를 사용하여 한 번만 알림
+    message.notification!.title,
+    message.notification!.body,
+    generalDetails,
+    payload: message.data['time'],
+  );
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
 
   // FCM 알림 초기화
   initializeNotification();
-
-  final pushNotificationService = PushNotificationService();
-  await pushNotificationService.init();
 
   await dotenv.load(fileName: 'assets/config/.env');
 
@@ -76,6 +109,9 @@ class MyApp extends StatelessWidget {
       title: 'pophub',
       theme: theme,
       home: const BottomNavigationPage(),
+      routes: {
+        '/alarm': (context) => const AlarmPage(), // 라우트 설정
+      },
     );
   }
 }

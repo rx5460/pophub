@@ -30,59 +30,11 @@ class AlarmPage extends StatefulWidget {
 class _AlarmPageState extends State<AlarmPage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    initializeNotifications();
-    setupListeners();
-  }
-
-  void initializeNotifications() {
-    var androidInitialization =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: androidInitialization);
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  void setupListeners() {
-    List<String> collections = ['alarms', 'orderAlarms', 'waitAlarms'];
-
-    for (var collection in collections) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(User().userName)
-          .collection(collection)
-          .snapshots()
-          .listen((snapshot) {
-        for (var change in snapshot.docChanges) {
-          if (change.type == DocumentChangeType.added) {
-            var data = change.doc.data() as Map<String, dynamic>;
-            String notificationMessage;
-            switch (collection) {
-              case 'alarms':
-                notificationMessage = "전체";
-                break;
-              case 'orderAlarms':
-                notificationMessage = "주문";
-                break;
-              case 'waitAlarms':
-                notificationMessage = "대기";
-                break;
-              default:
-                notificationMessage = "알 수 없음";
-            }
-            showNotification("${data['title']}\n${data['label']}",
-                "새로운 $notificationMessage 알람이 왔습니다!", data['time']);
-            setState(() {});
-          }
-        }
-      });
-    }
   }
 
   Future<void> showNotification(String title, String body, String time) async {
@@ -93,7 +45,8 @@ class _AlarmPageState extends State<AlarmPage>
       importance: Importance.high,
     );
     var generalDetails = NotificationDetails(android: androidDetails);
-    await _flutterLocalNotificationsPlugin.show(0, title, body, generalDetails);
+    await FlutterLocalNotificationsPlugin()
+        .show(0, title, body, generalDetails);
   }
 
   @override
