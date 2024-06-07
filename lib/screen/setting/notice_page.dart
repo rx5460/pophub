@@ -38,16 +38,22 @@ class _NoticePageState extends State<NoticePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomTitleBar(titleName: "공지 사항"),
-      body: ListView.builder(
-        itemCount: notices.length,
-        itemBuilder: (BuildContext context, int index) {
-          return NoticeTile(
-            title: notices[index].title,
-            date: notices[index].time,
-            content: notices[index].content,
-          );
-        },
-      ),
+      body: notices.isNotEmpty
+          ? ListView.builder(
+              itemCount: notices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return NoticeTile(
+                  title: notices[index].title,
+                  date: notices[index].time,
+                  content: notices[index].content,
+                );
+              },
+            )
+          : const Center(
+              child: Text(
+              "공지사항이 없습니다.",
+              style: TextStyle(fontSize: 16),
+            )),
     );
   }
 }

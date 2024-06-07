@@ -76,7 +76,7 @@ class _AppSettingState extends State<AppSetting> {
           ),
           const Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text('앱버전 0.1234'),
+            child: Text('앱버전 0.1'),
           ),
         ],
       ),

@@ -22,7 +22,7 @@ class StoreListPage extends StatelessWidget {
       body: popups.isEmpty
           ? const Center(
               child: Text(
-                '검색한 결과가 없습니다.',
+                '팝업스토어가 없습니다!',
                 style: TextStyle(fontSize: 18.0),
               ),
             )

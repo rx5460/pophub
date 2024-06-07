@@ -2,9 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pophub/model/goods_model.dart';
+import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/GoodsNotifier.dart';
+import 'package:pophub/screen/goods/goods_add_page.dart';
+import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/goods/goods_order.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class GoodsDetail extends StatefulWidget {
   final String goodsId;
@@ -21,6 +28,9 @@ class _GoodsDetailState extends State<GoodsDetail> {
   bool isBuying = false;
   GoodsModel? goods;
   int count = 1;
+  bool addGoodsVisible = false;
+
+  late PopupModel popup;
 
   @override
   void initState() {
@@ -31,13 +41,59 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Future<void> getGoodsData() async {
     try {
       GoodsModel? data = await Api.getPopupGoodsDetail(widget.goodsId);
-      setState(() {
-        goods = data;
-        isLoading = true;
-      });
+
+      List<dynamic> popupData = await Api.getMyPopup(User().userName);
+
+      if (!data.toString().contains("fail") ||
+          !data.toString().contains("없습니다")) {
+        setState(() {
+          goods = data;
+          isLoading = true;
+          popup = PopupModel.fromJson(popupData[0]);
+        });
+        if (goods != null) {
+          if (popup.id == goods!.store) {
+            setState(() {
+              addGoodsVisible = true;
+            });
+          }
+        }
+      } else {
+        setState(() {
+          addGoodsVisible = false;
+        });
+      }
     } catch (error) {
       // 오류 처리
       Logger.debug('Error fetching goods data: $error');
+    }
+  }
+
+  Future<void> goodsDelete(String productId) async {
+    final data = await Api.goodsDelete(productId);
+
+    if (!data.toString().contains("fail") && mounted) {
+      showAlert(context, "성공", "굿즈가 삭제되었습니다.", () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GoodsList(
+              popup: popup,
+            ),
+          ),
+        ).then((value) {
+          if (mounted) {
+            setState(() {});
+          }
+        });
+      });
+    } else {
+      if (mounted) {
+        showAlert(context, "실패", "굿즈 삭제 실패했습니다.", () {});
+      }
     }
   }
 
@@ -269,29 +325,86 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                     ),
                                   ],
                                 ),
-                                Positioned(
-                                  top: -AppBar().preferredSize.height + 5,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    child: AppBar(
-                                      systemOverlayStyle:
-                                          SystemUiOverlayStyle.dark,
-                                      backgroundColor: Colors.transparent,
-                                      elevation: 0,
-                                      leading: IconButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        icon: const Icon(
-                                          Icons.arrow_back_ios,
-                                          color: Colors.white,
+                                goods != null
+                                    ? Visibility(
+                                        visible: addGoodsVisible,
+                                        child: Positioned(
+                                          top: -AppBar().preferredSize.height +
+                                              20,
+                                          left: 0,
+                                          right: 0,
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: AppBar(
+                                              systemOverlayStyle:
+                                                  SystemUiOverlayStyle.dark,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              elevation: 0,
+                                              leading: IconButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: const Icon(
+                                                  Icons.arrow_back_ios,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              actions: [
+                                                PopupMenuButton(
+                                                  icon: const Icon(
+                                                    Icons.more_vert,
+                                                    color: Colors.white,
+                                                  ),
+                                                  onSelected: (value) {
+                                                    if (value == 'edit') {
+                                                      if (mounted) {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    MultiProvider(
+                                                                        providers: [
+                                                                          ChangeNotifierProvider(
+                                                                              create: (_) => GoodsNotifier())
+                                                                        ],
+                                                                        child:
+                                                                            GoodsCreatePage(
+                                                                          mode:
+                                                                              "modify",
+                                                                          goods:
+                                                                              goods,
+                                                                          popup:
+                                                                              popup,
+                                                                          productId:
+                                                                              goods!.product,
+                                                                        ))));
+                                                      }
+                                                    } else if (value ==
+                                                        'delete') {
+                                                      goodsDelete(
+                                                          goods!.product);
+                                                    }
+                                                  },
+                                                  itemBuilder:
+                                                      (BuildContext context) =>
+                                                          [
+                                                    const PopupMenuItem(
+                                                      value: 'edit',
+                                                      child: Text('굿즈 수정'),
+                                                    ),
+                                                    const PopupMenuItem(
+                                                      value: 'delete',
+                                                      child: Text('굿즈 삭제'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ],
@@ -506,25 +619,45 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Widget sliderWidget() {
     return CarouselSlider(
       carouselController: _controller,
-      items: goods?.image?.map(
-            (img) {
-              return Builder(
-                builder: (context) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      img,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                },
-              );
+      items: goods!.image!.map(
+        (img) {
+          return Builder(
+            builder: (context) {
+              return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        img,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.fill,
+                      ),
+                      Positioned(
+                        top: 0, // 그림자의 위치 조정
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 30, // 그림자의 높이 조정
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 50,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ));
             },
-          ).toList() ??
-          [],
+          );
+        },
+      ).toList(),
       options: CarouselOptions(
-        height: 300,
+        height: 250,
         viewportFraction: 1.0,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 4),

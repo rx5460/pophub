@@ -45,10 +45,16 @@ class _CategoryPageState extends State<CategoryPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (!_recentSearches.contains(search)) {
       _recentSearches.add(search);
-
       await prefs.setStringList('recentSearches', _recentSearches);
       _loadRecentSearches();
     }
+  }
+
+  Future<void> _removeRecentSearch(String search) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _recentSearches.remove(search);
+    await prefs.setStringList('recentSearches', _recentSearches);
+    _loadRecentSearches();
   }
 
   void _search(String query) async {
@@ -131,10 +137,8 @@ class _CategoryPageState extends State<CategoryPage> {
                       .map(
                         (search) => Chip(
                           label: Text(search),
-                          onDeleted: () {
-                            setState(() {
-                              _recentSearches.remove(search);
-                            });
+                          onDeleted: () async {
+                            await _removeRecentSearch(search);
                           },
                           deleteIcon: const Icon(Icons.clear, size: 20),
                           deleteIconColor: Colors.black,

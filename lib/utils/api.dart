@@ -788,4 +788,11 @@ class Api {
       throw Exception('Failed to fetch getPopupByCategory list');
     }
   }
+
+  // 굿즈 삭제
+  static Future<Map<String, dynamic>> goodsDelete(String productId) async {
+    final data = await deleteData('$domain/product/delete/$productId', {});
+    Logger.debug("### 굿즈 삭제 $data");
+    return data;
+  }
 }

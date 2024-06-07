@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/goods_model.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/screen/goods/goods_detail.dart';
+import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class GoodsCreatePage extends StatefulWidget {
   final String mode;
-  final String storeId;
+  final PopupModel popup;
   final GoodsModel? goods;
 
   final String? productId;
@@ -24,7 +27,7 @@ class GoodsCreatePage extends StatefulWidget {
     super.key,
     this.mode = "add",
     this.goods,
-    required this.storeId,
+    required this.popup,
     this.productId,
   });
 
@@ -105,13 +108,13 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
         }
       }
     } catch (e) {
-      print('Error picking image: $e');
+      Logger.debug('Error picking image: $e');
     }
   }
 
   Future<void> goodsAdd(GoodsNotifier goods) async {
     goods.userName = User().userName;
-    final data = await Api.goodsAdd(goods, widget.storeId);
+    final data = await Api.goodsAdd(goods, widget.popup.id.toString());
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "굿즈가 등록되었습니다.", () {
@@ -120,9 +123,13 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MultiProvider(providers: [
-                      ChangeNotifierProvider(create: (_) => UserNotifier())
-                    ], child: const BottomNavigationPage())));
+                builder: (context) => MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (_) => UserNotifier())
+                        ],
+                        child: GoodsList(
+                          popup: widget.popup,
+                        ))));
       });
     } else {}
   }
@@ -131,15 +138,23 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
     final data = await Api.goodsModify(goods, widget.productId.toString());
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
+      showAlert(context, "성공", "굿즈 수정이 완료되었습니다.", () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
         Navigator.of(context).pop();
 
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MultiProvider(providers: [
-                      ChangeNotifierProvider(create: (_) => UserNotifier())
-                    ], child: const BottomNavigationPage())));
+          context,
+          MaterialPageRoute(
+            builder: (context) => GoodsDetail(
+              goodsId: widget.productId.toString(),
+            ),
+          ),
+        ).then((value) {
+          if (mounted) {
+            setState(() {});
+          }
+        });
       });
     } else {}
   }
@@ -237,7 +252,11 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(11),
                   ],
-                  onChanged: (value) => goods.price = int.parse(value),
+                  onChanged: (value) {
+                    if (value != "") {
+                      goods.price = int.parse(value);
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
