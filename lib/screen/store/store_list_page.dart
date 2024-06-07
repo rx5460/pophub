@@ -19,7 +19,7 @@ class StoreListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomTitleBar(titleName: titleName),
-      body: popups.isEmpty
+      body: popups.isEmpty || popups[0].category == null
           ? const Center(
               child: Text(
                 '팝업스토어 리스트가 없습니다!',
@@ -52,6 +52,7 @@ class StoreListPage extends StatelessWidget {
                                 child: Image.network(
                                   '${popup.image![0]}',
                                   width: 100,
+                                  height: 100,
                                   fit: BoxFit.cover,
                                 ),
                               )

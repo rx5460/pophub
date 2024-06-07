@@ -148,7 +148,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
-                                color: Constants.DEFAULT_COLOR),
+                                width: 1, color: Constants.DEFAULT_COLOR),
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
@@ -179,17 +179,8 @@ class _CategoryPageState extends State<CategoryPage> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                            color: Constants.DEFAULT_COLOR, width: 2),
+                            color: Constants.DEFAULT_COLOR, width: 1),
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(
-                                0, 3), // changes position of shadow
-                          ),
-                        ],
                       ),
                       child: Center(
                         child: Text(

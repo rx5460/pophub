@@ -24,16 +24,14 @@ class _HomePageState extends State<HomePage> {
   final CarouselController _controller = CarouselController();
   TextEditingController searchController = TextEditingController();
   String? searchInput;
-  List<PopupModel>? poppularList;
-  List<PopupModel>? recommandList;
+  List<PopupModel> poppularList = [];
+  List<PopupModel> recommandList = [];
+  List<PopupModel> willBeOpenList = [];
+  List<PopupModel> willBeCloseList = [];
   bool _isExpanded = false;
   bool addGoodsVisible = false;
 
-  List imageList = [
-    'assets/images/Untitled.png',
-    'assets/images/Untitled.png',
-    'assets/images/Untitled.png',
-  ];
+  List imageList = [];
 
   Future<void> profileApi() async {
     Map<String, dynamic> data = await Api.getProfile(User().userId);
@@ -72,6 +70,8 @@ class _HomePageState extends State<HomePage> {
     fetchPopupData();
     await profileApi();
     getRecommandPopup();
+    await getWillBeOpenPopup();
+    await getWillBeClosePopup();
   }
 
   Future<void> checkStoreApi() async {
@@ -111,11 +111,48 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getRecommandPopup() async {
     try {
-      List<PopupModel>? dataList = await Api.getRecommandPopupList();
+      if (User().userName != "") {
+        List<PopupModel>? dataList = await Api.getRecommandPopupList();
+
+        if (dataList.isNotEmpty) {
+          setState(() {
+            recommandList = dataList;
+          });
+        }
+      }
+    } catch (error) {
+      Logger.debug('Error getRecommandPopup popup data: $error');
+    }
+  }
+
+  Future<void> getWillBeOpenPopup() async {
+    try {
+      List<PopupModel>? dataList = await Api.getWillBeOpenPopupList();
+
+      if (dataList.isNotEmpty) {
+        willBeOpenList = dataList;
+        if (willBeOpenList.isNotEmpty) {
+          for (PopupModel popup in willBeOpenList) {
+            if (popup.image != null) {
+              setState(() {
+                imageList.add(popup.image![0]);
+              });
+            }
+          }
+        }
+      }
+    } catch (error) {
+      Logger.debug('Error getRecommandPopup popup data: $error');
+    }
+  }
+
+  Future<void> getWillBeClosePopup() async {
+    try {
+      List<PopupModel>? dataList = await Api.getWillBeOpenPopupList();
 
       if (dataList.isNotEmpty) {
         setState(() {
-          recommandList = dataList;
+          willBeCloseList = dataList;
         });
       }
     } catch (error) {
@@ -249,10 +286,16 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Image.asset(
-          'assets/images/logo.png',
-          width: screenWidth * 0.14,
-        ),
+        title: User().userId != ""
+            ? Text(
+                "반갑습니다 ! ${User().userName}님 !",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              )
+            : Image.asset(
+                'assets/images/logo.png',
+                width: screenWidth * 0.14,
+              ),
         actions: [
           GestureDetector(
             onTap: () {
@@ -261,11 +304,8 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(builder: (context) => const AlarmPage()),
               );
             },
-            child: const Icon(
-              Icons.notifications_outlined,
-              size: 32,
-              color: Color.fromARGB(255, 106, 105, 105),
-            ),
+            child: const Icon(Icons.notifications_outlined,
+                size: 32, color: Colors.black),
           ),
           const SizedBox(
             width: 10,
@@ -313,10 +353,10 @@ class _HomePageState extends State<HomePage> {
                         Radius.circular(10),
                       ),
                     ),
-                    labelText: '검색',
+                    labelText: '어떤 정보를 찾아볼까요?',
                     labelStyle: const TextStyle(
                       color: Colors.grey,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontFamily: 'recipe',
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -327,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                       icon: const Icon(
                         Icons.search_sharp,
                         color: Colors.black,
-                        size: 30,
+                        size: 25,
                       ),
                     ),
                   ),
@@ -335,7 +375,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: sliderWidget(),
+                child: imageList.isNotEmpty ? sliderWidget() : Container(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -373,19 +413,27 @@ class _HomePageState extends State<HomePage> {
                     const Text(
                       '인기 있는 팝업스토어',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        if (context.mounted) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MultiProvider(
+                                          providers: [
+                                            ChangeNotifierProvider(
+                                                create: (_) => StoreModel())
+                                          ],
+                                          child: StoreListPage(
+                                            popups: poppularList,
+                                            titleName: "인기 팝업스토어",
+                                          ))));
+                        }
+                      },
                       child: const Row(
                         children: [
-                          Text(
-                            '더보기',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
                           Icon(
                             Icons.arrow_forward_ios,
                             size: 14,
@@ -397,26 +445,149 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: screenWidth,
-                    height: screenWidth * 0.8,
+                    height: screenWidth * 0.7,
                     child: ListView.builder(
-                      itemCount: poppularList?.length ?? 0, // null 체크 추가
-                      // physics: const NeverScrollableScrollPhysics(),
+                      itemCount: poppularList.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        final popup = poppularList![index];
-
-                        // 팝업 데이터를 표시하는 위젯을 반환합니다.
+                        final popup = poppularList[index];
                         return Padding(
                           padding: EdgeInsets.only(
                               left: screenWidth * 0.05,
-                              right: poppularList?.length == index + 1
+                              right: poppularList.length == index + 1
+                                  ? screenWidth * 0.05
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PopupDetail(
+                                    storeId: popup.id!,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                              width: screenWidth * 0.5,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  popup.image != null && popup.image!.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            '${popup.image![0]}',
+                                            width: screenWidth * 0.5,
+                                            height: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            'assets/images/logo.png',
+                                            width: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '${popup.name}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${DateFormat("yy.MM.dd").format(DateTime.parse(popup.start!))} ~ ${DateFormat("yy.MM.dd").format(DateTime.parse(popup.end!))}',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: screenWidth * 0.9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '종료 예정 팝업스토어',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (context.mounted) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MultiProvider(
+                                          providers: [
+                                            ChangeNotifierProvider(
+                                                create: (_) => StoreModel())
+                                          ],
+                                          child: StoreListPage(
+                                            popups: willBeCloseList,
+                                            titleName: "종료 예정 팝업스토어",
+                                          ))));
+                        }
+                      },
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: screenWidth,
+                    height: screenWidth * 0.7,
+                    child: ListView.builder(
+                      itemCount: willBeCloseList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final popup = willBeCloseList[index];
+
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: screenWidth * 0.05,
+                              right: willBeCloseList.length == index + 1
                                   ? screenWidth * 0.05
                                   : 0),
                           child: GestureDetector(
@@ -495,19 +666,27 @@ class _HomePageState extends State<HomePage> {
                       const Text(
                         '추천 팝업스토어',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w900),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          if (context.mounted) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MultiProvider(
+                                            providers: [
+                                              ChangeNotifierProvider(
+                                                  create: (_) => StoreModel())
+                                            ],
+                                            child: StoreListPage(
+                                              popups: recommandList,
+                                              titleName: "추천 팝업스토어",
+                                            ))));
+                          }
+                        },
                         child: const Row(
                           children: [
-                            Text(
-                              '더보기',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
                             Icon(
                               Icons.arrow_forward_ios,
                               size: 14,
@@ -522,7 +701,7 @@ class _HomePageState extends State<HomePage> {
               Visibility(
                 visible: recommandList != [] && User().userName != "",
                 child: const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
               ),
               Visibility(
@@ -532,19 +711,16 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     SizedBox(
                       width: screenWidth,
-                      height: screenWidth * 0.8,
+                      height: screenWidth * 0.7,
                       child: ListView.builder(
-                        itemCount: recommandList?.length ?? 0, // null 체크 추가
-                        // physics: const NeverScrollableScrollPhysics(),
+                        itemCount: recommandList.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          final popup = recommandList![index];
-
-                          // 팝업 데이터를 표시하는 위젯을 반환합니다.
+                          final popup = recommandList[index];
                           return Padding(
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.05,
-                                right: recommandList?.length == index + 1
+                                right: recommandList.length == index + 1
                                     ? screenWidth * 0.05
                                     : 0),
                             child: GestureDetector(
@@ -631,17 +807,21 @@ class _HomePageState extends State<HomePage> {
             builder: (context) {
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Image.asset(
+                child: Image.network(
                   img,
                   fit: BoxFit.fill,
                 ),
+                // Image.asset(
+                //   img,
+                //   fit: BoxFit.fill,
+                // ),
               );
             },
           );
         },
       ).toList(),
       options: CarouselOptions(
-        height: 250,
+        height: 300,
         viewportFraction: 1.0,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 4),

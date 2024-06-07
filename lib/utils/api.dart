@@ -856,4 +856,40 @@ class Api {
       throw Exception('Failed to getRecommandPopupList popup list');
     }
   }
+
+  // 오픈 예정 팝업 조회
+  static Future<List<PopupModel>> getWillBeOpenPopupList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/scheduledToOpen',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to getWillBeOpenPopupList popup list: $e');
+      throw Exception('Failed to getWillBeOpenPopupList popup list');
+    }
+  }
+
+  // 종료 예정 팝업 조회
+  static Future<List<PopupModel>> getWillBeClosePopupList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/scheduledToClose',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to getWillBeClosePopupList popup list: $e');
+      throw Exception('Failed to getWillBeClosePopupList popup list');
+    }
+  }
 }
