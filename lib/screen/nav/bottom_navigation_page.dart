@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/like_model.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/store/category_page.dart';
@@ -10,6 +12,7 @@ import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigationPage extends StatefulWidget {
@@ -36,17 +39,36 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   ];
   int _selectedIndex = 2; // 선택된 인덱스를 저장하는 변수 추가
   late PageController _pageController;
+  List<PopupModel> likePopupList = [];
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selectedIndex);
+    likePopupList = [];
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> getPopupData(List<LikeModel> likeData) async {
+    likePopupList.clear(); // likePopupList 초기화
+
+    for (LikeModel like in likeData) {
+      try {
+        PopupModel? popup =
+            await Api.getPopup(like.storeId, true, like.userName);
+        setState(() {
+          likePopupList.add(popup);
+        });
+      } catch (error) {
+        // 오류 처리
+        Logger.debug('Error fetching popup data: $error');
+      }
+    }
   }
 
   @override
@@ -155,9 +177,10 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                             }
                           }
                         } else if (index == 3) {
-                          final popupData = await Api.getLikePopup();
-                          if (!popupData.toString().contains("fail") &&
+                          final likeData = await Api.getLikePopup();
+                          if (!likeData.toString().contains("fail") &&
                               mounted) {
+                            await getPopupData(likeData);
                             if (context.mounted) {
                               Navigator.push(
                                   context,
@@ -168,8 +191,8 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                                                     create: (_) => StoreModel())
                                               ],
                                               child: StoreListPage(
-                                                popups: popupData,
-                                                titleName: "검색 결과",
+                                                popups: likePopupList,
+                                                titleName: "찜 팝업스토어",
                                               ))));
                             }
                           } else {}

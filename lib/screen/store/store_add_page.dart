@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/kopo_model.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -162,6 +163,44 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
         }
       }
     }
+  }
+
+  bool _validateInputs(StoreModel store) {
+    if (_nameController.text.isEmpty) {
+      _showValidationDialog("스토어 이름을 입력해주세요.");
+      return false;
+    }
+    if (_descriptionController.text.isEmpty) {
+      _showValidationDialog("스토어 설명을 입력해주세요.");
+      return false;
+    }
+    if (store.location.isEmpty) {
+      _showValidationDialog("스토어 위치를 선택해주세요.");
+      return false;
+    }
+    if (_contactController.text.isEmpty) {
+      _showValidationDialog("연락처를 입력해주세요.");
+      return false;
+    }
+    if (widget.mode == "add" && _maxCapacityController.text.isEmpty) {
+      _showValidationDialog("시간별 최대 인원을 입력해주세요.");
+      return false;
+    }
+    if (store.schedule!.isEmpty) {
+      _showValidationDialog("운영 시간을 설정해주세요.");
+      return false;
+    }
+    if (selectedCategory == null) {
+      _showValidationDialog("카테고리를 선택해주세요.");
+      return false;
+    }
+    return true;
+  }
+
+  void _showValidationDialog(String message) {
+    showAlert(context, "실패", message, () {
+      Navigator.of(context).pop();
+    });
   }
 
   Future<void> _pickLocation() async {
@@ -325,14 +364,20 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
+                    border: Border.all(color: Constants.BUTTON_GREY),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-                    title: const Text('스토어 위치'),
+                    title: const Text(
+                      '스토어 위치',
+                      style: TextStyle(color: Constants.DARK_GREY),
+                    ),
                     subtitle:
                         store.location.isNotEmpty ? Text(store.location) : null,
-                    trailing: const Icon(Icons.location_on),
+                    trailing: const Icon(
+                      Icons.location_on,
+                      color: Colors.grey,
+                    ),
                     onTap: () => _pickLocation(),
                   ),
                 ),
@@ -350,12 +395,16 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
+                    border: Border.all(color: Constants.BUTTON_GREY),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-                    title: const Text('운영 시간 설정하기'),
-                    trailing: const Icon(Icons.access_time),
+                    title: const Text(
+                      '운영 시간 설정하기',
+                      style: TextStyle(color: Constants.DARK_GREY),
+                    ),
+                    trailing: const Icon(Icons.access_time,
+                        color: Constants.DARK_GREY),
                     onTap: () {
                       _showOperatingHoursModal(context, store);
                     },
@@ -427,13 +476,22 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(color: Constants.BUTTON_GREY),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          title: const Text('운영 시작일'),
-                          subtitle: Text(_dateFormat.format(store.startDate)),
-                          trailing: const Icon(Icons.calendar_today),
+                          title: const Text(
+                            '운영 시작일',
+                            style: TextStyle(color: Constants.DARK_GREY),
+                          ),
+                          subtitle: Text(
+                            _dateFormat.format(store.startDate),
+                            style: const TextStyle(color: Constants.DARK_GREY),
+                          ),
+                          trailing: const Icon(
+                            Icons.calendar_today,
+                            color: Constants.BUTTON_GREY,
+                          ),
                           onTap: () => _selectDate(true),
                         ),
                       ),
@@ -442,13 +500,22 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(color: Constants.BUTTON_GREY),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          title: const Text('운영 종료일'),
-                          subtitle: Text(_dateFormat.format(store.endDate)),
-                          trailing: const Icon(Icons.calendar_today),
+                          title: const Text(
+                            '운영 종료일',
+                            style: TextStyle(color: Constants.DARK_GREY),
+                          ),
+                          subtitle: Text(
+                            _dateFormat.format(store.endDate),
+                            style: const TextStyle(color: Constants.DARK_GREY),
+                          ),
+                          trailing: const Icon(
+                            Icons.calendar_today,
+                            color: Constants.BUTTON_GREY,
+                          ),
                           onTap: () => _selectDate(false),
                         ),
                       ),
@@ -499,30 +566,11 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         const SizedBox(height: 20),
                       ],
                     )),
-
                 const Text(
                   "카테고리",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
-                // store.category.isNotEmpty
-                //     ? DropdownButtonFormField<String>(
-                //         decoration: const InputDecoration(labelText: '카테고리'),
-                //         value: store.category,
-                //         items: categoryList.map((categoryMap) {
-                //           String category = categoryMap.keys.first;
-                //           return DropdownMenuItem<String>(
-                //             value: categoryMap[category].toString(),
-                //             child: Text(category),
-                //           );
-                //         }).toList(),
-                //         onChanged: (value) {
-                //           if (value != null) {
-                //             store.category = value;
-                //           }
-                //         },
-                //       )
-                //     :
                 DropdownButtonFormField<CategoryModel>(
                   decoration: const InputDecoration(labelText: '카테고리'),
                   value: selectedCategory,
@@ -541,16 +589,17 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     }
                   },
                 ),
-
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
-                      if (widget.mode == "modify") {
-                        storeModify(store);
-                      } else if (widget.mode == "add") {
-                        storeAdd(store);
+                      if (_validateInputs(store)) {
+                        if (widget.mode == "modify") {
+                          storeModify(store);
+                        } else if (widget.mode == "add") {
+                          storeAdd(store);
+                        }
                       }
                     },
                     child: const Text('완료'),

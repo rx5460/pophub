@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -17,6 +18,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   late KakaoMapController mapController;
   List<Map<String, String>> locationList = [];
+  Map<String, Set<Marker>> markersMap = {};
   Set<Marker> markers = {};
 
   bool draggable = true;
@@ -35,11 +37,13 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> getAllPopupList() async {
     try {
-      final marker = await Api.getAllPopupList();
+      final markerMap = await Api.getAllPopupList();
 
-      if (marker.isNotEmpty) {
+      if (markerMap.isNotEmpty) {
         setState(() {
-          markers = marker;
+          markersMap = markerMap;
+          // Combine all markers from the map into a single set
+          markers = markerMap.values.expand((set) => set).toSet();
           isLoading = false;
         });
       }
@@ -55,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomTitleBar(
-        titleName: "지도",
+        titleName: "전체 팝업스토어",
         useBack: false,
       ),
       body: isLoading
@@ -75,6 +79,36 @@ class _MapPageState extends State<MapPage> {
               },
               currentLevel: 14,
               clusterer: clusterer,
+              onMarkerClustererTap: (latLng, zoomLevel) async {
+                int level = await mapController.getLevel() - 1;
+
+                await mapController.setLevel(
+                  level,
+                  options: LevelOptions(
+                    animate: Animate(duration: 500),
+                    anchor: latLng,
+                  ),
+                );
+              },
+              onMarkerTap: ((markerId, latLng, zoomLevel) {
+                // Find the popup name corresponding to the markerId
+                String storeId = markersMap.keys.firstWhere(
+                  (name) => markersMap[name]!
+                      .any((marker) => marker.markerId == markerId),
+                  orElse: () => 'Unknown',
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PopupDetail(
+                      storeId: storeId,
+                    ),
+                  ),
+                );
+                // ScaffoldMessenger.of(context)
+                //     .showSnackBar(SnackBar(content: Text('팝업스토어 이름 $storeId')));
+              }),
             ),
     );
   }

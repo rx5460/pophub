@@ -7,9 +7,13 @@ import 'package:pophub/screen/store/popup_detail.dart';
 class StoreListPage extends StatelessWidget {
   final List<PopupModel> popups;
   final String titleName;
+  final String mode;
 
   const StoreListPage(
-      {super.key, required this.popups, this.titleName = "팝업스토어"});
+      {super.key,
+      required this.popups,
+      this.titleName = "팝업스토어",
+      this.mode = "view"});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class StoreListPage extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => PopupDetail(
                           storeId: popup.id!,
-                          mode: "pending",
+                          mode: mode,
                         ),
                       ),
                     );
@@ -82,7 +86,8 @@ class StoreListPage extends StatelessWidget {
                                         .format(DateTime.parse(popup.start!))
                                     : '',
                               ),
-                              Text(popup.location ?? 'No ID'),
+                              Text(popup.location?.replaceAll("/", " ") ??
+                                  'No ID'),
                             ],
                           ),
                         ),

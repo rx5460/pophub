@@ -40,7 +40,7 @@ var theme = ThemeData(
     focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.red, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(10))),
-    labelStyle: TextStyle(color: Constants.BUTTON_GREY),
-    hintStyle: TextStyle(color: Colors.grey),
+    labelStyle: TextStyle(color: Constants.DARK_GREY),
+    hintStyle: TextStyle(color: Constants.DARK_GREY),
   ),
 );

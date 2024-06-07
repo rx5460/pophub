@@ -82,6 +82,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
                 builder: (context) => StoreListPage(
                       popups: data,
                       titleName: "승인 리스트",
+                      mode: "pending",
                     )));
       } else {
         Logger.debug("거절에 실패했습니다.");

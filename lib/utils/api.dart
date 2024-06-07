@@ -6,6 +6,7 @@ import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
+import 'package:pophub/model/like_model.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
@@ -796,8 +797,8 @@ class Api {
     return data;
   }
 
-  // 인기 팝업 조회
-  static Future<Set<Marker>> getAllPopupList() async {
+// 지도 조회용 모든 팝업 조회
+  static Future<Map<String, Set<Marker>>> getAllPopupList() async {
     try {
       final List<dynamic> dataList = await getListData(
         '$domain/popup',
@@ -807,7 +808,7 @@ class Api {
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
 
-      Set<Marker> markers = {};
+      Map<String, Set<Marker>> popupMarkersMap = {};
 
       for (PopupModel popup in popupList) {
         final locationData = await Api.getAddress(
@@ -822,17 +823,24 @@ class Api {
           var x = firstDocument['x'].toString();
           var y = firstDocument['y'].toString();
 
-          markers.add(Marker(
-              markerId: '${markers.length + 1}',
-              latLng: LatLng(double.parse(y), double.parse(x))));
+          Marker marker = Marker(
+            markerId: '${popupMarkersMap.length + 1}',
+            latLng: LatLng(double.parse(y), double.parse(x)),
+          );
+
+          if (popupMarkersMap.containsKey(popup.id)) {
+            popupMarkersMap[popup.id]!.add(marker);
+          } else {
+            popupMarkersMap[popup.id.toString()] = {marker};
+          }
         } else {
           Logger.debug('No documents found');
         }
       }
 
-      return markers;
+      return popupMarkersMap;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to All popup list: $e');
       throw Exception('Failed to All popup list');
     }
@@ -893,16 +901,16 @@ class Api {
   }
 
   // 찜 페이지 조회
-  static Future<List<PopupModel>> getLikePopup() async {
+  static Future<List<LikeModel>> getLikePopup() async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/popup/likeUser/${User().userName}}',
+        '$domain/popup/likeUser/${User().userName}',
         {},
       );
 
-      List<PopupModel> popupList =
-          dataList.map((data) => PopupModel.fromJson(data)).toList();
-      return popupList;
+      List<LikeModel> likeList =
+          dataList.map((data) => LikeModel.fromJson(data)).toList();
+      return likeList;
     } catch (e) {
       // 오류 처리–
       Logger.debug('Failed to getLikePopup popup list: $e');

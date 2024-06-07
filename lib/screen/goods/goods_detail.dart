@@ -92,7 +92,9 @@ class _GoodsDetailState extends State<GoodsDetail> {
       });
     } else {
       if (mounted) {
-        showAlert(context, "실패", "굿즈 삭제 실패했습니다.", () {});
+        showAlert(context, "실패", "굿즈 삭제 실패했습니다.", () {
+          Navigator.of(context).pop();
+        });
       }
     }
   }

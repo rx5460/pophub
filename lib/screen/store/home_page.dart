@@ -288,7 +288,7 @@ class _HomePageState extends State<HomePage> {
         surfaceTintColor: Colors.white,
         title: User().userId != ""
             ? Text(
-                "반갑습니다 ! ${User().userName}님 !",
+                "반갑습니다, ${User().userName}님 !",
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               )

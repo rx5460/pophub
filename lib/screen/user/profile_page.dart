@@ -368,6 +368,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         child: StoreListPage(
                                                           popups: data,
                                                           titleName: "승인 리스트",
+                                                          mode: "pending",
                                                         ))));
                                       }
                                     },

@@ -47,7 +47,7 @@ class _PopupDetailState extends State<PopupDetail> {
   double rating = 0;
   bool like = false;
   bool allowSuccess = false;
-  LatLng center = LatLng(37.5586677131962, 126.953450474616);
+  LatLng center = LatLng(37.5248570991105, 126.92683967042);
   Set<Marker> markers = {};
   bool timeVisible = false;
 
@@ -58,9 +58,16 @@ class _PopupDetailState extends State<PopupDetail> {
 
       setState(() {
         popup = data;
-        center = LatLng(double.parse(popup!.y.toString()),
-            double.parse(popup!.x.toString()));
-        markers.add(Marker(markerId: '마커', latLng: center));
+
+        double? xCoord = double.tryParse(popup!.y.toString());
+        double? yCoord = double.tryParse(popup!.x.toString());
+
+        if (xCoord != null && yCoord != null) {
+          center = LatLng(double.parse(popup!.y.toString()),
+              double.parse(popup!.x.toString()));
+          markers.add(Marker(markerId: '마커', latLng: center));
+        }
+
         isLoading = false;
         like = data.bookmark!;
       });
@@ -985,7 +992,8 @@ class _PopupDetailState extends State<PopupDetail> {
                               ),
                             ),
                             Visibility(
-                              visible: widget.mode == "pending",
+                              visible: widget.mode == "pending" &&
+                                  User().role == "Manager",
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
