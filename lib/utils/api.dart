@@ -838,4 +838,22 @@ class Api {
       throw Exception('Failed to All popup list');
     }
   }
+
+  // 추천 팝업 조회
+  static Future<List<PopupModel>> getRecommandPopupList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/recommendation/${User().userName}',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to getRecommandPopupList popup list: $e');
+      throw Exception('Failed to getRecommandPopupList popup list');
+    }
+  }
 }

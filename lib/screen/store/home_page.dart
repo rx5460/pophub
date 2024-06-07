@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
   String? searchInput;
   List<PopupModel>? poppularList;
+  List<PopupModel>? recommandList;
   bool _isExpanded = false;
   bool addGoodsVisible = false;
 
@@ -64,8 +65,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
     fetchPopupData();
-    profileApi();
+    await profileApi();
+    getRecommandPopup();
   }
 
   Future<void> checkStoreApi() async {
@@ -101,6 +107,20 @@ class _HomePageState extends State<HomePage> {
       }
     } else {}
     setState(() {});
+  }
+
+  Future<void> getRecommandPopup() async {
+    try {
+      List<PopupModel>? dataList = await Api.getRecommandPopupList();
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          recommandList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error getRecommandPopup popup data: $error');
+    }
   }
 
   Widget _buildCollapsedFloatingButton() {
@@ -464,6 +484,133 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
+              ),
+              Visibility(
+                visible: recommandList != [] && User().userName != "",
+                child: SizedBox(
+                  width: screenWidth * 0.9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '추천 팝업스토어',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w900),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Row(
+                          children: [
+                            Text(
+                              '더보기',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Visibility(
+                visible: recommandList != [] && User().userName != "",
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: screenWidth,
+                      height: screenWidth * 0.8,
+                      child: ListView.builder(
+                        itemCount: recommandList?.length ?? 0, // null 체크 추가
+                        // physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final popup = recommandList![index];
+
+                          // 팝업 데이터를 표시하는 위젯을 반환합니다.
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                left: screenWidth * 0.05,
+                                right: recommandList?.length == index + 1
+                                    ? screenWidth * 0.05
+                                    : 0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PopupDetail(
+                                      storeId: popup.id!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: screenWidth * 0.5,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    popup.image != null &&
+                                            popup.image!.isNotEmpty
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                              '${popup.image![0]}',
+                                              width: screenWidth * 0.5,
+                                              height: screenWidth * 0.5,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.asset(
+                                              'assets/images/logo.png',
+                                              width: screenWidth * 0.5,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        '${popup.name}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '${DateFormat("yy.MM.dd").format(DateTime.parse(popup.start!))} ~ ${DateFormat("yy.MM.dd").format(DateTime.parse(popup.end!))}',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
