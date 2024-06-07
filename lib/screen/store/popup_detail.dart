@@ -536,9 +536,17 @@ class _PopupDetailState extends State<PopupDetail> {
                                             size: 20,
                                           ),
                                           popup!.location != ""
-                                              ? Text(popup!.location
-                                                  .toString()
-                                                  .split('/')[0])
+                                              ? Expanded(
+                                                  // Expanded로 감싸서 공간을 제한
+                                                  child: Text(
+                                                    popup!.location
+                                                        .toString()
+                                                        .split('/')[0],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                )
                                               : const Text("")
                                         ],
                                       ),
@@ -859,19 +867,23 @@ class _PopupDetailState extends State<PopupDetail> {
                                     ),
                                   ),
                                   actions: [
-                                    PopupMenuButton(
-                                      icon: const Icon(
-                                        Icons.more_vert,
-                                        color: Colors.white,
-                                      ),
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          child: const Text('스토어 삭제'),
-                                          onTap: () {
-                                            popupDelete();
-                                          },
+                                    Visibility(
+                                      visible:
+                                          User().userName == popup?.username,
+                                      child: PopupMenuButton(
+                                        icon: const Icon(
+                                          Icons.more_vert,
+                                          color: Colors.white,
                                         ),
-                                      ],
+                                        itemBuilder: (context) => [
+                                          PopupMenuItem(
+                                            child: const Text('스토어 삭제'),
+                                            onTap: () {
+                                              popupDelete();
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1117,7 +1129,7 @@ class _PopupDetailState extends State<PopupDetail> {
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.5),
                                 spreadRadius: 2,
-                                blurRadius: 5,
+                                blurRadius: 50,
                                 offset: const Offset(0, 3),
                               ),
                             ],

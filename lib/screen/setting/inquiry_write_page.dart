@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pophub/model/category_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/utils/api.dart';
@@ -21,6 +22,7 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
   String category = "";
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
+  List<CategoryModel> categoryList = [];
 
   @override
   void dispose() {
@@ -43,13 +45,14 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
     }
   }
 
-  List<Map<String, int>> categoryList = [
-    {'기술 문의': 00},
-    {'상품 문의': 01},
-    {'고객 서비스 문의': 02},
-    {'주문/배송 문의': 03},
-    {'회원 가입/로그인 문의': 04},
-  ];
+  Future<void> getCategory() async {
+    final data = await Api.getCategory();
+    if (mounted) {
+      setState(() {
+        categoryList = data.where((item) => item.categoryId < 10).toList();
+      });
+    }
+  }
 
   Future<void> inquiryAdd() async {
     String title = _titleController.text;
@@ -62,20 +65,35 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const InquiryPage(),
-          ),
-        );
+        showAlert(context, "성공", "문의 등록을 완료했습니다.", () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const InquiryPage(),
+            ),
+          ).then((value) {
+            if (mounted) {
+              setState(() {});
+            }
+          });
+        });
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "문의 추가에 실패했습니다.", () {
+        showAlert(context, "경고", "문의 등록에 실패했습니다.", () {
           Navigator.of(context).pop();
         });
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCategory();
   }
 
   @override
@@ -111,25 +129,19 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
               maxLines: 6,
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<CategoryModel>(
               decoration: const InputDecoration(labelText: '카테고리'),
-              items: categoryList.map((categoryMap) {
-                String category = categoryMap.keys.first;
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
+              items: categoryList.map((categoryModel) {
+                return DropdownMenuItem<CategoryModel>(
+                  value: categoryModel,
+                  child: Text(categoryModel.categoryName),
                 );
               }).toList(),
               onChanged: (value) {
                 if (value != null) {
-                  for (var categoryMap in categoryList) {
-                    if (categoryMap.containsKey(value)) {
-                      setState(() {
-                        category = categoryMap[value]!.toString();
-                      });
-                      break;
-                    }
-                  }
+                  setState(() {
+                    category = value.categoryId.toString();
+                  });
                 }
               },
             ),

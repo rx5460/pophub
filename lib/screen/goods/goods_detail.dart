@@ -326,32 +326,31 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                   ],
                                 ),
                                 goods != null
-                                    ? Visibility(
-                                        visible: addGoodsVisible,
-                                        child: Positioned(
-                                          top: -AppBar().preferredSize.height +
-                                              20,
-                                          left: 0,
-                                          right: 0,
-                                          child: Container(
-                                            color: Colors.transparent,
-                                            child: AppBar(
-                                              systemOverlayStyle:
-                                                  SystemUiOverlayStyle.dark,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              elevation: 0,
-                                              leading: IconButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_back_ios,
-                                                  color: Colors.white,
-                                                ),
+                                    ? Positioned(
+                                        top:
+                                            -AppBar().preferredSize.height + 20,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: AppBar(
+                                            systemOverlayStyle:
+                                                SystemUiOverlayStyle.dark,
+                                            backgroundColor: Colors.transparent,
+                                            elevation: 0,
+                                            leading: IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: const Icon(
+                                                Icons.arrow_back_ios,
+                                                color: Colors.white,
                                               ),
-                                              actions: [
-                                                PopupMenuButton(
+                                            ),
+                                            actions: [
+                                              Visibility(
+                                                visible: addGoodsVisible,
+                                                child: PopupMenuButton(
                                                   icon: const Icon(
                                                     Icons.more_vert,
                                                     color: Colors.white,
@@ -399,8 +398,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       )
