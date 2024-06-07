@@ -370,7 +370,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   child: ListTile(
                     title: const Text(
                       '스토어 위치',
-                      style: TextStyle(color: Constants.DARK_GREY),
                     ),
                     subtitle:
                         store.location.isNotEmpty ? Text(store.location) : null,
@@ -401,7 +400,6 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   child: ListTile(
                     title: const Text(
                       '운영 시간 설정하기',
-                      style: TextStyle(color: Constants.DARK_GREY),
                     ),
                     trailing: const Icon(Icons.access_time,
                         color: Constants.DARK_GREY),
@@ -482,15 +480,13 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         child: ListTile(
                           title: const Text(
                             '운영 시작일',
-                            style: TextStyle(color: Constants.DARK_GREY),
                           ),
                           subtitle: Text(
                             _dateFormat.format(store.startDate),
-                            style: const TextStyle(color: Constants.DARK_GREY),
                           ),
                           trailing: const Icon(
                             Icons.calendar_today,
-                            color: Constants.BUTTON_GREY,
+                            color: Constants.DARK_GREY,
                           ),
                           onTap: () => _selectDate(true),
                         ),
@@ -506,15 +502,13 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         child: ListTile(
                           title: const Text(
                             '운영 종료일',
-                            style: TextStyle(color: Constants.DARK_GREY),
                           ),
                           subtitle: Text(
                             _dateFormat.format(store.endDate),
-                            style: const TextStyle(color: Constants.DARK_GREY),
                           ),
                           trailing: const Icon(
                             Icons.calendar_today,
-                            color: Constants.BUTTON_GREY,
+                            color: Constants.DARK_GREY,
                           ),
                           onTap: () => _selectDate(false),
                         ),

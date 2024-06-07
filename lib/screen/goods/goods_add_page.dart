@@ -134,6 +134,32 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
     } else {}
   }
 
+  bool _validateInputs() {
+    if (_nameController.text.isEmpty) {
+      _showValidationDialog("굿즈 이름을 입력해주세요.");
+      return false;
+    }
+    if (_priceController.text.isEmpty) {
+      _showValidationDialog("굿즈 가격을 입력해주세요.");
+      return false;
+    }
+    if (_quantityController.text.isEmpty) {
+      _showValidationDialog("굿즈 수량을 입력해주세요.");
+      return false;
+    }
+    if (_descriptionController.text.isEmpty) {
+      _showValidationDialog("굿즈 설명을 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+
+  void _showValidationDialog(String message) {
+    showAlert(context, "실패", message, () {
+      Navigator.of(context).pop();
+    });
+  }
+
   Future<void> goodsModify(GoodsNotifier goods) async {
     final data = await Api.goodsModify(goods, widget.productId.toString());
 
@@ -292,10 +318,12 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: OutlinedButton(
                     onPressed: () {
-                      if (widget.mode == "modify") {
-                        goodsModify(goods);
-                      } else if (widget.mode == "add") {
-                        goodsAdd(goods);
+                      if (_validateInputs()) {
+                        if (widget.mode == "modify") {
+                          goodsModify(goods);
+                        } else if (widget.mode == "add") {
+                          goodsAdd(goods);
+                        }
                       }
                     },
                     child: const Text('완료'),
