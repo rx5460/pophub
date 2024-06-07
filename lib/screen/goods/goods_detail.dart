@@ -8,6 +8,7 @@ import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/goods/goods_add_page.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/goods/goods_order.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
@@ -42,24 +43,32 @@ class _GoodsDetailState extends State<GoodsDetail> {
     try {
       GoodsModel? data = await Api.getPopupGoodsDetail(widget.goodsId);
 
-      List<dynamic> popupData = await Api.getMyPopup(User().userName);
+      if (User().userName != "") {
+        List<dynamic> popupData = await Api.getMyPopup(User().userName);
 
-      if (!data.toString().contains("fail") ||
-          !data.toString().contains("없습니다")) {
-        setState(() {
-          goods = data;
-          isLoading = true;
-          popup = PopupModel.fromJson(popupData[0]);
-        });
-        if (goods != null) {
-          if (popup.id == goods!.store) {
-            setState(() {
-              addGoodsVisible = true;
-            });
+        if (!data.toString().contains("fail") ||
+            !data.toString().contains("없습니다")) {
+          setState(() {
+            goods = data;
+            isLoading = true;
+            popup = PopupModel.fromJson(popupData[0]);
+          });
+          if (goods != null) {
+            if (popup.id == goods!.store) {
+              setState(() {
+                addGoodsVisible = true;
+              });
+            }
           }
+        } else {
+          setState(() {
+            addGoodsVisible = false;
+          });
         }
       } else {
         setState(() {
+          goods = data;
+          isLoading = true;
           addGoodsVisible = false;
         });
       }
@@ -189,20 +198,20 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                          const Row(
+                                          Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.info_outline,
                                                 size: 20,
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 8,
                                               ),
                                               Text(
-                                                '1인당 3개까지 구매 가능합니다.',
-                                                style: TextStyle(
+                                                '1인당 ${goods?.quantity}개까지 구매 가능합니다.',
+                                                style: const TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w600,
@@ -557,21 +566,30 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                       color: const Color(0xFFADD8E6)),
                                   child: InkWell(
                                     onTap: () {
-                                      setState(() {
-                                        if (!isBuying) {
-                                          isBuying = !isBuying;
-                                        } else {
-                                          // 결제페이지
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GoodsOrder(
-                                                      count: count,
-                                                    )),
-                                          );
-                                        }
-                                      });
+                                      if (User().userName != "") {
+                                        setState(() {
+                                          if (!isBuying) {
+                                            isBuying = !isBuying;
+                                          } else {
+                                            // 결제페이지
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GoodsOrder(
+                                                        count: count,
+                                                      )),
+                                            );
+                                          }
+                                        });
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Login()),
+                                        );
+                                      }
                                     },
                                     child: const Center(
                                       child: Text(

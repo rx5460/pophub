@@ -20,6 +20,7 @@ import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject_page.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -926,7 +927,17 @@ class _PopupDetailState extends State<PopupDetail> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      popupLike();
+                                      if (User().userName != "") {
+                                        popupLike();
+                                      } else {
+                                        if (context.mounted) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Login()));
+                                        }
+                                      }
                                     },
                                     child: Icon(
                                       like
@@ -969,14 +980,27 @@ class _PopupDetailState extends State<PopupDetail> {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ReserveDate(
-                                          popup: popup!,
-                                        ),
-                                      ),
-                                    );
+                                    if (User().userName != "") {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ReserveDate(
+                                              popup: popup!,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const Login(),
+                                          ),
+                                        );
+                                      }
+                                    }
                                   },
                                   child: const Center(
                                     child: Text(

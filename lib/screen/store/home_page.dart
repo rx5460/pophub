@@ -8,6 +8,7 @@ import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
@@ -299,10 +300,17 @@ class _HomePageState extends State<HomePage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AlarmPage()),
-              );
+              if (User().userName != "") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AlarmPage()),
+                );
+              } else {
+                if (context.mounted) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
+                }
+              }
             },
             child: const Icon(Icons.notifications_outlined,
                 size: 32, color: Colors.black),
