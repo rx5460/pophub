@@ -1,6 +1,13 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/utils.dart';
+import 'package:http/http.dart' as http;
 
 class ReserveCount extends StatefulWidget {
   final String date;
@@ -17,20 +24,57 @@ class _ReserveCountState extends State<ReserveCount> {
   int count = 1;
 
   Future<void> reservationApi() async {
-    print(User().userName);
-    Map<String, dynamic> data = await Api.popupReservation(
-        User().userName, widget.popup, widget.date, widget.time, count);
+    try {
+      String userName = User().userName;
+      Map<String, dynamic> data = await Api.popupReservation(
+          userName, widget.popup, widget.date, widget.time, count);
 
-    if (mounted) {
-      if (!data.toString().contains("fail")) {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const ReserveDate()),
-        // );
-
-        Navigator.pop(context);
+      if (data.toString().contains("fail")) {
+        if (mounted) {
+          showAlert(context, "경고", "사전 예약에 실패했습니다.", () {
+            Navigator.of(context).pop();
+          });
+        }
       } else {
-        Navigator.of(context).pop();
+        final Map<String, String> alarmDetails = {
+          'title': '사전 예약 완료',
+          'label': '사전 예약이 성공적으로 완료되었습니다.',
+          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+          'active': 'true',
+        };
+
+        // 서버에 알람 추가
+        await http.post(
+          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'userName': User().userName,
+            'type': 'alarms',
+            'alarmDetails': alarmDetails,
+          }),
+        );
+
+        // Firestore에 알람 추가
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(User().userName)
+            .collection('alarms')
+            .add(alarmDetails);
+
+        // 로컬 알림 발송
+        await const AlarmPage().showNotification(alarmDetails['title']!,
+            alarmDetails['label']!, alarmDetails['time']!);
+
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      print('Error during reservation: $e');
+      if (mounted) {
+        showAlert(context, "오류", "예약 중 오류가 발생했습니다. 다시 시도해주세요.", () {
+          Navigator.of(context).pop();
+        });
       }
     }
   }
