@@ -245,31 +245,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                           },
                                           decoration: const InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.white,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 2.0,
-                                                color: Color(0xFFADD8E6),
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 2.0,
-                                                color: Color(0xFFADD8E6),
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                            ),
                                             labelText: '닉네임',
-                                            labelStyle: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 18,
-                                              fontFamily: 'recipe',
-                                            ),
                                           ),
                                         ),
                                       ),
@@ -326,31 +302,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                       filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          width: 2.0,
-                                          color: Color(0xFFADD8E6),
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          width: 2.0,
-                                          color: Color(0xFFADD8E6),
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
                                       labelText: '나이',
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 18,
-                                        fontFamily: 'recipe',
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -373,31 +325,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                               filled: true,
-                              fillColor: Colors.white,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2.0,
-                                  color: Color(0xFFADD8E6),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2.0,
-                                  color: Color(0xFFADD8E6),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
                               labelText: '번호',
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontFamily: 'recipe',
-                              ),
                             ),
                           ),
                         ),

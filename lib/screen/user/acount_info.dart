@@ -171,32 +171,7 @@ class _AcountInfoState extends State<AcountInfo> {
                         },
                         readOnly: checked,
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2.0,
-                              color: Color(0xFFADD8E6),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2.0,
-                              color: Color(0xFFADD8E6),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
                           labelText: User().userName,
-                          labelStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 18,
-                            fontFamily: 'recipe',
-                          ),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                         ),
                       ),

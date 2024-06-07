@@ -42,8 +42,6 @@ class _MapPageState extends State<MapPage> {
           markers = marker;
           isLoading = false;
         });
-
-        Logger.debug(locationList.toString());
       }
     } catch (error) {
       Logger.debug('Error fetching popup data: $error');

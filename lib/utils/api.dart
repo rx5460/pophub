@@ -92,7 +92,6 @@ class Api {
   static Future<PopupModel> getPopup(
       String storeId, bool getLocation, String userName) async {
     Logger.debug(storeId);
-    print(storeId);
     try {
       Map<String, dynamic> data =
           await getData('$domain/popup/view/$storeId/$userName', {});
@@ -376,7 +375,7 @@ class Api {
     final data = await getKaKaoApi(
         'https://dapi.kakao.com/v2/local/search/address.json?nalyze_type=similar&page=1&size=10&query=$encode',
         {});
-    Logger.debug("### 카카오 api 조회 $data");
+
     return data;
   }
 
@@ -890,6 +889,24 @@ class Api {
       // 오류 처리–
       Logger.debug('Failed to getWillBeClosePopupList popup list: $e');
       throw Exception('Failed to getWillBeClosePopupList popup list');
+    }
+  }
+
+  // 찜 페이지 조회
+  static Future<List<PopupModel>> getLikePopup() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup/likeUser/${User().userName}}',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+      return popupList;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to getLikePopup popup list: $e');
+      throw Exception('Failed to getLikePopup popup list');
     }
   }
 }

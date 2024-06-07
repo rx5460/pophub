@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/store/category_page.dart';
 import 'package:pophub/screen/store/favorites_page.dart';
 import 'package:pophub/screen/store/home_page.dart';
 import 'package:pophub/screen/store/map_page.dart';
+import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/screen/user/profile_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});
@@ -151,6 +154,26 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                               }
                             }
                           }
+                        } else if (index == 3) {
+                          final popupData = await Api.getLikePopup();
+                          if (!popupData.toString().contains("fail") &&
+                              mounted) {
+                            if (context.mounted) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MultiProvider(
+                                              providers: [
+                                                ChangeNotifierProvider(
+                                                    create: (_) => StoreModel())
+                                              ],
+                                              child: StoreListPage(
+                                                popups: popupData,
+                                                titleName: "검색 결과",
+                                              ))));
+                            }
+                          } else {}
+                          setState(() {});
                         } else {
                           _pageController.jumpToPage(index);
                         }

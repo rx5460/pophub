@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
 
 var theme = ThemeData(
   appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
@@ -19,20 +20,27 @@ var theme = ThemeData(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
   textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(foregroundColor: Colors.black)),
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
+    border: OutlineInputBorder(),
     filled: true,
-    fillColor: const Color(0xFFFFFFFF),
-    contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-    border: OutlineInputBorder(
-      borderSide: const BorderSide(color: Color(0xffd9d9d9)),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    focusedBorder: const OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue),
-    ),
-    errorBorder: const OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.red),
-    ),
-    errorStyle: const TextStyle(color: Colors.red),
+    fillColor: Colors.white,
+    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Constants.BUTTON_GREY,
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Constants.DEFAULT_COLOR, width: 2.0),
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+    errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1.0),
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+    focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 2.0),
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+    labelStyle: TextStyle(color: Constants.BUTTON_GREY),
+    hintStyle: TextStyle(color: Colors.grey),
   ),
 );
