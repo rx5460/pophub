@@ -55,6 +55,9 @@ dependencies:
   image_picker: ^1.1.1
   kakao_map_plugin: ^0.3.1
   flutter_dotenv: ^5.1.0
+  flutter_native_splash: ^2.4.0
+
+
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +90,8 @@ flutter:
         - asset: assets/fonts/NanumGothic.ttf
           style: italic
 
+
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -117,3 +122,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
