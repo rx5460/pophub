@@ -139,10 +139,15 @@ class _AlarmPageState extends State<AlarmPage>
                       width: 65,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.cover,
-                        ),
+                        child: data['imageUrl'] != null
+                            ? Image.network(
+                                data['imageUrl'],
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/logo.png',
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                   ),
