@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:provider/provider.dart';
 
 class GoodsList extends StatefulWidget {
   final PopupModel popup;
@@ -45,16 +45,8 @@ class _GoodsListState extends State<GoodsList> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: const Text(
-          '굿즈',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+      appBar: const CustomTitleBar(
+        titleName: "굿즈",
       ),
       body: Padding(
         padding: EdgeInsets.only(

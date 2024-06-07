@@ -33,7 +33,8 @@ class PopupModel {
         category = json['category_id'],
         mark = json['store_mark_number'],
         view = json['store_view_count'],
-        image = json['imageUrls'],
+        image =
+            json.containsKey('imageUrls') ? json['imageUrls'] : json['images'],
         schedule = (json['store_schedules'] as List<dynamic>?)
             ?.map((item) => Schedule.fromJson(item as Map<String, dynamic>))
             .toList(),

@@ -28,10 +28,11 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Future<void> getCategory() async {
     final data = await Api.getCategory();
-    setState(() {
-      category = data.where((item) => item.categoryId >= 10).toList();
-    });
-    print("Data $data");
+    if (mounted) {
+      setState(() {
+        category = data.where((item) => item.categoryId >= 10).toList();
+      });
+    }
   }
 
   Future<void> _loadRecentSearches() async {

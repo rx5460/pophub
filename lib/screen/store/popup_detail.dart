@@ -249,7 +249,6 @@ class _PopupDetailState extends State<PopupDetail> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-    Set<Marker> markers = {};
 
     return Scaffold(
       body: !isLoading
@@ -508,26 +507,21 @@ class _PopupDetailState extends State<PopupDetail> {
                                         left: screenWidth * 0.05,
                                         right: screenWidth * 0.05,
                                       ),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: screenHeight * 0.2,
                                         width: screenWidth * 0.9,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                          width: 1,
-                                          color: Colors.black,
-                                        )),
-                                        // child: KakaoMap(
-                                        //   onMapCreated: ((controller) async {
-                                        //     mapController = controller;
+                                        child: KakaoMap(
+                                          onMapCreated: ((controller) async {
+                                            mapController = controller;
 
-                                        //     Logger.debug(center.toString());
-                                        //     Logger.debug(markers.toString());
+                                            Logger.debug(center.toString());
+                                            Logger.debug(markers.toString());
 
-                                        //     setState(() {});
-                                        //   }),
-                                        //   markers: markers.toList(),
-                                        //   center: center,
-                                        // ),
+                                            setState(() {});
+                                          }),
+                                          markers: markers.toList(),
+                                          center: center,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -535,13 +529,17 @@ class _PopupDetailState extends State<PopupDetail> {
                                           left: screenWidth * 0.05,
                                           right: screenWidth * 0.05,
                                           top: 8.0),
-                                      child: const Row(
+                                      child: Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.location_on_outlined,
                                             size: 20,
                                           ),
-                                          Text('서울특별시 마포구 양화로 162')
+                                          popup!.location != ""
+                                              ? Text(popup!.location
+                                                  .toString()
+                                                  .split('/')[0])
+                                              : const Text("")
                                         ],
                                       ),
                                     ),

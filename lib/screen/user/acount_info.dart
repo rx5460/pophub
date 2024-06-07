@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
+import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
@@ -92,23 +93,8 @@ class _AcountInfoState extends State<AcountInfo> {
     double screenHeight = screenSize.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          '계정 정보',
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-        ),
+      appBar: const CustomTitleBar(
+        titleName: "계정 정보",
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

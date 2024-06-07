@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/goods_model.dart';
@@ -70,7 +71,7 @@ class Api {
     return data;
   }
 
-  // 전체 팝업 조회
+  // 인기 팝업 조회
   static Future<List<PopupModel>> getPopupList() async {
     try {
       final List<dynamic> dataList = await getListData(
@@ -794,5 +795,47 @@ class Api {
     final data = await deleteData('$domain/product/delete/$productId', {});
     Logger.debug("### 굿즈 삭제 $data");
     return data;
+  }
+
+  // 인기 팝업 조회
+  static Future<Set<Marker>> getAllPopupList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/popup',
+        {},
+      );
+
+      List<PopupModel> popupList =
+          dataList.map((data) => PopupModel.fromJson(data)).toList();
+
+      Set<Marker> markers = {};
+
+      for (PopupModel popup in popupList) {
+        final locationData = await Api.getAddress(
+          popup.location.toString().split("/")[0] != ""
+              ? popup.location.toString().split("/")[0]
+              : "서울특별시 강남구 강남대로 지하396",
+        );
+
+        var documents = locationData['documents'];
+        if (documents != null && documents.isNotEmpty) {
+          var firstDocument = documents[0];
+          var x = firstDocument['x'].toString();
+          var y = firstDocument['y'].toString();
+
+          markers.add(Marker(
+              markerId: '${markers.length + 1}',
+              latLng: LatLng(double.parse(y), double.parse(x))));
+        } else {
+          Logger.debug('No documents found');
+        }
+      }
+
+      return markers;
+    } catch (e) {
+      // 오류 처리–
+      Logger.debug('Failed to All popup list: $e');
+      throw Exception('Failed to All popup list');
+    }
   }
 }
