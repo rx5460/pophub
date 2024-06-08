@@ -473,14 +473,21 @@ class _HomePageState extends State<HomePage> {
                                   : 0),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PopupDetail(
-                                    storeId: popup.id!,
-                                  ),
-                                ),
-                              );
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => PopupDetail(
+                                            storeId: popup.id!,
+                                          ),
+                                      settings:
+                                          const RouteSettings(name: "/popup")));
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => PopupDetail(
+                              //       storeId: popup.id!,
+                              //     ),
+                              //   ),
+                              // );
                             },
                             child: SizedBox(
                               width: screenWidth * 0.5,

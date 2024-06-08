@@ -39,8 +39,12 @@ class _ReserveCountState extends State<ReserveCount> {
         }
       } else {
         await sendAlarmAndNotification();
+        print('예역 성공');
         if (mounted) {
-          Navigator.pop(context);
+          print('예역 성공 마운트');
+          showAlert(context, "안내", "사전 예약에 성공했습니다.", () async {
+            Navigator.popUntil(context, ModalRoute.withName("/popup"));
+          });
         }
       }
     } catch (e) {
