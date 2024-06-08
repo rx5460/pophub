@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 
 class GoodsOrder extends StatefulWidget {
   final int count;
-  // ignore: prefer_const_constructors_in_immutables
-  GoodsOrder({super.key, required this.count});
+  final GoodsModel goods;
+  final String popupName;
+  const GoodsOrder(
+      {super.key,
+      required this.count,
+      required this.goods,
+      required this.popupName});
 
   @override
   State<GoodsOrder> createState() => _GoodsOrderState();
@@ -14,12 +21,48 @@ class GoodsOrder extends StatefulWidget {
 
 class _GoodsOrderState extends State<GoodsOrder> {
   String kakopayLink = "";
+  Map<String, dynamic>? profile;
+  int usePoint = 0;
 
   Future<void> testApi() async {
     final data =
         await Api.pay(User().userId, "zero22", widget.count, 33000, 3000, 0);
     // Map<String, dynamic> valueMap = json.decode(data);
     kakopayLink = data.toString();
+  }
+
+  Future<void> profileApi() async {
+    try {
+      Map<String, dynamic> data = await Api.getProfile(User().userId);
+
+      if (!data.toString().contains("fail")) {
+        setState(() {
+          profile = data;
+          print(profile);
+        });
+
+        User().userName = data['userName'];
+        User().phoneNumber = data['phoneNumber'];
+        User().age = data['age'];
+        User().gender = data['gender'];
+        User().file = data['userImage'] ?? '';
+        User().role = data['userRole'] ?? '';
+      }
+    } catch (e) {
+      Logger.debug('$e');
+    }
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    await profileApi();
+  }
+
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(amount);
   }
 
   @override
@@ -58,19 +101,19 @@ class _GoodsOrderState extends State<GoodsOrder> {
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                         )),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8, bottom: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '팝업스토어 이름',
-                            style: TextStyle(
+                            widget.popupName,
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(
+                          const Text(
                             '위치 확인하기',
                             style: TextStyle(
                               fontSize: 14,
@@ -90,20 +133,20 @@ class _GoodsOrderState extends State<GoodsOrder> {
                         const SizedBox(
                           width: 8,
                         ),
-                        const Column(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '굿즈 이름',
-                              style: TextStyle(
+                              widget.goods.productName,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
-                              '10,000원 (1개)',
-                              style: TextStyle(
+                              '${formatCurrency(widget.goods.price)}원 x ${widget.count}개 = ${formatCurrency(widget.goods.price * widget.count)}원',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -148,9 +191,9 @@ class _GoodsOrderState extends State<GoodsOrder> {
                         ),
                         Row(
                           children: [
-                            const Text(
-                              '2,000p',
-                              style: TextStyle(
+                            Text(
+                              '${formatCurrency(usePoint)}p',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w600,
@@ -160,7 +203,11 @@ class _GoodsOrderState extends State<GoodsOrder> {
                               width: 8,
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  usePoint = profile?['pointScore'];
+                                });
+                              },
                               child: Container(
                                 width: screenWidth * 0.2,
                                 decoration: BoxDecoration(
@@ -188,9 +235,9 @@ class _GoodsOrderState extends State<GoodsOrder> {
                         )
                       ],
                     ),
-                    const Text(
-                      '잔여 포인트 : 2,000p',
-                      style: TextStyle(
+                    Text(
+                      '잔여 포인트 : ${formatCurrency(profile?['pointScore'] ?? 0)}p',
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.w600,
@@ -210,17 +257,17 @@ class _GoodsOrderState extends State<GoodsOrder> {
               Padding(
                 padding: EdgeInsets.only(
                     left: screenWidth * 0.05, right: screenWidth * 0.05),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('총 결제 금액',
+                    const Text('총 결제 금액',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                         )),
                     Text(
-                      '8,000원',
-                      style: TextStyle(
+                      '${formatCurrency(widget.goods.price * widget.count - usePoint)}원',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         color: Color(0xFFADD8E6),
@@ -240,12 +287,12 @@ class _GoodsOrderState extends State<GoodsOrder> {
               Padding(
                 padding: EdgeInsets.only(
                     left: screenWidth * 0.05, right: screenWidth * 0.05),
-                child: const Column(
+                child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           '상품 금액',
                           style: TextStyle(
                             fontSize: 14,
@@ -254,21 +301,21 @@ class _GoodsOrderState extends State<GoodsOrder> {
                           ),
                         ),
                         Text(
-                          '10,000원',
-                          style: TextStyle(
+                          '${formatCurrency(widget.goods.price * widget.count)}원',
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           '포인트 할인',
                           style: TextStyle(
                             fontSize: 14,
@@ -277,8 +324,8 @@ class _GoodsOrderState extends State<GoodsOrder> {
                           ),
                         ),
                         Text(
-                          '-2,000원',
-                          style: TextStyle(
+                          '-${formatCurrency(usePoint)}p',
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -320,7 +367,11 @@ class _GoodsOrderState extends State<GoodsOrder> {
                           Radius.circular(15),
                         ),
                       ),
-                      child: const Icon(Icons.dashboard),
+                      child: Image.asset(
+                        'assets/images/kakaopay.png',
+                        width: screenWidth * 0.1,
+                        // height: 24,
+                      ),
                     ),
                   )
                 ],
@@ -330,11 +381,8 @@ class _GoodsOrderState extends State<GoodsOrder> {
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Container(
-              // duration: const Duration(milliseconds: 300),
               width: screenWidth * 0.9,
-
               height: screenHeight * 0.07,
-
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(

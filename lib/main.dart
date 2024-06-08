@@ -79,10 +79,10 @@ Future<void> _showNotification(
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  initializeNotification();
+  // initializeNotification();
 
   await dotenv.load(fileName: 'assets/config/.env');
 

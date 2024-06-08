@@ -18,6 +18,7 @@ import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject_page.dart';
+import 'package:pophub/screen/store/popup_review.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
 import 'package:pophub/screen/user/login.dart';
@@ -189,34 +190,17 @@ class _PopupDetailState extends State<PopupDetail> {
     }
   }
 
-  Future<void> writeReview() async {
-    Map<String, dynamic> data =
-        await Api.writeReview(widget.storeId, 4, '볼거리가 많아요 !', User().userId);
-
-    if (!data.toString().contains("fail")) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const ReserveDate()),
-      // );
-      setState(() {
-        isLoading = true;
-      });
-      getPopupData();
-      fetchReviewData();
-    } else {
-      Navigator.of(context).pop();
-    }
-  }
-
   Future<void> popupLike() async {
     Map<String, dynamic> data =
         await Api.storeLike(User().userName, widget.storeId);
 
     if (data.toString().contains("추가")) {
+      await getPopupData();
       setState(() {
         like = true;
       });
     } else {
+      await getPopupData();
       setState(() {
         like = false;
       });
@@ -243,7 +227,14 @@ class _PopupDetailState extends State<PopupDetail> {
     super.initState();
   }
 
+  void refreshReviewData() async {
+    await getPopupData();
+    await fetchReviewData();
+    await fetchGoodsData();
+  }
+
   Future<void> initializeData() async {
+    print('refresh');
     await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
     fetchReviewData(); // fetchReviewData를 호출합니다.
     fetchGoodsData();
@@ -518,18 +509,18 @@ class _PopupDetailState extends State<PopupDetail> {
                                       child: SizedBox(
                                         height: screenHeight * 0.2,
                                         width: screenWidth * 0.9,
-                                        child: KakaoMap(
-                                          onMapCreated: ((controller) async {
-                                            mapController = controller;
+                                        // child: KakaoMap(
+                                        //   onMapCreated: ((controller) async {
+                                        //     mapController = controller;
 
-                                            Logger.debug(center.toString());
-                                            Logger.debug(markers.toString());
+                                        //     Logger.debug(center.toString());
+                                        //     Logger.debug(markers.toString());
 
-                                            setState(() {});
-                                          }),
-                                          markers: markers.toList(),
-                                          center: center,
-                                        ),
+                                        //     setState(() {});
+                                        //   }),
+                                        //   markers: markers.toList(),
+                                        //   center: center,
+                                        // ),
                                       ),
                                     ),
                                     Padding(
@@ -569,7 +560,17 @@ class _PopupDetailState extends State<PopupDetail> {
                                       ),
                                       child: GestureDetector(
                                         onTap: () {
-                                          writeReview();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PopupReview(
+                                                      storeId: widget.storeId,
+                                                      storeName: popup!.name!,
+                                                      popupDetailRefresh:
+                                                          refreshReviewData,
+                                                    )),
+                                          );
                                         },
                                         child: SizedBox(
                                           width: screenWidth * 0.9,
@@ -578,18 +579,24 @@ class _PopupDetailState extends State<PopupDetail> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
-                                                children: List.generate(
-                                                  5,
-                                                  (starIndex) => Icon(
-                                                    starIndex <
-                                                            (rating) // null 대비
-                                                        ? Icons.star
-                                                        : Icons
-                                                            .star_border_outlined,
-                                                    size: 20,
-                                                    color: Colors.black,
+                                                children: [
+                                                  Row(
+                                                    children: List.generate(
+                                                      5,
+                                                      (starIndex) => Icon(
+                                                        starIndex <
+                                                                (rating) // null 대비
+                                                            ? Icons.star
+                                                            : Icons
+                                                                .star_border_outlined,
+                                                        size: 20,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Text(
+                                                      '($rating점) ${reviewList != null ? reviewList!.length : 0}개'),
+                                                ],
                                               ),
                                               const Icon(
                                                 Icons.arrow_forward_ios,
@@ -604,7 +611,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                       children: [
                                         // 최근 리뷰 3개 만 보여줌
                                         for (int index = 0;
-                                            index < (reviewList?.length ?? 0);
+                                            index <
+                                                (reviewList?.length ?? 0)
+                                                    .clamp(0, 3);
                                             index++)
                                           if (reviewList != null)
                                             Padding(
@@ -633,11 +642,6 @@ class _PopupDetailState extends State<PopupDetail> {
                                                             CrossAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          // const Icon(
-                                                          //   Icons
-                                                          //       .ac_unit_rounded,
-                                                          //   size: 20,
-                                                          // ),
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -663,7 +667,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                             starIndex <
                                                                     (reviewList![index]
                                                                             .rating ??
-                                                                        0) // null 대비
+                                                                        0)
                                                                 ? Icons.star
                                                                 : Icons
                                                                     .star_border_outlined,
@@ -741,7 +745,6 @@ class _PopupDetailState extends State<PopupDetail> {
                                                         final goods =
                                                             goodsList![index];
 
-                                                        // 팝업 데이터를 표시하는 위젯을 반환합니다.
                                                         return Padding(
                                                           padding: EdgeInsets.only(
                                                               left:
@@ -762,6 +765,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                   builder:
                                                                       (context) =>
                                                                           GoodsDetail(
+                                                                    popupName:
+                                                                        popup!
+                                                                            .name!,
                                                                     goodsId: goods
                                                                         .product,
                                                                   ),

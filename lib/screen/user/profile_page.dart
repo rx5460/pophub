@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
@@ -12,6 +13,7 @@ import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -24,6 +26,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? profile; // profile 변수를 nullable로 선언
   bool isLoading = true; // 로딩 상태 변수 추가
+  List<ReviewModel>? reviewList;
 
   Future<void> profileApi() async {
     setState(() {
@@ -100,10 +103,26 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> fetchReviewData() async {
+    try {
+      List<ReviewModel>? dataList =
+          await Api.getReviewListUser(User().userName);
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          reviewList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching review data: $error');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     profileApi(); // API 호출
+    fetchReviewData();
   }
 
   @override
@@ -262,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: const Column(
                                           children: [
                                             Text(
-                                              '10',
+                                              '0',
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w700,
@@ -290,19 +309,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       SizedBox(
                                         width: (screenWidth * 0.3) - 2,
-                                        child: const Column(
+                                        child: Column(
                                           children: [
                                             Text(
-                                              '10',
-                                              style: TextStyle(
+                                              reviewList?.length.toString() ??
+                                                  '0',
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 10,
                                             ),
-                                            Text(
+                                            const Text(
                                               '리뷰',
                                               style: TextStyle(
                                                 fontSize: 16,

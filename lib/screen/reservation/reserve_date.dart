@@ -62,6 +62,7 @@ class _ReserveDateState extends State<ReserveDate> {
     int? openHour;
     int? closeHour;
     for (int i = 0; i < widget.popup.schedule!.length; i++) {
+      print(widget.popup.schedule!.length);
       if (widget.popup.schedule![i].dayOfWeek == dayOfWeek) {
         openHour = int.parse(widget.popup.schedule![i].openTime.split(':')[0]);
         closeHour =
@@ -77,6 +78,7 @@ class _ReserveDateState extends State<ReserveDate> {
         }
         selectedHour = availableHours.isNotEmpty ? availableHours.first : 1;
       }
+      print(availableHours);
     });
   }
 

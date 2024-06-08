@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   List<PopupModel> willBeCloseList = [];
   bool _isExpanded = false;
   bool addGoodsVisible = false;
-
   List imageList = [];
 
   Future<void> profileApi() async {

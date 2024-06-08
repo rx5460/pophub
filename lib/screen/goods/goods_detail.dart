@@ -16,7 +16,9 @@ import 'package:provider/provider.dart';
 
 class GoodsDetail extends StatefulWidget {
   final String goodsId;
-  const GoodsDetail({Key? key, required this.goodsId}) : super(key: key);
+  final String popupName;
+  const GoodsDetail({Key? key, required this.goodsId, required this.popupName})
+      : super(key: key);
 
   @override
   State<GoodsDetail> createState() => _GoodsDetailState();
@@ -46,8 +48,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
       if (User().userName != "") {
         List<dynamic> popupData = await Api.getMyPopup(User().userName);
 
-        if (!data.toString().contains("fail") ||
-            !data.toString().contains("없습니다")) {
+        if (!popupData.toString().contains("없습니다")) {
           setState(() {
             goods = data;
             isLoading = true;
@@ -62,6 +63,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
           }
         } else {
           setState(() {
+            goods = data;
+            isLoading = true;
             addGoodsVisible = false;
           });
         }
@@ -577,6 +580,9 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       GoodsOrder(
+                                                        popupName:
+                                                            widget.popupName,
+                                                        goods: goods!,
                                                         count: count,
                                                       )),
                                             );
