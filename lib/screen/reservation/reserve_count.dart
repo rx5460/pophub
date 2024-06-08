@@ -31,40 +31,14 @@ class _ReserveCountState extends State<ReserveCount> {
 
       if (data.toString().contains("fail")) {
         if (mounted) {
-          showAlert(context, "경고", "사전 예약에 실패했습니다.", () {
+          // 예약 실패 알림 표시 및 대기 목록 추가 확인
+          showAlert(context, "경고", "사전 예약에 실패했습니다. 대기 목록에 추가하시겠습니까?", () async {
             Navigator.of(context).pop();
+            await addToWaitlist();
           });
         }
       } else {
-        final Map<String, String> alarmDetails = {
-          'title': '사전 예약 완료',
-          'label': '사전 예약이 성공적으로 완료되었습니다.',
-          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
-          'active': 'true',
-        };
-
-        // 서버에 알람 추가
-        await http.post(
-          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'userName': User().userName,
-            'type': 'alarms',
-            'alarmDetails': alarmDetails,
-          }),
-        );
-
-        // Firestore에 알람 추가
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(User().userName)
-            .collection('alarms')
-            .add(alarmDetails);
-
-        // 로컬 알림 발송
-        await const AlarmPage().showNotification(alarmDetails['title']!,
-            alarmDetails['label']!, alarmDetails['time']!);
-
+        await sendAlarmAndNotification();
         if (mounted) {
           Navigator.pop(context);
         }
@@ -77,6 +51,68 @@ class _ReserveCountState extends State<ReserveCount> {
         });
       }
     }
+  }
+
+  Future<void> addToWaitlist() async {
+    try {
+      String userName = User().userName;
+      final response = await http.post(
+        Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/waitlist_add'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userName': userName,
+          'storeId': widget.popup,
+          'date': widget.date,
+          'desiredTime': widget.time,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        showAlert(context, "알림", "대기 목록에 성공적으로 추가되었습니다.", () {
+          Navigator.of(context).pop();
+        });
+      } else {
+        showAlert(context, "오류", "대기 목록 추가에 실패했습니다.", () {
+          Navigator.of(context).pop();
+        });
+      }
+    } catch (e) {
+      print('Error during adding to waitlist: $e');
+      showAlert(context, "오류", "대기 목록 추가 중 오류가 발생했습니다. 다시 시도해주세요.", () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
+
+  Future<void> sendAlarmAndNotification() async {
+    final Map<String, String> alarmDetails = {
+      'title': '사전 예약 완료',
+      'label': '사전 예약이 성공적으로 완료되었습니다.',
+      'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+      'active': 'true',
+    };
+
+    // 서버에 알람 추가
+    await http.post(
+      Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userName': User().userName,
+        'type': 'alarms',
+        'alarmDetails': alarmDetails,
+      }),
+    );
+
+    // Firestore에 알람 추가
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(User().userName)
+        .collection('alarms')
+        .add(alarmDetails);
+
+    // 로컬 알림 발송
+    await const AlarmPage().showNotification(
+        alarmDetails['title']!, alarmDetails['label']!, alarmDetails['time']!);
   }
 
   @override
