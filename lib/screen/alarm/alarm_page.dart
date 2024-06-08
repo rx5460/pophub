@@ -4,7 +4,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pophub/model/user.dart';
 
 class AlarmPage extends StatefulWidget {
-  const AlarmPage({super.key});
+  final String? payload;
+  const AlarmPage({super.key, this.payload});
 
   @override
   State<AlarmPage> createState() => _AlarmPageState();
@@ -35,6 +36,7 @@ class _AlarmPageState extends State<AlarmPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    if (widget.payload != null) {}
   }
 
   Future<void> showNotification(String title, String body, String time) async {
