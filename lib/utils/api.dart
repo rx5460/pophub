@@ -461,6 +461,14 @@ class Api {
       }
     }
 
+    String locationPart = "";
+
+    if (store.location.isNotEmpty) {
+      List<String> parts = store.location.split("/");
+      if (parts.length > 1) {
+        locationPart = parts[1];
+      }
+    }
     formData.fields.addAll([
       MapEntry('category_id', store.category),
       MapEntry('user_name', User().userName),
@@ -470,9 +478,11 @@ class Api {
       ),
       MapEntry(
           'store_location',
-          store.location.contains("/")
-              ? store.location
-              : "${store.location}/${store.locationDetail}"),
+          locationPart == ""
+              ? store.locationDetail != ""
+                  ? "${store.location}/${store.locationDetail}"
+                  : store.location
+              : "${store.location.split("/").first}/${store.locationDetail}"),
       MapEntry('store_contact_info', store.contact),
       MapEntry('store_description', store.description),
       MapEntry('store_start_date',

@@ -42,7 +42,17 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     if (widget.popup != null) {
       _nameController.text = widget.popup?.name ?? '';
       _descriptionController.text = widget.popup?.description ?? '';
-      _locationController.text = widget.popup?.location ?? '';
+
+      String locationPart = "";
+      if (widget.popup?.location != null &&
+          widget.popup!.location!.isNotEmpty) {
+        List<String> parts = widget.popup!.location!.split("/");
+        if (parts.length > 1) {
+          locationPart = parts[1];
+        }
+      }
+
+      _locationController.text = locationPart;
       _contactController.text = widget.popup?.contact ?? '';
       _maxCapacityController.text = widget.popup?.view?.toString() ?? '';
 
@@ -371,8 +381,9 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     title: const Text(
                       '스토어 위치',
                     ),
-                    subtitle:
-                        store.location.isNotEmpty ? Text(store.location) : null,
+                    subtitle: store.location.isNotEmpty
+                        ? Text(store.location.split("/").first)
+                        : null,
                     trailing: const Icon(
                       Icons.location_on,
                       color: Colors.grey,

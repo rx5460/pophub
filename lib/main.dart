@@ -36,7 +36,14 @@ void initializeNotification() async {
     android: AndroidInitializationSettings("@mipmap/ic_launcher"),
   );
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      if (response.payload != null) {
+        navigatorKey.currentState?.pushNamed('/alarm');
+      }
+    },
+  );
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -76,6 +83,8 @@ Future<void> _showNotification(
     payload: message.data['time'],
   );
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

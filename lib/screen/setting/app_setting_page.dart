@@ -46,17 +46,17 @@ class _AppSettingState extends State<AppSetting> {
               );
             },
           ),
-          ListTile(
-            title: const Text('약관'),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              // 약관 페이지로 이동
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Container()),
-              );
-            },
-          ),
+          // ListTile(
+          //   title: const Text('약관'),
+          //   trailing: const Icon(Icons.arrow_forward_ios),
+          //   onTap: () {
+          //     // 약관 페이지로 이동
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => Container()),
+          //     );
+          //   },
+          // ),
           ListTile(
             title: const Text('로그아웃'),
             trailing: const Icon(Icons.arrow_forward_ios),
