@@ -175,6 +175,7 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
             builder: (context) => GoodsDetail(
               popupName: widget.popup.name!,
               goodsId: widget.productId.toString(),
+              popupId: widget.popup.id!,
             ),
           ),
         ).then((value) {

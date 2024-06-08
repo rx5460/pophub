@@ -768,6 +768,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                     popupName:
                                                                         popup!
                                                                             .name!,
+                                                                    popupId:
+                                                                        popup!
+                                                                            .id!,
                                                                     goodsId: goods
                                                                         .product,
                                                                   ),
