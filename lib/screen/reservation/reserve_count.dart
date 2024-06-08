@@ -39,9 +39,9 @@ class _ReserveCountState extends State<ReserveCount> {
         }
       } else {
         await sendAlarmAndNotification();
-        print('예역 성공');
+        print('예약 성공');
         if (mounted) {
-          print('예역 성공 마운트');
+          print('예약 성공 마운트');
           showAlert(context, "안내", "사전 예약에 성공했습니다.", () async {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -62,7 +62,8 @@ class _ReserveCountState extends State<ReserveCount> {
     try {
       String userName = User().userName;
       final response = await http.post(
-        Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/waitlist_add'),
+        Uri.parse(
+            'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/waitlist_add'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'userName': userName,
