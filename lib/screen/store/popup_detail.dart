@@ -549,7 +549,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                   child: Text(
                                                     popup!.location
                                                         .toString()
-                                                        .split('/')[0],
+                                                        .replaceAll("/", "  "),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,
