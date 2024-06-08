@@ -43,7 +43,8 @@ class _ReserveCountState extends State<ReserveCount> {
         if (mounted) {
           print('예역 성공 마운트');
           showAlert(context, "안내", "사전 예약에 성공했습니다.", () async {
-            Navigator.popUntil(context, ModalRoute.withName("/popup"));
+            Navigator.pop(context);
+            Navigator.pop(context);
           });
         }
       }
