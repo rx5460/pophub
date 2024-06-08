@@ -47,7 +47,8 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
         // 서버에 알람 추가
         await http.post(
-          Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm_add'),
+          Uri.parse(
+              'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'userName': applicantUsername,
