@@ -363,7 +363,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   visible: User().role == "President",
                                   child: MenuList(
                                     icon: Icons.message_outlined,
-                                    text: '내 스토어',
+                                    text: '내 팝업스토어',
                                     onClick: () {
                                       checkStoreApi();
                                     },
@@ -418,7 +418,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   visible: User().role == "President",
                                   child: MenuList(
                                     icon: Icons.event_note,
-                                    text: '내 스토어 예약 내역',
+                                    text: '내 팝업스토어 예약 내역',
                                     onClick: () {
                                       Navigator.push(
                                           context,
@@ -426,7 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               builder: (context) =>
                                                   const AlarmListPage(
                                                     mode: "store",
-                                                    titleName: "내 스토어 예약 내역",
+                                                    titleName: "내 팝업스토어 예약 내역",
                                                   )));
                                     },
                                   ),

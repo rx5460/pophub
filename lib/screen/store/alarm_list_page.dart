@@ -224,14 +224,11 @@ class _AlarmListPageState extends State<AlarmListPage> {
                                         ],
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: widget.mode == "store",
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                              "인원: ${(reserve.capacity != null) ? reserve.capacity.toString() : ''}명"),
-                                        ],
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                            "인원: ${(reserve.capacity != null) ? reserve.capacity.toString() : ''}명"),
+                                      ],
                                     ),
                                   ],
                                 ),
