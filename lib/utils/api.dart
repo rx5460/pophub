@@ -943,4 +943,36 @@ class Api {
       throw Exception('Failed to getLikePopup popup list');
     }
   }
+
+  //팝업 예약 상태 조회 by name
+  static Future<List<ReservationModel>> getReservationByUserName() async {
+    final dataList = await getListData(
+        '$domain/popup/getReservation/user/${User().userName}', {});
+    Logger.debug("### 팝업 예약 상태 조회 by name $dataList");
+
+    List<ReservationModel> reservationList =
+        dataList.map((data) => ReservationModel.fromJson(data)).toList();
+    return reservationList;
+  }
+
+  //팝업 예약 상태 조회 by store
+  static Future<List<ReservationModel>> getReservationByStoreId(
+      String storeId) async {
+    final dataList = await getListData(
+        '$domain/popup/getReservation/president/$storeId', {});
+    Logger.debug("### 팝업 예약 상태 조회 by storeId $dataList");
+
+    List<ReservationModel> reservationList =
+        dataList.map((data) => ReservationModel.fromJson(data)).toList();
+    return reservationList;
+  }
+
+  // 예약 삭제
+  static Future<Map<String, dynamic>> reserveDelete(
+      String reservationId) async {
+    final data =
+        await deleteData('$domain/popup/deleteReservation/$reservationId', {});
+    Logger.debug("### 예약 삭제 $data");
+    return data;
+  }
 }

@@ -6,6 +6,7 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/setting/app_setting_page.dart';
 import 'package:pophub/screen/setting/inquiry_page.dart';
 import 'package:pophub/screen/setting/notice_page.dart';
+import 'package:pophub/screen/store/alarm_list_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
@@ -395,14 +396,42 @@ class _ProfilePageState extends State<ProfilePage> {
                                     },
                                   ),
                                 ),
-                                // Visibility(
-                                //   visible: User().role == "General Member",
-                                //   child: MenuList(
-                                //     icon: Icons.star,
-                                //     text: '업적',
-                                //     onClick: () {},
-                                //   ),
-                                // ),
+                                Visibility(
+                                  visible: User().role == "General Member" ||
+                                      User().role == "President",
+                                  child: MenuList(
+                                    icon: Icons.event_note,
+                                    text: '예약 내역',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AlarmListPage(
+                                                    mode: "name",
+                                                    titleName: "예약 내역",
+                                                  )));
+                                    },
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: User().role == "President",
+                                  child: MenuList(
+                                    icon: Icons.event_note,
+                                    text: '내 스토어 예약 내역',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AlarmListPage(
+                                                    mode: "store",
+                                                    titleName: "내 스토어 예약 내역",
+                                                  )));
+                                    },
+                                  ),
+                                ),
+
                                 // MenuList(
                                 //   icon: Icons.credit_card,
                                 //   text: '결제 내역',
