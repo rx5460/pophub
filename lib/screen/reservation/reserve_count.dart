@@ -73,7 +73,7 @@ class _ReserveCountState extends State<ReserveCount> {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         showAlert(context, "알림", "대기 목록에 성공적으로 추가되었습니다.", () {
           Navigator.of(context).pop();
         });

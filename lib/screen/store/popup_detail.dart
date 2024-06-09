@@ -510,18 +510,18 @@ class _PopupDetailState extends State<PopupDetail> {
                                       child: SizedBox(
                                         height: screenHeight * 0.2,
                                         width: screenWidth * 0.9,
-                                        // child: KakaoMap(
-                                        //   onMapCreated: ((controller) async {
-                                        //     mapController = controller;
+                                        child: KakaoMap(
+                                          onMapCreated: ((controller) async {
+                                            mapController = controller;
 
-                                        //     Logger.debug(center.toString());
-                                        //     Logger.debug(markers.toString());
+                                            Logger.debug(center.toString());
+                                            Logger.debug(markers.toString());
 
-                                        //     setState(() {});
-                                        //   }),
-                                        //   markers: markers.toList(),
-                                        //   center: center,
-                                        // ),
+                                            setState(() {});
+                                          }),
+                                          markers: markers.toList(),
+                                          center: center,
+                                        ),
                                       ),
                                     ),
                                     Padding(
