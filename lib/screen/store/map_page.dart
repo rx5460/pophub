@@ -32,7 +32,11 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    getAllPopupList();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        getAllPopupList();
+      },
+    );
   }
 
   Future<void> getAllPopupList() async {
@@ -42,7 +46,6 @@ class _MapPageState extends State<MapPage> {
       if (markerMap.isNotEmpty) {
         setState(() {
           markersMap = markerMap;
-          // Combine all markers from the map into a single set
           markers = markerMap.values.expand((set) => set).toSet();
           isLoading = false;
         });
