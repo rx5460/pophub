@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:pophub/screen/goods/goods_add_page.dart';
 import 'package:pophub/screen/store/popup_detail.dart';
 import 'package:pophub/screen/store/store_add_page.dart';
 import 'package:pophub/screen/store/store_list_page.dart';
@@ -32,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   bool _isExpanded = false;
   bool addGoodsVisible = false;
   List imageList = [];
+  PopupModel? popup;
 
   Future<void> profileApi() async {
     Map<String, dynamic> data = await Api.getProfile(User().userId);
@@ -43,6 +46,7 @@ class _HomePageState extends State<HomePage> {
       User().gender = data['gender'];
       User().file = data['userImage'] ?? '';
       User().role = data['userRole'] ?? '';
+      checkStoreApi();
     }
   }
 
@@ -81,6 +85,10 @@ class _HomePageState extends State<HomePage> {
         !data.toString().contains("없습니다")) {
       setState(() {
         addGoodsVisible = true;
+
+        if (mounted) {
+          popup = PopupModel.fromJson(data[0]);
+        }
       });
     } else {
       setState(() {
@@ -178,7 +186,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildExpandedFloatingButtons() {
     return Transform.translate(
-      offset: Offset(MediaQuery.of(context).size.width * 0.04, 0),
+      offset: Offset(MediaQuery.of(context).size.width * 0.04,
+          MediaQuery.of(context).size.height * 0.02),
       child: Stack(
         fit: StackFit.expand, // Stack이 화면 전체를 차지하도록 설정
         children: [
@@ -194,7 +203,8 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white.withOpacity(0.85), // 반투명 배경
               child: Padding(
                 padding: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width * 0.04),
+                    right: MediaQuery.of(context).size.width * 0.04,
+                    bottom: MediaQuery.of(context).size.height * 0.02),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -202,11 +212,18 @@ class _HomePageState extends State<HomePage> {
                     addGoodsVisible
                         ? _buildFloatingButtonWithText(
                             onPressed: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => const CheckListAdd(),
-                              //     ));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MultiProvider(
+                                              providers: [
+                                                ChangeNotifierProvider(
+                                                    create: (_) =>
+                                                        GoodsNotifier())
+                                              ],
+                                              child: GoodsCreatePage(
+                                                  mode: "add",
+                                                  popup: popup!))));
                             },
                             icon: Icons.check_box_outlined,
                             text: '굿즈',
