@@ -79,16 +79,19 @@ class _LoginState extends State<Login> {
                       CustomTitleBar(
                           titleName: "로그인",
                           onBackPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MultiProvider(
-                                            providers: [
-                                              ChangeNotifierProvider(
-                                                  create: (_) => UserNotifier())
-                                            ],
-                                            child:
-                                                const BottomNavigationPage())));
+                            if (context.mounted) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MultiProvider(
+                                              providers: [
+                                                ChangeNotifierProvider(
+                                                    create: (_) =>
+                                                        UserNotifier())
+                                              ],
+                                              child:
+                                                  const BottomNavigationPage())));
+                            }
                           }),
                       Image.asset(
                         'assets/images/logo.png',
