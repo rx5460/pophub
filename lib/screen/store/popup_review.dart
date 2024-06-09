@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -153,7 +154,7 @@ class _PopupReviewState extends State<PopupReview> {
                       height: screenWidth * 0.1,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
-                        color: Color(0xFFE6A3B3),
+                        color: Constants.DEFAULT_COLOR,
                       ),
                       child: const Center(
                         child: Text(

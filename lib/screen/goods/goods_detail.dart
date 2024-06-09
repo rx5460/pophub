@@ -216,7 +216,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                             ),
                                           ),
                                           Text(
-                                            '${goods!.price.toString()}원',
+                                            '${formatNumber(goods!.price)}원',
                                             style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
@@ -570,7 +570,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                             FontWeight.w900),
                                                   ),
                                                   Text(
-                                                    '${goods!.price.toString()}원',
+                                                    '${formatNumber(goods!.price)}원',
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
@@ -756,7 +756,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
         },
       ).toList(),
       options: CarouselOptions(
-        height: 250,
+        height: 300,
         viewportFraction: 1.0,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 4),

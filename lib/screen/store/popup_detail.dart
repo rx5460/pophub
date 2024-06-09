@@ -596,7 +596,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                     ),
                                                   ),
                                                   Text(
-                                                      '($rating점) ${reviewList != null ? reviewList!.length : 0}개'),
+                                                      '(${rating.toStringAsFixed(1)}점) ${reviewList != null ? reviewList!.length : 0}개'),
                                                 ],
                                               ),
                                               const Icon(
@@ -1185,7 +1185,7 @@ class _PopupDetailState extends State<PopupDetail> {
         },
       ).toList(),
       options: CarouselOptions(
-        height: 250,
+        height: 300,
         viewportFraction: 1.0,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 4),

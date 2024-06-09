@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/screen/custom/custom_alert.dart';
 
 bool isValidPhoneNumber(String input) {
@@ -108,4 +109,9 @@ String generateNickname() {
     (_) => characters.codeUnitAt(random.nextInt(characters.length)),
   ));
   return generatedNickname;
+}
+
+String formatNumber(int number) {
+  final formatter = NumberFormat('#,###');
+  return formatter.format(number);
 }
