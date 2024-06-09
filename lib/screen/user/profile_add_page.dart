@@ -243,9 +243,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(
-                                        width: screenWidth * 0.6,
-                                        height: screenHeight * 0.07,
+                                      Expanded(
                                         child: TextField(
                                           controller: nicknameController,
                                           onChanged: (value) {
@@ -260,25 +258,19 @@ class _ProfileAddState extends State<ProfileAdd> {
                                           ),
                                         ),
                                       ),
-                                      Container(
+                                      SizedBox(
+                                        width: screenWidth * 0.1,
+                                      ),
+                                      SizedBox(
                                         width: screenWidth * 0.22,
-                                        height: screenHeight * 0.07,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10)),
-                                          border: Border.all(
-                                            width: 2,
-                                            color: const Color(0xFFE6A3B3),
-                                          ),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () {
+                                        height: screenHeight * 0.065,
+                                        child: OutlinedButton(
+                                          onPressed: () {
                                             if (nicknameChecked) {
                                               setState(() {
                                                 nicknameChecked = false;
                                               });
-                                            } else if (nicknameInput != null &&
-                                                nicknameInput!.isNotEmpty) {
+                                            } else if (nicknameInput != '') {
                                               nameCheckApi();
                                             }
                                           },
@@ -287,7 +279,6 @@ class _ProfileAddState extends State<ProfileAdd> {
                                               nicknameChecked ? '수정' : '중복확인',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w600,
-                                                color: Colors.black,
                                                 fontSize: 16,
                                               ),
                                             ),
