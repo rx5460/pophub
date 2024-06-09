@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PurchasePage extends StatefulWidget {
-  const PurchasePage({super.key});
+  final String api;
+  const PurchasePage({super.key, required this.api});
 
   @override
   State<PurchasePage> createState() => _PurchasePageState();
 }
 
 class _PurchasePageState extends State<PurchasePage> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   late final WebViewController _webViewController;
   String token = "";
   String profileData = "";
 
-  Future<void> _showToken() async {
-    token = (await _storage.read(key: 'token'))!;
-    setState(() {});
-  }
-
   @override
   void initState() {
-    _showToken();
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -38,7 +32,8 @@ class _PurchasePageState extends State<PurchasePage> {
             /// 황지민 : 결제시 intent 버그를 막기위한 작업
             /// 2024/05/20 재 수정 ..
             ///
-            Logger.debug("### ${request.url}");
+            Logger.debug("### ${request.url} efwaewaf");
+
             if (request.url.startsWith('intent')) {
               String parseUrl = request.url;
               if (parseUrl.contains("intent")) {
@@ -46,18 +41,28 @@ class _PurchasePageState extends State<PurchasePage> {
               }
               launchUrlString(parseUrl);
               return NavigationDecision.prevent;
-            }
-            // else if (request.url.startsWith('http://localhost')) {
-            //   return NavigationDecision.prevent;
-            // }
-            else {
+            } else if (request.url.contains("partner_user_id")) {
+              showAlert(context, "결제", "결제 성공했습니다.", () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
+              return NavigationDecision.prevent;
+            } else if (request.url.startsWith('http://localhost')) {
+              showAlert(context, "결제", "결제 실패했습니다.", () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
+              return NavigationDecision.prevent;
+            } else {
               return NavigationDecision.navigate;
             }
           },
         ),
       )
-      ..loadRequest(Uri.parse(
-          'https://online-pay.kakao.com/mockup/v1/ecc24646dccedae14bd1235b66dc40cfe0a4198128b6371fdb3e594a1e70d8b5/mInfo'));
+      ..loadRequest(
+          Uri.parse(widget.api.toString().replaceAll("aInfo", "mInfo")));
     super.initState();
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/user/purchase_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -25,10 +26,12 @@ class _GoodsOrderState extends State<GoodsOrder> {
   int usePoint = 0;
 
   Future<void> testApi() async {
-    final data =
-        await Api.pay(User().userId, "zero22", widget.count, 33000, 3000, 0);
-    // Map<String, dynamic> valueMap = json.decode(data);
-    kakopayLink = data.toString();
+    final data = await Api.pay(User().userId, widget.goods.productName,
+        widget.count, widget.goods.price, widget.goods.price ~/ 10, 0);
+
+    setState(() {
+      kakopayLink = data['data'];
+    });
   }
 
   Future<void> profileApi() async {
@@ -392,7 +395,17 @@ class _GoodsOrderState extends State<GoodsOrder> {
                   color: const Color(0xFFADD8E6)),
               child: InkWell(
                 onTap: () async {
-                  testApi();
+                  await testApi();
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PurchasePage(
+                          api: kakopayLink,
+                        ),
+                      ),
+                    );
+                  }
                   Logger.debug("kakopayLink $kakopayLink");
                 },
                 child: const Center(
