@@ -207,15 +207,31 @@ class _AlarmListPageState extends State<AlarmListPage> {
                                               : '',
                                         ),
                                         const SizedBox(width: 5.0), // 간격 추가
-                                        Text(
-                                          (reserve.time != null &&
-                                                  reserve.time!.isNotEmpty)
-                                              ? DateFormat("HH:mm").format(
-                                                  DateFormat("HH:mm:ss")
-                                                      .parse(reserve.time!))
-                                              : '',
-                                        ),
+                                        Text((reserve.time != null &&
+                                                reserve.time!.isNotEmpty)
+                                            ? DateFormat("HH:mm").format(
+                                                DateFormat("HH:mm:ss")
+                                                    .parse(reserve.time!))
+                                            : ''),
                                       ],
+                                    ),
+                                    Visibility(
+                                      visible: widget.mode == "store",
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              "아이디: ${reserve.userName != null ? reserve.userName.toString() : ""}"),
+                                        ],
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: widget.mode == "store",
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              "인원: ${(reserve.capacity != null) ? reserve.capacity.toString() : ''}명"),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
