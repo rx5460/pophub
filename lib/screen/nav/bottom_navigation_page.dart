@@ -164,6 +164,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                                           builder: (context) => ProfileAdd(
                                                 refreshProfile: () {},
                                                 useCallback: false,
+                                                isUser: true,
                                               )));
                                 }
                               } else {

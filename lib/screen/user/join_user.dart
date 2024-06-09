@@ -7,6 +7,7 @@ import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/profile_add_page.dart';
 import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ class _JoinUserState extends State<JoinUser> {
         // User 싱글톤에 user_id 추가
         User().userId = data['user_id'];
 
-        //await Api.profileAdd();
+        Logger.debug(userRole.toString());
 
         if (mounted) {
           Navigator.push(
@@ -93,6 +94,7 @@ class _JoinUserState extends State<JoinUser> {
                           child: ProfileAdd(
                             refreshProfile: () {},
                             useCallback: false,
+                            isUser: userRole == "General Member",
                           ))));
         }
       }

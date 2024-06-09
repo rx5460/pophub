@@ -15,8 +15,13 @@ import 'package:provider/provider.dart';
 class ProfileAdd extends StatefulWidget {
   final VoidCallback refreshProfile;
   final bool useCallback;
-  const ProfileAdd(
-      {super.key, required this.refreshProfile, required this.useCallback});
+  final bool isUser;
+  const ProfileAdd({
+    super.key,
+    required this.refreshProfile,
+    required this.useCallback,
+    required this.isUser,
+  });
 
   @override
   State<ProfileAdd> createState() => _ProfileAddState();
@@ -70,26 +75,30 @@ class _ProfileAddState extends State<ProfileAdd> {
     print(User().userName);
     Map<String, dynamic> data = _image == null
         ? await Api.profileAdd(
-            User().role == "President"
+            User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null
                     ? nicknameInput.toString()
                     : User().userId,
-            User().role == "President" ? '0' : _gender.toString(),
-            User().role == "President"
+            User().role == "President" || !widget.isUser
+                ? '0'
+                : _gender.toString(),
+            User().role == "President" || !widget.isUser
                 ? '0'
                 : ageController.text != ""
                     ? ageController.text
                     : '0',
             phoneController.text)
         : await Api.profileAddWithImage(
-            User().role == "President"
+            User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null
                     ? nicknameInput.toString()
                     : "",
-            User().role == "President" ? '0' : _gender.toString(),
-            User().role == "President"
+            User().role == "President" || !widget.isUser
+                ? '0'
+                : _gender.toString(),
+            User().role == "President" || !widget.isUser
                 ? '0'
                 : ageController.text != ""
                     ? ageController.text
@@ -214,8 +223,10 @@ class _ProfileAddState extends State<ProfileAdd> {
                           ),
                         ),
                         Visibility(
-                            visible: User().role == "General Member",
+                            visible: User().role == "General Member" ||
+                                widget.isUser,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: screenHeight * 0.02),
                                 const Text(
@@ -330,7 +341,8 @@ class _ProfileAddState extends State<ProfileAdd> {
                           ),
                         ),
                         Visibility(
-                            visible: User().role == "General Member",
+                            visible: User().role == "General Member" ||
+                                widget.isUser,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -396,7 +408,8 @@ class _ProfileAddState extends State<ProfileAdd> {
                           height: screenHeight * 0.07,
                           child: OutlinedButton(
                               onPressed: () {
-                                if (User().role == "General Member") {
+                                if (User().role == "General Member" ||
+                                    widget.isUser) {
                                   if (nicknameChecked &&
                                       nicknameInput != null &&
                                       nicknameInput!.isNotEmpty &&
