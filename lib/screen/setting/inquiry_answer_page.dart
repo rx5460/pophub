@@ -64,23 +64,26 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
         'inquiryId': widget.inquiryId.toString(),
       };
 
-      // 서버에 알람 추가
-      await http.post(
-        Uri.parse('https://pophub-fa05bf3eabc0.herokuapp.com/alarm/alarm_add'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'userName': userName,
-          'type': 'alarms',
-          'alarmDetails': alarmDetails,
-        }),
-      );
-
-      // Firestore에 알람 추가
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userName)
-          .collection('alarms')
-          .add(alarmDetails);
+      // 알람을 서버와 Firestore에 각각 한 번만 추가
+      await Future.wait([
+        // 서버에 알람 추가
+        http.post(
+          Uri.parse(
+              'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/alarm_add'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'userName': userName,
+            'type': 'alarms',
+            'alarmDetails': alarmDetails,
+          }),
+        ),
+        // Firestore에 알람 추가
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userName)
+            .collection('alarms')
+            .add(alarmDetails)
+      ]);
 
       // 로컬 알림 발송
       await const AlarmPage().showNotification(alarmDetails['title']!,
