@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/goods/goods_add_page.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class GoodsList extends StatefulWidget {
   final PopupModel popup;
@@ -57,6 +61,7 @@ class _GoodsListState extends State<GoodsList> {
           bottom: screenHeight * 0.02,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,20 +157,26 @@ class _GoodsListState extends State<GoodsList> {
               ],
             ),
             const Spacer(),
-            // OutlinedButton(
-            //   onPressed: () {
-            //     if (mounted) {
-            //       Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) => MultiProvider(providers: [
-            //                     ChangeNotifierProvider(
-            //                         create: (_) => GoodsNotifier())
-            //                   ], child: const GoodsCreatePage(mode: "add"))));
-            //     }
-            //   },
-            //   child: const Text('굿즈 추가하기'),
-            // ),
+            Visibility(
+              visible: User().userName == widget.popup.username,
+              child: OutlinedButton(
+                onPressed: () {
+                  if (mounted) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MultiProvider(
+                                    providers: [
+                                      ChangeNotifierProvider(
+                                          create: (_) => GoodsNotifier())
+                                    ],
+                                    child: GoodsCreatePage(
+                                        mode: "add", popup: widget.popup))));
+                  }
+                },
+                child: const Text('굿즈 추가하기'),
+              ),
+            )
           ],
         ),
       ),
