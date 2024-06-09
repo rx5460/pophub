@@ -5,6 +5,7 @@ import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 
 class GoodsList extends StatefulWidget {
   final PopupModel popup;
@@ -127,7 +128,7 @@ class _GoodsListState extends State<GoodsList> {
                                     padding: const EdgeInsets.only(
                                         top: 8.0, bottom: 8),
                                     child: Text(
-                                      '${goodsList![index].price.toString()}개',
+                                      '${formatNumber(goodsList![index].price)}원',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
