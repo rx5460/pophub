@@ -975,4 +975,11 @@ class Api {
     Logger.debug("### 예약 삭제 $data");
     return data;
   }
+
+  // 아이디 중복 체크
+  static Future<Map<String, dynamic>> idCheck(String userId) async {
+    final data = await getData('$domain/user/check/?userId=$userId', {});
+    Logger.debug("### 아이디 중복 확인 $data");
+    return data;
+  }
 }

@@ -29,8 +29,10 @@ class _JoinUserState extends State<JoinUser> {
   late final TextEditingController pwController = TextEditingController();
   late final TextEditingController confirmPwController =
       TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  bool checked = false;
 
   @override
   void dispose() {
@@ -108,8 +110,36 @@ class _JoinUserState extends State<JoinUser> {
     userNotifier.refresh();
   }
 
+  Future<void> idCheckApi() async {
+    if (idController.text == "") {
+      showAlert(context, "경고", "아이디를 입력해주세요.", () {
+        Navigator.of(context).pop();
+      });
+    }
+
+    Map<String, dynamic> data = await Api.idCheck(idController.text);
+
+    if (mounted) {
+      if (!data.toString().contains("Exists")) {
+        showAlert(context, "안내", "아이디 사용 가능합니다.", () {
+          Navigator.of(context).pop();
+        });
+        setState(() {
+          checked = true;
+        });
+      } else {
+        showAlert(context, "경고", "아이디가 중복되었습니다.", () {
+          Navigator.of(context).pop();
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
     return SafeArea(
         child: Scaffold(
             body: Center(
@@ -145,28 +175,33 @@ class _JoinUserState extends State<JoinUser> {
                                       onChange: () => {},
                                     ),
                                   )),
-                              // Container(
-                              //   height: 55,
-                              //   width: 90,
-                              //   margin: const EdgeInsets.only(left: 10),
-                              //   child: OutlinedButton(
-                              //       onPressed: () => {
-                              //             if (_idFormkey.currentState!
-                              //                 .validate())
-                              //               {
-                              //                 userNotifier.isVerify = true,
-                              //                 showAlert(
-                              //                     context, "확인", "인증되었습니다.",
-                              //                     () {
-                              //                   Navigator.of(context).pop();
-                              //                 })
-                              //               }
-                              //           },
-                              //       child: const Text(
-                              //         "중복 확인",
-                              //         textAlign: TextAlign.center,
-                              //       )),
-                              // ),
+                              SizedBox(
+                                width: screenWidth * 0.01,
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.2,
+                                height: screenHeight * 0.065,
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    if (checked) {
+                                      setState(() {
+                                        checked = false;
+                                      });
+                                    } else if (idController.text != '') {
+                                      idCheckApi();
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      checked ? '수정' : '중복확인',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -298,7 +333,17 @@ class _JoinUserState extends State<JoinUser> {
                                         _confirmPwFormkey.currentState!
                                             .validate())
                                       {
-                                        singUpApi(),
+                                        if (checked)
+                                          {
+                                            singUpApi(),
+                                          }
+                                        else
+                                          {
+                                            showAlert(context, "경고",
+                                                "아이디 중복체크를 해주세요.", () {
+                                              Navigator.of(context).pop();
+                                            })
+                                          }
                                       }
                                   },
                               child: const Text("완료")),

@@ -278,7 +278,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                       offset: Offset(0, -screenWidth * 0.1),
                                       child: Container(
                                         width: screenWidth * 0.17,
-                                        height: screenWidth * 0.06,
+                                        height: screenHeight * 0.01,
                                         decoration: BoxDecoration(
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(8),
@@ -306,7 +306,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                       padding: EdgeInsets.only(
                                           left: screenWidth * 0.05,
                                           right: screenWidth * 0.05,
-                                          bottom: 12.0),
+                                          bottom: screenHeight * 0.005),
                                       child: Text(
                                         popup?.name ?? '',
                                         style: const TextStyle(
@@ -319,6 +319,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                       padding: EdgeInsets.only(
                                         left: screenWidth * 0.05,
                                         right: screenWidth * 0.05,
+                                        bottom: screenHeight * 0.005,
                                       ),
                                       child: Row(
                                         children: [
@@ -489,10 +490,11 @@ class _PopupDetailState extends State<PopupDetail> {
                                         )),
                                     Container(
                                       padding: EdgeInsets.only(
-                                          left: screenWidth * 0.05,
-                                          right: screenWidth * 0.05,
-                                          top: 12,
-                                          bottom: 12),
+                                        left: screenWidth * 0.05,
+                                        right: screenWidth * 0.05,
+                                        top: screenHeight * 0.005,
+                                        bottom: screenHeight * 0.01,
+                                      ),
                                       width: screenWidth * 0.9,
                                       child: Text(
                                         popup?.description ?? '',
