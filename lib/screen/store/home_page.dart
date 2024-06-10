@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
@@ -175,7 +176,7 @@ class _HomePageState extends State<HomePage> {
           _isExpanded = true;
         });
       },
-      backgroundColor: const Color(0xFF1C77E4),
+      backgroundColor: Constants.DEFAULT_COLOR,
       shape: const CircleBorder(),
       child: const Icon(
         Icons.add,
