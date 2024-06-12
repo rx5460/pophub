@@ -12,10 +12,10 @@ ppt는 파일 링크로
 
 ## 기술 스택 (기술은 이미지로 처리)
 
-- 백엔드: Node.js
-- 프론트엔드: Flutter, dart
-- 배포: Heroku
-- 데이터베이스: mysql, firebase
+- 백엔드: <img src="https://img.shields.io/badge/node.js-339933?style=flat&logo=Node.js&logoColor=white"/>
+- 프론트엔드: <img src="https://img.shields.io/badge/flutter-02569B?style=flat&logo=flutter&logoColor=white"/>
+- 배포: <img src="https://img.shields.io/badge/heroku-430098?style=flat&logo=heroku&logoColor=white"/>
+- 데이터베이스: <img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white"/>, <img src="https://img.shields.io/badge/firebase-FFCA28?style=flat&logo=firebase&logoColor=black"/>
 - 사용된 라이브러리 :
 
 ## 팀 구성원 (사진 추가.. ?)
