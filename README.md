@@ -1,30 +1,35 @@
-# PopHub
+<p align = "center">
+    <img src="https://capsule-render.vercel.app/api?type=waving&color=0:ADD8E6,100:E6A3B3&height=300&section=header&text=Pophub&fontSize=70&fontColor=FFFFFF" />
+</p>
+<br>
+<p align="center">
+    <Strong>☁️PopHub란?☁️</Strong>
+        <br><br>
+        팝허브는 다양한 팝업스토어 정보(설명, 위치, 리뷰, 굿즈)를 확인 할 수 있습니다. <br> 추천 기능을 통해 사용자마다 좋아할 팝업스토어들을 추천해줍니다.<br>예약한 팝업 스토어를 알림 서비스로 놓치지 않고 정보         를 받을 수 있으며, <br>리뷰를 작성해 다른 사람들에게 방문했던 경험을 공유할 수도 있습니다.<br> 팝업스토어 판매자는 이 플랫폼을 통해 홍보 및 남는 굿즈 재고를 판매 할 수 있습니다. 
+        <br>
+    <br><br>
+    <Strong>📙ppt 및 영상 자료 링크📙</Strong><br><br>
+    <Strong>💻기술 스택💻</Strong>
+        <br>
+        <br>
+            <img src="https://img.shields.io/badge/node.js-339933?style=flat&logo=Node.js&logoColor=white"/>
+            <img src="https://img.shields.io/badge/flutter-02569B?style=flat&logo=flutter&logoColor=white"/>
+            <img src="https://img.shields.io/badge/heroku-430098?style=flat&logo=heroku&logoColor=white"/>
+            <img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white"/>
+            <img src="https://img.shields.io/badge/firebase-FFCA28?style=flat&logo=firebase&logoColor=black"/>
+        <br>
+        <br>
+    <Strong>🫱팀 구성🫲</Strong>
+    <br>⭐김혜현⭐ <br>(팀장 및 백엔드)<br>
+    <br>📡이진솔📡 <br>(백엔드)<br>
+    <br>⚙️연정흠⚙️ <br>(풀스택)<br>
+    <br>📱황지민📱 <br>(프론트엔드)<br>
+    <br>📱김영수📱 <br> <img src="https://github.com/rx5460/pophub_front/assets/42200731/14213d40-47fd-464a-ac11-edc90564f936" width="100" height="100" /><br>
+(프론트엔드)<br>
+</p>
 
-## PopHub란?
+<br>
 
-팝허브는 다양한 팝업스토어 정보(설명, 위치, 리뷰, 굿즈)를 확인 할 수 있고 추천 기능을 통해 사용자마다 좋아할 팝업스토어들을 추천해줍니다. 예약한 팝업 스토어를 알림 서비스로 놓치지 않고 정보를 받을 수 있으며, 리뷰를 작성해 다른 사람들에게 방문했던 경험을 공유할 수도 있습니다. 팝업스토어 판매자는 이 플랫폼을 통해 홍보 및 남는 굿즈 재고를 판매 할 수 있습니다. 
-
-## ppt 및 영상 자료 링크
-
-ppt는 파일 링크로
-
-영상은 iframe
-
-## 기술 스택 (기술은 이미지로 처리)
-
-- 백엔드: <img src="https://img.shields.io/badge/node.js-339933?style=flat&logo=Node.js&logoColor=white"/>
-- 프론트엔드: <img src="https://img.shields.io/badge/flutter-02569B?style=flat&logo=flutter&logoColor=white"/>
-- 배포: <img src="https://img.shields.io/badge/heroku-430098?style=flat&logo=heroku&logoColor=white"/>
-- 데이터베이스: <img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white"/>, <img src="https://img.shields.io/badge/firebase-FFCA28?style=flat&logo=firebase&logoColor=black"/>
-- 사용된 라이브러리 :
-
-## 팀 구성원 (사진 추가.. ?)
-
-- 김혜현(팀장 및 백엔드)
-- 이진솔 (백엔드)
-- 연정흠 (풀스택)
-- 황지민 (프론트엔드)
-- 김영수 (프론트엔드)
 
 ## 느낀점
 
