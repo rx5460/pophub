@@ -6,10 +6,6 @@
 
 팝허브는 다양한 팝업스토어 정보(설명, 위치, 리뷰, 굿즈)를 확인할 수 있는 플랫폼입니다. 추천 기능을 통해 사용자마다 좋아할 팝업스토어들을 추천해줍니다. 예약한 팝업 스토어를 알림 서비스로 놓치지 않고 정보를 받을 수 있으며, 리뷰를 작성해 다른 사람들에게 방문했던 경험을 공유할 수도 있습니다. 팝업스토어 판매자는 이 플랫폼을 통해 홍보 및 남는 굿즈 재고를 판매할 수 있습니다.
 
-## ppt 자료
-
-ppt 대표 사진 및 링크
-영상 iframe 처리
 
 
 ## 팀원 구성
@@ -20,13 +16,8 @@ ppt 대표 사진 및 링크
 | :------: |  :------: | :------: | :------: | :------: |
 | [<img src="https://github.com/rx5460/pophub_front/assets/42200731/e99003c5-26d5-4d09-b548-aeab53c105a5" height=150 width=150> <br/> @Mae-Hyong](https://github.com/Mae-Hyong) | [<img src="https://github.com/rx5460/pophub_front/assets/42200731/995e786f-9219-4b11-9944-f1e6ff1df49d" height=150 width=150> <br/> @S-ol9](https://github.com/S-ol9) | [<img src="https://github.com/rx5460/pophub_front/assets/42200731/2f9195ee-e54c-4261-862a-d138543a7710" height=150 width=150> <br/> @Promark1225](https://github.com/Promark1225) | [<img src="https://github.com/rx5460/pophub_front/assets/42200731/40ace482-4b11-484c-b133-18fdc9767225" height=150 width=150> <br/> @rx5460](https://github.com/rx5460) | [<img src="https://github.com/rx5460/pophub_front/assets/42200731/3b86284f-b85f-451c-88dd-3b9b5722f379" height=150 width=150> <br/> @everdudtn](https://github.com/everdudtn) |
 
-
-
-
-
 </div>
 
-<br>
 
 ## 개발 환경
 
@@ -39,6 +30,15 @@ ppt 대표 사진 및 링크
 
 - **협업 툴**: <img src="https://img.shields.io/badge/notion-ffffff?style=flat&logo=notion&logoColor=black"/> <img src="https://img.shields.io/badge/github-1c8139?style=flat&logo=github&logoColor=white"/> <img src="https://img.shields.io/badge/discord-5562ea?style=flat&logo=discord&logoColor=white"/>
 - **디자인**: <img src="https://img.shields.io/badge/figma-430098?style=flat&logo=figma&logoColor=white"/>
+
+
+## 프로젝트 제안
+
+ppt 대표 사진 및 링크
+
+## 프로젝트 결과
+발표 ppt
+영상 iframe 처리
 
 ## 느낀점
 
