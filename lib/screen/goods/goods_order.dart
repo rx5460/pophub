@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/alarm/alarm_page.dart';
 import 'package:pophub/screen/user/purchase_page.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:http/http.dart' as http;
 
 class GoodsOrder extends StatefulWidget {
   final int count;
@@ -120,13 +116,13 @@ class _GoodsOrderState extends State<GoodsOrder> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const Text(
-                            '위치 확인하기',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          // const Text(
+                          //   '위치 확인하기',
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     fontWeight: FontWeight.w600,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
