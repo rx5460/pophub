@@ -401,36 +401,6 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 onTap: () async {
                   await testApi();
                   if (context.mounted) {
-                    // 결제 완료 알림
-                    const String title = '결제 완료';
-                    const String label = '성공적으로 결제가 완료되었습니다.';
-                    final String time =
-                        DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now());
-
-                    final Map<String, String> alarmDetails = {
-                      'title': title,
-                      'label': label,
-                      'time': time,
-                      'active': 'true',
-                    };
-
-                    // 서버에 알람 추가
-                    await http.post(
-                      Uri.parse(
-                          'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/alarm_add'),
-                      headers: {'Content-Type': 'application/json'},
-                      body: jsonEncode({
-                        'userName': User().userName,
-                        'type': 'orderAlarms',
-                        'alarmDetails': alarmDetails,
-                      }),
-                    );
-
-                    await const AlarmPage().showNotification(
-                        alarmDetails['title']!,
-                        alarmDetails['label']!,
-                        alarmDetails['time']!);
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
