@@ -359,6 +359,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 const InquiryPage()));
                                   },
                                 ),
+                                // MenuList(
+                                //   icon: Icons.credit_card,
+                                //   text: '결제 내역',
+                                //   onClick: () {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 const PaymentHistoryPage()));
+                                //   },
+                                // ),
                                 Visibility(
                                   visible: User().role == "President",
                                   child: MenuList(
@@ -432,11 +443,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
 
-                                // MenuList(
-                                //   icon: Icons.credit_card,
-                                //   text: '결제 내역',
-                                //   onClick: () {},
-                                // ),
                                 // MenuList(
                                 //   icon: Icons.message_outlined,
                                 //   text: '장바구니',
