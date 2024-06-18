@@ -142,7 +142,9 @@ class _PopupReviewState extends State<PopupReview> {
                           index < _selectedRating
                               ? Icons.star
                               : Icons.star_border_outlined,
-                          color: Colors.black,
+                          color: index < _selectedRating
+                              ? Constants.REVIEW_STAR_CLOLR
+                              : Colors.black,
                         ),
                       );
                     }),
@@ -208,7 +210,7 @@ class _PopupReviewState extends State<PopupReview> {
                                       ? Icons.star
                                       : Icons.star_border_outlined,
                                   size: 20,
-                                  color: Colors.black,
+                                  color: Constants.REVIEW_STAR_CLOLR,
                                 ),
                               ),
                             ),

@@ -593,7 +593,8 @@ class _PopupDetailState extends State<PopupDetail> {
                                                             : Icons
                                                                 .star_border_outlined,
                                                         size: 20,
-                                                        color: Colors.black,
+                                                        color: Constants
+                                                            .REVIEW_STAR_CLOLR,
                                                       ),
                                                     ),
                                                   ),
@@ -675,7 +676,8 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                 : Icons
                                                                     .star_border_outlined,
                                                             size: 20,
-                                                            color: Colors.black,
+                                                            color: Constants
+                                                                .REVIEW_STAR_CLOLR,
                                                           ),
                                                         ),
                                                       ),
