@@ -4,7 +4,7 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/screen/user/find_id.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';

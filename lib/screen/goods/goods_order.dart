@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/user/purchase_page.dart';
+import 'package:pophub/screen/user/purchase.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 

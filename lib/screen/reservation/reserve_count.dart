@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:http/http.dart' as http;

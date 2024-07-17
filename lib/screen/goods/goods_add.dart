@@ -9,7 +9,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/goods/goods_detail.dart';
+import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';

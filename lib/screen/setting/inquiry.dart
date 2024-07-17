@@ -5,8 +5,8 @@ import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/setting/inquiry_answer_page.dart';
-import 'package:pophub/screen/setting/inquiry_write_page.dart';
+import 'package:pophub/screen/setting/inquiry_answer.dart';
+import 'package:pophub/screen/setting/inquiry_write.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';
 

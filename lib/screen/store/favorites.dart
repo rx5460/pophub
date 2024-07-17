@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pophub/model/like_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/log.dart';

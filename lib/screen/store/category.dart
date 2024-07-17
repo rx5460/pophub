@@ -3,7 +3,7 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

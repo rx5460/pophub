@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/popup_detail.dart';
+import 'package:pophub/screen/store/popup_view.dart';
 
 class StoreListPage extends StatelessWidget {
   final List<PopupModel> popups;

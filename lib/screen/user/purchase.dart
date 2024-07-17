@@ -5,7 +5,7 @@ import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

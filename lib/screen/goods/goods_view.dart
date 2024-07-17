@@ -5,7 +5,7 @@ import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
-import 'package:pophub/screen/goods/goods_add_page.dart';
+import 'package:pophub/screen/goods/goods_add.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/goods/goods_order.dart';
 import 'package:pophub/screen/user/login.dart';
