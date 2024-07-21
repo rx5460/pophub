@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
 
   Future<void> loginApi() async {
     Map<String, dynamic> data =
-        await Api.login(idController.text, pwController.text);
+        await Api.postLogin(idController.text, pwController.text);
 
     if (!data.toString().contains("fail")) {
       if (data['token'].isNotEmpty) {

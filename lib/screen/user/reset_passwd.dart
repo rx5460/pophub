@@ -48,7 +48,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
   }
 
   Future<void> certifiApi() async {
-    final data = await Api.sendCertifi(phoneController.text.toString());
+    final data = await Api.postSendCertifi(phoneController.text.toString());
 
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
@@ -64,7 +64,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
   }
 
   Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
-    final data = await Api.sendVerify(certifi, realAuthCode);
+    final data = await Api.postSendVerify(certifi, realAuthCode);
     //= {"data": "Successful"};
 
     if (!data.toString().contains("fail")) {
@@ -111,7 +111,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
     if (!data.toString().contains("fail")) {
       userId = data["userId"];
       final passwdData =
-          await Api.changePasswd(userId, pwController.text.toString());
+          await Api.postChangePassword(userId, pwController.text.toString());
       if (!passwdData.toString().contains("fail")) {
         await secureStorage.deleteAll();
         User().clear();

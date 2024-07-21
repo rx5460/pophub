@@ -86,7 +86,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
 
   Future<void> alarmDelete(reserveId) async {
     try {
-      final data = await Api.reserveDelete(reserveId);
+      final data = await Api.deleteReserve(reserveId);
       if (!data.toString().contains("fail") && mounted) {
         showAlert(context, "성공", "알림이 삭제되었습니다.", () {
           Navigator.of(context).pop();

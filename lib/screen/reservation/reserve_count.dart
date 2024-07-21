@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/utils/api.dart';
 import 'package:pophub/utils/utils.dart';
-import 'package:http/http.dart' as http;
 
 class ReserveCount extends StatefulWidget {
   final String date;
@@ -26,7 +26,7 @@ class _ReserveCountState extends State<ReserveCount> {
   Future<void> reservationApi() async {
     try {
       String userName = User().userName;
-      Map<String, dynamic> data = await Api.popupReservation(
+      Map<String, dynamic> data = await Api.postPopupReservationWithDetails(
           userName, widget.popup, widget.date, widget.time, count);
 
       if (data.toString().contains("fail")) {

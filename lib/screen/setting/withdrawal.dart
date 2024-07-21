@@ -15,7 +15,7 @@ class WithdrawalPage extends StatefulWidget {
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   Future<void> resetPasswdApi() async {
-    final data = await Api.userDelete();
+    final data = await Api.postUserDelete();
     if (!data.toString().contains("fail")) {
       await secureStorage.deleteAll();
       User().clear();

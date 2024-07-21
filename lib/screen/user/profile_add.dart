@@ -53,7 +53,7 @@ class _ProfileAddState extends State<ProfileAdd> {
   }
 
   Future<void> nameCheckApi() async {
-    Map<String, dynamic> data = await Api.nameCheck(nicknameInput ?? '');
+    Map<String, dynamic> data = await Api.getNameCheck(nicknameInput ?? '');
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
@@ -74,7 +74,7 @@ class _ProfileAddState extends State<ProfileAdd> {
   Future<void> profileAdd() async {
     print(User().userName);
     Map<String, dynamic> data = _image == null
-        ? await Api.profileAdd(
+        ? await Api.postProfileAdd(
             User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null
@@ -89,7 +89,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                     ? ageController.text
                     : '0',
             phoneController.text)
-        : await Api.profileAddWithImage(
+        : await Api.postProfileAddWithImage(
             User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null

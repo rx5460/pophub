@@ -19,7 +19,7 @@ class _StoreMainState extends State<StoreMain> {
   String profileData = "";
 
   Future<void> testApi() async {
-    final data = await Api.pay(User().userId, "zero22", 1, 33000, 3000, 0);
+    final data = await Api.postPay(User().userId, "zero22", 1, 33000, 3000, 0);
     // Map<String, dynamic> valueMap = json.decode(data);
     profileData = data.toString();
     setState(() {});

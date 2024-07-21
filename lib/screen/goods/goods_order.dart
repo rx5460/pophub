@@ -26,7 +26,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
   int usePoint = 0;
 
   Future<void> testApi() async {
-    final data = await Api.pay(User().userId, widget.goods.productName,
+    final data = await Api.postPay(User().userId, widget.goods.productName,
         widget.count, widget.goods.price, widget.goods.price ~/ 10, 0);
 
     setState(() {

@@ -21,8 +21,9 @@ import 'package:pophub/utils/utils.dart';
 
 class Api {
   static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+
   // SMS 전송
-  static Future<Map<String, dynamic>> sendCertifi(String phone) async {
+  static Future<Map<String, dynamic>> postSendCertifi(String phone) async {
     final data =
         await postData("$domain/user/certification", {'phoneNumber': phone});
     Logger.debug("### SMS 전송 $data");
@@ -30,17 +31,16 @@ class Api {
   }
 
   // SMS 인증
-  static Future<Map<String, dynamic>> sendVerify(
+  static Future<Map<String, dynamic>> postSendVerify(
       String authCode, String expectedCode) async {
     final data = await postData('$domain/user/verify',
         {'authCode': authCode, 'expectedCode': expectedCode});
     Logger.debug("### SMS 인증 $data");
-
     return data;
   }
 
   // 회원가입
-  static Future<Map<String, dynamic>> signUp(
+  static Future<Map<String, dynamic>> postSignUp(
       String userId, String userPassword, String userRole) async {
     final data = await postData('$domain/user/sign_up',
         {'userId': userId, "userPassword": userPassword, "userRole": userRole});
@@ -49,7 +49,7 @@ class Api {
   }
 
   // 로그인
-  static Future<Map<String, dynamic>> login(
+  static Future<Map<String, dynamic>> postLogin(
       String userId, String authPassword) async {
     final data = await postData('$domain/user/sign_in',
         {'userId': userId, 'authPassword': authPassword});
@@ -58,7 +58,7 @@ class Api {
   }
 
   // 비밀번호 변경
-  static changePasswd(String userId, String userPassword) async {
+  static postChangePassword(String userId, String userPassword) async {
     final data = await postNoAuthData('$domain/user/change_password',
         {'userId': userId, "userPassword": userPassword});
     Logger.debug("### 비밀번호 변경 $data");
@@ -75,21 +75,19 @@ class Api {
   // 인기 팝업 조회
   static Future<List<PopupModel>> getPopupList() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup/popular',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/popular', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to fetch popup list: $e');
       throw Exception('Failed to fetch popup list');
     }
   }
 
+  // 팝업스토어 조회
   static Future<PopupModel> getPopup(
       String storeId, bool getLocation, String userName) async {
     Logger.debug(storeId);
@@ -99,7 +97,6 @@ class Api {
       print('팝업 데이터 : $data');
       if (getLocation) {
         PopupModel popupModel = PopupModel.fromJson(data);
-
         final locationData = await Api.getAddress(
             popupModel.location.toString().split("/")[0] != ""
                 ? popupModel.location.toString().split("/")[0]
@@ -126,7 +123,7 @@ class Api {
   }
 
   // 팝업스토어 예약
-  static Future<Map<String, dynamic>> popupWait(
+  static Future<Map<String, dynamic>> postPopupReservation(
       String popup, String visitorName, int count, String userId) async {
     final data = await postData('$domain/popup/reservation/$popup', {
       'user_id': userId,
@@ -137,12 +134,11 @@ class Api {
     return data;
   }
 
-  //리뷰 조회 -  팝업별
-  static Future<List<ReviewModel>> getReviewList(String popup) async {
+  // 리뷰 조회 - 팝업별
+  static Future<List<ReviewModel>> getReviewListByPopup(String popup) async {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/popup/reviews/store/$popup', {});
-
       List<ReviewModel> reviewList =
           dataList.map((data) => ReviewModel.fromJson(data)).toList();
       return reviewList;
@@ -153,8 +149,8 @@ class Api {
     }
   }
 
-//리뷰 조회 -  사용자별
-  static Future<List<ReviewModel>> getReviewListUser(String userName) async {
+  // 리뷰 조회 - 사용자별
+  static Future<List<ReviewModel>> getReviewListByUser(String userName) async {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/popup/reviews/user/$userName', {});
@@ -169,8 +165,8 @@ class Api {
     }
   }
 
-  //리뷰 작성
-  static Future<Map<String, dynamic>> writeReview(
+  // 리뷰 작성
+  static Future<Map<String, dynamic>> postWriteReview(
       String popup, double rating, String content, String userName) async {
     final data = await postData('$domain/popup/review/create/$popup', {
       'user_name': userName,
@@ -182,40 +178,32 @@ class Api {
   }
 
   // 닉네임 중복 체크
-  static Future<Map<String, dynamic>> nameCheck(String userName) async {
+  static Future<Map<String, dynamic>> getNameCheck(String userName) async {
     final data = await getData('$domain/user/check/?userName=$userName', {});
     Logger.debug("### 닉네임 중복 확인 $data");
     return data;
   }
 
   // 프로필 수정 (이미지 x)
-  static Future<Map<String, dynamic>> profileModify(
+  static Future<Map<String, dynamic>> postProfileModify(
       String userId, String userName) async {
-    final data = await postData('$domain/user/update_profile/', {
-      'userId': userId,
-      'userName': userName,
-    });
+    final data = await postData('$domain/user/update_profile/',
+        {'userId': userId, 'userName': userName});
     Logger.debug("### 프로필 수정 이미지x $data");
     return data;
   }
 
   // 프로필 수정 (이미지 o)
-  static Future<Map<String, dynamic>> profileModifyImage(
+  static Future<Map<String, dynamic>> postProfileModifyImage(
       String userId, String userName, image) async {
-    final data = await postDataWithImage(
-        '$domain/user/update_profile/',
-        {
-          'userId': userId,
-          'userName': userName,
-        },
-        'file',
-        image);
+    final data = await postDataWithImage('$domain/user/update_profile/',
+        {'userId': userId, 'userName': userName}, 'file', image);
     Logger.debug("### 프로필 수정 이미지o $data");
     return data;
   }
 
-  //결제
-  static Future<Map<String, dynamic>> pay(String userId, String itemName,
+  // 결제
+  static Future<Map<String, dynamic>> postPay(String userId, String itemName,
       int quantity, int totalAmount, int vatAmount, int taxFreeAmount) async {
     final data = await postData('$domain/pay', {
       'userId': userId,
@@ -229,9 +217,13 @@ class Api {
     return data;
   }
 
-  //팝업 예약
-  static Future<Map<String, dynamic>> popupReservation(String userName,
-      String popup, String date, String time, int count) async {
+  // 팝업 예약
+  static Future<Map<String, dynamic>> postPopupReservationWithDetails(
+      String userName,
+      String popup,
+      String date,
+      String time,
+      int count) async {
     final data = await postData('$domain/popup/reservation/$popup/', {
       'user_name': userName,
       'reservation_date': date,
@@ -248,18 +240,17 @@ class Api {
     return data;
   }
 
-  //팝업 좋아여
-  static Future<Map<String, dynamic>> storeLike(
+  // 팝업 좋아요
+  static Future<Map<String, dynamic>> postStoreLike(
       String userName, String popup) async {
-    final data = await postData('$domain/popup/like/$popup/', {
-      'user_name': userName,
-    });
+    final data =
+        await postData('$domain/popup/like/$popup/', {'user_name': userName});
     Logger.debug(popup);
     Logger.debug("### 팝업 좋아요 $data");
     return data;
   }
 
-  //아이디 조회
+  // 아이디 조회
   static Future<Map<String, dynamic>> getId(String phoneNumber) async {
     final data = await getNoAuthData('$domain/user/search_id/$phoneNumber', {});
     Logger.debug("### 아이디 조회 $data");
@@ -267,7 +258,7 @@ class Api {
   }
 
   // 프로필 추가 (이미지 o)
-  static Future<Map<String, dynamic>> profileAddWithImage(
+  static Future<Map<String, dynamic>> postProfileAddWithImage(
       String nickName, String gender, String age, image, String phone) async {
     final data = await postDataWithImage(
         '$domain/user/create_profile/',
@@ -285,7 +276,7 @@ class Api {
   }
 
   // 프로필 추가 (이미지 x)
-  static Future<Map<String, dynamic>> profileAdd(
+  static Future<Map<String, dynamic>> postProfileAdd(
       String nickName, String gender, String age, String phone) async {
     final data = await postData('$domain/user/create_profile/', {
       'userId': User().userId,
@@ -299,10 +290,10 @@ class Api {
   }
 
   // 스토어 추가
-  static Future<Map<String, dynamic>> storeAdd(StoreModel store) async {
+  static Future<Map<String, dynamic>> postStoreAdd(StoreModel store) async {
     FormData formData = FormData();
 
-    //파일 추가
+    // 파일 추가
     for (var imageMap in store.images) {
       if (imageMap['type'] == 'file') {
         var file = imageMap['data'] as File;
@@ -317,10 +308,7 @@ class Api {
     formData.fields.addAll([
       MapEntry('category_id', store.category),
       MapEntry('user_name', User().userName),
-      MapEntry(
-        'store_name',
-        store.name,
-      ),
+      MapEntry('store_name', store.name),
       MapEntry('store_location', "${store.location}/${store.locationDetail}"),
       MapEntry('store_contact_info', store.contact),
       MapEntry('store_description', store.description),
@@ -353,8 +341,8 @@ class Api {
     return data;
   }
 
-  //펜딩 리스트
-  static Future<List<PopupModel>> pendingList() async {
+  // 펜딩 리스트
+  static Future<List<PopupModel>> getPendingList() async {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/admin/popupPendingList', {});
@@ -371,10 +359,9 @@ class Api {
   }
 
   // 팝업 승인
-  static Future<Map<String, dynamic>> popupAllow(String storeId) async {
-    final data = await putData('$domain/admin/popupPendingCheck/', {
-      'store_id': storeId,
-    });
+  static Future<Map<String, dynamic>> putPopupAllow(String storeId) async {
+    final data = await putData(
+        '$domain/admin/popupPendingCheck/', {'store_id': storeId});
     Logger.debug("### 팝업 승인 $data");
     return data;
   }
@@ -392,18 +379,15 @@ class Api {
     final data = await getKaKaoApi(
         'https://dapi.kakao.com/v2/local/search/address.json?nalyze_type=similar&page=1&size=10&query=$encode',
         {});
-
     return data;
   }
 
-// 전체 공지사항 조회
+  // 전체 공지사항 조회
   static Future<List<NoticeModel>> getNoticeList() async {
     final dataList = await getListData('$domain/admin/notice', {});
-
     List<NoticeModel> noticeList =
         dataList.map((data) => NoticeModel.fromJson(data)).toList();
     Logger.debug("### 공지사항 조회 $noticeList");
-
     return noticeList;
   }
 
@@ -420,10 +404,7 @@ class Api {
   static Future<List<InquiryModel>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/user/search_inquiry/?userName=$userName',
-        {},
-      );
-
+          '$domain/user/search_inquiry/?userName=$userName', {});
       Logger.debug("### 문의 내역 조회 $dataList");
 
       List<InquiryModel> inquiryList =
@@ -437,10 +418,10 @@ class Api {
   }
 
   // 스토어 수정
-  static Future<Map<String, dynamic>> storeModify(StoreModel store) async {
+  static Future<Map<String, dynamic>> putStoreModify(StoreModel store) async {
     FormData formData = FormData();
 
-    //파일 추가
+    // 파일 추가
     for (var imageMap in store.images) {
       if (imageMap['type'] == 'file') {
         var file = imageMap['data'] as File;
@@ -462,7 +443,6 @@ class Api {
     }
 
     String locationPart = "";
-
     if (store.location.isNotEmpty) {
       List<String> parts = store.location.split("/");
       if (parts.length > 1) {
@@ -472,10 +452,7 @@ class Api {
     formData.fields.addAll([
       MapEntry('category_id', store.category),
       MapEntry('user_name', User().userName),
-      MapEntry(
-        'store_name',
-        store.name,
-      ),
+      MapEntry('store_name', store.name),
       MapEntry(
           'store_location',
           locationPart == ""
@@ -517,18 +494,17 @@ class Api {
   }
 
   // 팝업 승인 거절
-  static Future<Map<String, dynamic>> popupDeny(
+  static Future<Map<String, dynamic>> postPopupDeny(
       String storeId, String content) async {
-    final data = await postData('$domain/admin/popupPendingDeny/', {
-      'store_id': storeId,
-      'denial_reason': content,
-    });
+    final data = await postData('$domain/admin/popupPendingDeny/',
+        {'store_id': storeId, 'denial_reason': content});
     Logger.debug("### 팝업 승인 거절 $data");
     return data;
   }
 
-  //팝업 예약 상태 조회
-  static Future<List<ReservationModel>> getReserveStatus(String popup) async {
+  // 팝업 예약 상태 조회
+  static Future<List<ReservationModel>> getReservationStatus(
+      String popup) async {
     try {
       final dataList =
           await getListData('$domain/popup/reservationStatus/$popup', {});
@@ -545,7 +521,7 @@ class Api {
   }
 
   // 문의내역 추가 (이미지 o)
-  static Future<Map<String, dynamic>> inquiryAddWithImage(
+  static Future<Map<String, dynamic>> postInquiryAddWithImage(
       String title, String content, String category, image) async {
     final data = await postDataWithImage(
         '$domain/user/create_inquiry/',
@@ -553,7 +529,7 @@ class Api {
           'userName': User().userName,
           'categoryId': category,
           'title': title,
-          'content': content,
+          'content': content
         },
         'file',
         image);
@@ -562,49 +538,45 @@ class Api {
   }
 
   // 문의내역 추가 (이미지 x)
-  static Future<Map<String, dynamic>> inquiryAdd(
+  static Future<Map<String, dynamic>> postInquiryAdd(
       String title, String content, String category) async {
     final data = await postData('$domain/user/create_inquiry/', {
       'userName': User().userName,
       'categoryId': category,
       'title': title,
-      'content': content,
+      'content': content
     });
     Logger.debug("### 문의내역 추가 이미지x $data");
     return data;
   }
 
-  //문의 내역 상세 조회
+  // 문의 내역 상세 조회
   static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
         await getData('$domain/user/search_inquiry/?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
-    InquiryModel inquirtModel = InquiryModel.fromJson(data);
-
-    return inquirtModel;
+    InquiryModel inquiryModel = InquiryModel.fromJson(data);
+    return inquiryModel;
   }
 
   // 문의 답변
-  static Future<Map<String, dynamic>> inquiryAnswer(
+  static Future<Map<String, dynamic>> postInquiryAnswer(
       int inquiryId, String content) async {
     final data = await postData('$domain/admin/answer/', {
       'inquiryId': inquiryId,
       'userName': User().userName,
-      'content': content,
+      'content': content
     });
     Logger.debug("### 문의 답변 $data");
     return data;
   }
 
-  //문의 내역 전체 조회
+  // 문의 내역 전체 조회
   static Future<List<InquiryModel>> getAllInquiryList() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/admin/search_inquiry',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/admin/search_inquiry', {});
       Logger.debug("### 문의 내역 전체 조회 $dataList");
 
       List<InquiryModel> inquiryList =
@@ -617,41 +589,37 @@ class Api {
     }
   }
 
-  //답변 조회
+  // 답변 조회
   static Future<AnswerModel> getAnswer(int inquiryId) async {
     final data =
         await getData('$domain/user/search_answer/?inquiryId=$inquiryId', {});
     Logger.debug("### 답변 조회 $data");
 
-    AnswerModel inquirtModel = AnswerModel.fromJson(data);
-
-    return inquirtModel;
+    AnswerModel answerModel = AnswerModel.fromJson(data);
+    return answerModel;
   }
 
-  //특정 팝업스토어 굿즈 조회
+  // 특정 팝업스토어 굿즈 조회
   static Future<List<GoodsModel>> getPopupGoodsList(String popup) async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/product/store/$popup',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/product/store/$popup', {});
       List<GoodsModel> goodsList =
           dataList.map((data) => GoodsModel.fromJson(data)).toList();
       return goodsList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to fetch goods list: $e');
       throw Exception('Failed to fetch goods list');
     }
   }
 
-  //굿즈 등록
-  static Future<Map<String, dynamic>> goodsAdd(
+  // 굿즈 등록
+  static Future<Map<String, dynamic>> postGoodsAdd(
       GoodsNotifier goods, String storeId) async {
     FormData formData = FormData();
 
-    //파일 추가
+    // 파일 추가
     for (var imageMap in goods.images) {
       if (imageMap['type'] == 'file') {
         var file = imageMap['data'] as File;
@@ -675,18 +643,9 @@ class Api {
     formData.fields.addAll([
       MapEntry('user_name', goods.userName),
       MapEntry('product_name', goods.productName),
-      MapEntry(
-        'product_price',
-        goods.price.toString(),
-      ),
-      MapEntry(
-        'product_description',
-        goods.description,
-      ),
-      MapEntry(
-        'remaining_quantity',
-        goods.quantity.toString(),
-      ),
+      MapEntry('product_price', goods.price.toString()),
+      MapEntry('product_description', goods.description),
+      MapEntry('remaining_quantity', goods.quantity.toString()),
     ]);
 
     Map<String, dynamic> data =
@@ -695,12 +654,12 @@ class Api {
     return data;
   }
 
-  //굿즈 수정
-  static Future<Map<String, dynamic>> goodsModify(
+  // 굿즈 수정
+  static Future<Map<String, dynamic>> putGoodsModify(
       GoodsNotifier goods, String productId) async {
     FormData formData = FormData();
 
-    //파일 추가
+    // 파일 추가
     for (var imageMap in goods.images) {
       if (imageMap['type'] == 'file') {
         var file = imageMap['data'] as File;
@@ -724,18 +683,9 @@ class Api {
     formData.fields.addAll([
       MapEntry('user_name', User().userName),
       MapEntry('product_name', goods.productName),
-      MapEntry(
-        'product_price',
-        goods.price.toString(),
-      ),
-      MapEntry(
-        'product_description',
-        goods.description,
-      ),
-      MapEntry(
-        'remaining_quantity',
-        goods.quantity.toString(),
-      ),
+      MapEntry('product_price', goods.price.toString()),
+      MapEntry('product_description', goods.description),
+      MapEntry('remaining_quantity', goods.quantity.toString()),
     ]);
 
     Map<String, dynamic> data =
@@ -754,19 +704,16 @@ class Api {
   }
 
   // 회원탈퇴
-  static Future<Map<String, dynamic>> userDelete() async {
-    final data = await postData('$domain/user/user_delete/', {
-      'userId': User().userId,
-      'phoneNumber': User().phoneNumber,
-    });
+  static Future<Map<String, dynamic>> postUserDelete() async {
+    final data = await postData('$domain/user/user_delete/',
+        {'userId': User().userId, 'phoneNumber': User().phoneNumber});
     Logger.debug("### 회원탈퇴 $data");
     return data;
   }
 
   // 카테고리 리스트 조회
-  static Future<List<CategoryModel>> getCategory() async {
+  static Future<List<CategoryModel>> getCategoryList() async {
     final dataList = await getListData('$domain/admin/category', {});
-
     List<CategoryModel> categoryList =
         dataList.map((data) => CategoryModel.fromJson(data)).toList();
     Logger.debug("### 카테고리 리스트 조회 $dataList");
@@ -774,7 +721,7 @@ class Api {
   }
 
   // 팝업 삭제
-  static Future<Map<String, dynamic>> popupDelete(String storeId) async {
+  static Future<Map<String, dynamic>> deletePopup(String storeId) async {
     final data = await deleteData('$domain/popup/delete/$storeId', {});
     Logger.debug("### 팝업 삭제 $data");
     return data;
@@ -784,15 +731,12 @@ class Api {
   static Future<List<PopupModel>> getPopupByName(String storeName) async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/popup/searchStoreName/?store_name=$storeName',
-        {},
-      );
-
+          '$domain/popup/searchStoreName/?store_name=$storeName', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to fetch getPopupByName list: $e');
       throw Exception('Failed to fetch getPopupByName list');
     }
@@ -801,36 +745,29 @@ class Api {
   // 카테고리로 팝업 검색
   static Future<List<PopupModel>> getPopupByCategory(int category) async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup/searchCategory/$category',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/searchCategory/$category', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to fetch getPopupByCategory list: $e');
       throw Exception('Failed to fetch getPopupByCategory list');
     }
   }
 
   // 굿즈 삭제
-  static Future<Map<String, dynamic>> goodsDelete(String productId) async {
+  static Future<Map<String, dynamic>> deleteGoods(String productId) async {
     final data = await deleteData('$domain/product/delete/$productId', {});
     Logger.debug("### 굿즈 삭제 $data");
     return data;
   }
 
-// 지도 조회용 모든 팝업 조회
-  static Future<Map<String, Set<Marker>>> getAllPopupList() async {
+  // 지도 조회용 모든 팝업 조회
+  static Future<Map<String, Set<Marker>>> getAllPopupListForMap() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup',
-        {},
-      );
-
+      final List<dynamic> dataList = await getListData('$domain/popup', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
 
@@ -873,36 +810,30 @@ class Api {
   }
 
   // 추천 팝업 조회
-  static Future<List<PopupModel>> getRecommandPopupList() async {
+  static Future<List<PopupModel>> getRecommendedPopupList() async {
     try {
       final List<dynamic> dataList = await getListData(
-        '$domain/popup/recommendation/${User().userName}',
-        {},
-      );
-
+          '$domain/popup/recommendation/${User().userName}', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
-      Logger.debug('Failed to getRecommandPopupList popup list: $e');
-      throw Exception('Failed to getRecommandPopupList popup list');
+      // 오류 처리
+      Logger.debug('Failed to getRecommendedPopupList popup list: $e');
+      throw Exception('Failed to getRecommendedPopupList popup list');
     }
   }
 
   // 오픈 예정 팝업 조회
   static Future<List<PopupModel>> getWillBeOpenPopupList() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup/scheduledToOpen',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/scheduledToOpen', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to getWillBeOpenPopupList popup list: $e');
       throw Exception('Failed to getWillBeOpenPopupList popup list');
     }
@@ -911,16 +842,13 @@ class Api {
   // 종료 예정 팝업 조회
   static Future<List<PopupModel>> getWillBeClosePopupList() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup/scheduledToClose',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/scheduledToClose', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to getWillBeClosePopupList popup list: $e');
       throw Exception('Failed to getWillBeClosePopupList popup list');
     }
@@ -929,22 +857,19 @@ class Api {
   // 찜 페이지 조회
   static Future<List<LikeModel>> getLikePopup() async {
     try {
-      final List<dynamic> dataList = await getListData(
-        '$domain/popup/likeUser/${User().userName}',
-        {},
-      );
-
+      final List<dynamic> dataList =
+          await getListData('$domain/popup/likeUser/${User().userName}', {});
       List<LikeModel> likeList =
           dataList.map((data) => LikeModel.fromJson(data)).toList();
       return likeList;
     } catch (e) {
-      // 오류 처리–
+      // 오류 처리
       Logger.debug('Failed to getLikePopup popup list: $e');
       throw Exception('Failed to getLikePopup popup list');
     }
   }
 
-  //팝업 예약 상태 조회 by name
+  // 팝업 예약 상태 조회 by name
   static Future<List<ReservationModel>> getReservationByUserName() async {
     final dataList = await getListData(
         '$domain/popup/getReservation/user/${User().userName}', {});
@@ -955,7 +880,7 @@ class Api {
     return reservationList;
   }
 
-  //팝업 예약 상태 조회 by store
+  // 팝업 예약 상태 조회 by store
   static Future<List<ReservationModel>> getReservationByStoreId(
       String storeId) async {
     final dataList = await getListData(
@@ -968,7 +893,7 @@ class Api {
   }
 
   // 예약 삭제
-  static Future<Map<String, dynamic>> reserveDelete(
+  static Future<Map<String, dynamic>> deleteReserve(
       String reservationId) async {
     final data =
         await deleteData('$domain/popup/deleteReservation/$reservationId', {});
@@ -977,7 +902,7 @@ class Api {
   }
 
   // 아이디 중복 체크
-  static Future<Map<String, dynamic>> idCheck(String userId) async {
+  static Future<Map<String, dynamic>> getIdCheck(String userId) async {
     final data = await getData('$domain/user/check/?userId=$userId', {});
     Logger.debug("### 아이디 중복 확인 $data");
     return data;

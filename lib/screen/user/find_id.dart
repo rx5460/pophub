@@ -40,7 +40,7 @@ class _FindIdState extends State<FindId> {
   }
 
   Future<void> certifiApi() async {
-    final data = await Api.sendCertifi(phoneController.text.toString());
+    final data = await Api.postSendCertifi(phoneController.text.toString());
 
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
@@ -56,7 +56,7 @@ class _FindIdState extends State<FindId> {
   }
 
   Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
-    final data = await Api.sendVerify(certifi, realAuthCode);
+    final data = await Api.postSendVerify(certifi, realAuthCode);
 
     if (data.toString().contains("Successful")) {
       if (!isDialogShowing) {

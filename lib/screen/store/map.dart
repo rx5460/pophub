@@ -41,7 +41,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> getAllPopupList() async {
     try {
-      final markerMap = await Api.getAllPopupList();
+      final markerMap = await Api.getAllPopupListForMap();
 
       if (markerMap.isNotEmpty) {
         setState(() {

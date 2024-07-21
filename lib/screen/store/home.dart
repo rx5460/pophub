@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> getRecommandPopup() async {
     try {
       if (User().userName != "") {
-        List<PopupModel>? dataList = await Api.getRecommandPopupList();
+        List<PopupModel>? dataList = await Api.getRecommendedPopupList();
 
         if (dataList.isNotEmpty) {
           setState(() {

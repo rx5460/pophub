@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/screen/reservation/reserve_count.dart';
@@ -39,7 +38,7 @@ class _ReserveDateState extends State<ReserveDate> {
   Future<void> getReserveStatus() async {
     try {
       List<ReservationModel>? data =
-          await Api.getReserveStatus(widget.popup.id!);
+          await Api.getReservationStatus(widget.popup.id!);
       setState(() {
         reserve = data;
       });

@@ -14,8 +14,8 @@ import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
-import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
+import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject.dart';
 import 'package:pophub/screen/store/popup_review.dart';
@@ -81,7 +81,7 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> popupDelete() async {
     try {
-      final data = await Api.popupDelete(widget.storeId);
+      final data = await Api.deletePopup(widget.storeId);
 
       if (!data.toString().contains("fail") && mounted) {
         showAlert(context, "성공", "팝업스토어가 삭제되었습니다.", () {
@@ -99,7 +99,7 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> popupStoreAllow() async {
     try {
-      final response = await Api.popupAllow(widget.storeId);
+      final response = await Api.putPopupAllow(widget.storeId);
       final responseString = response.toString();
       final applicantUsername =
           RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
@@ -151,7 +151,7 @@ class _PopupDetailState extends State<PopupDetail> {
         );
         Navigator.of(context).pop();
 
-        final data = await Api.pendingList();
+        final data = await Api.getPendingList();
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -175,7 +175,8 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> fetchReviewData() async {
     try {
-      List<ReviewModel>? dataList = await Api.getReviewList(widget.storeId);
+      List<ReviewModel>? dataList =
+          await Api.getReviewListByPopup(widget.storeId);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -193,7 +194,7 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> popupLike() async {
     Map<String, dynamic> data =
-        await Api.storeLike(User().userName, widget.storeId);
+        await Api.postStoreLike(User().userName, widget.storeId);
 
     if (data.toString().contains("추가")) {
       await getPopupData();

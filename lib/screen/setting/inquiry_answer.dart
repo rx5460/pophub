@@ -39,7 +39,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
 
     // 서버로부터 데이터를 받아옴
     Map<String, dynamic> data =
-        await Api.inquiryAnswer(widget.inquiryId, content);
+        await Api.postInquiryAnswer(widget.inquiryId, content);
 
     if (!data.toString().contains("fail")) {
       if (mounted) {

@@ -108,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchReviewData() async {
     try {
       List<ReviewModel>? dataList =
-          await Api.getReviewListUser(User().userName);
+          await Api.getReviewListByUser(User().userName);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -386,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     icon: Icons.assignment_turned_in_outlined,
                                     text: '팝업스토어 승인 대기',
                                     onClick: () async {
-                                      final data = await Api.pendingList();
+                                      final data = await Api.getPendingList();
                                       if (context.mounted) {
                                         Navigator.push(
                                             context,

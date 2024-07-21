@@ -103,7 +103,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   }
 
   Future<void> goodsDelete(String productId) async {
-    final data = await Api.goodsDelete(productId);
+    final data = await Api.deleteGoods(productId);
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "굿즈가 삭제되었습니다.", () {

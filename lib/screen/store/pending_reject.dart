@@ -23,7 +23,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
   Future<void> popupStoreDeny() async {
     try {
-      final response = await Api.popupDeny(widget.id, denyController.text);
+      final response = await Api.postPopupDeny(widget.id, denyController.text);
       final responseString = response.toString();
       final applicantUsername =
           RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
@@ -76,7 +76,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         );
         Navigator.of(context).pop();
 
-        final data = await Api.pendingList();
+        final data = await Api.getPendingList();
         Navigator.push(
             context,
             MaterialPageRoute(

@@ -43,7 +43,7 @@ class _JoinUserState extends State<JoinUser> {
   }
 
   Future<void> singUpApi() async {
-    final data = await Api.signUp(
+    final data = await Api.postSignUp(
         idController.text, pwController.text, userRole.toString());
 
     if (!mounted) return;
@@ -73,7 +73,7 @@ class _JoinUserState extends State<JoinUser> {
 
   Future<void> loginApi() async {
     Map<String, dynamic> data =
-        await Api.login(idController.text, pwController.text);
+        await Api.postLogin(idController.text, pwController.text);
 
     if (!data.toString().contains("fail")) {
       if (data['token'].isNotEmpty) {
@@ -117,7 +117,7 @@ class _JoinUserState extends State<JoinUser> {
       });
     }
 
-    Map<String, dynamic> data = await Api.idCheck(idController.text);
+    Map<String, dynamic> data = await Api.getIdCheck(idController.text);
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {

@@ -29,7 +29,8 @@ class _PopupReviewState extends State<PopupReview> {
 
   Future<void> fetchReviewData() async {
     try {
-      List<ReviewModel>? dataList = await Api.getReviewList(widget.storeId);
+      List<ReviewModel>? dataList =
+          await Api.getReviewListByPopup(widget.storeId);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -46,7 +47,7 @@ class _PopupReviewState extends State<PopupReview> {
   }
 
   Future<void> writeReview() async {
-    Map<String, dynamic> data = await Api.writeReview(
+    Map<String, dynamic> data = await Api.postWriteReview(
         widget.storeId, _selectedRating, contentController.text, User().userId);
 
     if (!data.toString().contains("fail")) {

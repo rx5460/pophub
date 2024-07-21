@@ -50,7 +50,7 @@ class _AcountInfoState extends State<AcountInfo> {
   bool checked = false;
 
   Future<void> nameCheckApi() async {
-    Map<String, dynamic> data = await Api.nameCheck(nicknameInput ?? '');
+    Map<String, dynamic> data = await Api.getNameCheck(nicknameInput ?? '');
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
@@ -70,7 +70,7 @@ class _AcountInfoState extends State<AcountInfo> {
 
   Future<void> profileModify() async {
     Map<String, dynamic> data =
-        await Api.profileModify(User().userId, nicknameInput!);
+        await Api.postProfileModify(User().userId, nicknameInput!);
 
     if (!data.toString().contains("fail")) {
       widget.refreshProfile;
@@ -79,7 +79,7 @@ class _AcountInfoState extends State<AcountInfo> {
   }
 
   Future<void> profileModifyImage() async {
-    Map<String, dynamic> data = await Api.profileModifyImage(
+    Map<String, dynamic> data = await Api.postProfileModifyImage(
         User().userId, nicknameInput!, File(_image!.path));
 
     if (!data.toString().contains("fail")) {

@@ -46,7 +46,7 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
   }
 
   Future<void> getCategory() async {
-    final data = await Api.getCategory();
+    final data = await Api.getCategoryList();
     if (mounted) {
       setState(() {
         categoryList = data.where((item) => item.categoryId < 10).toList();
@@ -59,8 +59,8 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
     String content = _contentController.text;
 
     Map<String, dynamic> data = _image == null
-        ? await Api.inquiryAdd(title, content, category)
-        : await Api.inquiryAddWithImage(
+        ? await Api.postInquiryAdd(title, content, category)
+        : await Api.postInquiryAddWithImage(
             title, content, category, File(_image!.path));
 
     if (!data.toString().contains("fail")) {
