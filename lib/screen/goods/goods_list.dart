@@ -6,7 +6,7 @@ import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
 import 'package:pophub/screen/goods/goods_view.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/goods_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class _GoodsListState extends State<GoodsList> {
   Future<void> fetchGoodsData() async {
     try {
       List<GoodsModel>? dataList =
-          await Api.getPopupGoodsList(widget.popup.id!);
+          await GoodsApi.getPopupGoodsList(widget.popup.id!);
 
       if (dataList.isNotEmpty) {
         setState(() {

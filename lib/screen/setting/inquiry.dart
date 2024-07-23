@@ -7,7 +7,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquiry_answer.dart';
 import 'package:pophub/screen/setting/inquiry_write.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/inquiryl_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class InquiryPage extends StatefulWidget {
@@ -28,8 +28,8 @@ class _InquiryPageState extends State<InquiryPage> {
   Future<void> getInquiryData() async {
     Logger.debug("### ${User().role}");
     final data = User().role == "Manager"
-        ? await Api.getAllInquiryList()
-        : await Api.getInquiryList(User().userName);
+        ? await InquiryApi.getAllInquiryList()
+        : await InquiryApi.getInquiryList(User().userName);
 
     if (data.toString().contains("fail")) {
     } else {
@@ -129,11 +129,11 @@ class _InquiryTileState extends State<InquiryTile> {
     });
 
     try {
-      final content = await Api.getInquiry(widget.inquiry.inquiryId);
+      final content = await InquiryApi.getInquiry(widget.inquiry.inquiryId);
 
       if (widget.inquiry.status == "complete" ||
           widget.inquiry.answerStatus == "complete") {
-        final answer = await Api.getAnswer(widget.inquiry.inquiryId);
+        final answer = await InquiryApi.getAnswer(widget.inquiry.inquiryId);
         setState(() {
           answerDetail = answer;
         });

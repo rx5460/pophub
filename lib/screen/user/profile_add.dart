@@ -7,7 +7,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +53,7 @@ class _ProfileAddState extends State<ProfileAdd> {
   }
 
   Future<void> nameCheckApi() async {
-    Map<String, dynamic> data = await Api.getNameCheck(nicknameInput ?? '');
+    Map<String, dynamic> data = await UserApi.getNameCheck(nicknameInput ?? '');
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
@@ -74,7 +74,7 @@ class _ProfileAddState extends State<ProfileAdd> {
   Future<void> profileAdd() async {
     print(User().userName);
     Map<String, dynamic> data = _image == null
-        ? await Api.postProfileAdd(
+        ? await UserApi.postProfileAdd(
             User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null
@@ -89,7 +89,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                     ? ageController.text
                     : '0',
             phoneController.text)
-        : await Api.postProfileAddWithImage(
+        : await UserApi.postProfileAddWithImage(
             User().role == "President" || !widget.isUser
                 ? User().userId
                 : nicknameInput != null

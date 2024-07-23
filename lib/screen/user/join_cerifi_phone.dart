@@ -6,7 +6,7 @@ import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/custom/custom_toast.dart';
 import 'package:pophub/screen/user/join_user.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   }
 
   Future<void> certifiApi() async {
-    final data = await Api.sendCertifi(phoneController.text.toString());
+    final data = await UserApi.postSendCertifi(phoneController.text.toString());
 
     if (!mounted) return;
     if (!data.toString().contains("fail")) {
@@ -56,7 +56,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
   }
 
   Future<void> verifyApi(String certifi, UserNotifier userNoti) async {
-    final data = await Api.sendVerify(certifi, realAuthCode);
+    final data = await UserApi.postSendVerify(certifi, realAuthCode);
 
     if (data.toString().contains("Successful")) {
       if (!isDialogShowing) {

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/screen/reservation/reserve_count.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/reservation_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class ReserveDate extends StatefulWidget {
@@ -38,7 +38,7 @@ class _ReserveDateState extends State<ReserveDate> {
   Future<void> getReserveStatus() async {
     try {
       List<ReservationModel>? data =
-          await Api.getReservationStatus(widget.popup.id!);
+          await ReservationApi.getReservationStatus(widget.popup.id!);
       setState(() {
         reserve = data;
       });

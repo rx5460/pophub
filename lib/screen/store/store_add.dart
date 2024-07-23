@@ -14,7 +14,8 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/screen/store/store_operate_hour.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/category_api.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/remedi_kopo.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +89,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   }
 
   Future<void> getCategory() async {
-    final data = await Api.getCategoryList();
+    final data = await CategoryApi.getCategoryList();
     setState(() {
       category = data.where((item) => item.categoryId >= 10).toList();
       if (widget.popup != null) {
@@ -232,7 +233,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   }
 
   Future<void> storeAdd(StoreModel store) async {
-    final data = await Api.postStoreAdd(store);
+    final data = await StoreApi.postStoreAdd(store);
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
@@ -249,7 +250,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
   }
 
   Future<void> storeModify(StoreModel store) async {
-    final data = await Api.putStoreModify(store);
+    final data = await StoreApi.putStoreModify(store);
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {

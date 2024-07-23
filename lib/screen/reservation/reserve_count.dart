@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/reservation_api.dart';
 import 'package:pophub/utils/utils.dart';
 
 class ReserveCount extends StatefulWidget {
@@ -26,8 +26,9 @@ class _ReserveCountState extends State<ReserveCount> {
   Future<void> reservationApi() async {
     try {
       String userName = User().userName;
-      Map<String, dynamic> data = await Api.postPopupReservationWithDetails(
-          userName, widget.popup, widget.date, widget.time, count);
+      Map<String, dynamic> data =
+          await ReservationApi.postPopupReservationWithDetails(
+              userName, widget.popup, widget.date, widget.time, count);
 
       if (data.toString().contains("fail")) {
         if (mounted) {

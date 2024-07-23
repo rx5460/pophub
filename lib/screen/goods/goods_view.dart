@@ -9,7 +9,8 @@ import 'package:pophub/screen/goods/goods_add.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/goods/goods_order.dart';
 import 'package:pophub/screen/user/login.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/goods_api.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   Future<void> fetchGoodsData() async {
     try {
-      List<GoodsModel>? dataList = await Api.getPopupGoodsList(widget.popupId);
+      List<GoodsModel>? dataList =
+          await GoodsApi.getPopupGoodsList(widget.popupId);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -64,10 +66,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   Future<void> getGoodsData() async {
     try {
-      GoodsModel? data = await Api.getPopupGoodsDetail(widget.goodsId);
+      GoodsModel? data = await GoodsApi.getPopupGoodsDetail(widget.goodsId);
 
       if (User().userName != "") {
-        List<dynamic> popupData = await Api.getMyPopup(User().userName);
+        List<dynamic> popupData = await StoreApi.getMyPopup(User().userName);
 
         if (!popupData.toString().contains("없습니다")) {
           setState(() {
@@ -103,7 +105,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   }
 
   Future<void> goodsDelete(String productId) async {
-    final data = await Api.deleteGoods(productId);
+    final data = await GoodsApi.deleteGoods(productId);
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "굿즈가 삭제되었습니다.", () {

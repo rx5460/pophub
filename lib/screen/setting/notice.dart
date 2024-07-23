@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/notice_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class NoticePage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _NoticePageState extends State<NoticePage> {
   List<NoticeModel> notices = [];
   Future<void> getPopupData() async {
     try {
-      final data = await Api.getNoticeList();
+      final data = await NoticeApi.getNoticeList();
       setState(() {
         notices = data;
       });

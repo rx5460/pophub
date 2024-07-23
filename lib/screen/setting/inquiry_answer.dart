@@ -8,7 +8,7 @@ import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/inquiryl_api.dart';
 import 'package:pophub/utils/utils.dart';
 
 class InquiryAnswerPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
 
     // 서버로부터 데이터를 받아옴
     Map<String, dynamic> data =
-        await Api.postInquiryAnswer(widget.inquiryId, content);
+        await InquiryApi.postInquiryAnswer(widget.inquiryId, content);
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
@@ -98,7 +98,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
   }
 
   Future<void> getInquiryData() async {
-    final content = await Api.getInquiry(widget.inquiryId);
+    final content = await InquiryApi.getInquiry(widget.inquiryId);
     setState(() {
       inquiry = content;
     });

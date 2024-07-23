@@ -7,7 +7,7 @@ import 'package:pophub/screen/store/map.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/screen/user/profile.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});
@@ -124,7 +124,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                       onTap: () async {
                         if (index == 4) {
                           Map<String, dynamic> data =
-                              await Api.getProfile(User().userId);
+                              await UserApi.getProfile(User().userId);
 
                           if (!data.toString().contains("fail")) {
                             _pageController.jumpToPage(index);

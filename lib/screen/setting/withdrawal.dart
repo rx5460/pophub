@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/utils.dart';
 
@@ -15,7 +15,7 @@ class WithdrawalPage extends StatefulWidget {
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   Future<void> resetPasswdApi() async {
-    final data = await Api.postUserDelete();
+    final data = await UserApi.postUserDelete();
     if (!data.toString().contains("fail")) {
       await secureStorage.deleteAll();
       User().clear();

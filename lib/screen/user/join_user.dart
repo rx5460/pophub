@@ -6,7 +6,7 @@ import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_text_form_feild.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/profile_add.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,7 @@ class _JoinUserState extends State<JoinUser> {
   }
 
   Future<void> singUpApi() async {
-    final data = await Api.postSignUp(
+    final data = await UserApi.postSignUp(
         idController.text, pwController.text, userRole.toString());
 
     if (!mounted) return;
@@ -73,7 +73,7 @@ class _JoinUserState extends State<JoinUser> {
 
   Future<void> loginApi() async {
     Map<String, dynamic> data =
-        await Api.postLogin(idController.text, pwController.text);
+        await UserApi.postLogin(idController.text, pwController.text);
 
     if (!data.toString().contains("fail")) {
       if (data['token'].isNotEmpty) {
@@ -117,7 +117,7 @@ class _JoinUserState extends State<JoinUser> {
       });
     }
 
-    Map<String, dynamic> data = await Api.getIdCheck(idController.text);
+    Map<String, dynamic> data = await UserApi.getIdCheck(idController.text);
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {

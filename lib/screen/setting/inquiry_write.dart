@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/category_api.dart';
+import 'package:pophub/utils/api/inquiryl_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 
@@ -46,7 +47,7 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
   }
 
   Future<void> getCategory() async {
-    final data = await Api.getCategoryList();
+    final data = await CategoryApi.getCategoryList();
     if (mounted) {
       setState(() {
         categoryList = data.where((item) => item.categoryId < 10).toList();
@@ -59,8 +60,8 @@ class _InquiryWritePageState extends State<InquiryWritePage> {
     String content = _contentController.text;
 
     Map<String, dynamic> data = _image == null
-        ? await Api.postInquiryAdd(title, content, category)
-        : await Api.postInquiryAddWithImage(
+        ? await InquiryApi.postInquiryAdd(title, content, category)
+        : await InquiryApi.postInquiryAddWithImage(
             title, content, category, File(_image!.path));
 
     if (!data.toString().contains("fail")) {

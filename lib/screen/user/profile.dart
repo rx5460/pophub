@@ -13,7 +13,9 @@ import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/profile_add.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/review_api.dart';
+import 'package:pophub/utils/api/store_api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = true;
     });
-    Map<String, dynamic> data = await Api.getProfile(User().userId);
+    Map<String, dynamic> data = await UserApi.getProfile(User().userId);
 
     if (!data.toString().contains("fail")) {
       profile = data;
@@ -71,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = true;
     });
-    List<dynamic> data = await Api.getMyPopup(User().userName);
+    List<dynamic> data = await StoreApi.getMyPopup(User().userName);
 
     if (!data.toString().contains("fail") &&
         !data.toString().contains("없습니다")) {
@@ -108,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchReviewData() async {
     try {
       List<ReviewModel>? dataList =
-          await Api.getReviewListByUser(User().userName);
+          await ReviewApi.getReviewListByUser(User().userName);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -386,7 +388,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     icon: Icons.assignment_turned_in_outlined,
                                     text: '팝업스토어 승인 대기',
                                     onClick: () async {
-                                      final data = await Api.getPendingList();
+                                      final data =
+                                          await StoreApi.getPendingList();
                                       if (context.mounted) {
                                         Navigator.push(
                                             context,
