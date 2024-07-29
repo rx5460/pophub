@@ -7,7 +7,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +50,7 @@ class _AcountInfoState extends State<AcountInfo> {
   bool checked = false;
 
   Future<void> nameCheckApi() async {
-    Map<String, dynamic> data = await Api.nameCheck(nicknameInput ?? '');
+    Map<String, dynamic> data = await UserApi.getNameCheck(nicknameInput ?? '');
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
@@ -70,7 +70,7 @@ class _AcountInfoState extends State<AcountInfo> {
 
   Future<void> profileModify() async {
     Map<String, dynamic> data =
-        await Api.profileModify(User().userId, nicknameInput!);
+        await UserApi.postProfileModify(User().userId, nicknameInput!);
 
     if (!data.toString().contains("fail")) {
       widget.refreshProfile;
@@ -79,7 +79,7 @@ class _AcountInfoState extends State<AcountInfo> {
   }
 
   Future<void> profileModifyImage() async {
-    Map<String, dynamic> data = await Api.profileModifyImage(
+    Map<String, dynamic> data = await UserApi.postProfileModifyImage(
         User().userId, nicknameInput!, File(_image!.path));
 
     if (!data.toString().contains("fail")) {

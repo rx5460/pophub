@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
-import 'package:pophub/screen/setting/withdrawal_page.dart';
+import 'package:pophub/screen/nav/bottom_navigation.dart';
+import 'package:pophub/screen/setting/withdrawal.dart';
 import 'package:pophub/utils/http.dart';
 
 class AppSetting extends StatefulWidget {

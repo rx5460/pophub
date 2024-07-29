@@ -6,13 +6,14 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
-import 'package:pophub/screen/alarm/alarm_page.dart';
-import 'package:pophub/screen/goods/goods_add_page.dart';
-import 'package:pophub/screen/store/popup_detail.dart';
-import 'package:pophub/screen/store/store_add_page.dart';
-import 'package:pophub/screen/store/store_list_page.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
+import 'package:pophub/screen/goods/goods_add.dart';
+import 'package:pophub/screen/store/popup_view.dart';
+import 'package:pophub/screen/store/store_add.dart';
+import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/login.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/store_api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   PopupModel? popup;
 
   Future<void> profileApi() async {
-    Map<String, dynamic> data = await Api.getProfile(User().userId);
+    Map<String, dynamic> data = await UserApi.getProfile(User().userId);
 
     if (!data.toString().contains("fail")) {
       User().userName = data['userName'];
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchPopupData() async {
     try {
-      List<PopupModel>? dataList = await Api.getPopupList();
+      List<PopupModel>? dataList = await StoreApi.getPopupList();
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> checkStoreApi() async {
-    List<dynamic> data = await Api.getMyPopup(User().userName);
+    List<dynamic> data = await StoreApi.getMyPopup(User().userName);
 
     if (!data.toString().contains("fail") &&
         !data.toString().contains("없습니다")) {
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getPopupByStoreName(String storeName) async {
-    final data = await Api.getPopupByName(storeName);
+    final data = await StoreApi.getPopupByName(storeName);
     if (!data.toString().contains("fail") && mounted) {
       if (context.mounted) {
         Navigator.push(
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> getRecommandPopup() async {
     try {
       if (User().userName != "") {
-        List<PopupModel>? dataList = await Api.getRecommandPopupList();
+        List<PopupModel>? dataList = await StoreApi.getRecommendedPopupList();
 
         if (dataList.isNotEmpty) {
           setState(() {
@@ -136,7 +137,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getWillBeOpenPopup() async {
     try {
-      List<PopupModel>? dataList = await Api.getWillBeOpenPopupList();
+      List<PopupModel>? dataList = await StoreApi.getWillBeOpenPopupList();
 
       if (dataList.isNotEmpty) {
         willBeOpenList = dataList;
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getWillBeClosePopup() async {
     try {
-      List<PopupModel>? dataList = await Api.getWillBeOpenPopupList();
+      List<PopupModel>? dataList = await StoreApi.getWillBeOpenPopupList();
 
       if (dataList.isNotEmpty) {
         setState(() {

@@ -3,7 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/payment_api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 
 class StoreMain extends StatefulWidget {
   const StoreMain({super.key});
@@ -19,14 +20,15 @@ class _StoreMainState extends State<StoreMain> {
   String profileData = "";
 
   Future<void> testApi() async {
-    final data = await Api.pay(User().userId, "zero22", 1, 33000, 3000, 0);
+    final data =
+        await PaymentApi.postPay(User().userId, "zero22", 1, 33000, 3000, 0);
     // Map<String, dynamic> valueMap = json.decode(data);
     profileData = data.toString();
     setState(() {});
   }
 
   Future<void> popupApi() async {
-    final data = await Api.getProfile(User().userId);
+    final data = await UserApi.getProfile(User().userId);
     // Map<String, dynamic> valueMap = json.decode(data);
     profileData = data.toString();
     setState(() {});

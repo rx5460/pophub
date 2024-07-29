@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/user/purchase_page.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/user/purchase.dart';
+import 'package:pophub/utils/api/payment_api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class GoodsOrder extends StatefulWidget {
@@ -26,8 +27,13 @@ class _GoodsOrderState extends State<GoodsOrder> {
   int usePoint = 0;
 
   Future<void> testApi() async {
-    final data = await Api.pay(User().userId, widget.goods.productName,
-        widget.count, widget.goods.price, widget.goods.price ~/ 10, 0);
+    final data = await PaymentApi.postPay(
+        User().userId,
+        widget.goods.productName,
+        widget.count,
+        widget.goods.price,
+        widget.goods.price ~/ 10,
+        0);
 
     setState(() {
       kakopayLink = data['data'];
@@ -36,7 +42,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
 
   Future<void> profileApi() async {
     try {
-      Map<String, dynamic> data = await Api.getProfile(User().userId);
+      Map<String, dynamic> data = await UserApi.getProfile(User().userId);
 
       if (!data.toString().contains("fail")) {
         setState(() {
@@ -402,6 +408,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       MaterialPageRoute(
                         builder: (context) => PurchasePage(
                           api: kakopayLink,
+                          storeId: widget.goods.store,
                         ),
                       ),
                     );

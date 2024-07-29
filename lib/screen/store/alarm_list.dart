@@ -4,8 +4,9 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/popup_detail.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/store/popup_view.dart';
+import 'package:pophub/utils/api/reservation_api.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 
@@ -51,7 +52,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
 
   Future<void> getReserveList() async {
     try {
-      final data = await Api.getReservationByUserName();
+      final data = await ReservationApi.getReservationByUserName();
       if (!data.toString().contains("fail")) {
         setState(() {
           reserveList = data;
@@ -67,11 +68,12 @@ class _AlarmListPageState extends State<AlarmListPage> {
 
   Future<void> getReservePresidentList() async {
     try {
-      List<dynamic> data = await Api.getMyPopup(User().userName);
+      List<dynamic> data = await StoreApi.getMyPopup(User().userName);
       if (!data.toString().contains("fail") &&
           !data.toString().contains("없습니다")) {
         PopupModel popup = PopupModel.fromJson(data[0]);
-        final listData = await Api.getReservationByStoreId(popup.id.toString());
+        final listData =
+            await ReservationApi.getReservationByStoreId(popup.id.toString());
         setState(() {
           reserveList = listData;
         });
@@ -86,7 +88,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
 
   Future<void> alarmDelete(reserveId) async {
     try {
-      final data = await Api.reserveDelete(reserveId);
+      final data = await ReservationApi.deleteReserve(reserveId);
       if (!data.toString().contains("fail") && mounted) {
         showAlert(context, "성공", "알림이 삭제되었습니다.", () {
           Navigator.of(context).pop();
@@ -106,7 +108,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
     storeName = [];
     for (ReservationModel reserve in list) {
       try {
-        PopupModel? popup = await Api.getPopup(
+        PopupModel? popup = await StoreApi.getPopup(
             reserve.store.toString(), false, reserve.userName.toString());
         setState(() {
           imageList.add(popup.image != null && popup.image!.isNotEmpty

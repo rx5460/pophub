@@ -3,8 +3,9 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/store_list_page.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/store/store_list.dart';
+import 'package:pophub/utils/api/category_api.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +28,7 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Future<void> getCategory() async {
-    final data = await Api.getCategory();
+    final data = await CategoryApi.getCategoryList();
     if (mounted) {
       setState(() {
         category = data.where((item) => item.categoryId >= 10).toList();
@@ -64,7 +65,7 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Future<void> getPopupByStoreName(String storeName) async {
-    final data = await Api.getPopupByName(storeName);
+    final data = await StoreApi.getPopupByName(storeName);
     if (!data.toString().contains("fail") && mounted) {
       if (context.mounted) {
         Navigator.push(
@@ -84,7 +85,7 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   void _searchByCategory(int category) async {
-    final data = await Api.getPopupByCategory(category);
+    final data = await StoreApi.getPopupByCategory(category);
     if (!data.toString().contains("fail") && mounted) {
       if (context.mounted) {
         Navigator.push(

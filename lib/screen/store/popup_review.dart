@@ -3,7 +3,7 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/review_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class PopupReview extends StatefulWidget {
@@ -29,7 +29,8 @@ class _PopupReviewState extends State<PopupReview> {
 
   Future<void> fetchReviewData() async {
     try {
-      List<ReviewModel>? dataList = await Api.getReviewList(widget.storeId);
+      List<ReviewModel>? dataList =
+          await ReviewApi.getReviewListByPopup(widget.storeId);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -46,7 +47,7 @@ class _PopupReviewState extends State<PopupReview> {
   }
 
   Future<void> writeReview() async {
-    Map<String, dynamic> data = await Api.writeReview(
+    Map<String, dynamic> data = await ReviewApi.postWriteReview(
         widget.storeId, _selectedRating, contentController.text, User().userId);
 
     if (!data.toString().contains("fail")) {
@@ -142,7 +143,9 @@ class _PopupReviewState extends State<PopupReview> {
                           index < _selectedRating
                               ? Icons.star
                               : Icons.star_border_outlined,
-                          color: Colors.black,
+                          color: index < _selectedRating
+                              ? Constants.REVIEW_STAR_CLOLR
+                              : Colors.black,
                         ),
                       );
                     }),
@@ -208,7 +211,7 @@ class _PopupReviewState extends State<PopupReview> {
                                       ? Icons.star
                                       : Icons.star_border_outlined,
                                   size: 20,
-                                  color: Colors.black,
+                                  color: Constants.REVIEW_STAR_CLOLR,
                                 ),
                               ),
                             ),

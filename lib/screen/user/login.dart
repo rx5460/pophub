@@ -4,11 +4,11 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/nav/bottom_navigation_page.dart';
+import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/screen/user/find_id.dart';
 import 'package:pophub/screen/user/join_cerifi_phone.dart';
 import 'package:pophub/screen/user/reset_passwd.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
 
   Future<void> loginApi() async {
     Map<String, dynamic> data =
-        await Api.login(idController.text, pwController.text);
+        await UserApi.postLogin(idController.text, pwController.text);
 
     if (!data.toString().contains("fail")) {
       if (data['token'].isNotEmpty) {

@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:pophub/screen/alarm/alarm_page.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/store_list_page.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/store/store_list.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class PendingRejectPage extends StatefulWidget {
@@ -23,7 +23,8 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
   Future<void> popupStoreDeny() async {
     try {
-      final response = await Api.popupDeny(widget.id, denyController.text);
+      final response =
+          await StoreApi.postPopupDeny(widget.id, denyController.text);
       final responseString = response.toString();
       final applicantUsername =
           RegExp(r'\{data: (.+?)\}').firstMatch(responseString)?.group(1) ??
@@ -76,7 +77,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
         );
         Navigator.of(context).pop();
 
-        final data = await Api.pendingList();
+        final data = await StoreApi.getPendingList();
         Navigator.push(
             context,
             MaterialPageRoute(

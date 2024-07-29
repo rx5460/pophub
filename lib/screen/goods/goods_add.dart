@@ -9,9 +9,9 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/goods/goods_detail.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/goods/goods_view.dart';
+import 'package:pophub/utils/api/goods_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -114,7 +114,7 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   Future<void> goodsAdd(GoodsNotifier goods) async {
     goods.userName = User().userName;
-    final data = await Api.goodsAdd(goods, widget.popup.id.toString());
+    final data = await GoodsApi.postGoodsAdd(goods, widget.popup.id.toString());
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "굿즈가 등록되었습니다.", () {
@@ -161,7 +161,8 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
   }
 
   Future<void> goodsModify(GoodsNotifier goods) async {
-    final data = await Api.goodsModify(goods, widget.productId.toString());
+    final data =
+        await GoodsApi.putGoodsModify(goods, widget.productId.toString());
 
     if (!data.toString().contains("fail") && mounted) {
       showAlert(context, "성공", "굿즈 수정이 완료되었습니다.", () {

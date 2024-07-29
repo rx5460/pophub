@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/store/popup_detail.dart';
-import 'package:pophub/utils/api.dart';
+import 'package:pophub/screen/store/popup_view.dart';
+import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class MapPage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> getAllPopupList() async {
     try {
-      final markerMap = await Api.getAllPopupList();
+      final markerMap = await StoreApi.getAllPopupListForMap();
 
       if (markerMap.isNotEmpty) {
         setState(() {
