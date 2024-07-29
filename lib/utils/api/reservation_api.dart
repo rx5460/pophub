@@ -3,7 +3,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
-class ReservationwApi {
+class ReservationApi {
   static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
 
 // 팝업 예약

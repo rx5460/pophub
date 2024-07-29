@@ -408,6 +408,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       MaterialPageRoute(
                         builder: (context) => PurchasePage(
                           api: kakopayLink,
+                          storeId: widget.goods.store,
                         ),
                       ),
                     );

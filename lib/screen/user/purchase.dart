@@ -11,7 +11,9 @@ import 'package:http/http.dart' as http;
 
 class PurchasePage extends StatefulWidget {
   final String api;
-  const PurchasePage({super.key, required this.api});
+  final String storeId;
+
+  const PurchasePage({super.key, required this.api, required this.storeId});
 
   @override
   State<PurchasePage> createState() => _PurchasePageState();
@@ -70,6 +72,24 @@ class _PurchasePageState extends State<PurchasePage> {
                     'userName': User().userName,
                     'type': 'orderAlarms',
                     'alarmDetails': alarmDetails,
+                  }),
+                );
+                // 판매자 알람 추가
+                final Map<String, String> sellerAlarmDetails = {
+                  'title': '주문 들어옴',
+                  'label': '자사 굿즈 주문이 들어왔습니다.',
+                  'time': time,
+                  'active': 'true',
+                };
+
+                await http.post(
+                  Uri.parse(
+                      'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/seller_alarm_add'),
+                  headers: {'Content-Type': 'application/json'},
+                  body: jsonEncode({
+                    'storeId': widget.storeId,
+                    'type': 'orderAlarms',
+                    'alarmDetails': sellerAlarmDetails,
                   }),
                 );
 
