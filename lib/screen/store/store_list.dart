@@ -17,9 +17,9 @@ class StoreListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
-    double screenHeight = screenSize.height;
+    // Size screenSize = MediaQuery.of(context).size;
+    // double screenWidth = screenSize.width;
+    // double screenHeight = screenSize.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomTitleBar(titleName: titleName),

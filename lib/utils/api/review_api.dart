@@ -3,7 +3,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class ReviewApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 리뷰 조회 - 팝업별
   static Future<List<ReviewModel>> getReviewListByPopup(String popup) async {

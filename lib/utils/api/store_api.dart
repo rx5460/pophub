@@ -12,7 +12,8 @@ import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/utils.dart';
 
 class StoreApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 인기 팝업 조회
   static Future<List<PopupModel>> getPopupList() async {

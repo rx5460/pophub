@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
@@ -26,7 +26,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
   final _phoneFormkey = GlobalKey<FormState>();
   final _certifiFormkey = GlobalKey<FormState>();
   bool isDialogShowing = false;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  // final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String token = "";
   String userId = "";
   final _pwFormkey = GlobalKey<FormState>();
@@ -140,7 +140,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
+    // double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Consumer<UserNotifier>(
       builder: (_, userNotifier, child) {

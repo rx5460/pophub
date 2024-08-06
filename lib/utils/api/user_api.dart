@@ -3,7 +3,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class UserApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
   // SMS 전송
   static Future<Map<String, dynamic>> postSendCertifi(String phone) async {
@@ -36,6 +37,7 @@ class UserApi {
       String userId, String authPassword) async {
     final data = await postData('$domain/user/sign_in',
         {'userId': userId, 'authPassword': authPassword});
+    print(data);
     Logger.debug("### 로그인 $data");
     return data;
   }

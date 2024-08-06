@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-    bool isUserGeneral = User().role == 'general';
+    // bool isUserGeneral = User().role == 'general';
 
     return Scaffold(
       backgroundColor: Colors.white,
