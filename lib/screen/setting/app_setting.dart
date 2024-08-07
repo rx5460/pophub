@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
+import 'package:pophub/screen/setting/alarm_setting.dart';
 import 'package:pophub/screen/setting/withdrawal.dart';
 import 'package:pophub/utils/http.dart';
 
@@ -33,18 +34,18 @@ class _AppSettingState extends State<AppSetting> {
       body: ListView(
         children: <Widget>[
           const CustomTitleBar(titleName: "앱 설정"),
-          // ListTile(
-          //   title: const Text('알림 설정'),
-          //   trailing: const Icon(Icons.arrow_forward_ios),
-          //   onTap: () {
-          //     // 알림 설정 페이지로 이동
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => const AlarmSettingsPage()),
-          //     );
-          //   },
-          // ),
+          ListTile(
+            title: const Text('알림 설정'),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              // 알림 설정 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AlarmSettingsPage()),
+              );
+            },
+          ),
           // ListTile(
           //   title: const Text('약관'),
           //   trailing: const Icon(Icons.arrow_forward_ios),
