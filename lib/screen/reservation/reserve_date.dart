@@ -92,7 +92,10 @@ class _ReserveDateState extends State<ReserveDate> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text('예약하기'),
+        title: const Text(
+          '예약하기',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

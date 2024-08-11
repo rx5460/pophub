@@ -36,7 +36,9 @@ class StoreApi {
     Logger.debug(storeId);
     try {
       Map<String, dynamic> data =
-          await getData('$domain/popup/view/$storeId/$userName', {});
+          // await getData('$domain/popup/view/$storeId/$userName', {});
+          await getData('$domain/popup/view/$storeId?userName=$userName', {});
+      print('$domain/popup/view/$storeId/$userName');
       print('팝업 데이터 : $data');
       if (getLocation) {
         PopupModel popupModel = PopupModel.fromJson(data);

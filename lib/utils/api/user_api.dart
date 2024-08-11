@@ -26,7 +26,7 @@ class UserApi {
   // 회원가입
   static Future<Map<String, dynamic>> postSignUp(
       String userId, String userPassword, String userRole) async {
-    final data = await postData('$domain/user/sign_up',
+    final data = await postData('$domain/user/signUp',
         {'userId': userId, "userPassword": userPassword, "userRole": userRole});
     Logger.debug("### 회원가입 $data");
     return data;
@@ -35,8 +35,9 @@ class UserApi {
   // 로그인
   static Future<Map<String, dynamic>> postLogin(
       String userId, String authPassword) async {
-    final data = await postData('$domain/user/sign_in',
+    final data = await postData('$domain/user/signIn',
         {'userId': userId, 'authPassword': authPassword});
+
     print(data);
     Logger.debug("### 로그인 $data");
     return data;
@@ -44,7 +45,7 @@ class UserApi {
 
   // 비밀번호 변경
   static postChangePassword(String userId, String userPassword) async {
-    final data = await postNoAuthData('$domain/user/change_password',
+    final data = await postNoAuthData('$domain/user/changePassword',
         {'userId': userId, "userPassword": userPassword});
     Logger.debug("### 비밀번호 변경 $data");
     return data;
@@ -67,7 +68,7 @@ class UserApi {
   // 프로필 수정 (이미지 x)
   static Future<Map<String, dynamic>> postProfileModify(
       String userId, String userName) async {
-    final data = await postData('$domain/user/update_profile/',
+    final data = await postData('$domain/user/updateProfile/',
         {'userId': userId, 'userName': userName});
     Logger.debug("### 프로필 수정 이미지x $data");
     return data;
@@ -76,7 +77,7 @@ class UserApi {
   // 프로필 수정 (이미지 o)
   static Future<Map<String, dynamic>> postProfileModifyImage(
       String userId, String userName, image) async {
-    final data = await postDataWithImage('$domain/user/update_profile/',
+    final data = await postDataWithImage('$domain/user/updateProfile/',
         {'userId': userId, 'userName': userName}, 'file', image);
     Logger.debug("### 프로필 수정 이미지o $data");
     return data;
@@ -84,7 +85,7 @@ class UserApi {
 
 // 아이디 조회
   static Future<Map<String, dynamic>> getId(String phoneNumber) async {
-    final data = await getNoAuthData('$domain/user/search_id/$phoneNumber', {});
+    final data = await getNoAuthData('$domain/user/searchId/$phoneNumber', {});
     Logger.debug("### 아이디 조회 $data");
     return data;
   }
@@ -93,7 +94,7 @@ class UserApi {
   static Future<Map<String, dynamic>> postProfileAddWithImage(
       String nickName, String gender, String age, image, String phone) async {
     final data = await postDataWithImage(
-        '$domain/user/create_profile/',
+        '$domain/user/createProfile/',
         {
           'userId': User().userId,
           'userName': nickName,
@@ -110,7 +111,7 @@ class UserApi {
   // 프로필 추가 (이미지 x)
   static Future<Map<String, dynamic>> postProfileAdd(
       String nickName, String gender, String age, String phone) async {
-    final data = await postData('$domain/user/create_profile/', {
+    final data = await postData('$domain/user/createProfile/', {
       'userId': User().userId,
       'userName': nickName,
       'phoneNumber': phone,
@@ -123,7 +124,7 @@ class UserApi {
 
 // 회원탈퇴
   static Future<Map<String, dynamic>> postUserDelete() async {
-    final data = await postData('$domain/user/user_delete/',
+    final data = await postData('$domain/user/userDelete/',
         {'userId': User().userId, 'phoneNumber': User().phoneNumber});
     Logger.debug("### 회원탈퇴 $data");
     return data;
