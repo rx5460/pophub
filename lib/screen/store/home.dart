@@ -8,6 +8,7 @@ import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
+import 'package:pophub/screen/reservation/waiting_count.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
@@ -817,6 +818,16 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WaitingCount(),
+                      ),
+                    );
+                  },
+                  child: const Text('예약하기'))
             ],
           ),
         ),

@@ -12,6 +12,7 @@ import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/screen/user/my_review.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/review_api.dart';
 import 'package:pophub/utils/api/store_api.dart';
@@ -338,6 +339,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ],
                                   ),
+                                ),
+                                MenuList(
+                                  icon: Icons.comment,
+                                  text: '리뷰',
+                                  onClick: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MyReview()));
+                                  },
                                 ),
                                 MenuList(
                                   icon: Icons.info_outline,

@@ -41,10 +41,12 @@ class ReviewApi {
   static Future<Map<String, dynamic>> postWriteReview(
       String popup, double rating, String content, String userName) async {
     final data = await postData('$domain/popup/review/create/$popup', {
-      'user_name': userName,
-      'review_rating': rating,
-      'review_content': content
+      'userName': userName,
+      'reviewRating': rating,
+      'reviewContent': content
     });
+    print('$domain/popup/review/create/$popup');
+    print('userName: $userName,reviewRating: $rating,reviewContent: $content');
     Logger.debug("### 리뷰 작성 $data");
     return data;
   }

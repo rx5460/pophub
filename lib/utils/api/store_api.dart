@@ -71,9 +71,9 @@ class StoreApi {
   static Future<Map<String, dynamic>> postPopupReservation(
       String popup, String visitorName, int count, String userId) async {
     final data = await postData('$domain/popup/reservation/$popup', {
-      'user_id': userId,
-      'wait_visitor_name': visitorName,
-      'wait_visitor_number': count
+      'userId': userId,
+      'waitVisitorName': visitorName,
+      'waitVisitorNumber': count
     });
     Logger.debug("### 예약 $data");
     return data;
@@ -83,7 +83,7 @@ class StoreApi {
   static Future<Map<String, dynamic>> postStoreLike(
       String userName, String popup) async {
     final data =
-        await postData('$domain/popup/like/$popup/', {'user_name': userName});
+        await postData('$domain/popup/like/$popup/', {'userName': userName});
     Logger.debug(popup);
     Logger.debug("### 팝업 좋아요 $data");
     return data;
@@ -106,17 +106,17 @@ class StoreApi {
     }
 
     formData.fields.addAll([
-      MapEntry('category_id', store.category),
-      MapEntry('user_name', User().userName),
-      MapEntry('store_name', store.name),
-      MapEntry('store_location', "${store.location}/${store.locationDetail}"),
-      MapEntry('store_contact_info', store.contact),
-      MapEntry('store_description', store.description),
-      MapEntry('store_start_date',
-          store.startDate.toIso8601String().split('T').first),
+      MapEntry('categoryId', store.category),
+      MapEntry('userName', User().userName),
+      MapEntry('storeName', store.name),
+      MapEntry('storeLocation', "${store.location}/${store.locationDetail}"),
+      MapEntry('storeContactInfo', store.contact),
+      MapEntry('storeDescription', store.description),
       MapEntry(
-          'store_end_date', store.endDate.toIso8601String().split('T').first),
-      MapEntry('max_capacity', store.maxCapacity.toString()),
+          'storeStartDate', store.startDate.toIso8601String().split('T').first),
+      MapEntry(
+          'storeEndDate', store.endDate.toIso8601String().split('T').first),
+      MapEntry('maxCapacity', store.maxCapacity.toString()),
     ]);
 
     if (store.schedule != null) {
@@ -206,23 +206,23 @@ class StoreApi {
       }
     }
     formData.fields.addAll([
-      MapEntry('category_id', store.category),
-      MapEntry('user_name', User().userName),
-      MapEntry('store_name', store.name),
+      MapEntry('categoryId', store.category),
+      MapEntry('userName', User().userName),
+      MapEntry('storeName', store.name),
       MapEntry(
-          'store_location',
+          'storeLocation',
           locationPart == ""
               ? store.locationDetail != ""
                   ? "${store.location}/${store.locationDetail}"
                   : store.location
               : "${store.location.split("/").first}/${store.locationDetail}"),
-      MapEntry('store_contact_info', store.contact),
-      MapEntry('store_description', store.description),
-      MapEntry('store_start_date',
-          store.startDate.toIso8601String().split('T').first),
+      MapEntry('storeContactInfo', store.contact),
+      MapEntry('storeDescription', store.description),
       MapEntry(
-          'store_end_date', store.endDate.toIso8601String().split('T').first),
-      MapEntry('max_capacity', store.maxCapacity.toString()),
+          'storeStartDate', store.startDate.toIso8601String().split('T').first),
+      MapEntry(
+          'storeEndDate', store.endDate.toIso8601String().split('T').first),
+      MapEntry('maxCapacity', store.maxCapacity.toString()),
     ]);
 
     if (store.schedule != null) {
@@ -253,7 +253,7 @@ class StoreApi {
   static Future<Map<String, dynamic>> postPopupDeny(
       String storeId, String content) async {
     final data = await postData('$domain/admin/popupPendingDeny/',
-        {'store_id': storeId, 'denial_reason': content});
+        {'storeId': storeId, 'denialReason': content});
     Logger.debug("### 팝업 승인 거절 $data");
     return data;
   }

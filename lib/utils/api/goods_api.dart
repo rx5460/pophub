@@ -93,11 +93,11 @@ class GoodsApi {
     }
 
     formData.fields.addAll([
-      MapEntry('user_name', User().userName),
-      MapEntry('product_name', goods.productName),
-      MapEntry('product_price', goods.price.toString()),
-      MapEntry('product_description', goods.description),
-      MapEntry('remaining_quantity', goods.quantity.toString()),
+      MapEntry('userName', User().userName),
+      MapEntry('productName', goods.productName),
+      MapEntry('productPrice', goods.price.toString()),
+      MapEntry('productDescription', goods.description),
+      MapEntry('remainingQuantity', goods.quantity.toString()),
     ]);
 
     Map<String, dynamic> data =

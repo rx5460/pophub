@@ -15,15 +15,15 @@ class ReservationApi {
       String time,
       int count) async {
     final data = await postData('$domain/popup/reservation/$popup/', {
-      'user_name': userName,
-      'reservation_date': date,
-      'reservation_time': time,
+      'userName': userName,
+      'reservationDate': date,
+      'reservationTime': time,
       'capacity': count
     });
     print({
-      'user_name': userName,
-      'reservation_date': date,
-      'reservation_time': time,
+      'userName': userName,
+      'reservationDate': date,
+      'reservationTime': time,
       'capacity': count
     });
     Logger.debug("### 팝업 예약 $data");
