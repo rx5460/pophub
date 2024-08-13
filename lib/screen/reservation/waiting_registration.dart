@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/screen/reservation/waiting_info.dart';
 
 class WaitingRegistration extends StatefulWidget {
   const WaitingRegistration({super.key});
@@ -192,7 +193,7 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const WaitingRegistration(),
+                        builder: (context) => const WaitingInfo(),
                       ),
                     );
                   },
