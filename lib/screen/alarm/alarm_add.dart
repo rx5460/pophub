@@ -56,10 +56,13 @@ class NoticePage extends StatelessWidget {
                 onPressed: () {
                   // 완료 버튼 클릭 후 로직 추가해야됨
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text('완료'),
+                child: const Text('완료',
+                    style: TextStyle(
+                      fontSize: 18,
+                    )),
               ),
             ),
           ],
