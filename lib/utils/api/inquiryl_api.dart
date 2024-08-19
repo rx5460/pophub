@@ -5,13 +5,14 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class InquiryApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 문의 내역
   static Future<List<InquiryModel>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
-          '$domain/user/search_inquiry/?userName=$userName', {});
+          '$domain/user/searchInquiry/?userName=$userName', {});
       Logger.debug("### 문의 내역 조회 $dataList");
 
       List<InquiryModel> inquiryList =
@@ -28,7 +29,7 @@ class InquiryApi {
   static Future<Map<String, dynamic>> postInquiryAddWithImage(
       String title, String content, String category, image) async {
     final data = await postDataWithImage(
-        '$domain/user/create_inquiry/',
+        '$domain/user/createInquiry/',
         {
           'userName': User().userName,
           'categoryId': category,
@@ -44,7 +45,7 @@ class InquiryApi {
   // 문의내역 추가 (이미지 x)
   static Future<Map<String, dynamic>> postInquiryAdd(
       String title, String content, String category) async {
-    final data = await postData('$domain/user/create_inquiry/', {
+    final data = await postData('$domain/user/createInquiry/', {
       'userName': User().userName,
       'categoryId': category,
       'title': title,
@@ -57,7 +58,7 @@ class InquiryApi {
   // 문의 내역 상세 조회
   static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
-        await getData('$domain/user/search_inquiry/?inquiryId=$inquiryId', {});
+        await getData('$domain/user/searchInquiry/?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
     InquiryModel inquiryModel = InquiryModel.fromJson(data);
@@ -80,7 +81,7 @@ class InquiryApi {
   static Future<List<InquiryModel>> getAllInquiryList() async {
     try {
       final List<dynamic> dataList =
-          await getListData('$domain/admin/search_inquiry', {});
+          await getListData('$domain/admin/searchInquiry', {});
       Logger.debug("### 문의 내역 전체 조회 $dataList");
 
       List<InquiryModel> inquiryList =
@@ -96,7 +97,7 @@ class InquiryApi {
   // 답변 조회
   static Future<AnswerModel> getAnswer(int inquiryId) async {
     final data =
-        await getData('$domain/user/search_answer/?inquiryId=$inquiryId', {});
+        await getData('$domain/user/searchAnswer/?inquiryId=$inquiryId', {});
     Logger.debug("### 답변 조회 $data");
 
     AnswerModel answerModel = AnswerModel.fromJson(data);

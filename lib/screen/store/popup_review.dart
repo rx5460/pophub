@@ -73,7 +73,7 @@ class _PopupReviewState extends State<PopupReview> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    double screenHeight = screenSize.height;
+    // double screenHeight = screenSize.height;
     return Scaffold(
       appBar: CustomTitleBar(titleName: widget.storeName),
       body: SingleChildScrollView(

@@ -3,7 +3,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class NoticeApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 전체 공지사항 조회
   static Future<List<NoticeModel>> getNoticeList() async {

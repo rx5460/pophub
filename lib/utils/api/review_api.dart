@@ -3,7 +3,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class ReviewApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 리뷰 조회 - 팝업별
   static Future<List<ReviewModel>> getReviewListByPopup(String popup) async {
@@ -40,10 +41,12 @@ class ReviewApi {
   static Future<Map<String, dynamic>> postWriteReview(
       String popup, double rating, String content, String userName) async {
     final data = await postData('$domain/popup/review/create/$popup', {
-      'user_name': userName,
-      'review_rating': rating,
-      'review_content': content
+      'userName': userName,
+      'reviewRating': rating,
+      'reviewContent': content
     });
+    print('$domain/popup/review/create/$popup');
+    print('userName: $userName,reviewRating: $rating,reviewContent: $content');
     Logger.debug("### 리뷰 작성 $data");
     return data;
   }

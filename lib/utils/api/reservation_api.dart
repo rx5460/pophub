@@ -4,7 +4,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class ReservationApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 팝업 예약
   static Future<Map<String, dynamic>> postPopupReservationWithDetails(
@@ -14,15 +15,15 @@ class ReservationApi {
       String time,
       int count) async {
     final data = await postData('$domain/popup/reservation/$popup/', {
-      'user_name': userName,
-      'reservation_date': date,
-      'reservation_time': time,
+      'userName': userName,
+      'reservationDate': date,
+      'reservationTime': time,
       'capacity': count
     });
     print({
-      'user_name': userName,
-      'reservation_date': date,
-      'reservation_time': time,
+      'userName': userName,
+      'reservationDate': date,
+      'reservationTime': time,
       'capacity': count
     });
     Logger.debug("### 팝업 예약 $data");

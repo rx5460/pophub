@@ -190,9 +190,9 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
-    double screenHeight = screenSize.height;
+    // Size screenSize = MediaQuery.of(context).size;
+    // double screenWidth = screenSize.width;
+    // double screenHeight = screenSize.height;
     return Scaffold(
       appBar: CustomTitleBar(
           titleName: widget.mode == "modify" ? "굿즈 수정" : "굿즈 추가"),

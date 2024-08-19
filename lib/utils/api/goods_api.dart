@@ -8,7 +8,8 @@ import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
 class GoodsApi {
-  static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
+  static String domain = "http://3.88.120.90:3000";
 
 // 특정 팝업스토어 굿즈 조회
   static Future<List<GoodsModel>> getPopupGoodsList(String popup) async {
@@ -92,11 +93,11 @@ class GoodsApi {
     }
 
     formData.fields.addAll([
-      MapEntry('user_name', User().userName),
-      MapEntry('product_name', goods.productName),
-      MapEntry('product_price', goods.price.toString()),
-      MapEntry('product_description', goods.description),
-      MapEntry('remaining_quantity', goods.quantity.toString()),
+      MapEntry('userName', User().userName),
+      MapEntry('productName', goods.productName),
+      MapEntry('productPrice', goods.price.toString()),
+      MapEntry('productDescription', goods.description),
+      MapEntry('remainingQuantity', goods.quantity.toString()),
     ]);
 
     Map<String, dynamic> data =

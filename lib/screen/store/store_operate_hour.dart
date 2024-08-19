@@ -103,7 +103,7 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
   }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
-    final TimeOfDay? picked = await showCupertinoModalPopup(
+    await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
         return Container(

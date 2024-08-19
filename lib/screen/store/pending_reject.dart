@@ -11,8 +11,9 @@ import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class PendingRejectPage extends StatefulWidget {
-  String id = "";
-  PendingRejectPage({super.key, required this.id});
+  final String id; // final로 수정
+
+  const PendingRejectPage({super.key, required this.id});
 
   @override
   State<PendingRejectPage> createState() => _PendingRejectPageState();
