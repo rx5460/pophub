@@ -7,7 +7,13 @@ class NoticePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공지사항'),
+        title: const Text(
+          '공지사항',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -22,7 +28,10 @@ class NoticePage extends StatelessWidget {
           children: [
             const Text(
               '공지사항 제목',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             const TextField(
@@ -34,7 +43,10 @@ class NoticePage extends StatelessWidget {
             const SizedBox(height: 16.0),
             const Text(
               '공지사항 내용',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             const Expanded(
@@ -57,12 +69,16 @@ class NoticePage extends StatelessWidget {
                   // 완료 버튼 클릭 후 로직 추가해야됨
                 },
                 style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text('완료',
-                    style: TextStyle(
-                      fontSize: 18,
-                    )),
+                child: const Text(
+                  '완료',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
