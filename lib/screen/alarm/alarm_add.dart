@@ -1,13 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class NoticePage extends StatelessWidget {
   const NoticePage({Key? key}) : super(key: key);
 
+  Future<void> _sendNotice(
+      BuildContext context, String title, String label) async {
+    try {
+      String formattedTime =
+          DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now());
+
+      // Firestore에 공지사항 저장
+      await FirebaseFirestore.instance.collection('alarms').add({
+        'active': true,
+        'label': label,
+        'time': formattedTime,
+        'title': title,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('공지사항이 성공적으로 전송되었습니다.')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('공지사항 전송에 실패했습니다. 다시 시도해주세요.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _titleController = TextEditingController();
+    final TextEditingController _contentController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공지사항'),
+        title: const Text(
+          '공지사항',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -22,29 +57,34 @@ class NoticePage extends StatelessWidget {
           children: [
             const Text(
               '공지사항 제목',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: '점검 안내 공지',
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16.0),
             const Text(
               '공지사항 내용',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
-            const Expanded(
+            Expanded(
               child: TextField(
+                controller: _contentController,
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: InputDecoration(
-                  hintText:
-                      '안녕하세요, 팝허브입니다.\n\n보다 나은 서비스 제공을 위해 다음과 같이 시스템 점검을 실시할 예정입니다. 고객 여러분의 양해 부탁드립니다.\n\n점검 일정:\n• 일시: 2024년 5월 17일 00:00부터 2024년',
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -54,15 +94,23 @@ class NoticePage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // 완료 버튼 클릭 후 로직 추가해야됨
+                  _sendNotice(
+                    context,
+                    _titleController.text,
+                    _contentController.text,
+                  );
                 },
                 style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text('완료',
-                    style: TextStyle(
-                      fontSize: 18,
-                    )),
+                child: const Text(
+                  '완료',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
