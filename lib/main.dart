@@ -84,6 +84,25 @@ Future<void> _showNotification(
   );
 }
 
+Future<void> _toggleNotification(bool value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isNotified', value);
+
+  if (value) {
+    // 푸시 알림을 켤 때 FCM 구독
+    await FirebaseMessaging.instance.subscribeToTopic('all_users');
+  } else {
+    // 푸시 알림을 끌 때 FCM 구독 해제
+    await FirebaseMessaging.instance.unsubscribeFromTopic('all_users');
+  }
+}
+
+void loadInitialNotificationSetting() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isNotified = prefs.getBool('isNotified') ?? true; // 기본값을 true로 설정
+  _toggleNotification(isNotified);
+}
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -92,6 +111,9 @@ Future<void> main() async {
 
   // FCM 알림 초기화
   initializeNotification();
+
+  // 초기 알림 설정 로드 및 적용
+  loadInitialNotificationSetting();
 
   await dotenv.load(fileName: 'assets/config/.env');
 
