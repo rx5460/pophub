@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class PushAutoToken {
-  final String apiUrl = "http://pophub-fa05bf3eabc0.herokuapp.com/token_create";
+  final String apiUrl = "http://3.88.120.90:3000/token_create";
 
   Future<void> createToken(String userName) async {
     final response = await http.post(

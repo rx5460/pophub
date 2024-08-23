@@ -68,8 +68,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
       await Future.wait([
         // 서버에 알람 추가
         http.post(
-          Uri.parse(
-              'https://pophub-fa05bf3eabc0.herokuapp.com/alarm/alarm_add'),
+          Uri.parse('http://3.88.120.90:3000/alarm/alarm_add'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'userName': userName,
