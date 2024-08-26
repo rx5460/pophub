@@ -3,6 +3,8 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/screen/alarm/alarm_add.dart';
+import 'package:pophub/screen/alarm/notice_add.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
@@ -372,6 +374,35 @@ class _ProfilePageState extends State<ProfilePage> {
                                             builder: (context) =>
                                                 const InquiryPage()));
                                   },
+                                ),
+                                Visibility(
+                                  visible: User().role == "Manager",
+                                  child: Column(
+                                    children: [
+                                      MenuList(
+                                        icon: Icons.add_alert,
+                                        text: '알림 등록',
+                                        onClick: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const AlarmAdd()));
+                                        },
+                                      ),
+                                      MenuList(
+                                        icon: Icons.add_circle_outline,
+                                        text: '공지사항 등록',
+                                        onClick: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const NoticeAdd()));
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 // MenuList(
                                 //   icon: Icons.credit_card,

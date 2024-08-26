@@ -2,42 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class NoticePage extends StatelessWidget {
-  const NoticePage({Key? key}) : super(key: key);
+class AlarmAdd extends StatefulWidget {
+  const AlarmAdd({Key? key}) : super(key: key);
 
-  Future<void> _sendNotice(
-      BuildContext context, String title, String label) async {
+  @override
+  AlarmAddState createState() => AlarmAddState();
+}
+
+class AlarmAddState extends State<AlarmAdd> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+  String _selectedCategory = '전체';
+
+  Future<void> alarmNotification() async {
+    String collection;
+    switch (_selectedCategory) {
+      case '주문':
+        collection = 'orderAlarms';
+        break;
+      case '대기':
+        collection = 'waitAlarms';
+        break;
+      default:
+        collection = 'alarms';
+    }
+
     try {
       String formattedTime =
           DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now());
 
-      // Firestore에 공지사항 저장
-      await FirebaseFirestore.instance.collection('alarms').add({
+      // Firestore에 알림 저장
+      await FirebaseFirestore.instance.collection(collection).add({
         'active': true,
-        'label': label,
+        'label': _contentController.text,
         'time': formattedTime,
-        'title': title,
+        'title': _titleController.text,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('공지사항이 성공적으로 전송되었습니다.')),
+        const SnackBar(content: Text('알림이 성공적으로 전송되었습니다.')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('공지사항 전송에 실패했습니다. 다시 시도해주세요.')),
+        const SnackBar(content: Text('알림 전송에 실패했습니다. 다시 시도해주세요.')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _titleController = TextEditingController();
-    final TextEditingController _contentController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '공지사항',
+          '알림',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -56,7 +73,7 @@ class NoticePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '공지사항 제목',
+              '알림 제목',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
@@ -71,7 +88,41 @@ class NoticePage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             const Text(
-              '공지사항 내용',
+              '알림 카테고리',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
+              items: const [
+                DropdownMenuItem<String>(
+                  value: '전체',
+                  child: Text('전체'),
+                ),
+                DropdownMenuItem<String>(
+                  value: '주문',
+                  child: Text('주문'),
+                ),
+                DropdownMenuItem<String>(
+                  value: '대기',
+                  child: Text('대기'),
+                ),
+              ],
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedCategory = value ?? '전체';
+                });
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              '알림 내용',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
@@ -93,13 +144,7 @@ class NoticePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  _sendNotice(
-                    context,
-                    _titleController.text,
-                    _contentController.text,
-                  );
-                },
+                onPressed: alarmNotification,
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
