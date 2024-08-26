@@ -4,10 +4,10 @@ class InquiryPage extends StatefulWidget {
   const InquiryPage({Key? key}) : super(key: key);
 
   @override
-  _InquiryPageState createState() => _InquiryPageState();
+  InquiryPageState createState() => InquiryPageState();
 }
 
-class _InquiryPageState extends State<InquiryPage>
+class InquiryPageState extends State<InquiryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
