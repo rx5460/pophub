@@ -1,4 +1,5 @@
 import 'package:pophub/model/review_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -9,8 +10,8 @@ class ReviewApi {
 // 리뷰 조회 - 팝업별
   static Future<List<ReviewModel>> getReviewListByPopup(String popup) async {
     try {
-      final List<dynamic> dataList =
-          await getListData('$domain/popup/reviews/store/$popup', {});
+      final List<dynamic> dataList = await getListData(
+          '$domain/popup/getReviews?type=store&storeId=$popup', {});
       List<ReviewModel> reviewList =
           dataList.map((data) => ReviewModel.fromJson(data)).toList();
       return reviewList;
@@ -24,8 +25,8 @@ class ReviewApi {
   // 리뷰 조회 - 사용자별
   static Future<List<ReviewModel>> getReviewListByUser(String userName) async {
     try {
-      final List<dynamic> dataList =
-          await getListData('$domain/popup/reviews/user/$userName', {});
+      final List<dynamic> dataList = await getListData(
+          '$domain/popup/getReviews?type=user&userName=${User().userName}', {});
       print('$domain/popup/reviews/user/$userName');
       List<ReviewModel> reviewList =
           dataList.map((data) => ReviewModel.fromJson(data)).toList();

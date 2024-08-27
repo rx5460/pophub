@@ -3,6 +3,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
@@ -241,103 +242,106 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: screenHeight * 0.03),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SizedBox(
-                                        width: (screenWidth * 0.3) - 2,
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              profile?['pointScore']
-                                                      .toString() ??
-                                                  '',
-                                              style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700,
+                                Visibility(
+                                  visible: User().role == "General Member",
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: screenHeight * 0.03),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: (screenWidth * 0.3) - 2,
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                profile?['pointScore']
+                                                        .toString() ??
+                                                    '',
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              '포인트',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey,
+                                              const SizedBox(
+                                                height: 10,
                                               ),
-                                            ),
-                                          ],
+                                              const Text(
+                                                '포인트',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        height: screenWidth * 0.15,
-                                        width: 1,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.grey,
+                                        Container(
+                                          height: screenWidth * 0.15,
+                                          width: 1,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.grey,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: (screenWidth * 0.3) - 2,
-                                        child: const Column(
-                                          children: [
-                                            Text(
-                                              '0',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700,
+                                        SizedBox(
+                                          width: (screenWidth * 0.3) - 2,
+                                          child: const Column(
+                                            children: [
+                                              Text(
+                                                '0',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              '방문',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey,
+                                              SizedBox(
+                                                height: 10,
                                               ),
-                                            ),
-                                          ],
+                                              Text(
+                                                '방문',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        height: screenWidth * 0.15,
-                                        width: 1,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.grey,
+                                        Container(
+                                          height: screenWidth * 0.15,
+                                          width: 1,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.grey,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: (screenWidth * 0.3) - 2,
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              reviewList?.length.toString() ??
-                                                  '0',
-                                              style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700,
+                                        SizedBox(
+                                          width: (screenWidth * 0.3) - 2,
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                reviewList?.length.toString() ??
+                                                    '0',
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              '리뷰',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey,
+                                              const SizedBox(
+                                                height: 10,
                                               ),
-                                            ),
-                                          ],
+                                              const Text(
+                                                '리뷰',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 MenuList(
@@ -454,6 +458,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     mode: "store",
                                                     titleName: "내 팝업스토어 예약 내역",
                                                   )));
+                                    },
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: User().role == "President",
+                                  child: MenuList(
+                                    icon: Icons.shopping_bag_outlined,
+                                    text: '펀딩',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MultiProvider(
+                                                      providers: [
+                                                        ChangeNotifierProvider(
+                                                            create: (_) =>
+                                                                StoreModel())
+                                                      ],
+                                                      child:
+                                                          const FundingAddPage(
+                                                              mode: "add"))));
                                     },
                                   ),
                                 ),

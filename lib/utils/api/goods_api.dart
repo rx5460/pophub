@@ -109,6 +109,7 @@ class GoodsApi {
   // 특정 팝업 굿즈 상세 조회
   static Future<GoodsModel> getPopupGoodsDetail(String productId) async {
     final data = await getListData('$domain/product/view/$productId', {});
+    // 뒤에 userId 추가 예정 / 스웨거에는 userId 포함(필수체크 x)
     Logger.debug("### 특정 팝업 굿즈 상세 조회 $data");
 
     GoodsModel goodsModel = GoodsModel.fromJson(data[0]);
