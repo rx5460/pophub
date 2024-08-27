@@ -83,7 +83,7 @@ class InquiryPageState extends State<InquiryPage>
                   _tabController.index == 0 ? '문의 하기' : '광고 문의 하기',
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white, // 글씨 색상 하얀색으로 설정
+                    color: Colors.white,
                   ),
                 ),
               ),
