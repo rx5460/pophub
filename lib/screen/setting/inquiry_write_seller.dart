@@ -33,6 +33,13 @@ class NoticePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 8.0),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: '',
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 16.0),
             const Text(
               '광고 문의 내용',
