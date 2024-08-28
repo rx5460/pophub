@@ -49,8 +49,18 @@ class InquiryPageState extends State<InquiryPage>
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
           tabs: const [
-            Tab(text: '일반 문의'),
-            Tab(text: '광고 문의'),
+            Tab(
+              child: Text(
+                '일반 문의',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Tab(
+              child: Text(
+                '광고 문의',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
       ),
@@ -84,6 +94,7 @@ class InquiryPageState extends State<InquiryPage>
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

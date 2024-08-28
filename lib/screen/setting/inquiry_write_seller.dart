@@ -36,7 +36,7 @@ class NoticePage extends StatelessWidget {
             const SizedBox(height: 8.0),
             const TextField(
               decoration: InputDecoration(
-                hintText: '',
+                hintText: '광고 제목을 입력해주세요',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -55,8 +55,7 @@ class NoticePage extends StatelessWidget {
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
                 decoration: InputDecoration(
-                  hintText:
-                      '안녕하세요 수키도키 팝업스토어입니다.\n 광고 관련 문의 드립니다. \n\n 저희 팝업스토어 관련 홍보를 하고 싶은데 어떻게 \n 진행하면 되나요?',
+                  hintText: '광고 문의 내용을 입력하세요',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -75,6 +74,7 @@ class NoticePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
