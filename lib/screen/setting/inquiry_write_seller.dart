@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-class NoticePage extends StatelessWidget {
+class NoticePage extends StatefulWidget {
   const NoticePage({Key? key}) : super(key: key);
+
+  @override
+  NoticePageState createState() => NoticePageState();
+}
+
+class NoticePageState extends State<NoticePage> {
+  String selectedCategory = '광고';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '광고 문의',
+          '문의 하기',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -27,15 +34,48 @@ class NoticePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '광고 문의 제목',
+              '문의 카테고리',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 8.0),
+            DropdownButtonFormField<String>(
+              value: selectedCategory,
+              items: <String>['광고', '기타'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCategory = newValue!;
+                });
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 16.0),
             const Text(
-              '광고 문의 내용',
+              '문의 제목',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: '문의 제목을 입력하세요',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              '문의 내용',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
@@ -48,17 +88,42 @@ class NoticePage extends StatelessWidget {
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
                 decoration: InputDecoration(
-                  hintText:
-                      '안녕하세요 수키도키 팝업스토어입니다.\n 광고 관련 문의 드립니다. \n\n 저희 팝업스토어 관련 홍보를 하고 싶은데 어떻게 \n 진행하면 되나요?',
+                  hintText: '문의 내용을 입력하세요',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
             const SizedBox(height: 16.0),
+            if (selectedCategory == '광고')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '이미지 첨부',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // 이미지 첨부
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    child: const Text('첨부하기'),
+                  ),
+                  const SizedBox(height: 16.0),
+                ],
+              ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // 완료 api
+                },
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
@@ -68,6 +133,7 @@ class NoticePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
