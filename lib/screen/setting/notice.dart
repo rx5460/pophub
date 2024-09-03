@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/setting/notice_detail.dart';
+import 'package:pophub/screen/setting/notice_write.dart';
 import 'package:pophub/utils/api/notice_api.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -36,24 +38,51 @@ class _NoticePageState extends State<NoticePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
     return Scaffold(
       appBar: const CustomTitleBar(titleName: "공지 사항"),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NoticeWrite(),
+          ),
+        );
+      }),
       body: notices.isNotEmpty
-          ? ListView.builder(
-              itemCount: notices.length,
-              itemBuilder: (BuildContext context, int index) {
-                return NoticeTile(
-                  title: notices[index].title,
-                  date: notices[index].time,
-                  content: notices[index].content,
-                );
-              },
+          ? Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(width: 0.5, color: Constants.DARK_GREY))),
+              child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (BuildContext context, int index) {
+                  return const NoticeTile(
+                    title: "공지제목",
+                    date: "2024-08-24",
+                    content:
+                        "안녕하세요. 팝허브입니다. 보다 나은 서비스 제공을 위해 다음과 같이 시스템 점검을 실시할 예정입니다. 고객 여러분의 양해 부탁드립니다.",
+                  );
+                },
+              ),
             )
-          : const Center(
-              child: Text(
-              "공지사항이 없습니다.",
-              style: TextStyle(fontSize: 16),
-            )),
+          : Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(width: 0.5, color: Constants.DARK_GREY))),
+              child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (BuildContext context, int index) {
+                  return const NoticeTile(
+                    title: "공지제목",
+                    date: "2024-08-24",
+                    content:
+                        "안녕하세요. 팝허브입니다. 보다 나은 서비스 제공을 위해 다음과 같이 시스템 점검을 실시할 예정입니다. 고객 여러분의 양해 부탁드립니다.",
+                  );
+                },
+              ),
+            ),
     );
   }
 }
@@ -72,22 +101,49 @@ class NoticeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Constants.LIGHT_GREY,
-              width: 0.5,
+        decoration: const BoxDecoration(
+            border: Border(
+                bottom: BorderSide(width: 0.5, color: Constants.DARK_GREY)),
+            borderRadius: BorderRadius.all(Radius.zero)),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NoticeDetail(
+                  title: title,
+                  date: date,
+                  content: content,
+                ),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      DateFormat("yyyy.MM.dd").format(DateTime.parse(date)),
+                      style: const TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_right_rounded,
+                ),
+              ],
             ),
-            borderRadius: const BorderRadius.all(Radius.zero)),
-        child: ExpansionTile(
-          title: Text(title),
-          subtitle: Text(DateFormat("yyyy.MM.dd").format(DateTime.parse(date))),
-          children: <Widget>[
-            Container(
-              color: Constants.LIGHT_GREY,
-              padding: const EdgeInsets.all(16.0),
-              child: Text(content),
-            ),
-          ],
+          ),
         ));
   }
 }

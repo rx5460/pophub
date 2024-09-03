@@ -111,7 +111,7 @@ class UserApi {
   // 프로필 추가 (이미지 x)
   static Future<Map<String, dynamic>> postProfileAdd(
       String nickName, String gender, String age, String phone) async {
-    final data = await postData('$domain/user/createProfile/', {
+    final data = await postData('$domain/user/profile/create', {
       'userId': User().userId,
       'userName': nickName,
       'phoneNumber': phone,

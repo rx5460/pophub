@@ -29,7 +29,7 @@ class InquiryApi {
   static Future<Map<String, dynamic>> postInquiryAddWithImage(
       String title, String content, String category, image) async {
     final data = await postDataWithImage(
-        '$domain/user/createInquiry/',
+        '$domain/user/inquiry/create',
         {
           'userName': User().userName,
           'categoryId': category,
@@ -45,7 +45,7 @@ class InquiryApi {
   // 문의내역 추가 (이미지 x)
   static Future<Map<String, dynamic>> postInquiryAdd(
       String title, String content, String category) async {
-    final data = await postData('$domain/user/createInquiry/', {
+    final data = await postData('$domain/user/inquiry/create', {
       'userName': User().userName,
       'categoryId': category,
       'title': title,
@@ -58,7 +58,7 @@ class InquiryApi {
   // 문의 내역 상세 조회
   static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
-        await getData('$domain/user/searchInquiry/?inquiryId=$inquiryId', {});
+        await getData('$domain/user/inauiry/search/?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
     InquiryModel inquiryModel = InquiryModel.fromJson(data);
@@ -97,7 +97,7 @@ class InquiryApi {
   // 답변 조회
   static Future<AnswerModel> getAnswer(int inquiryId) async {
     final data =
-        await getData('$domain/user/searchAnswer/?inquiryId=$inquiryId', {});
+        await getData('$domain/user/anwser/search/?inquiryId=$inquiryId', {});
     Logger.debug("### 답변 조회 $data");
 
     AnswerModel answerModel = AnswerModel.fromJson(data);
