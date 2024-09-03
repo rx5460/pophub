@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NoticePage extends StatefulWidget {
   const NoticePage({Key? key}) : super(key: key);
@@ -9,6 +12,22 @@ class NoticePage extends StatefulWidget {
 
 class NoticePageState extends State<NoticePage> {
   String selectedCategory = '광고';
+  final ImagePicker _picker = ImagePicker();
+  File? _selectedImage;
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          _selectedImage = File(pickedImage.path);
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +125,31 @@ class NoticePageState extends State<NoticePage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // 이미지 첨부
-                    },
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: const Text('첨부하기'),
-                  ),
+                  _selectedImage == null
+                      ? ElevatedButton(
+                          onPressed: _pickImage,
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child: const Text('첨부하기'),
+                        )
+                      : Column(
+                          children: [
+                            Image.file(
+                              _selectedImage!,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 8.0),
+                            ElevatedButton(
+                              onPressed: _pickImage,
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
+                              child: const Text('다시 선택'),
+                            ),
+                          ],
+                        ),
                   const SizedBox(height: 16.0),
                 ],
               ),
