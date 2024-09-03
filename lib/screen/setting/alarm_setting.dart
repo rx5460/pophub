@@ -61,7 +61,12 @@ class _AlarmSettingsPageState extends State<AlarmSettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SwitchListTile(
-              title: const Text('푸시 알림 ON / OFF'),
+              title: const Text(
+                '푸시 알림 ON / OFF',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               value: _pushNotification,
               onChanged: (bool value) {
                 _toggleNotification(value);

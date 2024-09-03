@@ -84,6 +84,7 @@ class AlarmAddState extends State<AlarmAdd> {
               controller: _titleController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                hintText: '알림 제목을 입력하세요',
               ),
             ),
             const SizedBox(height: 16.0),
@@ -137,6 +138,7 @@ class AlarmAddState extends State<AlarmAdd> {
                 textAlignVertical: TextAlignVertical.top,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
+                  hintText: '알림 내용을 입력하세요',
                 ),
               ),
             ),
@@ -152,9 +154,9 @@ class AlarmAddState extends State<AlarmAdd> {
                 child: const Text(
                   '완료',
                   style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),

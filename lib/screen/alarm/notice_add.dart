@@ -67,6 +67,7 @@ class NoticeAdd extends StatelessWidget {
               controller: titleController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                hintText: '공지사항 제목을 입력하세요',
               ),
             ),
             const SizedBox(height: 16.0),
@@ -86,6 +87,7 @@ class NoticeAdd extends StatelessWidget {
                 textAlignVertical: TextAlignVertical.top,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
+                  hintText: '공지사항 내용을 입력하세요',
                 ),
               ),
             ),
@@ -109,6 +111,7 @@ class NoticeAdd extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

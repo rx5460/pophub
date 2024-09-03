@@ -4,10 +4,10 @@ class InquiryPage extends StatefulWidget {
   const InquiryPage({Key? key}) : super(key: key);
 
   @override
-  _InquiryPageState createState() => _InquiryPageState();
+  InquiryPageState createState() => InquiryPageState();
 }
 
-class _InquiryPageState extends State<InquiryPage>
+class InquiryPageState extends State<InquiryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -49,8 +49,18 @@ class _InquiryPageState extends State<InquiryPage>
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
           tabs: const [
-            Tab(text: '일반 문의'),
-            Tab(text: '광고 문의'),
+            Tab(
+              child: Text(
+                '일반 문의',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Tab(
+              child: Text(
+                '광고 문의',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
       ),
@@ -81,7 +91,11 @@ class _InquiryPageState extends State<InquiryPage>
                 ),
                 child: Text(
                   _tabController.index == 0 ? '문의 하기' : '광고 문의 하기',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
