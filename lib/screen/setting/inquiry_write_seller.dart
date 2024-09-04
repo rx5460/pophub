@@ -133,9 +133,9 @@ class NoticePageState extends State<NoticePage> {
                             backgroundColor: Colors.white,
                             side: const BorderSide(color: Color(0xFFE6A3B3)),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text(
                                 '첨부하기',
                                 style: TextStyle(
@@ -165,10 +165,10 @@ class NoticePageState extends State<NoticePage> {
                                 side:
                                     const BorderSide(color: Color(0xFFE6A3B3)),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Text(
                                     '다시 선택',
                                     style: TextStyle(
