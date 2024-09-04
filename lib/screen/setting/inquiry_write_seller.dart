@@ -41,7 +41,7 @@ class NoticePageState extends State<NoticePage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -62,7 +62,7 @@ class NoticePageState extends State<NoticePage> {
             const SizedBox(height: 8.0),
             DropdownButtonFormField<String>(
               value: selectedCategory,
-              items: <String>['광고', '기타'].map((String value) {
+              items: <String>['광고', '일반'].map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -128,10 +128,26 @@ class NoticePageState extends State<NoticePage> {
                   _selectedImage == null
                       ? ElevatedButton(
                           onPressed: _pickImage,
-                          style: OutlinedButton.styleFrom(
+                          style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Color(0xFFE6A3B3)),
                           ),
-                          child: const Text('첨부하기'),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
+                                '첨부하기',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
                         )
                       : Column(
                           children: [
@@ -143,10 +159,28 @@ class NoticePageState extends State<NoticePage> {
                             const SizedBox(height: 8.0),
                             ElevatedButton(
                               onPressed: _pickImage,
-                              style: OutlinedButton.styleFrom(
+                              style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(double.infinity, 50),
+                                backgroundColor: Colors.white,
+                                side:
+                                    const BorderSide(color: Color(0xFFE6A3B3)),
                               ),
-                              child: const Text('다시 선택'),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text(
+                                    '다시 선택',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
