@@ -55,6 +55,9 @@ class InquiryPageState extends State<InquiryPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
                 child: const Text(
                   '문의 하기',

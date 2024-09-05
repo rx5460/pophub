@@ -196,6 +196,9 @@ class NoticePageState extends State<NoticePage> {
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
                 child: const Text(
                   '완료',
