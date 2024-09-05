@@ -15,6 +15,8 @@ class AdUploadPageState extends State<AdUploadPage> {
   DateTime? startDate;
   DateTime? endDate;
 
+  final Color pinkColor = const Color(0xFFE6A3B3);
+
   Future<void> _pickImage() async {
     try {
       final XFile? pickedImage =
@@ -45,6 +47,67 @@ class AdUploadPageState extends State<AdUploadPage> {
         }
       });
     }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            side: BorderSide(color: pinkColor, width: 2),
+          ),
+          backgroundColor: Colors.white,
+          contentPadding: const EdgeInsets.all(16.0),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '성공',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  '광고 등록이 완료되었습니다.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 24.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: pinkColor,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: pinkColor, width: 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    '닫기',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -183,10 +246,10 @@ class AdUploadPageState extends State<AdUploadPage> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // 완료 로직
+              _showSuccessDialog();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE6A3B3),
+              backgroundColor: pinkColor,
               minimumSize: const Size(double.infinity, 50),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
