@@ -322,7 +322,7 @@ class _HomePageState extends State<HomePage> {
               if (User().userName != "") {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AlarmPage()),
+                  MaterialPageRoute(builder: (context) => const AlarmList()),
                 );
               } else {
                 if (context.mounted) {

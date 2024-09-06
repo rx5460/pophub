@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AdUploadPage extends StatefulWidget {
-  const AdUploadPage({Key? key}) : super(key: key);
+class AdUpload extends StatefulWidget {
+  const AdUpload({Key? key}) : super(key: key);
 
   @override
-  AdUploadPageState createState() => AdUploadPageState();
+  AdUploadState createState() => AdUploadState();
 }
 
-class AdUploadPageState extends State<AdUploadPage> {
+class AdUploadState extends State<AdUpload> {
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
   DateTime? startDate;

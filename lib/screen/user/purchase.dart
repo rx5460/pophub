@@ -91,7 +91,7 @@ class _PurchasePageState extends State<PurchasePage> {
                   }),
                 );
 
-                await const AlarmPage().showNotification(alarmDetails['title']!,
+                await const AlarmList().showNotification(alarmDetails['title']!,
                     alarmDetails['label']!, alarmDetails['time']!);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pophub/model/user.dart';
 
-class AlarmPage extends StatefulWidget {
+class AlarmList extends StatefulWidget {
   final String? payload;
-  const AlarmPage({super.key, this.payload});
+  const AlarmList({super.key, this.payload});
 
   @override
-  State<AlarmPage> createState() => _AlarmPageState();
+  State<AlarmList> createState() => AlarmListState();
 
   Future<void> showNotification(String title, String body, String time) async {
     var androidDetails = const AndroidNotificationDetails(
@@ -28,7 +28,7 @@ class AlarmPage extends StatefulWidget {
   }
 }
 
-class _AlarmPageState extends State<AlarmPage>
+class AlarmListState extends State<AlarmList>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
@@ -74,8 +74,8 @@ class _AlarmPageState extends State<AlarmPage>
         ),
         bottom: TabBar(
           controller: _tabController,
-          dividerColor: const Color(0xFFADD8E6),
-          indicatorColor: const Color(0xFFADD8E6),
+          dividerColor: const Color(0xFFE6A3B3),
+          indicatorColor: const Color(0xFFE6A3B3),
           indicatorWeight: 3.5,
           indicatorSize: TabBarIndicatorSize.label,
           labelColor: Colors.black,

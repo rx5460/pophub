@@ -117,7 +117,7 @@ class _ReserveCountState extends State<ReserveCount> {
         .add(alarmDetails);
 
     // 로컬 알림 발송
-    await const AlarmPage().showNotification(
+    await const AlarmList().showNotification(
         alarmDetails['title']!, alarmDetails['label']!, alarmDetails['time']!);
   }
 
