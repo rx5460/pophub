@@ -116,8 +116,67 @@ class AdListState extends State<AdList> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildAdListTab() {
-    return const Center(
-      child: Text('광고 리스트 내용'),
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        ListTile(
+          title: const Text(
+            '나의 히어로 아카데미아',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+            '2024.09.06',
+            style: TextStyle(color: Colors.grey),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              // 삭제 로직
+            },
+          ),
+          onTap: () {
+            // 광고 상세 페이지로 이동
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdDetail(
+                  title: '나의 히어로 아카데미아',
+                  date: '2024.09.06',
+                  content: '나의 히어로 아카데미아는 개꿀잼입니다!',
+                ),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text(
+            '원피스',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+            '2024.09.07',
+            style: TextStyle(color: Colors.grey),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              // 삭제 로직
+            },
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdDetail(
+                  title: '원피스',
+                  date: '2024.09.07',
+                  content: '원피스도 개꿀잼이에요!',
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -152,7 +211,7 @@ class AdListState extends State<AdList> with SingleTickerProviderStateMixin {
                 name,
                 style: const TextStyle(
                   fontSize: 14.0,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 4.0),
@@ -183,6 +242,69 @@ class AdListState extends State<AdList> with SingleTickerProviderStateMixin {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class AdDetail extends StatelessWidget {
+  final String title;
+  final String date;
+  final String content;
+
+  const AdDetail({
+    Key? key,
+    required this.title,
+    required this.date,
+    required this.content,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          '광고 상세 정보',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              date,
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Text(
+              content,
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          ],
+        ),
       ),
     );
   }
