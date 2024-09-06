@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
-import 'package:pophub/screen/setting/ad_list.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
