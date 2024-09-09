@@ -140,7 +140,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                         )),
                     Container(
                       width: double.infinity,
-                      height: 55,
+                      height: 48,
                       margin: const EdgeInsets.only(top: 15),
                       child: OutlinedButton(
                           onPressed: () => {
@@ -172,7 +172,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                 ))),
                         Container(
                           width: 80,
-                          height: 55,
+                          height: 48,
                           margin: const EdgeInsets.only(
                               top: 18, bottom: 18, left: 10),
                           child: OutlinedButton(
@@ -196,7 +196,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                     const Spacer(),
                     SizedBox(
                       width: double.infinity,
-                      height: 55,
+                      height: 48,
                       child: OutlinedButton(
                           onPressed: () => {
                                 if (userNotifier.isVerify)

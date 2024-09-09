@@ -65,7 +65,7 @@ class _StoreMainState extends State<StoreMain> {
                       Text(profileData),
                       Container(
                         width: double.infinity,
-                        height: 55,
+                        height: 48,
                         margin: const EdgeInsets.only(top: 10, bottom: 10),
                         child: OutlinedButton(
                             onPressed: () => {popupApi()},
