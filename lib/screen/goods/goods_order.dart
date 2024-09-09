@@ -221,13 +221,14 @@ class _GoodsOrderState extends State<GoodsOrder> {
                               child: Container(
                                 width: screenWidth * 0.2,
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Constants.DEFAULT_COLOR,
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(8)),
-                                    color: const Color(0xFFADD8E6)),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Constants.DEFAULT_COLOR,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
+                                  color: Constants.DEFAULT_COLOR,
+                                ),
                                 child: const Center(
                                     child: Padding(
                                   padding: EdgeInsets.all(2.0),
@@ -280,7 +281,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFFADD8E6),
+                        color: Constants.DEFAULT_COLOR,
                       ),
                     ),
                   ],
@@ -368,11 +369,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       height: screenHeight * 0.08,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          width: 1,
-                          color: const Color(
-                            0xFFADD8E6,
-                          ),
-                        ),
+                            width: 1, color: Constants.DEFAULT_COLOR),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(15),
                         ),
@@ -394,12 +391,13 @@ class _GoodsOrderState extends State<GoodsOrder> {
               width: screenWidth * 0.9,
               height: screenHeight * 0.07,
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(
-                    width: 2,
-                    color: Constants.DEFAULT_COLOR,
-                  ),
-                  color: const Color(0xFFADD8E6)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                border: Border.all(
+                  width: 2,
+                  color: Constants.DEFAULT_COLOR,
+                ),
+                color: Constants.DEFAULT_COLOR,
+              ),
               child: InkWell(
                 onTap: () async {
                   await testApi();

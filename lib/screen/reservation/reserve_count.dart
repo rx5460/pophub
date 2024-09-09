@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/utils/api/reservation_api.dart';
@@ -238,7 +239,10 @@ class _ReserveCountState extends State<ReserveCount> {
             height: screenHeight * 0.18,
             decoration: const BoxDecoration(
                 border: Border(
-                    top: BorderSide(width: 1, color: Color(0xFFADD8E6)))),
+                    top: BorderSide(
+              width: 1,
+              color: Constants.DEFAULT_COLOR,
+            ))),
             child: Column(
               children: [
                 Padding(

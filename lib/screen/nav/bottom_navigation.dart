@@ -72,7 +72,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             border: Border(
               top: BorderSide(
                 width: 2,
-                color: Color(0xFFADD8E6),
+                color: Constants.DEFAULT_COLOR,
               ),
             ),
           ),

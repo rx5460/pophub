@@ -170,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: screenWidth,
                       height: screenHeight * 0.2,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFADD8E6),
+                        color: Constants.DEFAULT_COLOR,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10),
                           bottomRight: Radius.circular(10),

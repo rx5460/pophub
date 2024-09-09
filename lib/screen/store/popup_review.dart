@@ -103,7 +103,7 @@ class _PopupReviewState extends State<PopupReview> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 2,
-                        color: Color(0xFFAdd8E6),
+                        color: Constants.DEFAULT_COLOR,
                       ),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/screen/reservation/reserve_count.dart';
@@ -203,7 +204,7 @@ class _ReserveDateState extends State<ReserveDate> {
                         decoration: BoxDecoration(
                           color: abled
                               ? selectedHour == hour
-                                  ? const Color(0xFFADD8E6)
+                                  ? Constants.DEFAULT_COLOR
                                   : Colors.white
                               : Colors.grey,
                           border: Border.all(

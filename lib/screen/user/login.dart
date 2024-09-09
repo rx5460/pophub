@@ -201,7 +201,7 @@ class _LoginState extends State<Login> {
                               '또는',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 14,
                               ),
                             ),
                             Expanded(

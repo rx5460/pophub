@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -35,10 +36,10 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               String token = parseUrl.split("code=")[1];
               await _storage.write(key: 'token', value: token);
 
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => const BottomNavigationPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavigationPage()));
               return NavigationDecision.prevent;
             } else {
               return NavigationDecision.navigate;
