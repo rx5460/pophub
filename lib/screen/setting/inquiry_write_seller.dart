@@ -132,6 +132,10 @@ class NoticePageState extends State<NoticePage> {
                             minimumSize: const Size(double.infinity, 50),
                             backgroundColor: Colors.white,
                             side: const BorderSide(color: Color(0xFFE6A3B3)),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

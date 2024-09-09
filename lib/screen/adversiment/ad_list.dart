@@ -148,7 +148,8 @@ class AdListState extends State<AdList> with SingleTickerProviderStateMixin {
                 builder: (context) => const AdItemDetail(
                   title: '나의 히어로 아카데미아',
                   date: '2024.09.06',
-                  content: '나의 히어로 아카데미아는 개꿀잼입니다!',
+                  content:
+                      '나의 히어로 아카데미아는 결말은 별로지만 과정이 너무 재밌는 애니메이션입니다. 팝업 스토어 오셔서 그 재미를 한 번 느껴보세요!',
                 ),
               ),
             );
@@ -176,7 +177,8 @@ class AdListState extends State<AdList> with SingleTickerProviderStateMixin {
                 builder: (context) => const AdItemDetail(
                   title: '원피스',
                   date: '2024.09.07',
-                  content: '원피스도 개꿀잼이에요!',
+                  content:
+                      '원피스도 왠만한 사람들이 모두 다 아는 그런 대중적인 애니메이션입니다. 20주년 기념으로 여는 이번 팝업스토어에 함께 해보세요!',
                 ),
               ),
             );
