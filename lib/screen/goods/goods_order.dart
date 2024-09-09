@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/user/purchase.dart';
@@ -172,7 +173,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 child: Container(
                   width: screenWidth,
                   height: 1,
-                  color: const Color(0xFFAdd8E6),
+                  color: Constants.DEFAULT_COLOR,
                 ),
               ),
               Padding(
@@ -222,7 +223,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 1,
-                                      color: const Color(0xFFADD8E6),
+                                      color: Constants.DEFAULT_COLOR,
                                     ),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(8)),
@@ -260,7 +261,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 child: Container(
                   width: screenWidth,
                   height: 1,
-                  color: const Color(0xFFAdd8E6),
+                  color: Constants.DEFAULT_COLOR,
                 ),
               ),
               Padding(
@@ -290,7 +291,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 child: Container(
                   width: screenWidth,
                   height: 1,
-                  color: const Color(0xFFAdd8E6),
+                  color: Constants.DEFAULT_COLOR,
                 ),
               ),
               Padding(
@@ -349,7 +350,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 child: Container(
                   width: screenWidth,
                   height: 1,
-                  color: const Color(0xFFAdd8E6),
+                  color: Constants.DEFAULT_COLOR,
                 ),
               ),
               Column(
@@ -396,7 +397,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(
                     width: 2,
-                    color: const Color(0xFFADD8E6),
+                    color: Constants.DEFAULT_COLOR,
                   ),
                   color: const Color(0xFFADD8E6)),
               child: InkWell(

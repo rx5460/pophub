@@ -999,9 +999,9 @@ class _PopupDetailState extends State<PopupDetail> {
                                       Radius.circular(10)),
                                   border: Border.all(
                                     width: 2,
-                                    color: const Color(0xFFADD8E6),
+                                    color: Constants.DEFAULT_COLOR,
                                   ),
-                                  color: const Color(0xFFADD8E6),
+                                  color: Constants.DEFAULT_COLOR,
                                 ),
                                 child: InkWell(
                                   onTap: () {

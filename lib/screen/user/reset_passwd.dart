@@ -302,7 +302,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                           side: const BorderSide(
                                               color: Colors.white),
                                           backgroundColor:
-                                              const Color(0xffadd8e6),
+                                              Constants.DEFAULT_COLOR,
                                           foregroundColor: Colors.white,
                                           textStyle: const TextStyle(
                                               color: Colors.white),

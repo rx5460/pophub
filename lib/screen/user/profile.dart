@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
@@ -154,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
             width: screenWidth * 0.05,
           )
         ],
-        backgroundColor: const Color(0xFFADD8E6),
+        backgroundColor: Constants.DEFAULT_COLOR,
         elevation: 0,
       ),
       body: isLoading

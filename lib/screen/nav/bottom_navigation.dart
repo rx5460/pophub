@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/store/category.dart';
 import 'package:pophub/screen/store/favorites.dart';
 import 'package:pophub/screen/store/home.dart';
 import 'package:pophub/screen/store/map.dart';
 import 'package:pophub/screen/user/login.dart';
-import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/screen/user/profile.dart';
+import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/user_api.dart';
 
 class BottomNavigationPage extends StatefulWidget {
@@ -101,7 +102,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                                 ),
                                 border: Border.all(
                                   width: 2,
-                                  color: const Color(0xFFADD8E6),
+                                  color: Constants.DEFAULT_COLOR,
                                 ),
                               ),
                               child: ClipRRect(
