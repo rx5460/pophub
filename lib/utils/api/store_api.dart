@@ -6,9 +6,9 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/schedule_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/utils.dart';
 
 class StoreApi {
@@ -359,7 +359,8 @@ class StoreApi {
   static Future<List<PopupModel>> getPopupByName(String storeName) async {
     try {
       final List<dynamic> dataList = await getListData(
-          '$domain/popup/searchStoreName/?store_name=$storeName', {});
+          '$domain/popup/searchPopups/?type=storeName&storeName=$storeName',
+          {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
@@ -373,8 +374,8 @@ class StoreApi {
   // 카테고리로 팝업 검색
   static Future<List<PopupModel>> getPopupByCategory(int category) async {
     try {
-      final List<dynamic> dataList =
-          await getListData('$domain/popup/searchCategory/$category', {});
+      final List<dynamic> dataList = await getListData(
+          '$domain/popup/searchPopups/?type=category&categoryId=$category', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
