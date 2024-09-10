@@ -61,7 +61,7 @@ class AlarmAddState extends State<AlarmAdd> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -150,6 +150,9 @@ class AlarmAddState extends State<AlarmAdd> {
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
                 child: const Text(
                   '완료',

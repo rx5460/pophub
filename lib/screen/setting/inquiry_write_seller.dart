@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NoticePage extends StatefulWidget {
   const NoticePage({Key? key}) : super(key: key);
@@ -9,6 +12,22 @@ class NoticePage extends StatefulWidget {
 
 class NoticePageState extends State<NoticePage> {
   String selectedCategory = '광고';
+  final ImagePicker _picker = ImagePicker();
+  File? _selectedImage;
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          _selectedImage = File(pickedImage.path);
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +41,7 @@ class NoticePageState extends State<NoticePage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -43,7 +62,7 @@ class NoticePageState extends State<NoticePage> {
             const SizedBox(height: 8.0),
             DropdownButtonFormField<String>(
               value: selectedCategory,
-              items: <String>['광고', '기타'].map((String value) {
+              items: <String>['광고', '일반'].map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -106,15 +125,69 @@ class NoticePageState extends State<NoticePage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // 이미지 첨부
-                    },
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: const Text('첨부하기'),
-                  ),
+                  _selectedImage == null
+                      ? ElevatedButton(
+                          onPressed: _pickImage,
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 50),
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Color(0xFFE6A3B3)),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '첨부하기',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            Image.file(
+                              _selectedImage!,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 8.0),
+                            ElevatedButton(
+                              onPressed: _pickImage,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 50),
+                                backgroundColor: Colors.white,
+                                side:
+                                    const BorderSide(color: Color(0xFFE6A3B3)),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '다시 선택',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                   const SizedBox(height: 16.0),
                 ],
               ),
@@ -127,6 +200,9 @@ class NoticePageState extends State<NoticePage> {
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   minimumSize: const Size(double.infinity, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
                 child: const Text(
                   '완료',

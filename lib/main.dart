@@ -141,7 +141,7 @@ class MyApp extends StatelessWidget {
       theme: theme,
       home: const BottomNavigationPage(),
       routes: {
-        '/alarm': (context) => const AlarmPage(), // 라우트 설정
+        '/alarm': (context) => const AlarmList(), // 라우트 설정
       },
     );
   }

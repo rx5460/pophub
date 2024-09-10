@@ -66,7 +66,7 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
             .add(alarmDetails);
 
         // 로컬 알림 발송
-        await const AlarmPage().showNotification(alarmDetails['title']!,
+        await const AlarmList().showNotification(alarmDetails['title']!,
             alarmDetails['label']!, alarmDetails['time']!);
 
         Navigator.of(context).pop();

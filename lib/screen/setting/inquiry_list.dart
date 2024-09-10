@@ -7,22 +7,7 @@ class InquiryPage extends StatefulWidget {
   InquiryPageState createState() => InquiryPageState();
 }
 
-class InquiryPageState extends State<InquiryPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class InquiryPageState extends State<InquiryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,47 +21,27 @@ class InquiryPageState extends State<InquiryPage>
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.white,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: const Color(0xFFE6A3B3),
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          tabs: const [
-            Tab(
-              child: Text(
-                '일반 문의',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            Tab(
-              child: Text(
-                '광고 문의',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
+        elevation: 0,
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: const [
-                Center(
-                    child:
-                        Text('문의 내용이 없습니다!', style: TextStyle(fontSize: 16))),
-                Center(
-                    child: Text('광고 문의 내용이 없습니다!',
-                        style: TextStyle(fontSize: 16))),
-              ],
+          const Expanded(
+            child: Center(
+              child: Text(
+                '문의 내역이 없습니다!',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
           Padding(
@@ -84,14 +49,19 @@ class InquiryPageState extends State<InquiryPage>
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // 문의 하기 이동
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE6A3B3),
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
-                child: Text(
-                  _tabController.index == 0 ? '문의 하기' : '광고 문의 하기',
-                  style: const TextStyle(
+                child: const Text(
+                  '문의 하기',
+                  style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

@@ -6,10 +6,10 @@ class AlarmSettingsPage extends StatefulWidget {
   const AlarmSettingsPage({super.key});
 
   @override
-  _AlarmSettingsPageState createState() => _AlarmSettingsPageState();
+  AlarmSettingsPageState createState() => AlarmSettingsPageState();
 }
 
-class _AlarmSettingsPageState extends State<AlarmSettingsPage> {
+class AlarmSettingsPageState extends State<AlarmSettingsPage> {
   bool _pushNotification = false;
 
   @override
@@ -54,6 +54,12 @@ class _AlarmSettingsPageState extends State<AlarmSettingsPage> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
