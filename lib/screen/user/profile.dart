@@ -500,18 +500,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                     text: '펀딩',
                                     onClick: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          const FundingAddPage(
-                                                              mode: "add"))));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const FundingAddPage(
+                                                  mode: "add",
+                                                )),
+                                      );
                                     },
                                   ),
                                 ),
