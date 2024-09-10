@@ -12,6 +12,11 @@ class LikeApi {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/popup/likeUser/${User().userName}', {});
+
+      if (dataList.toString().contains("존재하지")) {
+        List<LikeModel> likeList = [];
+        return likeList;
+      }
       List<LikeModel> likeList =
           dataList.map((data) => LikeModel.fromJson(data)).toList();
       return likeList;

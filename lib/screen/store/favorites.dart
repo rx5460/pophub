@@ -25,22 +25,27 @@ class _FavoritesPageState extends State<FavoritesPage> {
       if (User().userName != "") {
         final likeData = await LikeApi.getLikePopup();
 
-        for (LikeModel like in likeData) {
-          try {
-            PopupModel? popup =
-                await StoreApi.getPopup(like.storeId, true, like.userName);
-            if (context.mounted) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {
-                  likePopupList.add(popup);
+        if (likeData.isNotEmpty) {
+          for (LikeModel like in likeData) {
+            try {
+              PopupModel? popup =
+                  await StoreApi.getPopup(like.storeId, true, like.userName);
+              if (context.mounted) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    likePopupList.add(popup);
+                  });
+                  isLoading = true;
                 });
-                isLoading = true;
-              });
+              }
+            } catch (error) {
+              // 오류 처리
+              Logger.debug('Error fetching popup data: $error');
             }
-          } catch (error) {
-            // 오류 처리
-            Logger.debug('Error fetching popup data: $error');
           }
+        } else {
+          setState(() {});
+          isLoading = true;
         }
       } else {
         if (context.mounted) {
@@ -72,6 +77,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
           )
         : StoreListPage(
             popups: likePopupList,
+            useBack: false,
+            titleName: "찜 팝업스토어",
           );
   }
 }

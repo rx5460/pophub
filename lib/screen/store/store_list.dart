@@ -8,12 +8,14 @@ class StoreListPage extends StatelessWidget {
   final List<PopupModel> popups;
   final String titleName;
   final String mode;
+  final bool useBack;
 
   const StoreListPage(
       {super.key,
       required this.popups,
       this.titleName = "팝업스토어",
-      this.mode = "view"});
+      this.mode = "view",
+      this.useBack = true});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,10 @@ class StoreListPage extends StatelessWidget {
     // double screenHeight = screenSize.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomTitleBar(titleName: titleName),
+      appBar: CustomTitleBar(
+        titleName: titleName,
+        useBack: useBack,
+      ),
       body: popups.isEmpty || popups[0].category == null
           ? const Center(
               child: Text(
