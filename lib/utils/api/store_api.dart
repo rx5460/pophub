@@ -160,8 +160,8 @@ class StoreApi {
 
   // 팝업 승인
   static Future<Map<String, dynamic>> putPopupAllow(String storeId) async {
-    final data = await putData(
-        '$domain/admin/popupPendingCheck/', {'store_id': storeId});
+    final data =
+        await putData('$domain/admin/popupPendingCheck/', {'storeId': storeId});
     Logger.debug("### 팝업 승인 $data");
     return data;
   }
