@@ -30,6 +30,7 @@ class _AcountInfoState extends State<AcountInfo> {
   void initState() {
     super.initState();
     nicknameController.text = User().userName;
+    nicknameInput = User().userName;
   }
 
   Future<void> _pickImage() async {

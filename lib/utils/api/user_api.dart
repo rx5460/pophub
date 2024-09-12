@@ -68,7 +68,7 @@ class UserApi {
   // 프로필 수정 (이미지 x)
   static Future<Map<String, dynamic>> postProfileModify(
       String userId, String userName) async {
-    final data = await postData('$domain/user/updateProfile/',
+    final data = await postData('$domain/user/profile/update',
         {'userId': userId, 'userName': userName});
     Logger.debug("### 프로필 수정 이미지x $data");
     return data;
@@ -77,8 +77,8 @@ class UserApi {
   // 프로필 수정 (이미지 o)
   static Future<Map<String, dynamic>> postProfileModifyImage(
       String userId, String userName, image) async {
-    final data = await postDataWithImage('$domain/user/updateProfile/',
-        {'userId': userId, 'userName': userName}, 'file', image);
+    final data = await postDataWithImage('$domain/user/profile/update',
+        {'userId': userId, 'userName': userName}, 'userImage', image);
     Logger.debug("### 프로필 수정 이미지o $data");
     return data;
   }
@@ -94,7 +94,7 @@ class UserApi {
   static Future<Map<String, dynamic>> postProfileAddWithImage(
       String nickName, String gender, String age, image, String phone) async {
     final data = await postDataWithImage(
-        '$domain/user/createProfile/',
+        '$domain/user/profile/create',
         {
           'userId': User().userId,
           'userName': nickName,
