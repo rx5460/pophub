@@ -145,11 +145,4 @@ class UserApi {
         {});
     return data;
   }
-
-  // 카카오 간편 로그인 리다이렉트
-  static Future<Map<String, dynamic>> kakaoLogin() async {
-    final data = await getData('$domain/user/oauth/kakao', {});
-    Logger.debug("### 카카오 리다이렉트 $data");
-    return data;
-  }
 }

@@ -115,7 +115,12 @@ class _AddressWritePageState extends State<AddressWritePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-        appBar: const CustomTitleBar(titleName: "문의 하기"),
+        appBar: CustomTitleBar(
+          titleName: "주소",
+          onBackPressed: () {
+            Navigator.pop(context, totalAddress);
+          },
+        ),
         body: Padding(
           padding: EdgeInsets.only(
               left: screenWidth * 0.05,
@@ -143,7 +148,7 @@ class _AddressWritePageState extends State<AddressWritePage> {
                         ),
                         child: ListTile(
                           title: const Text(
-                            '스토어 위치',
+                            '내 주소',
                           ),
                           subtitle: pickAddress != ""
                               ? Text(pickAddress.toString())

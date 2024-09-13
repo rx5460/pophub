@@ -269,7 +269,7 @@ class _LoginState extends State<Login> {
                                       builder: (context) =>
                                           const KakaoLoginPage(
                                             url:
-                                                'http://3.88.120.90:3000/user/oauth/kakao',
+                                                'http://3.88.120.90:3000/user/auth/kakao',
                                           )));
                             },
                             style: OutlinedButton.styleFrom(
