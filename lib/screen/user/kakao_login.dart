@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/utils/log.dart';
+import 'package:pophub/utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class KakaoLoginPage extends StatefulWidget {
@@ -32,14 +37,38 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
           onNavigationRequest: (NavigationRequest request) async {
             Logger.debug("### ${request.url}");
             String parseUrl = request.url;
-            if (parseUrl.contains("code=")) {
-              String token = parseUrl.split("code=")[1];
-              await _storage.write(key: 'token', value: token);
 
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const BottomNavigationPage()));
+            if (parseUrl.contains("callback?code=")) {
+              final response = await http.get(Uri.parse(parseUrl));
+
+              if (response.statusCode == 201) {
+                String data = response.body;
+
+                var jsonData = jsonDecode(data);
+                Logger.debug('Parsed JSON: $jsonData');
+
+                String token = jsonData['token_info']['access_token'];
+                String id = jsonData['profile_info']['response']['id'];
+                await _storage.write(key: 'token', value: token);
+                User().userId = id;
+
+                if (mounted) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BottomNavigationPage()));
+                }
+              } else {
+                // 에러 처리
+                if (mounted) {
+                  showAlert(context, "경고", "간편로그인 정보를 불러오는데 실패하였습니다.", () {
+                    Navigator.of(context).pop();
+                  });
+                }
+
+                Logger.debug(" ${response.body}");
+              }
+
               return NavigationDecision.prevent;
             } else {
               return NavigationDecision.navigate;
