@@ -124,8 +124,8 @@ class UserApi {
 
 // 회원탈퇴
   static Future<Map<String, dynamic>> postUserDelete() async {
-    final data = await postData('$domain/user/userDelete/',
-        {'userId': User().userId, 'phoneNumber': User().phoneNumber});
+    final data = await postData('$domain/user/delete/',
+        {'userId': 'jimin01', 'phoneNumber': User().phoneNumber});
     Logger.debug("### 회원탈퇴 $data");
     return data;
   }
