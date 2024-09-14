@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AdUpload extends StatefulWidget {
   const AdUpload({Key? key}) : super(key: key);
@@ -49,65 +50,34 @@ class AdUploadState extends State<AdUpload> {
     }
   }
 
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            side: BorderSide(color: pinkColor, width: 2),
-          ),
-          backgroundColor: Colors.white,
-          contentPadding: const EdgeInsets.all(16.0),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '성공',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                const Text(
-                  '광고 등록이 완료되었습니다.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 24.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: pinkColor,
-                    backgroundColor: Colors.white,
-                    side: BorderSide(color: pinkColor, width: 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: const Text(
-                    '닫기',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+  Future<void> uploadAd() async {
+    if (_selectedImage == null || startDate == null || endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("모든 필드를 채워주세요!")),
+      );
+      return;
+    }
+
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://3.88.120.90:3000/admin/event/create'),
     );
+    request.fields['startDate'] = startDate!.toIso8601String();
+    request.fields['endDate'] = endDate!.toIso8601String();
+    request.files
+        .add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("광고 업로드 성공!")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("광고 업로드 실패: ${response.reasonPhrase}")),
+      );
+    }
   }
 
   @override
@@ -245,9 +215,7 @@ class AdUploadState extends State<AdUpload> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              _showSuccessDialog();
-            },
+            onPressed: uploadAd,
             style: ElevatedButton.styleFrom(
               backgroundColor: pinkColor,
               minimumSize: const Size(double.infinity, 50),
