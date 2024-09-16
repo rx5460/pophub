@@ -15,6 +15,7 @@ class AdUploadState extends State<AdUpload> {
   File? _selectedImage;
   DateTime? startDate;
   DateTime? endDate;
+  String adTitle = '';
 
   final Color pinkColor = const Color(0xFFE6A3B3);
 
@@ -112,7 +113,10 @@ class AdUploadState extends State<AdUpload> {
   }
 
   Future<void> uploadAd() async {
-    if (_selectedImage == null || startDate == null || endDate == null) {
+    if (_selectedImage == null ||
+        startDate == null ||
+        endDate == null ||
+        adTitle.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("모든 값을 입력해주세요.")),
       );
@@ -125,6 +129,7 @@ class AdUploadState extends State<AdUpload> {
     );
     request.fields['startDate'] = startDate!.toIso8601String();
     request.fields['endDate'] = endDate!.toIso8601String();
+    request.fields['title'] = adTitle;
     request.files
         .add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
 
@@ -164,6 +169,26 @@ class AdUploadState extends State<AdUpload> {
           children: [
             const SizedBox(height: 16.0),
             const Text(
+              '광고 제목',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: '광고 제목을 입력하세요',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  adTitle = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
               '광고 이미지',
               style: TextStyle(
                 fontSize: 16.0,
@@ -183,7 +208,9 @@ class AdUploadState extends State<AdUpload> {
               ),
               child: _selectedImage == null
                   ? ListTile(
-                      title: const Text('첨부하기'),
+                      title: const Text(
+                        '첨부하기',
+                      ),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: _pickImage,
                     )
@@ -202,19 +229,6 @@ class AdUploadState extends State<AdUpload> {
                         ),
                       ],
                     ),
-            ),
-            const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '광고 미리보기',
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 30.0),
             const Text(

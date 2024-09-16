@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pophub/screen/adversiment/ad_edit.dart';
 import 'dart:convert';
+
+import 'package:pophub/screen/adversiment/ad_upload.dart';
 
 class AdDetailsPage extends StatelessWidget {
   final Map<String, dynamic> ad;
@@ -136,7 +139,7 @@ class AdListPageState extends State<AdListPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AdDetailsPage(ad: ad),
+                                builder: (context) => AdEditPage(ad: ad),
                               ),
                             );
                           },
@@ -147,6 +150,37 @@ class AdListPageState extends State<AdListPage> {
                 ),
               ],
             ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdUpload(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: pinkColor,
+              minimumSize: const Size(double.infinity, 50),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+            ),
+            child: const Text(
+              '광고 추가',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

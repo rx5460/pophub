@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:pophub/screen/adversiment/ad_list.dart';
+import 'package:pophub/screen/adversiment/ad_upload.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
@@ -139,7 +141,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'pophub',
       theme: theme,
-      home: const BottomNavigationPage(),
+      home: const AdUpload(),
       routes: {
         '/alarm': (context) => const AlarmList(), // 라우트 설정
       },
