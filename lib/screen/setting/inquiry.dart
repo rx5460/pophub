@@ -14,17 +14,18 @@ class InquiryPage extends StatefulWidget {
   const InquiryPage({super.key});
 
   @override
-  _InquiryPageState createState() => _InquiryPageState();
+  InquiryPageState createState() => InquiryPageState();
 }
 
-class _InquiryPageState extends State<InquiryPage> {
+class InquiryPageState extends State<InquiryPage> {
+  List<InquiryModel> inquiryList = [];
+
   @override
   void initState() {
     getInquiryData();
     super.initState();
   }
 
-  List<InquiryModel> inquiryList = [];
   Future<void> getInquiryData() async {
     Logger.debug("### ${User().role}");
     final data = User().role == "Manager"
@@ -32,6 +33,7 @@ class _InquiryPageState extends State<InquiryPage> {
         : await InquiryApi.getInquiryList(User().userName);
 
     if (data.toString().contains("fail")) {
+      // Handle error
     } else {
       setState(() {
         inquiryList = data;
@@ -43,6 +45,7 @@ class _InquiryPageState extends State<InquiryPage> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
+
     return Scaffold(
       appBar: const CustomTitleBar(titleName: "문의 내역"),
       body: Padding(
@@ -58,10 +61,11 @@ class _InquiryPageState extends State<InquiryPage> {
                       },
                     )
                   : const Center(
-                      child: Text(
-                      "문의 내역이 없습니다.",
-                      style: TextStyle(fontSize: 16),
-                    )),
+                      child: Text("문의 내역이 없습니다!",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
             ),
             Visibility(
               visible: User().role != "Manager",
@@ -77,30 +81,17 @@ class _InquiryPageState extends State<InquiryPage> {
                       ),
                     ),
                   },
-                  child: const Text("문의 하기"),
+                  child: const Text(
+                    '문의 하기',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
-            // Visibility(
-            //   visible: User().role == "Manager",
-            //   child: Padding(
-            //     padding: EdgeInsets.only(
-            //         left: screenHeight * 0.02, right: screenHeight * 0.02),
-            //     child: OutlinedButton(
-            //       onPressed: () => {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => const InquiryAnswerPage(
-            //               inquiryId: 1,
-            //             ),
-            //           ),
-            //         ),
-            //       },
-            //       child: const Text("문의 답변 하기"),
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),
@@ -114,10 +105,10 @@ class InquiryTile extends StatefulWidget {
   const InquiryTile({super.key, required this.inquiry});
 
   @override
-  _InquiryTileState createState() => _InquiryTileState();
+  InquiryTileState createState() => InquiryTileState();
 }
 
-class _InquiryTileState extends State<InquiryTile> {
+class InquiryTileState extends State<InquiryTile> {
   bool _isExpanded = false;
   bool _isLoading = false;
   InquiryModel? inquiryDetail;

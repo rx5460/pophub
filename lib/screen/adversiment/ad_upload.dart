@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AdUpload extends StatefulWidget {
   const AdUpload({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class AdUploadState extends State<AdUpload> {
   File? _selectedImage;
   DateTime? startDate;
   DateTime? endDate;
+  String adTitle = '';
 
   final Color pinkColor = const Color(0xFFE6A3B3);
 
@@ -49,7 +51,7 @@ class AdUploadState extends State<AdUpload> {
     }
   }
 
-  void _showSuccessDialog() {
+  Future<void> _showSuccessDialog() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -110,6 +112,38 @@ class AdUploadState extends State<AdUpload> {
     );
   }
 
+  Future<void> uploadAd() async {
+    if (_selectedImage == null ||
+        startDate == null ||
+        endDate == null ||
+        adTitle.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("모든 값을 입력해주세요.")),
+      );
+      return;
+    }
+
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://3.88.120.90:3000/admin/event/create'),
+    );
+    request.fields['startDate'] = startDate!.toIso8601String();
+    request.fields['endDate'] = endDate!.toIso8601String();
+    request.fields['title'] = adTitle;
+    request.files
+        .add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 201) {
+      _showSuccessDialog();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("광고 업로드 실패: ${response.reasonPhrase}")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,6 +169,26 @@ class AdUploadState extends State<AdUpload> {
           children: [
             const SizedBox(height: 16.0),
             const Text(
+              '광고 제목',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: '광고 제목을 입력하세요',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  adTitle = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
               '광고 이미지',
               style: TextStyle(
                 fontSize: 16.0,
@@ -154,7 +208,9 @@ class AdUploadState extends State<AdUpload> {
               ),
               child: _selectedImage == null
                   ? ListTile(
-                      title: const Text('첨부하기'),
+                      title: const Text(
+                        '첨부하기',
+                      ),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: _pickImage,
                     )
@@ -173,19 +229,6 @@ class AdUploadState extends State<AdUpload> {
                         ),
                       ],
                     ),
-            ),
-            const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '광고 미리보기',
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 30.0),
             const Text(
@@ -245,9 +288,7 @@ class AdUploadState extends State<AdUpload> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              _showSuccessDialog();
-            },
+            onPressed: uploadAd,
             style: ElevatedButton.styleFrom(
               backgroundColor: pinkColor,
               minimumSize: const Size(double.infinity, 50),
