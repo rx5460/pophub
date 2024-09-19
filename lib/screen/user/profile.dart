@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
@@ -522,12 +523,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                     text: '광고',
                                     onClick: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AdDetailsPage(
-                                                    ad: {},
-                                                  )));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AdDetailsPage(
+                                            ad: AdModel.fromJson({
+                                              'id': '',
+                                              'title': 'No Title',
+                                              'description': 'No Description',
+                                              'imageUrl': '',
+                                              'createdAt': DateTime.now()
+                                                  .toIso8601String(),
+                                            }),
+                                          ),
+                                        ),
+                                      );
                                     },
                                   ),
                                 ),

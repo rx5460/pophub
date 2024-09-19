@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/screen/adversiment/ad_edit.dart';
 import 'dart:convert';
 
 import 'package:pophub/screen/adversiment/ad_upload.dart';
 
 class AdDetailsPage extends StatelessWidget {
-  final Map<String, dynamic> ad;
+  final AdModel ad;
 
   const AdDetailsPage({required this.ad, Key? key}) : super(key: key);
 
@@ -29,7 +30,7 @@ class AdDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              ad['title'],
+              ad.title,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -37,7 +38,7 @@ class AdDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              ad['startDate'] ?? '날짜 정보 없음',
+              ad.startDate != null ? ad.startDate.toString() : '날짜 정보 없음',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -45,11 +46,11 @@ class AdDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            if (ad['imageUrl'] != null)
-              Image.network(ad['imageUrl'], height: 200, fit: BoxFit.cover),
+            if (ad.imageUrl != null)
+              Image.network(ad.imageUrl, height: 200, fit: BoxFit.cover),
             const SizedBox(height: 16),
             Text(
-              ad['content'],
+              ad.content ?? '내용 없음',
               style: const TextStyle(fontSize: 16),
             ),
           ],
@@ -132,7 +133,7 @@ class AdListPageState extends State<AdListPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: ListTile(
-                          title: Text(ad['title'],
+                          title: Text(ad.title,
                               style: TextStyle(color: pinkColor)),
                           subtitle: Text(ad['content']),
                           onTap: () {
