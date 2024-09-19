@@ -516,7 +516,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: User().role == "President",
+                                  visible: User().role == "manager",
                                   child: MenuList(
                                     icon: Icons.ad_units,
                                     text: '광고',
