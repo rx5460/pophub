@@ -4,6 +4,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
 import 'package:pophub/screen/alarm/notice_add.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
@@ -510,6 +511,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     mode: "add",
                                                   )),
                                         );
+                                      },
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: User().role == "Manager",
+                                    child: MenuList(
+                                      icon: Icons.ad_units,
+                                      text: '광고',
+                                      onClick: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AdDetailsPage(
+                                                      ad: {},
+                                                    )));
                                       },
                                     ),
                                   ),
