@@ -6,16 +6,21 @@ class AdModel {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final String? creatorId;
+  final DateTime? startDate;
+  final String? content;
+  final DateTime? endDate;
 
-  AdModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    required this.createdAt,
-    this.updatedAt,
-    this.creatorId,
-  });
+  AdModel(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.imageUrl,
+      required this.createdAt,
+      this.updatedAt,
+      this.creatorId,
+      this.startDate,
+      this.content,
+      this.endDate});
 
   factory AdModel.fromJson(Map<String, dynamic> json) {
     return AdModel(

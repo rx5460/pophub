@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:pophub/model/ad_model.dart';
 
 class AdEditPage extends StatefulWidget {
-  final Map<String, dynamic> ad;
+  final AdModel ad;
 
   const AdEditPage({required this.ad, Key? key}) : super(key: key);
 
@@ -23,9 +24,9 @@ class AdEditPageState extends State<AdEditPage> {
   @override
   void initState() {
     super.initState();
-    adTitle = widget.ad['title'];
-    startDate = DateTime.parse(widget.ad['startDate']);
-    endDate = DateTime.parse(widget.ad['endDate']);
+    adTitle = widget.ad.title;
+    startDate = DateTime.parse(widget.ad.startDate as String);
+    endDate = widget.ad.endDate ?? DateTime.now();
   }
 
   Future<void> _pickImage() async {
@@ -70,12 +71,11 @@ class AdEditPageState extends State<AdEditPage> {
 
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse(
-          'http://3.88.120.90:3000/admin/event/update/${widget.ad['id']}'),
+      Uri.parse('http://3.88.120.90:3000/admin/event/update/${widget.ad.id}'),
     );
     request.fields['title'] = adTitle;
-    request.fields['startDate'] = startDate!.toIso8601String();
-    request.fields['endDate'] = endDate!.toIso8601String();
+    request.fields['startDate'] = startDate.toString();
+    request.fields['endDate'] = endDate.toString();
 
     if (_selectedImage != null) {
       request.files
@@ -142,9 +142,8 @@ class AdEditPageState extends State<AdEditPage> {
               ),
             ),
             const SizedBox(height: 8.0),
-            if (widget.ad['imageUrl'] != null && _selectedImage == null)
-              Image.network(widget.ad['imageUrl'],
-                  height: 200, fit: BoxFit.cover),
+            if (widget.ad.imageUrl != null && _selectedImage == null)
+              Image.network(widget.ad.imageUrl, height: 200, fit: BoxFit.cover),
             if (_selectedImage != null)
               Image.file(_selectedImage!, height: 200, fit: BoxFit.cover),
             const SizedBox(height: 8.0),
