@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/reservation/waiting_registration.dart';
 
 class WaitingCount extends StatefulWidget {
@@ -128,7 +129,10 @@ class _WaitingCountState extends State<WaitingCount> {
             height: screenHeight * 0.19,
             decoration: const BoxDecoration(
                 border: Border(
-                    top: BorderSide(width: 1, color: Color(0xFFADD8E6)))),
+                    top: BorderSide(
+              width: 1,
+              color: Constants.DEFAULT_COLOR,
+            ))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

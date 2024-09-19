@@ -324,7 +324,7 @@ class _JoinUserState extends State<JoinUser> {
                         const Spacer(flex: 40),
                         Container(
                           padding: const EdgeInsets.only(left: 5, right: 5),
-                          height: 55,
+                          height: 48,
                           width: double.infinity,
                           child: OutlinedButton(
                               onPressed: () => {

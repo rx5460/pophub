@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
@@ -509,7 +510,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                           border: Border(
                             top: BorderSide(
                               width: 2,
-                              color: Color(0xFFADD8E6),
+                              color: Constants.DEFAULT_COLOR,
                             ),
                           ),
                           color: Colors.white),
@@ -636,13 +637,14 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                       ? screenHeight * 0.06
                                       : screenHeight * 0.05,
                                   decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(10)),
-                                      border: Border.all(
-                                        width: 2,
-                                        color: const Color(0xFFADD8E6),
-                                      ),
-                                      color: const Color(0xFFADD8E6)),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: Constants.DEFAULT_COLOR,
+                                    ),
+                                    color: Constants.DEFAULT_COLOR,
+                                  ),
                                   child: InkWell(
                                     onTap: () {
                                       if (User().userName != "") {

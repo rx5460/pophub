@@ -173,7 +173,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           )),
                       Container(
                         width: double.infinity,
-                        height: 55,
+                        height: 48,
                         margin: const EdgeInsets.only(top: 15),
                         child: OutlinedButton(
                             onPressed: () => {
@@ -205,7 +205,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                   ))),
                           Container(
                             width: 80,
-                            height: 55,
+                            height: 48,
                             margin: const EdgeInsets.only(
                                 top: 18, bottom: 18, left: 10),
                             child: OutlinedButton(
@@ -284,7 +284,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                             children: [
                               Expanded(
                                 child: SizedBox(
-                                  height: 55,
+                                  height: 48,
                                   child: OutlinedButton(
                                       onPressed: () => {
                                             {
@@ -302,7 +302,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                           side: const BorderSide(
                                               color: Colors.white),
                                           backgroundColor:
-                                              const Color(0xffadd8e6),
+                                              Constants.DEFAULT_COLOR,
                                           foregroundColor: Colors.white,
                                           textStyle: const TextStyle(
                                               color: Colors.white),

@@ -365,7 +365,7 @@ class _HomePageState extends State<HomePage> {
                     enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1.0,
-                        color: Color(0xFFADD8E6),
+                        color: Constants.DEFAULT_COLOR,
                       ),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
@@ -374,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1.0,
-                        color: Color(0xFFADD8E6),
+                        color: Constants.DEFAULT_COLOR,
                       ),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),

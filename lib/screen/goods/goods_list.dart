@@ -121,12 +121,15 @@ class _GoodsListState extends State<GoodsList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    goodsList![index].productName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
+                                  SizedBox(
+                                    width: 200,
+                                    child: Text(
+                                      goodsList![index].productName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                   Padding(

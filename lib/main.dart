@@ -107,13 +107,13 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  initializeNotification();
+  // initializeNotification();
 
   // 초기 알림 설정 로드 및 적용
-  loadInitialNotificationSetting();
+  // loadInitialNotificationSetting();
 
   await dotenv.load(fileName: 'assets/config/.env');
 

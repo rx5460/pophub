@@ -30,6 +30,7 @@ class _AcountInfoState extends State<AcountInfo> {
   void initState() {
     super.initState();
     nicknameController.text = User().userName;
+    nicknameInput = User().userName;
   }
 
   Future<void> _pickImage() async {
@@ -139,7 +140,7 @@ class _AcountInfoState extends State<AcountInfo> {
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 1,
-                                    color: const Color(0xFFADD8E6),
+                                    color: Constants.DEFAULT_COLOR,
                                   ),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(50)),

@@ -202,7 +202,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1,
-                                            color: const Color(0xFFADD8E6),
+                                            color: Constants.DEFAULT_COLOR,
                                           ),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(50)),

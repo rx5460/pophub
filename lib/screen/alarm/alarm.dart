@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 
 class AlarmList extends StatefulWidget {
@@ -74,8 +75,8 @@ class AlarmListState extends State<AlarmList>
         ),
         bottom: TabBar(
           controller: _tabController,
-          dividerColor: const Color(0xFFE6A3B3),
-          indicatorColor: const Color(0xFFE6A3B3),
+          dividerColor: Constants.DEFAULT_COLOR,
+          indicatorColor: Constants.DEFAULT_COLOR,
           indicatorWeight: 3.5,
           indicatorSize: TabBarIndicatorSize.label,
           labelColor: Colors.black,
