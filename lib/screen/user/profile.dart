@@ -210,334 +210,334 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           child: Padding(
                             padding: EdgeInsets.only(top: screenWidth * 0.1),
-                            child: Column(
-                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => AcountInfo(
-                                                refreshProfile: profileApi,
-                                              )),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    // width: screenWidth * 0.4,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(width: 20),
-                                        Text(
-                                          // 닉네임으로 수정
-                                          profile?['userName'] ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AcountInfo(
+                                                  refreshProfile: profileApi,
+                                                )),
+                                      );
+                                    },
+                                    child: SizedBox(
+                                      // width: screenWidth * 0.4,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(width: 20),
+                                          Text(
+                                            // 닉네임으로 수정
+                                            profile?['userName'] ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 20,
-                                        ),
-                                      ],
+                                          const Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "General Member",
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: screenHeight * 0.03),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: (screenWidth * 0.3) - 2,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                profile?['pointScore']
-                                                        .toString() ??
-                                                    '',
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w700,
+                                  Visibility(
+                                    visible: User().role == "General Member",
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: screenHeight * 0.03),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            width: (screenWidth * 0.3) - 2,
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  profile?['pointScore']
+                                                          .toString() ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              const Text(
-                                                '포인트',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey,
+                                                const SizedBox(
+                                                  height: 10,
                                                 ),
-                                              ),
-                                            ],
+                                                const Text(
+                                                  '포인트',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          height: screenWidth * 0.15,
-                                          width: 1,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
+                                          Container(
+                                            height: screenWidth * 0.15,
+                                            width: 1,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: (screenWidth * 0.3) - 2,
-                                          child: const Column(
-                                            children: [
-                                              Text(
-                                                '0',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w700,
+                                          SizedBox(
+                                            width: (screenWidth * 0.3) - 2,
+                                            child: const Column(
+                                              children: [
+                                                Text(
+                                                  '0',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                '방문',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey,
+                                                SizedBox(
+                                                  height: 10,
                                                 ),
-                                              ),
-                                            ],
+                                                Text(
+                                                  '방문',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          height: screenWidth * 0.15,
-                                          width: 1,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
+                                          Container(
+                                            height: screenWidth * 0.15,
+                                            width: 1,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: (screenWidth * 0.3) - 2,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                reviewList?.length.toString() ??
-                                                    '0',
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w700,
+                                          SizedBox(
+                                            width: (screenWidth * 0.3) - 2,
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  reviewList?.length
+                                                          .toString() ??
+                                                      '0',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              const Text(
-                                                '리뷰',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey,
+                                                const SizedBox(
+                                                  height: 10,
                                                 ),
-                                              ),
-                                            ],
+                                                const Text(
+                                                  '리뷰',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                MenuList(
-                                  icon: Icons.comment,
-                                  text: '리뷰',
-                                  onClick: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const MyReview()));
-                                  },
-                                ),
-                                MenuList(
-                                  icon: Icons.info_outline,
-                                  text: '공지사항',
-                                  onClick: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const NoticePage()));
-                                  },
-                                ),
-                                MenuList(
-                                  icon: Icons.help_outline,
-                                  text: '문의내역',
-                                  onClick: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const InquiryPage()));
-                                  },
-                                ),
-                                Visibility(
-                                  visible: User().role == "Manager",
-                                  child: Column(
-                                    children: [
-                                      MenuList(
-                                        icon: Icons.add_alert,
-                                        text: '알림 등록',
-                                        onClick: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const AlarmAdd()));
-                                        },
-                                      ),
-                                      MenuList(
-                                        icon: Icons.add_circle_outline,
-                                        text: '공지사항 등록',
-                                        onClick: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const NoticeAdd()));
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // MenuList(
-                                //   icon: Icons.credit_card,
-                                //   text: '결제 내역',
-                                //   onClick: () {
-                                //     Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //             builder: (context) =>
-                                //                 const PaymentHistoryPage()));
-                                //   },
-                                // ),
-                                Visibility(
-                                  visible: User().role == "President",
-                                  child: MenuList(
-                                    icon: Icons.message_outlined,
-                                    text: '내 팝업스토어',
+                                  MenuList(
+                                    icon: Icons.comment,
+                                    text: '리뷰',
                                     onClick: () {
-                                      checkStoreApi();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MyReview()));
                                     },
                                   ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "Manager",
-                                  child: MenuList(
-                                    icon: Icons.assignment_turned_in_outlined,
-                                    text: '팝업스토어 승인 대기',
-                                    onClick: () async {
-                                      final data =
-                                          await StoreApi.getPendingList();
-                                      if (context.mounted) {
+                                  MenuList(
+                                    icon: Icons.info_outline,
+                                    text: '공지사항',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const NoticePage()));
+                                    },
+                                  ),
+                                  MenuList(
+                                    icon: Icons.help_outline,
+                                    text: '문의내역',
+                                    onClick: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const InquiryPage()));
+                                    },
+                                  ),
+                                  Visibility(
+                                    visible: User().role == "Manager",
+                                    child: Column(
+                                      children: [
+                                        MenuList(
+                                          icon: Icons.add_alert,
+                                          text: '알림 등록',
+                                          onClick: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AlarmAdd()));
+                                          },
+                                        ),
+                                        MenuList(
+                                          icon: Icons.add_circle_outline,
+                                          text: '공지사항 등록',
+                                          onClick: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const NoticeAdd()));
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // MenuList(
+                                  //   icon: Icons.credit_card,
+                                  //   text: '결제 내역',
+                                  //   onClick: () {
+                                  //     Navigator.push(
+                                  //         context,
+                                  //         MaterialPageRoute(
+                                  //             builder: (context) =>
+                                  //                 const PaymentHistoryPage()));
+                                  //   },
+                                  // ),
+                                  Visibility(
+                                    visible: User().role == "President",
+                                    child: MenuList(
+                                      icon: Icons.message_outlined,
+                                      text: '내 팝업스토어',
+                                      onClick: () {
+                                        checkStoreApi();
+                                      },
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: User().role == "Manager",
+                                    child: MenuList(
+                                      icon: Icons.assignment_turned_in_outlined,
+                                      text: '팝업스토어 승인 대기',
+                                      onClick: () async {
+                                        final data =
+                                            await StoreApi.getPendingList();
+                                        if (context.mounted) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MultiProvider(
+                                                          providers: [
+                                                            ChangeNotifierProvider(
+                                                                create: (_) =>
+                                                                    StoreModel())
+                                                          ],
+                                                          child: StoreListPage(
+                                                            popups: data,
+                                                            titleName: "승인 리스트",
+                                                            mode: "pending",
+                                                          ))));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: User().role == "General Member" ||
+                                        User().role == "President",
+                                    child: MenuList(
+                                      icon: Icons.event_note,
+                                      text: '예약 내역',
+                                      onClick: () {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    MultiProvider(
-                                                        providers: [
-                                                          ChangeNotifierProvider(
-                                                              create: (_) =>
-                                                                  StoreModel())
-                                                        ],
-                                                        child: StoreListPage(
-                                                          popups: data,
-                                                          titleName: "승인 리스트",
-                                                          mode: "pending",
-                                                        ))));
-                                      }
-                                    },
+                                                    const AlarmListPage(
+                                                      mode: "name",
+                                                      titleName: "예약 내역",
+                                                    )));
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "General Member" ||
-                                      User().role == "President",
-                                  child: MenuList(
-                                    icon: Icons.event_note,
-                                    text: '예약 내역',
-                                    onClick: () {
-                                      Navigator.push(
+                                  Visibility(
+                                    visible: User().role == "President",
+                                    child: MenuList(
+                                      icon: Icons.event_note,
+                                      text: '내 팝업스토어 예약 내역',
+                                      onClick: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AlarmListPage(
+                                                      mode: "store",
+                                                      titleName:
+                                                          "내 팝업스토어 예약 내역",
+                                                    )));
+                                      },
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: User().role == "President",
+                                    child: MenuList(
+                                      icon: Icons.shopping_bag_outlined,
+                                      text: '펀딩',
+                                      onClick: () {
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const AlarmListPage(
-                                                    mode: "name",
-                                                    titleName: "예약 내역",
-                                                  )));
-                                    },
+                                                  const FundingAddPage(
+                                                    mode: "add",
+                                                  )),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "President",
-                                  child: MenuList(
-                                    icon: Icons.event_note,
-                                    text: '내 팝업스토어 예약 내역',
-                                    onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AlarmListPage(
-                                                    mode: "store",
-                                                    titleName: "내 팝업스토어 예약 내역",
-                                                  )));
-                                    },
+                                  Visibility(
+                                    visible: User().role == "Manager",
+                                    child: MenuList(
+                                      icon: Icons.ad_units,
+                                      text: '광고',
+                                      onClick: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AdDetailsPage(
+                                                      ad: {},
+                                                    )));
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "President",
-                                  child: MenuList(
-                                    icon: Icons.shopping_bag_outlined,
-                                    text: '펀딩',
-                                    onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MultiProvider(
-                                                      providers: [
-                                                        ChangeNotifierProvider(
-                                                            create: (_) =>
-                                                                StoreModel())
-                                                      ],
-                                                      child:
-                                                          const FundingAddPage(
-                                                              mode: "add"))));
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: User().role == "manager",
-                                  child: MenuList(
-                                    icon: Icons.ad_units,
-                                    text: '광고',
-                                    onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AdDetailsPage(
-                                                    ad: {},
-                                                  )));
-                                    },
-                                  ),
-                                ),
-                                // MenuList(
-                                //   icon: Icons.message_outlined,
-                                //   text: '장바구니',
-                                //   onClick: () {},
-                                // ),
-                              ],
+
+                                  // MenuList(
+                                  //   icon: Icons.message_outlined,
+                                  //   text: '장바구니',
+                                  //   onClick: () {},
+                                  // ),
+                                ],
+                              ),
                             ),
                           ),
                         )),
