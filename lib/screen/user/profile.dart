@@ -538,7 +538,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                         Visibility(
-                                          visible: User().role == "manager",
+                                          visible: User().role == "Manager",
                                           child: MenuList(
                                             icon: Icons.ad_units,
                                             text: '광고',
@@ -547,18 +547,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AdDetailsPage(
-                                                    ad: AdModel.fromJson({
-                                                      'id': '',
-                                                      'title': 'No Title',
-                                                      'description':
-                                                          'No Description',
-                                                      'imageUrl': '',
-                                                      'createdAt': DateTime
-                                                              .now()
-                                                          .toIso8601String(),
-                                                    }),
-                                                  ),
+                                                      const AdListPage(),
                                                 ),
                                               );
                                             },

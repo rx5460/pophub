@@ -17,6 +17,13 @@ class AdDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           '광고 상세 정보',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -96,6 +103,13 @@ class AdListPageState extends State<AdListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           '광고 목록',
           style: TextStyle(
@@ -103,53 +117,38 @@ class AdListPageState extends State<AdListPage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: pinkColor,
       ),
       body: ads.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    '광고 리스트',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: pinkColor,
-                    ),
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 60.0),
+                child: Text(
+                  '광고 목록이 없습니다!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: ads.length,
-                    itemBuilder: (context, index) {
-                      final ad = ads[index];
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: pinkColor),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: ListTile(
-                          title: Text(ad.title,
-                              style: TextStyle(color: pinkColor)),
-                          subtitle: Text(ad['content']),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AdEditPage(ad: ad),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: ads.length,
+              itemBuilder: (context, index) {
+                final ad = ads[index];
+                return ListTile(
+                  title: Text(ad['title'], style: TextStyle(color: pinkColor)),
+                  subtitle: Text(ad['content'] ?? '내용 없음'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdEditPage(ad: ad),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
