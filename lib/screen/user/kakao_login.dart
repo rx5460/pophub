@@ -42,21 +42,31 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               final response = await http.get(Uri.parse(parseUrl));
 
               if (response.statusCode == 201) {
-                String data = response.body;
+                try {
+                  String data = response.body;
 
-                var jsonData = jsonDecode(data);
-                Logger.debug('Parsed JSON: $jsonData');
+                  var jsonData = jsonDecode(data);
+                  Logger.debug('Parsed JSON: $jsonData');
 
-                String token = jsonData['token_info']['access_token'];
-                String id = jsonData['profile_info']['response']['id'];
-                await _storage.write(key: 'token', value: token);
-                User().userId = id;
+                  String token = jsonData['token'];
+                  String id = jsonData['token'];
 
-                if (mounted) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNavigationPage()));
+                  await _storage.write(key: 'token', value: token);
+                  User().userId = id;
+
+                  if (mounted) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const BottomNavigationPage()));
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    showAlert(context, "경고", "간편로그인에 실패하였습니다.", () {
+                      Navigator.of(context).pop();
+                    });
+                  }
                 }
               } else {
                 // 에러 처리
