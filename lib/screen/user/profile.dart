@@ -9,10 +9,12 @@ import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
 import 'package:pophub/screen/alarm/notice_add.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
+import 'package:pophub/screen/funding/funding_list.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
 import 'package:pophub/screen/store/alarm_list.dart';
+import 'package:pophub/screen/store/calender.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
@@ -20,6 +22,7 @@ import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
 import 'package:pophub/screen/user/profile_add.dart';
+import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/review_api.dart';
 import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/api/user_api.dart';
@@ -106,6 +109,37 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (context) => MultiProvider(providers: [
                       ChangeNotifierProvider(create: (_) => StoreModel())
                     ], child: const StoreCreatePage(mode: "add"))));
+      }
+    }
+
+    setState(() {
+      isLoading = false; // 로딩 상태 변경
+    });
+  }
+
+  Future<void> checkFundingApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<dynamic> data = await FundingApi.getMyFunding();
+
+    if (!data.toString().contains("fail") &&
+        !data.toString().contains("없습니다")) {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FundingList()),
+        );
+      }
+    } else {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const FundingAddPage(
+                    mode: "add",
+                  )),
+        );
       }
     }
 
@@ -297,30 +331,39 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     color: Colors.grey,
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width:
-                                                      (screenWidth * 0.3) - 2,
-                                                  child: const Column(
-                                                    children: [
-                                                      Text(
-                                                        '0',
-                                                        style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.w700,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const Calender()));
+                                                  },
+                                                  child: SizedBox(
+                                                    width:
+                                                        (screenWidth * 0.3) - 2,
+                                                    child: const Column(
+                                                      children: [
+                                                        Text(
+                                                          '0',
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        '방문',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey,
+                                                        SizedBox(
+                                                          height: 10,
                                                         ),
-                                                      ),
-                                                    ],
+                                                        Text(
+                                                          '방문',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                                 Container(
@@ -550,6 +593,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       const AdListPage(),
                                                 ),
                                               );
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              User().role == "General Member" ||
+                                                  User().role == "President",
+                                          child: MenuList(
+                                            icon: Icons.shopping_bag_outlined,
+                                            text: '펀딩',
+                                            onClick: () {
+                                              checkFundingApi();
                                             },
                                           ),
                                         ),
