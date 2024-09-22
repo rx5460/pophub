@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
         // 토큰 추가
         await _storage.write(key: 'token', value: data['token']);
         // User 싱글톤에 user_id 추가
-        User().userId = data['user_id'];
+        User().userId = data['userId'];
 
         //await Api.profileAdd();
 
