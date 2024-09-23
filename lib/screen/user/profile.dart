@@ -21,6 +21,7 @@ import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
+import 'package:pophub/screen/user/payment_history.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/review_api.dart';
@@ -537,6 +538,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             mode: "name",
                                                             titleName: "예약 내역",
                                                           )));
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              User().role == "General Member",
+                                          child: MenuList(
+                                            icon: Icons.payment,
+                                            text: '결제 내역',
+                                            onClick: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const PaymentHistoryPage(),
+                                                ),
+                                              );
                                             },
                                           ),
                                         ),
