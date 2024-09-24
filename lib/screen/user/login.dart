@@ -185,9 +185,7 @@ class _LoginState extends State<Login> {
                                 )),
                           ],
                         ),
-
                         SizedBox(height: screenHeight * 0.01),
-
                         const Row(
                           children: <Widget>[
                             Expanded(
@@ -213,7 +211,6 @@ class _LoginState extends State<Login> {
                             ),
                           ],
                         ),
-
                         SizedBox(height: screenHeight * 0.03),
                         Container(
                           width: double.infinity,
@@ -291,41 +288,6 @@ class _LoginState extends State<Login> {
                                   const Expanded(
                                     child: Text(
                                       "카카오 로그인",
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Google login button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              // Handle Google login
-                            },
-                            style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.black,
-                                backgroundColor: Colors.white,
-                                side: const BorderSide(color: Colors.grey)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset(
-                                      'assets/images/google_icon.png',
-                                      height: 60,
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    child: Text(
-                                      "Google 계정으로 로그인",
                                       textAlign: TextAlign.center,
                                     ),
                                   ),

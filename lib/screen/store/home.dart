@@ -95,7 +95,9 @@ class _HomePageState extends State<HomePage> {
       });
     } else {
       setState(() {
-        addGoodsVisible = false;
+        if (mounted) {
+          addGoodsVisible = false;
+        }
       });
     }
   }
