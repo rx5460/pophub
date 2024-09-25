@@ -196,10 +196,6 @@ class AdUploadState extends State<AdUpload> {
               ),
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              '이미지는 1:1 비율로 등록해주세요.\n광고는 팝업 배너 형식으로 등록됩니다.',
-              style: TextStyle(fontSize: 14.0, color: Colors.grey),
-            ),
             const SizedBox(height: 16.0),
             Container(
               decoration: BoxDecoration(

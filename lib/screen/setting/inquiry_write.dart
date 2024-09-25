@@ -133,6 +133,15 @@ class InquiryWritePageState extends State<InquiryWritePage> {
               },
             ),
             const SizedBox(height: 16.0),
+            if (selectedCategory == '광고 문의')
+              const Text(
+                '이미지는 1:1 비율로 등록해주세요.\n광고는 팝업 배너 형식으로 등록됩니다.\n\n광고 등록 시 수정 및 삭제가 불가능합니다.',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.grey,
+                ),
+              ),
+            const SizedBox(height: 16.0),
             const Text(
               '문의 제목',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
@@ -164,78 +173,77 @@ class InquiryWritePageState extends State<InquiryWritePage> {
               ),
             ),
             const SizedBox(height: 16.0),
-            if (selectedCategory == '광고')
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '이미지 첨부',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8.0),
-                  _selectedImage == null
-                      ? ElevatedButton(
-                          onPressed: _pickImage,
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Color(0xFFE6A3B3)),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '이미지 첨부',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                _selectedImage == null
+                    ? OutlinedButton(
+                        onPressed: _pickImage,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Color(0xFFE6A3B3)),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '첨부하기',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.black,
-                              ),
-                            ],
-                          ),
-                        )
-                      : Column(
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.file(
-                              _selectedImage!,
-                              height: 200,
-                              fit: BoxFit.cover,
+                            Text(
+                              '   첨부하기',
+                              style: TextStyle(color: Colors.black),
                             ),
-                            const SizedBox(height: 8.0),
-                            ElevatedButton(
-                              onPressed: _pickImage,
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 50),
-                                backgroundColor: Colors.white,
-                                side:
-                                    const BorderSide(color: Color(0xFFE6A3B3)),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '다시 선택',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
                             ),
                           ],
                         ),
-                  const SizedBox(height: 16.0),
-                ],
-              ),
+                      )
+                    : Column(
+                        children: [
+                          Image.file(
+                            _selectedImage!,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(height: 8.0),
+                          OutlinedButton(
+                            onPressed: _pickImage,
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Color(0xFFE6A3B3)),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '다시 선택',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                const SizedBox(height: 16.0),
+              ],
+            ),
           ],
         ),
       ),
