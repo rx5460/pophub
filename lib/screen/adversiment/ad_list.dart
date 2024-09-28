@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/screen/adversiment/ad_edit.dart';
+import 'package:pophub/screen/adversiment/ad_upload.dart';
 
 class AdListPage extends StatefulWidget {
   const AdListPage({Key? key}) : super(key: key);
@@ -54,41 +55,77 @@ class AdListPageState extends State<AdListPage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: pinkColor,
+        backgroundColor: Colors.white,
       ),
-      body: ads.isEmpty
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 60.0),
-                child: Text(
-                  '광고 목록이 없습니다!',
+      body: Column(
+        children: [
+          Expanded(
+            child: ads.isEmpty
+                ? const Center(
+                    child: Text(
+                      '광고 목록이 없습니다!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: ads.length,
+                    itemBuilder: (context, index) {
+                      final ad = ads[index];
+                      return ListTile(
+                        title:
+                            Text(ad.title, style: TextStyle(color: pinkColor)),
+                        subtitle: Text(
+                            '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')}'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AdEditPage(ad: ad),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AdUpload(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: pinkColor,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+                child: const Text(
+                  '광고 추가',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            )
-          : ListView.builder(
-              itemCount: ads.length,
-              itemBuilder: (context, index) {
-                final ad = ads[index];
-                return ListTile(
-                  title: Text(ad.title, style: TextStyle(color: pinkColor)),
-                  subtitle: Text(
-                      '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AdEditPage(ad: ad),
-                      ),
-                    );
-                  },
-                );
-              },
             ),
+          ),
+        ],
+      ),
     );
   }
 }
