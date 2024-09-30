@@ -25,8 +25,10 @@ class AdUploadState extends State<AdUpload> {
           await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
-          _selectedImage = File(pickedImage.path);
+          _selectedImage = File(pickedImage.path); // 이미지를 File 객체로 변환
         });
+      } else {
+        print("이미지 선택이 취소되었습니다.");
       }
     } catch (e) {
       print('이미지 선택 중 오류 발생: $e');
@@ -48,6 +50,46 @@ class AdUploadState extends State<AdUpload> {
           endDate = picked;
         }
       });
+    }
+  }
+
+  // 광고 데이터 서버로 전송
+  Future<void> uploadAd() async {
+    if (_selectedImage == null ||
+        startDate == null ||
+        endDate == null ||
+        adTitle.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("모든 값을 입력해주세요.")),
+      );
+      return;
+    }
+
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://3.88.120.90:3000/admin/event/create'),
+      );
+      request.fields['startDate'] = startDate!.toIso8601String();
+      request.fields['endDate'] = endDate!.toIso8601String();
+      request.fields['title'] = adTitle;
+      request.files
+          .add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
+
+      var response = await request.send();
+
+      if (response.statusCode == 201) {
+        _showSuccessDialog();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("광고 업로드 실패: ${response.reasonPhrase}")),
+        );
+      }
+    } catch (e) {
+      print("업로드 중 오류 발생: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("업로드 중 오류가 발생했습니다.")),
+      );
     }
   }
 
@@ -110,38 +152,6 @@ class AdUploadState extends State<AdUpload> {
         );
       },
     );
-  }
-
-  Future<void> uploadAd() async {
-    if (_selectedImage == null ||
-        startDate == null ||
-        endDate == null ||
-        adTitle.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("모든 값을 입력해주세요.")),
-      );
-      return;
-    }
-
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://3.88.120.90:3000/admin/event/create'),
-    );
-    request.fields['startDate'] = startDate!.toIso8601String();
-    request.fields['endDate'] = endDate!.toIso8601String();
-    request.fields['title'] = adTitle;
-    request.files
-        .add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
-
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      _showSuccessDialog();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("광고 업로드 실패: ${response.reasonPhrase}")),
-      );
-    }
   }
 
   @override
