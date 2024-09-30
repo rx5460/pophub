@@ -8,8 +8,6 @@ class AdEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color pinkColor = Color(0xFFE6A3B3);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -24,7 +22,6 @@ class AdEditPage extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: pinkColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
