@@ -123,16 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
       isLoading = true;
     });
     List<dynamic> data = await FundingApi.getMyFunding();
+    print(data);
 
-    if (!data.toString().contains("fail") &&
-        !data.toString().contains("없습니다")) {
-      if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const FundingList()),
-        );
-      }
-    } else {
+    if (data.toString().contains("Not")) {
       if (mounted) {
         Navigator.push(
           context,
@@ -140,6 +133,13 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: (context) => const FundingAddPage(
                     mode: "add",
                   )),
+        );
+      }
+    } else {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FundingList()),
         );
       }
     }
@@ -576,28 +576,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                             },
                                           ),
                                         ),
-                                        Visibility(
-                                          visible: User().role == "President",
-                                          child: MenuList(
-                                            icon: Icons.shopping_bag_outlined,
-                                            text: '펀딩',
-                                            onClick: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          MultiProvider(
-                                                              providers: [
-                                                                ChangeNotifierProvider(
-                                                                    create: (_) =>
-                                                                        StoreModel())
-                                                              ],
-                                                              child: const FundingAddPage(
-                                                                  mode:
-                                                                      "add"))));
-                                            },
-                                          ),
-                                        ),
+                                        // Visibility(
+                                        //   visible: User().role == "President",
+                                        //   child: MenuList(
+                                        //     icon: Icons.shopping_bag_outlined,
+                                        //     text: '펀딩',
+                                        //     onClick: () {
+                                        //       checkFundingApi();
+                                        //     },
+                                        //   ),
+                                        // ),
                                         Visibility(
                                           visible: User().role == "Manager",
                                           child: MenuList(
@@ -626,11 +614,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                             },
                                           ),
                                         ),
-                                        // MenuList(
-                                        //   icon: Icons.message_outlined,
-                                        //   text: '장바구니',
-                                        //   onClick: () {},
-                                        // ),
+                                        MenuList(
+                                          icon: Icons.message_outlined,
+                                          text: '장바구니',
+                                          onClick: () {},
+                                        ),
                                       ],
                                     ),
                                   ),
