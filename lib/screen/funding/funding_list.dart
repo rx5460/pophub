@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/funding/funding_list_detail.dart';
+import 'package:pophub/utils/api/funding_api.dart';
+import 'package:pophub/utils/log.dart';
 
 class FundingList extends StatefulWidget {
   const FundingList({
@@ -17,12 +20,28 @@ class _FundingListState extends State<FundingList>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
   var countFomat = NumberFormat('###,###,###,###');
-  List<Map<String, dynamic>> fundingItem = [];
+  List<FundingItemModel>? fundingItem;
+
+  Future<void> fetchGoodsData() async {
+    try {
+      List<FundingItemModel> dataList =
+          await FundingApi.getFundingItemList('funding');
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          fundingItem = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching item data: $error');
+    }
+  }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
+    fetchGoodsData();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -73,6 +92,16 @@ class _FundingListState extends State<FundingList>
                   ],
                 )
               : null),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        heroTag: null,
+        backgroundColor: Constants.DEFAULT_COLOR,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add_outlined,
+          color: Colors.white,
+        ),
+      ),
       body: User().role == 'General Member'
           ? Column(
               children: [
@@ -216,7 +245,7 @@ class _FundingListState extends State<FundingList>
                 Column(
                   children: [
                     for (int index = 0;
-                        index < (fundingItem.length ?? 0);
+                        index < (fundingItem!.length ?? 0);
                         index++)
                       if (fundingItem != [])
                         Container(
@@ -250,7 +279,7 @@ class _FundingListState extends State<FundingList>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${countFomat.format(fundingItem[index]["price"])}원",
+                                      "${countFomat.format(fundingItem![index].amount)}원",
                                       style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -259,7 +288,7 @@ class _FundingListState extends State<FundingList>
                                       height: 8,
                                     ),
                                     Text(
-                                      fundingItem[index]["title"].toString(),
+                                      fundingItem![index].itemName.toString(),
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
@@ -268,7 +297,7 @@ class _FundingListState extends State<FundingList>
                                       height: 8,
                                     ),
                                     Text(
-                                      "제한수량 ${fundingItem[index]["limit"].toString()}개",
+                                      "제한수량 ${fundingItem![index].count.toString()}개",
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
@@ -279,8 +308,7 @@ class _FundingListState extends State<FundingList>
                                     SizedBox(
                                       width: screenWidth * 0.4,
                                       child: Text(
-                                        fundingItem[index]["description"]
-                                            .toString(),
+                                        fundingItem![index].content.toString(),
                                         style: const TextStyle(fontSize: 11),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 3,
@@ -288,13 +316,13 @@ class _FundingListState extends State<FundingList>
                                     ),
                                   ],
                                 ),
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        fundingItem.removeAt(index);
-                                      });
-                                    },
-                                    child: const Icon(Icons.close)),
+                                // GestureDetector(
+                                //     onTap: () {
+                                //       setState(() {
+                                //         fundingItem!.removeAt(index);
+                                //       });
+                                //     },
+                                //     child: const Icon(Icons.close)),
                               ],
                             ),
                           ),

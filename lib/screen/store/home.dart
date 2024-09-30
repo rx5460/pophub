@@ -2,17 +2,20 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/funding_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
+import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
 import 'package:pophub/screen/reservation/waiting_count.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/login.dart';
+import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
@@ -31,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
   String? searchInput;
   List<PopupModel> poppularList = [];
+  List<FundingModel> fundingList = [];
   List<PopupModel> recommandList = [];
   List<PopupModel> willBeOpenList = [];
   List<PopupModel> willBeCloseList = [];
@@ -67,6 +71,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> fetchFundingData() async {
+    try {
+      List<FundingModel> dataList = await FundingApi.getFundingList();
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          fundingList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching funding data: $error');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +93,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> initializeData() async {
     fetchPopupData();
+    fetchFundingData();
     await profileApi();
     getRecommandPopup();
     await getWillBeOpenPopup();
@@ -817,6 +836,125 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+              ),
+              SizedBox(
+                width: screenWidth * 0.9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '신규 펀딩',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Funding()),
+                          );
+                        }
+                      },
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: screenWidth,
+                    height: screenWidth * 0.7,
+                    child: ListView.builder(
+                      itemCount: fundingList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final funding = fundingList[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: screenWidth * 0.05,
+                              right: fundingList.length == index + 1
+                                  ? screenWidth * 0.05
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => PopupDetail(
+                              //       storeId: popup.id!,
+                              //     ),
+                              //   ),
+                              // );
+                            },
+                            child: SizedBox(
+                              width: screenWidth * 0.5,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  funding.images != null &&
+                                          funding.images!.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            '${funding.images![0]}',
+                                            width: screenWidth * 0.5,
+                                            height: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            'assets/images/logo.png',
+                                            width: screenWidth * 0.5,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '${funding.title}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   '${DateFormat("yy.MM.dd").format(DateTime.parse(funding.openDate!))} ~ ${DateFormat("yy.MM.dd").format(DateTime.parse(funding.closeDate!))}',
+                                  //   style: const TextStyle(
+                                  //     fontSize: 11,
+                                  //     color: Colors.grey,
+                                  //     fontWeight: FontWeight.w900,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
               OutlinedButton(
                   onPressed: () {
