@@ -35,25 +35,6 @@ class AdUploadState extends State<AdUpload> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isStartDate) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
-    }
-  }
-
-  // 광고 데이터 서버로 전송
   Future<void> uploadAd() async {
     if (_selectedImage == null ||
         startDate == null ||
@@ -154,6 +135,25 @@ class AdUploadState extends State<AdUpload> {
     );
   }
 
+  // 날짜 선택 함수
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStartDate) {
+          startDate = picked;
+        } else {
+          endDate = picked;
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +206,6 @@ class AdUploadState extends State<AdUpload> {
               ),
             ),
             const SizedBox(height: 8.0),
-            const SizedBox(height: 16.0),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -214,9 +213,7 @@ class AdUploadState extends State<AdUpload> {
               ),
               child: _selectedImage == null
                   ? ListTile(
-                      title: const Text(
-                        '첨부하기',
-                      ),
+                      title: const Text('첨부하기'),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: _pickImage,
                     )

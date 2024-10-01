@@ -2,7 +2,7 @@ class AdModel {
   final String id;
   final String title;
   final String description;
-  final String imageUrl;
+  final List<String> imageUrls;
   final DateTime createdAt;
   final DateTime? updatedAt;
   final String? creatorId;
@@ -14,7 +14,7 @@ class AdModel {
     required this.id,
     required this.title,
     required this.description,
-    required this.imageUrl,
+    required this.imageUrls,
     required this.createdAt,
     this.updatedAt,
     this.creatorId,
@@ -29,7 +29,9 @@ class AdModel {
       title: json['title'] != null ? json['title'] as String : '',
       description:
           json['description'] != null ? json['description'] as String : '',
-      imageUrl: json['imageUrl'] != null ? json['imageUrl'] as String : '',
+      imageUrls: (json['imageUrls'] != null
+          ? List<String>.from(json['imageUrls'] as List)
+          : []),
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
@@ -52,7 +54,7 @@ class AdModel {
       'id': id,
       'title': title,
       'description': description,
-      'imageUrl': imageUrl,
+      'imageUrls': imageUrls,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'creatorId': creatorId,

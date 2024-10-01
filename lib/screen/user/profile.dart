@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
-import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
