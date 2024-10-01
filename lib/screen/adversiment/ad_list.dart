@@ -45,12 +45,42 @@ class AdListPageState extends State<AdListPage> {
   Future<void> _loadSelectedAds() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? storedAds = prefs.getStringList('selected_ads');
-    setState(() {
-      addedAds = storedAds
-              ?.map((adJson) => AdModel.fromJson(jsonDecode(adJson)))
-              .toList() ??
-          [];
-    });
+    if (storedAds != null && storedAds.isNotEmpty) {
+      setState(() {
+        addedAds = storedAds
+            .map((adJson) {
+              try {
+                return AdModel.fromJson(jsonDecode(adJson));
+              } catch (e) {
+                print("Invalid JSON data: $adJson, Error: $e");
+                return null;
+              }
+            })
+            .where((ad) => ad != null)
+            .cast<AdModel>()
+            .toList();
+      });
+    }
+  }
+
+  Future<void> _deleteAd(int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? storedAds = prefs.getStringList('selected_ads');
+
+    if (storedAds != null && storedAds.isNotEmpty) {
+      // 해당 광고 삭제
+      storedAds.removeAt(index);
+      await prefs.setStringList('selected_ads', storedAds);
+
+      // UI 업데이트
+      setState(() {
+        addedAds.removeAt(index);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("광고가 삭제되었습니다.")),
+      );
+    }
   }
 
   Future<void> _navigateToAdEdit(BuildContext context, AdModel ad) async {
@@ -113,7 +143,12 @@ class AdListPageState extends State<AdListPage> {
                                   style: TextStyle(color: pinkColor)),
                               subtitle: Text(
                                   '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')}'),
-                              trailing: Icon(Icons.check, color: pinkColor),
+                              trailing: IconButton(
+                                icon: Icon(Icons.delete, color: pinkColor),
+                                onPressed: () {
+                                  _deleteAd(index);
+                                },
+                              ),
                             ),
                           );
                         },

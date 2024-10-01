@@ -67,10 +67,21 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadSelectedAds() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? storedAds = prefs.getStringList('selected_ads');
+
     if (storedAds != null && storedAds.isNotEmpty) {
       setState(() {
         selectedAds = storedAds
-            .map((adJson) => AdModel.fromJson(jsonDecode(adJson)))
+            .where((adJson) => adJson.isNotEmpty)
+            .map((adJson) {
+              try {
+                return AdModel.fromJson(jsonDecode(adJson));
+              } catch (e) {
+                print("Error parsing adJson: $adJson, Error: $e");
+                return null;
+              }
+            })
+            .where((ad) => ad != null)
+            .cast<AdModel>()
             .toList();
       });
     }
