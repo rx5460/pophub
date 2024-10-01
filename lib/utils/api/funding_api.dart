@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pophub/model/funding_model.dart';
+import 'package:pophub/model/funding_support_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
@@ -246,5 +247,35 @@ class FundingApi {
         {'itemId': item, 'amount': amount, 'userName': User().userName});
     Logger.debug("### 펀딩 참여 $data");
     return data;
+  }
+
+  // 펀딩 참여 조회
+  static Future<List<FundingSupportModel>> getFundingSupport() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+          '$domain/funding/support?userName=${User().userName}', {});
+      List<FundingSupportModel> supportList =
+          dataList.map((data) => FundingSupportModel.fromJson(data)).toList();
+      return supportList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch support list: $e');
+      throw Exception('Failed to fetch support list');
+    }
+  }
+
+  // 아이템조회 : itemId
+  static Future<List<FundingItemModel>> getFundingItem(String item) async {
+    try {
+      final List<dynamic> dataList =
+          await getListData('$domain/funding/item?itemId=$item', {});
+      List<FundingItemModel> itemList =
+          dataList.map((data) => FundingItemModel.fromJson(data)).toList();
+      return itemList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch itme list: $e');
+      throw Exception('Failed to fetch itme list');
+    }
   }
 }

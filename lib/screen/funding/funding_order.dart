@@ -5,6 +5,7 @@ import 'package:pophub/model/address_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/api/address_api.dart';
+import 'package:pophub/utils/api/funding_api.dart';
 
 class FundingOrder extends StatefulWidget {
   final int count;
@@ -37,6 +38,20 @@ class _FundingOrderState extends State<FundingOrder> {
         addressId = data.addressId;
       });
     }
+  }
+
+  Future<void> submit() async {
+    final result = await FundingApi.postFundingSupport(
+        widget.item.itemId!, (widget.count * widget.item.amount!).toString());
+
+    if (!result.toString().contains("fail")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('펀딩에 참여하였습니다.'),
+        ),
+      );
+      Navigator.pop(context);
+    } else {}
   }
 
   @override
@@ -255,7 +270,9 @@ class _FundingOrderState extends State<FundingOrder> {
                   ),
                   color: Constants.DEFAULT_COLOR),
               child: InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  submit();
+                },
                 child: const Center(
                   child: Text(
                     '펀딩 참여하기',

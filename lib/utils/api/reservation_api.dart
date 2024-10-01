@@ -14,13 +14,14 @@ class ReservationApi {
       String date,
       String time,
       int count) async {
-    final data = await postData('$domain/popup/reservation/$popup/', {
+    final data = await postData('$domain/reservation/advance?storeId=$popup/', {
       'userName': userName,
       'reservationDate': date,
       'reservationTime': time,
       'capacity': count
     });
     print({
+      'popup': popup,
       'userName': userName,
       'reservationDate': date,
       'reservationTime': time,

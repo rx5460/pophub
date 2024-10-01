@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/funding_support_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
@@ -24,6 +25,7 @@ class _FundingListState extends State<FundingList>
   TabController? _tabController;
   var countFomat = NumberFormat('###,###,###,###');
   List<FundingItemModel>? fundingItem;
+  List<FundingSupportModel>? supportList;
 
   Future<void> fetchItemData() async {
     try {
@@ -41,11 +43,27 @@ class _FundingListState extends State<FundingList>
     }
   }
 
+  Future<void> fetchSupportData() async {
+    try {
+      List<FundingSupportModel>? dataList =
+          await FundingApi.getFundingSupport();
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          supportList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching support data: $error');
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchItemData();
+    fetchSupportData();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -104,71 +122,81 @@ class _FundingListState extends State<FundingList>
                   decoration:
                       const BoxDecoration(color: Constants.DEFAULT_COLOR),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FundingListDetail()),
-                    );
-                  },
-                  child: Container(
-                      width: screenWidth,
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1, color: Constants.DEFAULT_COLOR))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, left: 20, right: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              '2024.09.03',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w900),
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            const Text('수키도키 팝업스토어',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w900)),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            const Text('파일폴더 및 액자 세트',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500)),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            Row(
+                for (int index = 0; index < (supportList?.length ?? 0); index++)
+                  if (supportList != [])
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FundingListDetail(
+                                    support: supportList![index],
+                                  )),
+                        );
+                      },
+                      child: Container(
+                          width: screenWidth,
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 1,
+                                      color: Constants.DEFAULT_COLOR))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 20, right: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '수량 : 1개',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: Constants.DARK_GREY),
+                                Text(
+                                  DateFormat("yyyy.MM.dd").format(
+                                      DateTime.parse(
+                                          supportList![index].createdAt!)),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900),
                                 ),
                                 const SizedBox(
-                                  width: 20,
+                                  height: 3,
                                 ),
-                                Text(
-                                  '${countFomat.format(8900)}원',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: Constants.DARK_GREY),
+                                Text(supportList![index].itemId!,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900)),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(supportList![index].itemId!,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      '수량 : 2개',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300,
+                                          color: Constants.DARK_GREY),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      '${countFomat.format(supportList![index].amount)}원',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300,
+                                          color: Constants.DARK_GREY),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      )),
-                )
+                          )),
+                    )
               ],
             )
           : TabBarView(
@@ -186,9 +214,8 @@ class _FundingListState extends State<FundingList>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FundingListDetail(
-                                    mode: 'President',
-                                  )),
+                              builder: (context) => FundingListDetail(
+                                  mode: 'President', support: supportList![0])),
                         );
                       },
                       child: Container(

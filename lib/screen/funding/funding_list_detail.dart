@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/funding_support_model.dart';
 
 class FundingListDetail extends StatefulWidget {
   final String mode;
-  const FundingListDetail({super.key, this.mode = 'General'});
+  final FundingSupportModel support;
+  const FundingListDetail(
+      {super.key, this.mode = 'General', required this.support});
 
   @override
   State<FundingListDetail> createState() => _FundingListDetailState();
 }
 
 class _FundingListDetailState extends State<FundingListDetail> {
+  var countFomat = NumberFormat('###,###,###,###');
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -44,19 +50,21 @@ class _FundingListDetailState extends State<FundingListDetail> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('황지민',
-                              style: TextStyle(
+                          Text(widget.support.userName!,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
                               )),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8, bottom: 8),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "20204.08.16 10:10",
-                                  style: TextStyle(
+                                  DateFormat("yyyy.MM.dd hh:mm").format(
+                                      DateTime.parse(
+                                          widget.support.createdAt!)),
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -118,12 +126,12 @@ class _FundingListDetailState extends State<FundingListDetail> {
                     Padding(
                       padding: EdgeInsets.only(
                           left: screenWidth * 0.05, right: screenWidth * 0.05),
-                      child: const Column(
+                      child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 '상품 금액',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -132,18 +140,18 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                 ),
                               ),
                               Text(
-                                'ds원',
-                                style: TextStyle(
+                                '${countFomat.format(widget.support.amount)}원',
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(

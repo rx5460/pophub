@@ -684,6 +684,9 @@ class _FundingDetailState extends State<FundingDetail> {
                                                           item: fundingItem![
                                                               selected])),
                                             );
+                                            setState(() {
+                                              isBuying = false;
+                                            });
                                           }
                                         });
                                       } else {
@@ -723,6 +726,7 @@ class _FundingDetailState extends State<FundingDetail> {
                           onTap: () {
                             setState(() {
                               isBuying = false;
+                              count = 1;
                             });
                           },
                           child: Container(
