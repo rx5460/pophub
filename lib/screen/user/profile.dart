@@ -7,6 +7,7 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
 import 'package:pophub/screen/alarm/notice_add.dart';
+import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
@@ -136,10 +137,18 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     } else {
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const FundingList()),
-        );
+        if (User().role == "President") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Funding(mode: 'select')),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FundingList()),
+          );
+        }
       }
     }
 

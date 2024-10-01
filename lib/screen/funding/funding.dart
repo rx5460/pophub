@@ -6,7 +6,9 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
+import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_detail.dart';
+import 'package:pophub/screen/funding/funding_list.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
 import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/utils/api/funding_api.dart';
@@ -16,9 +18,8 @@ import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class Funding extends StatefulWidget {
-  const Funding({
-    super.key,
-  });
+  final String mode;
+  const Funding({super.key, this.mode = "view"});
 
   @override
   State<Funding> createState() => _FundingState();
@@ -41,11 +42,29 @@ class _FundingState extends State<Funding> {
     }
   }
 
+  Future<void> fetchMyFundingData() async {
+    try {
+      List<FundingModel>? dataList = await FundingApi.getFundingList();
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          fundingList = dataList;
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching funding data: $error');
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchFundingData();
+    if (widget.mode == 'select') {
+      fetchMyFundingData();
+    } else {
+      fetchFundingData();
+    }
   }
 
   @override
@@ -57,6 +76,24 @@ class _FundingState extends State<Funding> {
       appBar: const CustomTitleBar(
         titleName: "펀딩 리스트",
       ),
+      floatingActionButton: widget.mode == 'select'
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FundingAddPage()),
+                );
+              },
+              heroTag: null,
+              backgroundColor: Constants.DEFAULT_COLOR,
+              shape: const CircleBorder(),
+              child: const Icon(
+                Icons.add_outlined,
+                color: Colors.white,
+              ),
+            )
+          : null,
       body: Padding(
         padding: EdgeInsets.only(
           left: screenWidth * 0.05,
@@ -79,12 +116,23 @@ class _FundingState extends State<Funding> {
                         padding: EdgeInsets.only(bottom: screenHeight * 0.03),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FundingDetail(
-                                      funding: fundingList![index])),
-                            );
+                            if (widget.mode == 'select') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FundingList(
+                                          funding:
+                                              fundingList![index].fundingId!,
+                                        )),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FundingDetail(
+                                        funding: fundingList![index])),
+                              );
+                            }
                           },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +225,7 @@ class _FundingState extends State<Funding> {
                                       ),
                                     ),
                                     Text(
-                                      fundingList![index].content!,
+                                      fundingList![index].content ?? '',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,

@@ -281,7 +281,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                       offset: Offset(0, -screenWidth * 0.1),
                                       child: Container(
                                         width: screenWidth * 0.17,
-                                        height: screenHeight * 0.01,
+                                        height: screenHeight * 0.02,
                                         decoration: BoxDecoration(
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(8),

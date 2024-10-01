@@ -3,13 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list_detail.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class FundingList extends StatefulWidget {
+  final String? funding;
   const FundingList({
     super.key,
+    this.funding,
   });
 
   @override
@@ -22,11 +25,12 @@ class _FundingListState extends State<FundingList>
   var countFomat = NumberFormat('###,###,###,###');
   List<FundingItemModel>? fundingItem;
 
-  Future<void> fetchGoodsData() async {
+  Future<void> fetchItemData() async {
     try {
+      print('펀딩 아이디 : ${widget.funding!}');
       List<FundingItemModel> dataList =
-          await FundingApi.getFundingItemList('funding');
-
+          await FundingApi.getFundingItemList(widget.funding!);
+      print('펀딩 아이디 : ${widget.funding!}');
       if (dataList.isNotEmpty) {
         setState(() {
           fundingItem = dataList;
@@ -41,7 +45,7 @@ class _FundingListState extends State<FundingList>
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchGoodsData();
+    fetchItemData();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -92,16 +96,6 @@ class _FundingListState extends State<FundingList>
                   ],
                 )
               : null),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        heroTag: null,
-        backgroundColor: Constants.DEFAULT_COLOR,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.add_outlined,
-          color: Colors.white,
-        ),
-      ),
       body: User().role == 'General Member'
           ? Column(
               children: [
@@ -245,7 +239,7 @@ class _FundingListState extends State<FundingList>
                 Column(
                   children: [
                     for (int index = 0;
-                        index < (fundingItem!.length ?? 0);
+                        index < (fundingItem?.length ?? 0);
                         index++)
                       if (fundingItem != [])
                         Container(

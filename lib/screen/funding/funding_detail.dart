@@ -184,7 +184,7 @@ class _FundingDetailState extends State<FundingDetail> {
                                           offset: Offset(0, -screenWidth * 0.1),
                                           child: Container(
                                             width: screenWidth * 0.17,
-                                            height: screenWidth * 0.06,
+                                            height: screenWidth * 0.05,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   const BorderRadius.all(

@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
     try {
       if (User().userName != "") {
         List<PopupModel>? dataList = await StoreApi.getRecommendedPopupList();
-
+        print(dataList[0]);
         if (dataList.isNotEmpty) {
           setState(() {
             recommandList = dataList;
@@ -765,6 +765,7 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           final popup = recommandList[index];
+
                           return Padding(
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.05,
@@ -958,16 +959,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const WaitingCount(),
-                      ),
-                    );
-                  },
-                  child: const Text('예약하기'))
             ],
           ),
         ),
