@@ -33,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int current = 0;
   final CarouselController controller = CarouselController();
+
   TextEditingController searchController = TextEditingController();
   String? searchInput;
   List<PopupModel> poppularList = [];
@@ -435,76 +436,46 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-
-              // 상단에 등록된 광고
-              selectedAds.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: CarouselSlider.builder(
-                        options: CarouselOptions(
-                          height: 300.0,
-                          autoPlay: true,
-                          enlargeCenterPage: true,
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: selectedAds.isNotEmpty
+                    ? sliderWidget()
+                    : const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          '※ 광고 문의 ※',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
-                        itemCount: selectedAds.length,
-                        itemBuilder:
-                            (BuildContext context, int index, int realIdx) {
-                          final ad = selectedAds[index];
-                          return Card(
-                            elevation: 4,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: ad.img.isNotEmpty
-                                          ? NetworkImage(ad.img)
-                                          : const AssetImage(
-                                                  'assets/images/logo.png')
-                                              as ImageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 10,
-                                  left: 10,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        ad.title,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')} ~ ${ad.endDate?.year}.${ad.endDate?.month.toString().padLeft(2, '0')}.${ad.endDate?.day.toString().padLeft(2, '0')}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
                       ),
-                    )
-                  : const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        '※ 광고 문의 ※',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Transform.translate(
+                    offset: Offset(0, -screenWidth * 0.1),
+                    child: Container(
+                      width: screenWidth * 0.17,
+                      height: screenWidth * 0.06,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                        color: Colors.white.withOpacity(0.2),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${(current + 1).toString()}/${imageList.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
+                  ),
+                ],
+              ),
 
               // 인기 있는 팝업스토어
               SizedBox(
@@ -1008,6 +979,42 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget sliderWidget() {
+    return CarouselSlider(
+      carouselController: controller,
+      items: selectedAds.map(
+        (img) {
+          return Builder(
+            builder: (context) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Image.network(
+                  img.toString(),
+                  fit: BoxFit.fill,
+                ),
+                // Image.asset(
+                //   img,
+                //   fit: BoxFit.fill,
+                // ),
+              );
+            },
+          );
+        },
+      ).toList(),
+      options: CarouselOptions(
+        height: 300,
+        viewportFraction: 1.0,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 4),
+        onPageChanged: (index, reason) {
+          setState(() {
+            current = index;
+          });
+        },
       ),
     );
   }
