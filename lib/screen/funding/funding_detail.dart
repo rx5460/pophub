@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
-import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/funding/funding_order.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/log.dart';
@@ -675,18 +675,15 @@ class _FundingDetailState extends State<FundingDetail> {
                                           if (!isBuying) {
                                             isBuying = !isBuying;
                                           } else {
-                                            // 결제페이지
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           GoodsOrder(
-                                            //             popupName:
-                                            //                 widget.popupName,
-                                            //             goods: goods!,
-                                            //             count: count,
-                                            //           )),
-                                            // );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FundingOrder(
+                                                          count: count,
+                                                          item: fundingItem![
+                                                              selected])),
+                                            );
                                           }
                                         });
                                       } else {

@@ -74,27 +74,31 @@ class _FundingListDetailState extends State<FundingListDetail> {
                               const SizedBox(
                                 width: 8,
                               ),
-                              const Column(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "파일 폴더 및 액자 세트",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  Text(
-                                    '쥐순이 랜텀 파일 폴더 및 액자가 들어있는 세트 입니다.',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      overflow: TextOverflow.ellipsis,
+                                  SizedBox(
+                                    width: screenWidth * 0.7 - 8,
+                                    child: const Text(
+                                      '쥐순이 랜텀 파일 폴더 및 액자가 들어있는 세트 입니다.',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 3, // 최대 줄 수를 설정 (필요에 맞게 변경 가능)
+                                      softWrap: true, // 자동 줄바꿈을 활성화
+                                      overflow:
+                                          TextOverflow.visible, // 생략 기호 제거
                                     ),
-                                    maxLines: 3, // 최대 줄 수를 설정 (필요에 맞게 변경 가능)
-                                    softWrap: true, // 자동 줄바꿈을 활성화
-                                    overflow: TextOverflow.visible, // 생략 기호 제거
                                   ),
                                 ],
                               )
@@ -248,27 +252,31 @@ class _FundingListDetailState extends State<FundingListDetail> {
                               const SizedBox(
                                 width: 8,
                               ),
-                              const Column(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "파일 폴더 및 액자 세트",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  Text(
-                                    '쥐순이 랜텀 파일 폴더 및 액자가 들어있는 세트 입니다.',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      overflow: TextOverflow.ellipsis,
+                                  SizedBox(
+                                    width: screenWidth * 0.7 - 8,
+                                    child: const Text(
+                                      '쥐순이 랜텀 파일 폴더 및 액자가 들어있는 세트 입니다.',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 3, // 최대 줄 수를 설정 (필요에 맞게 변경 가능)
+                                      softWrap: true, // 자동 줄바꿈을 활성화
+                                      overflow:
+                                          TextOverflow.visible, // 생략 기호 제거
                                     ),
-                                    maxLines: 3, // 최대 줄 수를 설정 (필요에 맞게 변경 가능)
-                                    softWrap: true, // 자동 줄바꿈을 활성화
-                                    overflow: TextOverflow.visible, // 생략 기호 제거
                                   ),
                                 ],
                               )

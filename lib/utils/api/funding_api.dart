@@ -238,4 +238,13 @@ class FundingApi {
       throw Exception('Failed to fetch funding list');
     }
   }
+
+  // 펀딩 참여
+  static Future<Map<String, dynamic>> postFundingSupport(
+      String item, String amount) async {
+    final data = await postData('$domain/funding/support/create',
+        {'itemId': item, 'amount': amount, 'userName': User().userName});
+    Logger.debug("### 펀딩 참여 $data");
+    return data;
+  }
 }
