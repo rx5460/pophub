@@ -252,20 +252,29 @@ class _FundingListState extends State<FundingList>
                                       color: Constants.DEFAULT_COLOR))),
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                top: 40, bottom: 40, left: 20, right: 20),
+                                top: 20, bottom: 20, left: 20, right: 20),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    'assets/images/goods.png',
-                                    // width: screenHeight * 0.07 - 5,
-                                    width: screenWidth * 0.32,
-                                    height: screenWidth * 0.32,
-                                    fit: BoxFit.cover,
-                                  ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: fundingItem![index].images == null
+                                        ? Image.asset(
+                                            'assets/images/goods.png',
+                                            // width: screenHeight * 0.07 - 5,
+                                            width: screenWidth * 0.32,
+                                            height: screenWidth * 0.32,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.network(
+                                            fundingItem![index].images![0],
+                                            width: screenWidth * 0.32,
+                                            height: screenWidth * 0.32,
+                                            fit: BoxFit.cover,
+                                          )),
+                                const SizedBox(
+                                  width: 20,
                                 ),
                                 Column(
                                   mainAxisAlignment:
