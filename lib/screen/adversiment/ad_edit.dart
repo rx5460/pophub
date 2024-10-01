@@ -68,11 +68,6 @@ class AdEditPage extends StatelessWidget {
               )
             else
               const Text('이미지가 없습니다.'),
-            const SizedBox(height: 16),
-            Text(
-              ad.content ?? '내용 없음',
-              style: const TextStyle(fontSize: 16),
-            ),
           ],
         ),
       ),
