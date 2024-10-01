@@ -61,8 +61,8 @@ class _AdEditPageState extends State<AdEditPage> {
             const SizedBox(height: 16),
             if (widget.ad.img.isNotEmpty)
               Image.network(
-                widget.ad.img as String,
-                height: 200,
+                widget.ad.img,
+                width: 500,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   Logger.error('이미지 로드 중 에러 발생: $error');

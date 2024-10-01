@@ -10,7 +10,6 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
-import 'package:pophub/screen/reservation/waiting_count.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
@@ -20,6 +19,9 @@ import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:pophub/model/ad_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,8 +31,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _current = 0;
-  final CarouselController _controller = CarouselController();
+  int current = 0;
+  final CarouselController controller = CarouselController();
   TextEditingController searchController = TextEditingController();
   String? searchInput;
   List<PopupModel> poppularList = [];
@@ -42,6 +44,35 @@ class _HomePageState extends State<HomePage> {
   bool addGoodsVisible = false;
   List imageList = [];
   PopupModel? popup;
+  List<AdModel> selectedAds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+    _loadSelectedAds();
+  }
+
+  Future<void> initializeData() async {
+    fetchPopupData();
+    fetchFundingData();
+    await profileApi();
+    getRecommandPopup();
+    await getWillBeOpenPopup();
+    await getWillBeClosePopup();
+  }
+
+  Future<void> _loadSelectedAds() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? storedAds = prefs.getStringList('selected_ads');
+    if (storedAds != null && storedAds.isNotEmpty) {
+      setState(() {
+        selectedAds = storedAds
+            .map((adJson) => AdModel.fromJson(jsonDecode(adJson)))
+            .toList();
+      });
+    }
+  }
 
   Future<void> profileApi() async {
     Map<String, dynamic> data = await UserApi.getProfile(User().userId);
@@ -83,21 +114,6 @@ class _HomePageState extends State<HomePage> {
     } catch (error) {
       Logger.debug('Error fetching funding data: $error');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initializeData();
-  }
-
-  Future<void> initializeData() async {
-    fetchPopupData();
-    fetchFundingData();
-    await profileApi();
-    getRecommandPopup();
-    await getWillBeOpenPopup();
-    await getWillBeClosePopup();
   }
 
   Future<void> checkStoreApi() async {
@@ -145,7 +161,6 @@ class _HomePageState extends State<HomePage> {
     try {
       if (User().userName != "") {
         List<PopupModel>? dataList = await StoreApi.getRecommendedPopupList();
-        print(dataList[0]);
         if (dataList.isNotEmpty) {
           setState(() {
             recommandList = dataList;
@@ -213,7 +228,7 @@ class _HomePageState extends State<HomePage> {
       offset: Offset(MediaQuery.of(context).size.width * 0.04,
           MediaQuery.of(context).size.height * 0.02),
       child: Stack(
-        fit: StackFit.expand, // Stack이 화면 전체를 차지하도록 설정
+        fit: StackFit.expand,
         children: [
           GestureDetector(
             onTap: () {
@@ -224,7 +239,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: Colors.white.withOpacity(0.85), // 반투명 배경
+              color: Colors.white.withOpacity(0.85),
               child: Padding(
                 padding: EdgeInsets.only(
                     right: MediaQuery.of(context).size.width * 0.04,
@@ -318,7 +333,6 @@ class _HomePageState extends State<HomePage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-    // bool isUserGeneral = User().role == 'general';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -421,38 +435,78 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: imageList.isNotEmpty ? sliderWidget() : Container(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Transform.translate(
-                    offset: Offset(0, -screenWidth * 0.1),
-                    child: Container(
-                      width: screenWidth * 0.17,
-                      height: screenWidth * 0.06,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(8),
+
+              // 상단에 등록된 광고
+              selectedAds.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: CarouselSlider.builder(
+                        options: CarouselOptions(
+                          height: 300.0,
+                          autoPlay: true,
+                          enlargeCenterPage: true,
                         ),
-                        color: Colors.white.withOpacity(0.2),
+                        itemCount: selectedAds.length,
+                        itemBuilder:
+                            (BuildContext context, int index, int realIdx) {
+                          final ad = selectedAds[index];
+                          return Card(
+                            elevation: 4,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: ad.img.isNotEmpty
+                                          ? NetworkImage(ad.img)
+                                          : const AssetImage(
+                                                  'assets/images/logo.png')
+                                              as ImageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 10,
+                                  left: 10,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ad.title,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')} ~ ${ad.endDate?.year}.${ad.endDate?.month.toString().padLeft(2, '0')}.${ad.endDate?.day.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      child: Center(
-                        child: Text(
-                          '${(_current + 1).toString()}/${imageList.length}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        '※ 광고 문의 ※',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ),
-                  ),
-                ],
-              ),
+
+              // 인기 있는 팝업스토어
               SizedBox(
                 width: screenWidth * 0.9,
                 child: Row(
@@ -578,6 +632,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              // 종료 예정 팝업스토어
               SizedBox(
                 width: screenWidth * 0.9,
                 child: Row(
@@ -704,8 +762,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              // 추천 팝업스토어
               Visibility(
-                visible: recommandList != [] && User().userName != "",
+                visible: recommandList.isNotEmpty && User().userName != "",
                 child: SizedBox(
                   width: screenWidth * 0.9,
                   child: Row(
@@ -746,14 +808,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Visibility(
-                visible: recommandList != [] && User().userName != "",
-                child: const SizedBox(
-                  height: 10,
-                ),
+              const SizedBox(
+                height: 10,
               ),
               Visibility(
-                visible: recommandList != [] && User().userName != "",
+                visible: recommandList.isNotEmpty && User().userName != "",
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -840,6 +899,10 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              // 신규 펀딩
               SizedBox(
                 width: screenWidth * 0.9,
                 child: Row(
@@ -893,16 +956,7 @@ class _HomePageState extends State<HomePage> {
                                   ? screenWidth * 0.05
                                   : 0),
                           child: GestureDetector(
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => PopupDetail(
-                              //       storeId: popup.id!,
-                              //     ),
-                              //   ),
-                              // );
-                            },
+                            onTap: () {},
                             child: SizedBox(
                               width: screenWidth * 0.5,
                               child: Column(
@@ -941,14 +995,6 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                   ),
-                                  // Text(
-                                  //   '${DateFormat("yy.MM.dd").format(DateTime.parse(funding.openDate!))} ~ ${DateFormat("yy.MM.dd").format(DateTime.parse(funding.closeDate!))}',
-                                  //   style: const TextStyle(
-                                  //     fontSize: 11,
-                                  //     color: Colors.grey,
-                                  //     fontWeight: FontWeight.w900,
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -962,42 +1008,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget sliderWidget() {
-    return CarouselSlider(
-      carouselController: _controller,
-      items: imageList.map(
-        (img) {
-          return Builder(
-            builder: (context) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(
-                  img,
-                  fit: BoxFit.fill,
-                ),
-                // Image.asset(
-                //   img,
-                //   fit: BoxFit.fill,
-                // ),
-              );
-            },
-          );
-        },
-      ).toList(),
-      options: CarouselOptions(
-        height: 300,
-        viewportFraction: 1.0,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 4),
-        onPageChanged: (index, reason) {
-          setState(() {
-            _current = index;
-          });
-        },
       ),
     );
   }

@@ -23,6 +23,8 @@ class AdModel {
     this.endDate,
   });
 
+  String get imageUrl => img;
+
   factory AdModel.fromJson(Map<String, dynamic> json) {
     return AdModel(
       id: json['id'] != null ? json['id'] as String : '',
