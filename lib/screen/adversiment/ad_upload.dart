@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class AdUpload extends StatefulWidget {
-  const AdUpload({Key? key}) : super(key: key);
+  const AdUpload({Key? key, required String mode}) : super(key: key);
 
   @override
   AdUploadState createState() => AdUploadState();
