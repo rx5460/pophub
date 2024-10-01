@@ -463,7 +463,50 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: selectedAds.isNotEmpty
-                    ? sliderWidget()
+                    ? CarouselSlider(
+                        items: selectedAds.map(
+                          (ad) {
+                            return Builder(
+                              builder: (context) {
+                                return SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Image.network(
+                                    ad.img, // AdModel의 img 필드를 사용하여 이미지를 로드
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            '이미지를 불러올 수 없습니다.',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text('Error: $error',
+                                              style: const TextStyle(
+                                                  color: Colors.red)),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ).toList(),
+                        options: CarouselOptions(
+                          height: 300,
+                          viewportFraction: 1.0,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 4),
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              current = index;
+                            });
+                          },
+                        ),
+                      )
                     : const Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text(
@@ -472,6 +515,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
