@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/model/ad_model.dart';
+import '../../utils/log.dart';
 
 class AdEditPage extends StatelessWidget {
   final AdModel ad;
@@ -22,6 +23,8 @@ class AdEditPage extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,13 +48,22 @@ class AdEditPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            if (ad.imageUrl.isNotEmpty)
+            if (ad.imageUrls.isNotEmpty)
               Image.network(
-                ad.imageUrl,
+                ad.imageUrls as String,
                 height: 200,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Text('이미지를 불러올 수 없습니다.');
+                  Logger.error('이미지 로드 중 에러 발생: $error');
+                  Logger.error('스택 트레이스: $stackTrace');
+                  return Column(
+                    children: [
+                      const Text('이미지를 불러올 수 없습니다.'),
+                      const SizedBox(height: 8),
+                      Text('에러: $error',
+                          style: const TextStyle(color: Colors.red)),
+                    ],
+                  );
                 },
               )
             else

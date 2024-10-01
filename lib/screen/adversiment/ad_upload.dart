@@ -25,7 +25,7 @@ class AdUploadState extends State<AdUpload> {
           await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
-          _selectedImage = File(pickedImage.path); //이미지를 File 객체로 변환
+          _selectedImage = File(pickedImage.path); // 이미지를 File 객체로 변환
         });
       } else {
         print("이미지 선택이 취소되었습니다.");
