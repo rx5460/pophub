@@ -265,17 +265,12 @@ class FundingApi {
   }
 
   // 아이템조회 : itemId
-  static Future<List<FundingItemModel>> getFundingItem(String item) async {
-    try {
-      final List<dynamic> dataList =
-          await getListData('$domain/funding/item?itemId=$item', {});
-      List<FundingItemModel> itemList =
-          dataList.map((data) => FundingItemModel.fromJson(data)).toList();
-      return itemList;
-    } catch (e) {
-      // 오류 처리
-      Logger.debug('Failed to fetch itme list: $e');
-      throw Exception('Failed to fetch itme list');
-    }
+  static Future<FundingItemModel> getFundingItemDetail(String itemId) async {
+    final data = await getListData('$domain/funding/item?itemId=$itemId', {});
+    print('data : $data');
+    Logger.debug("### 특정 아이템 상세 조회 $data");
+
+    FundingItemModel item = FundingItemModel.fromJson(data[0]);
+    return item;
   }
 }

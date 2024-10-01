@@ -396,7 +396,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                       int.parse(_itemAmountController.text),
                                   "description":
                                       _itemDescriptionController.text,
-                                  // "image": itemImages
+                                  "image": itemImages
                                 });
                                 _itemPriceController.clear();
                                 _itemTitleController.clear();
