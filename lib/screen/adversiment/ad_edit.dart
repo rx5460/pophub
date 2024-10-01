@@ -47,7 +47,7 @@ class AdEditPage extends StatelessWidget {
             const SizedBox(height: 16),
             if (ad.imageUrl.isNotEmpty)
               Image.network(
-                ad.imageUrl!,
+                ad.imageUrl,
                 height: 200,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
