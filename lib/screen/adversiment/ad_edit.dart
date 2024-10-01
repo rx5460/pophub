@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'package:pophub/model/ad_model.dart';
 import '../../utils/log.dart';
 
@@ -12,10 +14,27 @@ class AdEditPage extends StatefulWidget {
 }
 
 class _AdEditPageState extends State<AdEditPage> {
-  @override
-  void initState() {
-    super.initState();
-    print(widget.ad.img);
+  final Color pinkColor = const Color(0xFFE6A3B3);
+
+  Future<void> _registerAd() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // 등록할 광고를 SharedPreferences에 저장
+    List<String>? storedAds = prefs.getStringList('selected_ads');
+    storedAds = storedAds ?? [];
+
+    if (!storedAds.contains(jsonEncode(widget.ad.toJson()))) {
+      storedAds.add(jsonEncode(widget.ad.toJson()));
+    }
+
+    await prefs.setStringList('selected_ads', storedAds);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("${widget.ad.title} 광고가 등록되었습니다!")),
+    );
+
+    // 광고 등록 후 true 값을 반환
+    Navigator.pop(context, true);
   }
 
   @override
@@ -63,6 +82,7 @@ class _AdEditPageState extends State<AdEditPage> {
               Image.network(
                 widget.ad.img,
                 width: 500,
+                height: 500,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   Logger.error('이미지 로드 중 에러 발생: $error');
@@ -79,6 +99,28 @@ class _AdEditPageState extends State<AdEditPage> {
               )
             else
               const Text('이미지가 없습니다.'),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _registerAd,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: pinkColor,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+                child: const Text(
+                  '광고 등록',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

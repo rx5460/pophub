@@ -7,6 +7,7 @@ import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
+import 'package:pophub/screen/adversiment/ad_edit.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/goods/goods_add.dart';
@@ -72,6 +73,18 @@ class _HomePageState extends State<HomePage> {
             .map((adJson) => AdModel.fromJson(jsonDecode(adJson)))
             .toList();
       });
+    }
+  }
+
+  Future<void> navigateToAdEdit(BuildContext context, AdModel ad) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdEditPage(ad: ad),
+      ),
+    );
+    if (result == true) {
+      await _loadSelectedAds(); // 광고 등록 후 selectedAds 리스트 갱신
     }
   }
 
