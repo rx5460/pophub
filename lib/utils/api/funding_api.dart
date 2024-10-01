@@ -79,7 +79,7 @@ class FundingApi {
       if (imageMap['type'] == 'file') {
         var file = imageMap['data'] as File;
         formData.files.add(MapEntry(
-          'image',
+          'images',
           await MultipartFile.fromFile(file.path,
               filename: file.path.split('/').last),
         ));
@@ -88,7 +88,7 @@ class FundingApi {
         var response = await Dio().get<List<int>>(url,
             options: Options(responseType: ResponseType.bytes));
         formData.files.add(MapEntry(
-          'image',
+          'images',
           MultipartFile.fromBytes(response.data!,
               filename: url.split('/').last),
         ));
@@ -103,6 +103,7 @@ class FundingApi {
       MapEntry('amount', funding.amount?.toString() ?? '0'),
       MapEntry('openDate', funding.openDate ?? ''),
       MapEntry('closeDate', funding.closeDate ?? ''),
+      MapEntry('paymentDate', funding.closeDate ?? '')
     ]);
     for (var field in formData.fields) {
       print("${field.key}: ${field.value}");
@@ -118,12 +119,78 @@ class FundingApi {
     return data;
   }
 
-  //펀딩 참여자 조회
-  static Future<List<dynamic>> getFundingjoin() async {
-    final data =
-        await getListData('$domain/funding?userName=${User().userName}', {});
+  //아이템 생성
+  static Future<Map<String, dynamic>> postItemAdd(FundingItemModel item) async {
+    FormData formData = FormData();
+
+    // 파일 추가
+
+    if (item.images != null) {
+      for (var imageMap in item.images!) {
+        if (imageMap['type'] == 'file') {
+          var file = imageMap['data'] as File;
+          formData.files.add(MapEntry(
+            'images',
+            await MultipartFile.fromFile(file.path,
+                filename: file.path.split('/').last),
+          ));
+        } else if (imageMap['type'] == 'url') {
+          var url = imageMap['data'] as String;
+          var response = await Dio().get<List<int>>(url,
+              options: Options(responseType: ResponseType.bytes));
+          formData.files.add(MapEntry(
+            'images',
+            MultipartFile.fromBytes(response.data!,
+                filename: url.split('/').last),
+          ));
+        }
+      }
+    }
+
+    // 아이템 기본 정보 추가
+    formData.fields.addAll([
+      MapEntry('fundingId', item.fundingId!),
+      MapEntry('userName', User().userName),
+      MapEntry('itemName', item.itemName ?? ''),
+      MapEntry('content', item.content ?? ''),
+      MapEntry('count', item.count?.toString() ?? '0'),
+      MapEntry('amount', item.amount?.toString() ?? '0'),
+      MapEntry('openDate', item.openDate ?? ''),
+      MapEntry('closeDate', item.closeDate ?? ''),
+      MapEntry('paymentDate', item.paymentDate!),
+      // // 문자열을 DateTime으로 변환 후 ISO 8601 형식으로 변환
+      // MapEntry(
+      //     'openDate',
+      //     item.openDate != null
+      //         ? DateTime.parse(item.openDate!).toIso8601String()
+      //         : ''),
+      // MapEntry(
+      //     'closeDate',
+      //     item.closeDate != null
+      //         ? DateTime.parse(item.closeDate!).toIso8601String()
+      //         : ''),
+      // MapEntry(
+      //     'paymentDate',
+      //     item.paymentDate != null
+      //         ? DateTime.parse(item.paymentDate!).toIso8601String()
+      //         : ''),
+    ]);
+
+    // 필드 출력 (디버깅용)
+    for (var field in formData.fields) {
+      print("${field.key}: ${field.value}");
+    }
+
+    // 파일 출력 (디버깅용)
+    for (var file in formData.files) {
+      print("File Field: ${file.key}, File Name: ${file.value.filename}");
+    }
+
+    // 서버에 데이터 전송
+    final data = await postFormData('$domain/funding/item/create', formData);
     print(data);
-    Logger.debug("### 내 펀딩 조회 $data");
+
+    Logger.debug("### 아이템 추가 $data");
     return data;
   }
 
@@ -132,7 +199,7 @@ class FundingApi {
       String funding) async {
     try {
       final List<dynamic> dataList =
-          await getListData('$domain/funding/iteme?fundingId=$funding', {});
+          await getListData('$domain/funding/item?fundingId=$funding', {});
       List<FundingItemModel> itemList =
           dataList.map((data) => FundingItemModel.fromJson(data)).toList();
       return itemList;
@@ -147,6 +214,21 @@ class FundingApi {
   static Future<List<FundingModel>> getFundingList() async {
     try {
       final List<dynamic> dataList = await getListData('$domain/funding', {});
+      List<FundingModel> fundingList =
+          dataList.map((data) => FundingModel.fromJson(data)).toList();
+      return fundingList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch funding list: $e');
+      throw Exception('Failed to fetch funding list');
+    }
+  }
+
+  // 내 펀딩 조회
+  static Future<List<FundingModel>> getMyFundingList() async {
+    try {
+      final List<dynamic> dataList =
+          await getListData('$domain/funding?userName=${User().userName}', {});
       List<FundingModel> fundingList =
           dataList.map((data) => FundingModel.fromJson(data)).toList();
       return fundingList;

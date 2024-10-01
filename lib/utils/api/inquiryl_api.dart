@@ -12,7 +12,7 @@ class InquiryApi {
   static Future<List<InquiryModel>> getInquiryList(String userName) async {
     try {
       final List<dynamic> dataList = await getListData(
-          '$domain/user/searchInquiry/?userName=$userName', {});
+          '$domain/user/inquiry/search?userName=$userName', {});
       Logger.debug("### 문의 내역 조회 $dataList");
 
       List<InquiryModel> inquiryList =

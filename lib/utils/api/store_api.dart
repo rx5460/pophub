@@ -307,7 +307,7 @@ class StoreApi {
   static Future<List<PopupModel>> getRecommendedPopupList() async {
     try {
       final List<dynamic> dataList = await getListData(
-          '$domain/popup/recommendation/${User().userName}', {});
+          '$domain/popup/recommendation?userName=${User().userName}', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
@@ -322,7 +322,7 @@ class StoreApi {
   static Future<List<PopupModel>> getWillBeOpenPopupList() async {
     try {
       final List<dynamic> dataList =
-          await getListData('$domain/popup/scheduledToOpen', {});
+          await getListData('$domain/popup/scheduledPopups?type=open', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;
@@ -337,7 +337,7 @@ class StoreApi {
   static Future<List<PopupModel>> getWillBeClosePopupList() async {
     try {
       final List<dynamic> dataList =
-          await getListData('$domain/popup/scheduledToClose', {});
+          await getListData('$domain/popup/scheduledPopups?type=close', {});
       List<PopupModel> popupList =
           dataList.map((data) => PopupModel.fromJson(data)).toList();
       return popupList;

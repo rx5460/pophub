@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/funding_model.dart';
+import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/popup_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -65,7 +67,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         _targetAmountController.text.isEmpty ||
-        fundingItem.isEmpty) {
+        fundingItem.isEmpty ||
+        images == []) {
       showAlert(context, "오류", "모든 필드를 입력하고 펀딩 아이템을 추가하세요.", () {
         Navigator.pop(context);
       });
@@ -99,7 +102,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
 
     // 펀딩 추가 API 호출
     final result = await FundingApi.postFundingAdd(funding);
-
+    print('result : $result');
     if (result.toString().contains("fail")) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -107,10 +110,44 @@ class _FundingAddPageState extends State<FundingAddPage> {
         ),
       );
     } else {
+      for (int index = 0; index < (fundingItem.length); index++) {
+        // _submitItem(fundingItem[index], result.toString());
+        _submitItem(fundingItem[index], result['data']);
+      }
+
       showAlert(context, "성공", "펀딩이 성공적으로 등록되었습니다.", () {
         Navigator.pop(context); // 페이지 닫기
+        Navigator.pop(context);
       });
     }
+  }
+
+  Future<void> _submitItem(Map<String, dynamic> items, String fundingId) async {
+    // 펀딩 모델 생성
+    FundingItemModel item = FundingItemModel(
+      fundingId: fundingId,
+      userName: User().userName,
+      itemName: items['title'],
+      content: items['description'],
+      count: items['limit'],
+      amount: items['price'],
+      openDate: startDate.toString(),
+      closeDate: endDate.toString(),
+      paymentDate: endDate.toString(),
+      images: items['image'],
+    );
+
+    // 펀딩 추가 API 호출
+    final result = await FundingApi.postItemAdd(item);
+
+    if (result.toString().contains("fail")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('아이템 등록에 실패했습니다. 펀딩 아이템 : ${items['title'].toString()}'),
+        ),
+      );
+    } else {}
   }
 
   Future<void> _pickImage() async {
@@ -340,6 +377,17 @@ class _FundingAddPageState extends State<FundingAddPage> {
                           width: MediaQuery.of(context).size.width * 0.34,
                           child: OutlinedButton(
                             onPressed: () {
+                              if (_itemTitleController.text.isEmpty ||
+                                  _itemPriceController.text.isEmpty ||
+                                  _itemAmountController.text.isEmpty ||
+                                  _itemDescriptionController.text.isEmpty) {
+                                showAlert(
+                                    context, "오류", "모든 필드를 입력하고 펀딩 아이템을 추가하세요.",
+                                    () {
+                                  Navigator.pop(context);
+                                });
+                                return;
+                              }
                               setState(() {
                                 fundingItem.add({
                                   "price": int.parse(_itemPriceController.text),
@@ -348,7 +396,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                       int.parse(_itemAmountController.text),
                                   "description":
                                       _itemDescriptionController.text,
-                                  "image": itemImages
+                                  // "image": itemImages
                                 });
                                 _itemPriceController.clear();
                                 _itemTitleController.clear();
@@ -626,7 +674,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                               // 이미지 표시
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: fundingItem[index]["image"].isNotEmpty
+                                child: fundingItem[index]["image"] != null
                                     ? (fundingItem[index]["image"][0]['type'] ==
                                             'file'
                                         ? Image.file(
