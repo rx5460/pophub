@@ -30,6 +30,7 @@ class _FundingDetailState extends State<FundingDetail> {
   final CarouselController _controller = CarouselController();
   bool isLoading = true;
   bool isBuying = false;
+  int selected = 0;
 
   int count = 1;
 
@@ -37,9 +38,10 @@ class _FundingDetailState extends State<FundingDetail> {
 
   Future<void> fetchItemData() async {
     try {
+      print('펀딩 아이디 : ${widget.funding}');
       List<FundingItemModel> dataList =
           await FundingApi.getFundingItemList(widget.funding.fundingId!);
-
+      print('펀딩 아이디 : ${widget.funding}');
       if (dataList.isNotEmpty) {
         setState(() {
           fundingItem = dataList;
@@ -343,107 +345,147 @@ class _FundingDetailState extends State<FundingDetail> {
                                               ),
                                             ],
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons
-                                                        .check_box_outline_blank_rounded,
-                                                    color: Constants.DARK_GREY,
-                                                  ),
-                                                  Text(
-                                                    "${countFormat.format(widget.funding.amount)}원",
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                          for (int index = 0;
+                                              index <
+                                                  (fundingItem?.length ?? 0);
+                                              index++)
+                                            if (fundingItem != [])
+                                              Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.asset(
-                                                      'assets/images/goods.png',
-                                                      // width: screenHeight * 0.07 - 5,
-                                                      width: screenWidth * 0.32,
-                                                      height:
-                                                          screenWidth * 0.32,
-                                                      fit: BoxFit.cover,
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        selected = index;
+                                                      });
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        selected == index
+                                                            ? const Icon(
+                                                                Icons
+                                                                    .check_box_outlined,
+                                                                color: Colors
+                                                                    .black)
+                                                            : const Icon(
+                                                                Icons
+                                                                    .check_box_outline_blank_rounded,
+                                                                color: Constants
+                                                                    .DARK_GREY,
+                                                              ),
+                                                        Text(
+                                                          "${countFormat.format(fundingItem![index].amount)}원",
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Column(
+                                                  Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                        MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: fundingItem![
+                                                                        index]
+                                                                    .images !=
+                                                                []
+                                                            ? Image.network(
+                                                                fundingItem![
+                                                                        index]
+                                                                    .images![0],
+                                                                width:
+                                                                    screenWidth *
+                                                                        0.32,
+                                                                height:
+                                                                    screenWidth *
+                                                                        0.32,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : Image.asset(
+                                                                'assets/images/goods.png',
+                                                                // width: screenHeight * 0.07 - 5,
+                                                                width:
+                                                                    screenWidth *
+                                                                        0.32,
+                                                                height:
+                                                                    screenWidth *
+                                                                        0.32,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                      ),
                                                       const SizedBox(
-                                                        height: 8,
+                                                        width: 20,
                                                       ),
-                                                      Text(
-                                                        widget.funding.title
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        "잔여수량 ${widget.funding.amount.toString()}개",
-                                                        style: const TextStyle(
-                                                            fontSize: 13,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          Text(
+                                                            fundingItem![index]
+                                                                .itemName
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Text(
+                                                            "잔여수량 ${fundingItem![index].amount.toString()}개",
+                                                            style: const TextStyle(
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
-                                                  // GestureDetector(
-                                                  //     onTap: () {
-                                                  //       setState(() {
-                                                  //         fundingItem!.removeAt(index);
-                                                  //       });
-                                                  //     },
-                                                  //     child: const Icon(Icons.close)),
+                                                  SizedBox(
+                                                    width: screenWidth * 0.4,
+                                                    child: Text(
+                                                      fundingItem![index]
+                                                          .content
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 3,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 30,
+                                                  ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                width: screenWidth * 0.4,
-                                                child: Text(
-                                                  widget.funding.content
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 3,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                                           const SizedBox(
                                             height: 30,
                                           ),
@@ -451,6 +493,29 @@ class _FundingDetailState extends State<FundingDetail> {
                                       ),
                                     ),
                                   ],
+                                ),
+                                Positioned(
+                                  top: -AppBar().preferredSize.height + 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    child: AppBar(
+                                      systemOverlayStyle:
+                                          SystemUiOverlayStyle.dark,
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0,
+                                      leading: IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -523,14 +588,15 @@ class _FundingDetailState extends State<FundingDetail> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    fundingItem![0].itemName!,
+                                                    fundingItem![selected]
+                                                        .itemName!,
                                                     style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w900),
                                                   ),
                                                   Text(
-                                                    '${formatNumber(fundingItem![0].amount!)}원',
+                                                    '${formatNumber(fundingItem![selected].amount! * count)}원',
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
@@ -634,7 +700,7 @@ class _FundingDetailState extends State<FundingDetail> {
                                     },
                                     child: const Center(
                                       child: Text(
-                                        '구매하기',
+                                        '펀딩하기',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
