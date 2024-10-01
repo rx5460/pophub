@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:pophub/model/ad_model.dart';
 import '../../utils/log.dart';
 
-class AdEditPage extends StatelessWidget {
+class AdEditPage extends StatefulWidget {
   final AdModel ad;
 
   const AdEditPage({required this.ad, Key? key}) : super(key: key);
+
+  @override
+  State<AdEditPage> createState() => _AdEditPageState();
+}
+
+class _AdEditPageState extends State<AdEditPage> {
+  @override
+  void initState() {
+    super.initState();
+    print(widget.ad.img);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +43,7 @@ class AdEditPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              ad.title,
+              widget.ad.title,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -40,7 +51,7 @@ class AdEditPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${ad.startDate?.year}.${ad.startDate?.month.toString().padLeft(2, '0')}.${ad.startDate?.day.toString().padLeft(2, '0')}',
+              '${widget.ad.startDate?.year}.${widget.ad.startDate?.month.toString().padLeft(2, '0')}.${widget.ad.startDate?.day.toString().padLeft(2, '0')}',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -48,9 +59,9 @@ class AdEditPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            if (ad.imageUrls.isNotEmpty)
+            if (widget.ad.img.isNotEmpty)
               Image.network(
-                ad.imageUrls as String,
+                widget.ad.img as String,
                 height: 200,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {

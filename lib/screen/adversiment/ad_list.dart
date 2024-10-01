@@ -86,7 +86,7 @@ class AdListPageState extends State<AdListPage> {
         selectedAds.remove(ad.id);
         addedAds.remove(ad);
       } else {
-        selectedAds.add(ad.id!);
+        selectedAds.add(ad.id);
         addedAds.insert(0, ad);
       }
     });
@@ -213,6 +213,8 @@ class AdListPageState extends State<AdListPage> {
                           ),
                         ),
                         onTap: () {
+                          print(ad.title);
+                          print(ad.img);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
