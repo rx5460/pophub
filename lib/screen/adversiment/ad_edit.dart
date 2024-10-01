@@ -19,7 +19,7 @@ class AdEditPage extends StatelessWidget {
         ),
         title: const Text(
           '광고 상세 정보',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
       ),
@@ -45,8 +45,17 @@ class AdEditPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            if (ad.imageUrl != null)
-              Image.network(ad.imageUrl!, height: 200, fit: BoxFit.cover),
+            if (ad.imageUrl.isNotEmpty)
+              Image.network(
+                ad.imageUrl!,
+                height: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text('이미지를 불러올 수 없습니다.');
+                },
+              )
+            else
+              const Text('이미지가 없습니다.'),
             const SizedBox(height: 16),
             Text(
               ad.content ?? '내용 없음',
