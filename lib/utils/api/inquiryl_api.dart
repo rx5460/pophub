@@ -58,7 +58,7 @@ class InquiryApi {
   // 문의 내역 상세 조회
   static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
-        await getData('$domain/user/inauiry/search/?inquiryId=$inquiryId', {});
+        await getData('$domain/user/answer/search?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
     InquiryModel inquiryModel = InquiryModel.fromJson(data);
@@ -81,7 +81,7 @@ class InquiryApi {
   static Future<List<InquiryModel>> getAllInquiryList() async {
     try {
       final List<dynamic> dataList =
-          await getListData('$domain/admin/inqury/search', {});
+          await getListData('$domain/admin/inquiry/search', {});
       Logger.debug("### 문의 내역 전체 조회 $dataList");
 
       List<InquiryModel> inquiryList =
