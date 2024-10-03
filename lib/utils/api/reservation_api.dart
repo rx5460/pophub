@@ -14,7 +14,7 @@ class ReservationApi {
       String date,
       String time,
       int count) async {
-    final data = await postData('$domain/reservation/advance?storeId=$popup/', {
+    final data = await postData('$domain/reservation/advance?storeId=$popup', {
       'userName': userName,
       'reservationDate': date,
       'reservationTime': time,
