@@ -8,16 +8,9 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/funding_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
-import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/notifier/StoreNotifier.dart';
-import 'package:pophub/notifier/UserNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
-import 'package:pophub/screen/nav/bottom_navigation.dart';
-import 'package:pophub/utils/api/category_api.dart';
-import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/utils.dart';
-import 'package:provider/provider.dart';
 
 import '../../utils/api/funding_api.dart';
 
@@ -223,223 +216,233 @@ class _FundingAddPageState extends State<FundingAddPage> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               backgroundColor: Colors.white,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: Colors.white,
-                ),
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                _pickItemImage(setModalState);
-                              },
-                              child: const Icon(Icons.add),
+              child: SingleChildScrollView(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  _pickItemImage(setModalState);
+                                },
+                                child: const Icon(Icons.add),
+                              ),
                             ),
-                          ),
-                          ...itemImages
-                              .map((image) => Stack(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: image['type'] == 'file'
-                                              ? Image.file(
-                                                  image['data'],
-                                                  width: 56,
-                                                  height: 56,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : Image.network(
-                                                  image['data'],
-                                                  width: 56,
-                                                  height: 56,
-                                                  fit: BoxFit.cover,
-                                                ),
+                            ...itemImages
+                                .map((image) => Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            child: image['type'] == 'file'
+                                                ? Image.file(
+                                                    image['data'],
+                                                    width: 56,
+                                                    height: 56,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.network(
+                                                    image['data'],
+                                                    width: 56,
+                                                    height: 56,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        right: 0,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setModalState(() {
-                                              itemImages.remove(image);
-                                            });
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                            child: const Icon(
-                                              Icons.close,
-                                              size: 20,
-                                              color: Colors.white,
+                                        Positioned(
+                                          right: 0,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setModalState(() {
+                                                itemImages.remove(image);
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: const Icon(
+                                                Icons.close,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ))
-                              .toList(),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      '펀딩 제목',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _itemTitleController,
-                      decoration: const InputDecoration(
-                        labelText: '제목을 작성해주세요.',
-                        alignLabelWithHint: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        labelStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '펀딩 가격',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _itemPriceController,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        labelText: '금액을 작성해주세요.',
-                        alignLabelWithHint: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        labelStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '펀딩 수량',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _itemAmountController,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        labelText: '수량을 작성해주세요.',
-                        alignLabelWithHint: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        labelStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      '펀딩 설명',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _itemDescriptionController,
-                      decoration: const InputDecoration(
-                        labelText: '펀딩 설명을 작성해주세요.',
-                        alignLabelWithHint: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        labelStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      maxLines: 4,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.34,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              if (_itemTitleController.text.isEmpty ||
-                                  _itemPriceController.text.isEmpty ||
-                                  _itemAmountController.text.isEmpty ||
-                                  _itemDescriptionController.text.isEmpty) {
-                                showAlert(
-                                    context, "오류", "모든 필드를 입력하고 펀딩 아이템을 추가하세요.",
-                                    () {
-                                  Navigator.pop(context);
-                                });
-                                return;
-                              }
-                              setState(() {
-                                fundingItem.add({
-                                  "price": int.parse(_itemPriceController.text),
-                                  "title": _itemTitleController.text,
-                                  "limit":
-                                      int.parse(_itemAmountController.text),
-                                  "description":
-                                      _itemDescriptionController.text,
-                                  "image": itemImages
-                                });
-                                _itemPriceController.clear();
-                                _itemTitleController.clear();
-                                _itemAmountController.clear();
-                                _itemDescriptionController.clear();
-                                itemImages = [];
-                              });
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 50, vertical: 15),
-                            ),
-                            child: const Text('추가'),
-                          ),
+                                      ],
+                                    ))
+                                .toList(),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.34,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                _itemPriceController.clear();
-                                _itemTitleController.clear();
-                                _itemAmountController.clear();
-                                _itemDescriptionController.clear();
-                                itemImages = [];
-                              });
-                              Navigator.pop(context);
-                            },
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: const BorderSide(color: Colors.grey),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 50, vertical: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '펀딩 제목',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _itemTitleController,
+                        decoration: const InputDecoration(
+                          labelText: '제목을 작성해주세요.',
+                          alignLabelWithHint: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          labelStyle:
+                              TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        '펀딩 가격',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _itemPriceController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: '금액을 작성해주세요.',
+                          alignLabelWithHint: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          labelStyle:
+                              TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        '펀딩 수량',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _itemAmountController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: '수량을 작성해주세요.',
+                          alignLabelWithHint: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          labelStyle:
+                              TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '펀딩 설명',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _itemDescriptionController,
+                        decoration: const InputDecoration(
+                          labelText: '펀딩 설명을 작성해주세요.',
+                          alignLabelWithHint: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          labelStyle:
+                              TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                        maxLines: 4,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.34,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                if (_itemTitleController.text.isEmpty ||
+                                    _itemPriceController.text.isEmpty ||
+                                    _itemAmountController.text.isEmpty ||
+                                    _itemDescriptionController.text.isEmpty) {
+                                  showAlert(context, "오류",
+                                      "모든 필드를 입력하고 펀딩 아이템을 추가하세요.", () {
+                                    Navigator.pop(context);
+                                  });
+                                  return;
+                                }
+                                setState(() {
+                                  fundingItem.add({
+                                    "price":
+                                        int.parse(_itemPriceController.text),
+                                    "title": _itemTitleController.text,
+                                    "limit":
+                                        int.parse(_itemAmountController.text),
+                                    "description":
+                                        _itemDescriptionController.text,
+                                    "image": itemImages
+                                  });
+                                  _itemPriceController.clear();
+                                  _itemTitleController.clear();
+                                  _itemAmountController.clear();
+                                  _itemDescriptionController.clear();
+                                  itemImages = [];
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 50, vertical: 15),
+                              ),
+                              child: const Text('추가'),
                             ),
-                            child: const Text('닫기',
-                                style: TextStyle(color: Colors.black)),
                           ),
-                        )
-                      ],
-                    )
-                  ],
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.34,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _itemPriceController.clear();
+                                  _itemTitleController.clear();
+                                  _itemAmountController.clear();
+                                  _itemDescriptionController.clear();
+                                  itemImages = [];
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 50, vertical: 15),
+                              ),
+                              child: const Text('닫기',
+                                  style: TextStyle(color: Colors.black)),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
