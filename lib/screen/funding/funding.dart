@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_model.dart';
-import 'package:pophub/model/goods_model.dart';
-import 'package:pophub/model/popup_model.dart';
-import 'package:pophub/model/user.dart';
-import 'package:pophub/notifier/GoodsNotifier.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_detail.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
-import 'package:pophub/screen/goods/goods_add.dart';
-import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/utils/api/funding_api.dart';
-import 'package:pophub/utils/api/goods_api.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:pophub/utils/utils.dart';
-import 'package:provider/provider.dart';
 
 class Funding extends StatefulWidget {
   final String mode;
@@ -224,13 +215,16 @@ class _FundingState extends State<Funding> {
                                         ],
                                       ),
                                     ),
-                                    Text(
-                                      fundingList![index].content ?? '',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
+                                    SizedBox(
+                                      width: screenWidth * 0.5,
+                                      child: Text(
+                                        fundingList![index].content ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
