@@ -18,6 +18,7 @@ import 'package:pophub/screen/store/calender.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
+import 'package:pophub/screen/user/achieve.dart';
 import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
@@ -414,6 +415,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ],
                                             ),
                                           ),
+                                        ),
+                                        MenuList(
+                                          icon: Icons.star,
+                                          text: '업적',
+                                          onClick: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AchievementsPage()));
+                                          },
                                         ),
                                         MenuList(
                                           icon: Icons.comment,
