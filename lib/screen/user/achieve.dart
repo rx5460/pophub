@@ -6,7 +6,7 @@ import 'package:pophub/model/achieve_model.dart';
 // 업적 데이터 불러오기
 Future<List<Achievement>> fetchAchievements() async {
   final response =
-      await http.get(Uri.parse('http://3.88.120.90/user/achieveHub'));
+      await http.get(Uri.parse('http://3.233.20.5:3000/user/achieveHub'));
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body);

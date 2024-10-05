@@ -5,7 +5,7 @@ import 'package:pophub/utils/log.dart';
 
 class ReservationApi {
   // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
-  static String domain = "http://3.88.120.90:3000";
+  static String domain = "http://3.233.20.5:3000";
 
 // 팝업 예약
   static Future<Map<String, dynamic>> postPopupReservationWithDetails(

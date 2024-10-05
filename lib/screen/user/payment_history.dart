@@ -22,7 +22,7 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
   Future<void> fetchPayments() async {
     final response =
-        await http.get(Uri.parse('https://3.88.120.90:3000/pay/search'));
+        await http.get(Uri.parse('http://3.233.20.5:3000/pay/search'));
 
     if (response.statusCode == 200) {
       List<dynamic> paymentData = jsonDecode(response.body);

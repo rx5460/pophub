@@ -27,7 +27,7 @@ class AdListPageState extends State<AdListPage> {
 
   Future<void> fetchAds() async {
     final response =
-        await http.get(Uri.parse('http://3.88.120.90:3000/admin/event'));
+        await http.get(Uri.parse('http://3.233.20.5:3000/admin/event'));
 
     if (response.statusCode == 200) {
       setState(() {

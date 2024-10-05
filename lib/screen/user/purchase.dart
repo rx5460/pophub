@@ -61,7 +61,7 @@ class _PurchasePageState extends State<PurchasePage> {
 
           // 서버에 알람 추가
           await http.post(
-            Uri.parse('http://3.88.120.90:3000/alarm/alarm_add'),
+            Uri.parse('http://3.233.20.5:3000/alarm/alarm_add'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'userName': User().userName,
@@ -78,7 +78,7 @@ class _PurchasePageState extends State<PurchasePage> {
           };
 
           await http.post(
-            Uri.parse('http://3.88.120.90:3000/alarm/seller_alarm_add'),
+            Uri.parse('http://3.233.20.5:3000/alarm/seller_alarm_add'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'storeId': widget.goods.store,

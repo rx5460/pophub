@@ -6,7 +6,7 @@ import 'package:pophub/utils/log.dart';
 
 class InquiryApi {
   // static String domain = "https://pophub-fa05bf3eabc0.herokuapp.com";
-  static String domain = "http://3.88.120.90:3000";
+  static String domain = "http://3.233.20.5:3000";
 
 // 문의 내역
   static Future<List<InquiryModel>> getInquiryList(String userName) async {

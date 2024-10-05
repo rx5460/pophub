@@ -64,7 +64,7 @@ class _ReserveCountState extends State<ReserveCount> {
     try {
       String userName = User().userName;
       final response = await http.post(
-        Uri.parse('http://3.88.120.90:3000/alarm/waitlist_add'),
+        Uri.parse('http://3.233.20.5:3000/alarm/waitlist_add'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'userName': userName,
@@ -101,7 +101,7 @@ class _ReserveCountState extends State<ReserveCount> {
 
     // 서버에 알람 추가
     await http.post(
-      Uri.parse('http://3.88.120.90:3000/alarm_add'),
+      Uri.parse('http://3.233.20.5:3000/alarm_add'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'userName': User().userName,

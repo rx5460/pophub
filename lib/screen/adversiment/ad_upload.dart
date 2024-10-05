@@ -49,7 +49,7 @@ class AdUploadState extends State<AdUpload> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://3.88.120.90:3000/admin/event/create'),
+        Uri.parse('http://3.233.20.5:3000/admin/event/create'),
       );
       request.fields['startDate'] = startDate!.toIso8601String();
       request.fields['endDate'] = endDate!.toIso8601String();
