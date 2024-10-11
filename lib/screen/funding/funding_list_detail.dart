@@ -277,7 +277,7 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             onTap: () async {},
                             child: const Center(
                               child: Text(
-                                '주문 취소',
+                                '펀딩 취소',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,

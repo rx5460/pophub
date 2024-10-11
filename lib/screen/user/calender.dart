@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/screen/user/qr_scan.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class Calender extends StatefulWidget {
   const Calender({super.key});
@@ -15,6 +17,7 @@ class _CalenderState extends State<Calender> {
   @override
   void initState() {
     super.initState();
+    print("asd");
     _currentDate = DateTime.now();
     _selectedDate = DateTime.now();
   }
@@ -62,113 +65,131 @@ class _CalenderState extends State<Calender> {
           ),
         ],
       ),
-      body: GestureDetector(
-        onTap: () {},
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(
-                  top: 8,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    DayOfWeek(str: 'S'),
-                    DayOfWeek(str: 'M'),
-                    DayOfWeek(str: 'T'),
-                    DayOfWeek(str: 'W'),
-                    DayOfWeek(str: 'T'),
-                    DayOfWeek(str: 'F'),
-                    DayOfWeek(str: 'S'),
-                  ],
-                ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const QrScan()),
+          );
+        },
+        heroTag: null,
+        backgroundColor: Constants.DEFAULT_COLOR,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add_outlined,
+          color: Colors.white,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.only(
+                top: 8,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                    width: 0.5,
-                    color: Colors.grey,
-                  ))),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DayOfWeek(str: 'S'),
+                  DayOfWeek(str: 'M'),
+                  DayOfWeek(str: 'T'),
+                  DayOfWeek(str: 'W'),
+                  DayOfWeek(str: 'T'),
+                  DayOfWeek(str: 'F'),
+                  DayOfWeek(str: 'S'),
+                ],
               ),
-              SizedBox(
-                width: screenWidth * 0.9,
-                child: Table(
-                  children: buildCalendar(_currentDate),
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 8),
+              child: Container(
+                decoration: const BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                  width: 0.5,
+                  color: Colors.grey,
+                ))),
               ),
-              SizedBox(
-                height: screenHeight * 0.03,
+            ),
+            SizedBox(
+              width: screenWidth * 0.9,
+              child: Table(
+                children: buildCalendar(_currentDate),
               ),
-              SizedBox(
-                width: screenWidth * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${_selectedDate.month}월 ${_selectedDate.day}일 (${getWeekdayString(_selectedDate.weekday)})',
-                      style: const TextStyle(
-                          fontSize: 20,
+            ),
+            SizedBox(
+              height: screenHeight * 0.03,
+            ),
+            SizedBox(
+              width: screenWidth * 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${_selectedDate.month}월 ${_selectedDate.day}일 (${getWeekdayString(_selectedDate.weekday)})',
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, left: 8, bottom: 16),
+                    child: Text(
+                      '일정',
+                      style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.black),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, left: 8, bottom: 16),
-                      child: Text(
-                        '일정',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Container(
-                        width: screenWidth * 0.82,
-                        height: screenHeight * 0.07,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              width: 3,
-                              color: Constants.DEFAULT_COLOR,
-                            ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Container(
+                      width: screenWidth * 0.82,
+                      height: screenHeight * 0.07,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            width: 3,
+                            color: Constants.DEFAULT_COLOR,
                           ),
                         ),
-                        child: const Padding(
-                            padding: EdgeInsets.only(left: 16, right: 16),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '팝업스토어',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text(
-                                    '2024.05.1512123',
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w300),
-                                  )
-                                ])),
                       ),
+                      child: const Padding(
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '팝업스토어',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  '2024.05.1512123',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w300),
+                                )
+                              ])),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            QrImageView(
+              data:
+                  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAYAAAB1PADUAAAAAklEQVR4AewaftIAAASuSURBVO3BQY4cSRIEQdNA/f/Lun30UwCJ9OolOSaCP1K15KRq0UnVopOqRSdVi06qFp1ULTqpWnRSteikatFJ1aKTqkUnVYtOqhadVC06qVr0yUtAfpOaGyCTmgnIjZobIDdqboBMam6A/CY1b5xULTqpWnRSteiTZWo2AXkDyKTmDTU3QCY1k5o31GwCsumkatFJ1aKTqkWffBmQJ9Q8AWRScwNkUnMDZFIzAZnU3AC5UfMEkCfUfNNJ1aKTqkUnVYs++Y9RMwGZ1ExqngByo2YC8i85qVp0UrXopGrRJ/8YIG8AeULNE0AmNf+Sk6pFJ1WLTqoWffJlan6TmjeAPAFkUjMBmdRMQCY1T6j5k5xULTqpWnRSteiTZUD+JEAmNROQSc0EZFIzAflNQP5kJ1WLTqoWnVQt+uQlNX8zNROQSc0EZFJzo+YNNX+Tk6pFJ1WLTqoWffISkEnNBGSTmknNjZobIJOaCcgTQCY1E5BJzQ2QTWq+6aRq0UnVopOqRfgji4DcqJmATGqeADKp+SYgN2omIDdq3gAyqbkBMqnZdFK16KRq0UnVok9eAnKj5gkgN2pugExqJiCTmifUvKFmk5obIL/ppGrRSdWik6pF+CO/CMgTaiYgk5oJyBtqJiCTmgnIpOYGyKTmBsg3qdl0UrXopGrRSdUi/JEXgExqNgG5UTMBeULNJiCTmieATGomIDdqboDcqHnjpGrRSdWik6pF+CP/R0AmNU8AuVFzA+QNNTdA3lAzAdmkZtNJ1aKTqkUnVYvwR14AMqmZgNyomYA8oWYTkE1qvgnIpOYGyI2aN06qFp1ULTqpWvTJMiCTmgnIBORGzQ2QGzU3QG7U3ACZ1ExAnlDzBpBJzW86qVp0UrXopGrRJ18G5Ak1E5BJzRtAbtRMQJ4A8oSaCcgbap5Qs+mkatFJ1aKTqkX4Iy8A2aTmvwzIjZpNQCY1b5xULTqpWnRSteiTZWomIJOaCcgE5EbNBOQJNROQSc0NkEnNJjU3QJ5QMwH5ppOqRSdVi06qFn3yZWpu1HyTmgnIE0AmNROQSc0TQCY1E5BJzQRkUvOEmk0nVYtOqhadVC365JcB+SY1T6i5UTMBmdRMQG7U3AC5AfKGmm86qVp0UrXopGrRJy+peULNJiBPqLkBcqNmAjKpuQFyo+YJIE8AmdRsOqladFK16KRq0ScvAflNaiY1vwnIDZAbNROQGyCTmjfUfNNJ1aKTqkUnVYs+WaZmE5AbIJOaCciNmhs1E5AbNROQN9T8TU6qFp1ULTqpWvTJlwF5Qs0bQCY1N0AmNROQGzUTkEnNBOQGyDcBmdRsOqladFK16KRq0Sf/GDUTkCeATGpugExqJiCTmhsgN2omIBOQSc1vOqladFK16KRq0Sf/ODUTkBs1E5AngLyh5gbIn+ykatFJ1aKTqkWffJmab1IzAZnUbFIzAZnUbAIyqbkBMgGZ1HzTSdWik6pFJ1WL8EdeAPKb1ExANqm5AfKGmieA3Kh5AsikZtNJ1aKTqkUnVYvwR6qWnFQtOqladFK16KRq0UnVopOqRSdVi06qFp1ULTqpWnRSteikatFJ1aKTqkUnVYv+B3AyJiXOiNNxAAAAAElFTkSuQmCC',
+              version: QrVersions.auto,
+              size: 200.0,
+            ),
+          ],
         ),
       ),
     );

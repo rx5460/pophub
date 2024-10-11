@@ -14,7 +14,7 @@ import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
 import 'package:pophub/screen/store/alarm_list.dart';
-import 'package:pophub/screen/store/calender.dart';
+import 'package:pophub/screen/user/calender.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';

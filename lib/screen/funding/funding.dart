@@ -216,7 +216,11 @@ class _FundingState extends State<Funding> {
                                       ),
                                     ),
                                     SizedBox(
+<<<<<<< HEAD
                                       width: screenWidth * 0.5,
+=======
+                                      width: screenWidth * 0.55 - 8,
+>>>>>>> kys
                                       child: Text(
                                         fundingList![index].content ?? '',
                                         style: const TextStyle(

@@ -469,7 +469,7 @@ class _FundingDetailState extends State<FundingDetail> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                    width: screenWidth * 0.4,
+                                                    width: screenWidth * 0.9,
                                                     child: Text(
                                                       fundingItem![index]
                                                           .content
