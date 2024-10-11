@@ -158,14 +158,14 @@ class _FundingListState extends State<FundingList>
                                 const SizedBox(
                                   height: 3,
                                 ),
-                                Text(supportList![index].itemId!,
+                                Text(supportList![index].fundingName!,
                                     style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w900)),
                                 const SizedBox(
                                   height: 3,
                                 ),
-                                Text(supportList![index].itemId!,
+                                Text(supportList![index].itemName!,
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500)),
@@ -174,9 +174,9 @@ class _FundingListState extends State<FundingList>
                                 ),
                                 Row(
                                   children: [
-                                    const Text(
-                                      '수량 : 2개',
-                                      style: TextStyle(
+                                    Text(
+                                      '수량 : ${supportList![index].count ?? 2}개',
+                                      style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                           color: Constants.DARK_GREY),

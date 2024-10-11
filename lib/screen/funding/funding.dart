@@ -224,11 +224,14 @@ class _FundingState extends State<Funding> {
                                         ],
                                       ),
                                     ),
-                                    Text(
-                                      fundingList![index].content ?? '',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
+                                    SizedBox(
+                                      width: screenWidth * 0.55 - 8,
+                                      child: Text(
+                                        fundingList![index].content ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ],
