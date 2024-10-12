@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/address_model.dart';
@@ -54,13 +55,16 @@ class _AddressWritePageState extends State<AddressWritePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        showAlert(context, "성공", "주소 등록을 완료했습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('address_registration_has_been_completed').tr(), () {
           Navigator.of(context).pop();
         });
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "주소 등록에 실패했습니다.", () {
+        showAlert(
+            context, ('warning').tr(), ('address_registration_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -73,13 +77,16 @@ class _AddressWritePageState extends State<AddressWritePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        showAlert(context, "성공", "주소 수정을 완료했습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('address_modification_has_been_completed').tr(), () {
           Navigator.of(context).pop();
         });
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "주소 수정을 실패했습니다.", () {
+        showAlert(
+            context, ('warning').tr(), ('address_modification_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -92,7 +99,7 @@ class _AddressWritePageState extends State<AddressWritePage> {
     KopoModel? model = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const RemediKopo(),
+        builder: (context) => RemediKopo(),
       ),
     );
 
@@ -116,7 +123,7 @@ class _AddressWritePageState extends State<AddressWritePage> {
     double screenHeight = screenSize.height;
     return Scaffold(
         appBar: CustomTitleBar(
-          titleName: "주소",
+          titleName: ('titleName_10').tr(),
           onBackPressed: () {
             Navigator.pop(context, totalAddress);
           },
@@ -135,9 +142,9 @@ class _AddressWritePageState extends State<AddressWritePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "주소 찾기",
-                        style: TextStyle(
+                      Text(
+                        ('find_address').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
@@ -147,8 +154,8 @@ class _AddressWritePageState extends State<AddressWritePage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          title: const Text(
-                            '내 주소',
+                          title: Text(
+                            ('my_address').tr(),
                           ),
                           subtitle: pickAddress != ""
                               ? Text(pickAddress.toString())
@@ -161,9 +168,9 @@ class _AddressWritePageState extends State<AddressWritePage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        "상세 주소",
-                        style: TextStyle(
+                      Text(
+                        ('detailed_address').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
@@ -172,8 +179,8 @@ class _AddressWritePageState extends State<AddressWritePage> {
                           Expanded(
                             child: TextField(
                               controller: _locationController,
-                              decoration: const InputDecoration(
-                                  labelText: '상세 위치를 적어주세요.'),
+                              decoration: InputDecoration(
+                                  labelText: ('labelText_7').tr()),
                               onChanged: (value) => addressDetail = value,
                             ),
                           ),
@@ -191,15 +198,19 @@ class _AddressWritePageState extends State<AddressWritePage> {
                                         ("${pickAddress!} $addressDetail");
                                   });
                                 } else {
-                                  showAlert(context, "실패", "상세주소를 작성해주세요.", () {
+                                  showAlert(
+                                      context,
+                                      ('failure').tr(),
+                                      ('please_write_your_detailed_address')
+                                          .tr(), () {
                                     Navigator.of(context).pop();
                                   });
                                 }
                               },
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  '입력',
-                                  style: TextStyle(
+                                  ('input').tr(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
                                   ),
@@ -212,9 +223,10 @@ class _AddressWritePageState extends State<AddressWritePage> {
                       const SizedBox(height: 10),
                     ],
                   )),
-              const Text(
-                "내 주소",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              Text(
+                ('my_address').tr(),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(height: 16),
               Row(
@@ -263,7 +275,7 @@ class _AddressWritePageState extends State<AddressWritePage> {
                       },
                       child: Center(
                         child: Text(
-                          isShow ? '완료' : '수정',
+                          isShow ? ('complete').tr() : ('correction').tr(),
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -279,8 +291,8 @@ class _AddressWritePageState extends State<AddressWritePage> {
               //   width: double.infinity,
               //   child: OutlinedButton(
               //     onPressed: () {},
-              //     child: const Text(
-              //       '완료',
+              //     child: Text(
+              //       ('complete').tr(),
               //       style: TextStyle(
               //         fontSize: 16,
               //         color: Colors.white,

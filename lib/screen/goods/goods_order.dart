@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/address_model.dart';
 import 'package:pophub/model/goods_model.dart';
@@ -109,9 +109,9 @@ class _GoodsOrderState extends State<GoodsOrder> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: const Text(
-          '주문/결제',
-          style: TextStyle(
+        title: Text(
+          ('orderpayment').tr(),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
           ),
@@ -132,8 +132,8 @@ class _GoodsOrderState extends State<GoodsOrder> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('상품 정보',
-                          style: TextStyle(
+                      Text(('product_information').tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                           )),
@@ -173,13 +173,17 @@ class _GoodsOrderState extends State<GoodsOrder> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              Text(
-                                '${formatCurrency(widget.goods.price)}원 x ${widget.count}개 = ${formatCurrency(widget.goods.price * widget.count)}원',
-                                style: const TextStyle(
+                              const Text(
+                                '_won_x__pieces___won',
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
-                              ),
+                              ).tr(args: [
+                                formatCurrency(widget.goods.price),
+                                widget.count.toString(),
+                                (widget.goods.price * widget.count).toString()
+                              ]),
                             ],
                           )
                         ],
@@ -202,17 +206,17 @@ class _GoodsOrderState extends State<GoodsOrder> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('포인트',
-                          style: TextStyle(
+                      Text(('point').tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                           )),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            '포인트',
-                            style: TextStyle(
+                          Text(
+                            ('point').tr(),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,
@@ -248,12 +252,12 @@ class _GoodsOrderState extends State<GoodsOrder> {
                                         Radius.circular(8)),
                                     color: Constants.DEFAULT_COLOR,
                                   ),
-                                  child: const Center(
+                                  child: Center(
                                       child: Padding(
-                                    padding: EdgeInsets.all(2.0),
+                                    padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      '모두사용',
-                                      style: TextStyle(
+                                      ('use_all').tr(),
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                       ),
@@ -290,19 +294,22 @@ class _GoodsOrderState extends State<GoodsOrder> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('총 결제 금액',
-                          style: TextStyle(
+                      Text(('total_payment_amount').tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                           )),
-                      Text(
-                        '${formatCurrency(widget.goods.price * widget.count - usePoint)}원',
-                        style: const TextStyle(
+                      const Text(
+                        'won',
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                           color: Constants.DEFAULT_COLOR,
                         ),
-                      ),
+                      ).tr(args: [
+                        formatCurrency(
+                            widget.goods.price * widget.count - usePoint)
+                      ]),
                     ],
                   ),
                 ),
@@ -322,21 +329,23 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            '상품 금액',
-                            style: TextStyle(
+                          Text(
+                            ('product_amount').tr(),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(
-                            '${formatCurrency(widget.goods.price * widget.count)}원',
-                            style: const TextStyle(
+                          const Text(
+                            'won',
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
-                          ),
+                          ).tr(args: [
+                            formatCurrency(widget.goods.price * widget.count)
+                          ]),
                         ],
                       ),
                       const SizedBox(
@@ -345,9 +354,9 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            '포인트 할인',
-                            style: TextStyle(
+                          Text(
+                            ('point_discount').tr(),
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,
@@ -376,10 +385,10 @@ class _GoodsOrderState extends State<GoodsOrder> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('배송',
-                          style: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(('delivery').tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                           )),
@@ -427,10 +436,10 @@ class _GoodsOrderState extends State<GoodsOrder> {
                             ),
                           )),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text('결제 방법',
-                          style: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(('payment_method').tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                           )),
@@ -492,10 +501,10 @@ class _GoodsOrderState extends State<GoodsOrder> {
                     }
                     Logger.debug("kakopayLink $kakopayLink");
                   },
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      '결제하기',
-                      style: TextStyle(
+                      ('make_payment').tr(),
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                         fontSize: 22,

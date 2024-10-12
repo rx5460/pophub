@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class AlertDialogWidget extends StatelessWidget {
         Center(
           child: OutlinedButton(
             onPressed: onPressed,
-            child: const Text('확인'),
+            child: Text(('check').tr()),
           ),
         ),
       ],

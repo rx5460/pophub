@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
@@ -58,7 +59,8 @@ class _LoginState extends State<Login> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "아이디와 비밀번호를 확인해주세요.", () {
+        showAlert(context, ('warning').tr(),
+            ('please_check_your_id_and_password').tr(), () {
           Navigator.of(context).pop();
         });
       }
@@ -81,7 +83,7 @@ class _LoginState extends State<Login> {
                     child: Column(
                       children: <Widget>[
                         CustomTitleBar(
-                            titleName: "로그인",
+                            titleName: ('titleName_3').tr(),
                             onBackPressed: () {
                               if (context.mounted) {
                                 Navigator.push(
@@ -104,7 +106,8 @@ class _LoginState extends State<Login> {
                         ),
                         TextField(
                             controller: idController,
-                            decoration: const InputDecoration(hintText: "아이디")),
+                            decoration:
+                                InputDecoration(hintText: ('hintText').tr())),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
                         ),
@@ -112,7 +115,7 @@ class _LoginState extends State<Login> {
                             controller: pwController,
                             obscureText: true,
                             decoration:
-                                const InputDecoration(hintText: "비밀번호")),
+                                InputDecoration(hintText: ('hintText_1').tr())),
                         Container(
                           margin: const EdgeInsets.only(top: 0, bottom: 10),
                         ),
@@ -131,7 +134,7 @@ class _LoginState extends State<Login> {
                                                             UserNotifier())
                                                   ], child: const FindId())))
                                     },
-                                child: const Text("아이디 찾기")),
+                                child: Text(('find_id').tr())),
                             TextButton(
                                 onPressed: () => {
                                       Navigator.push(
@@ -147,7 +150,7 @@ class _LoginState extends State<Login> {
                                                       child:
                                                           const ResetPasswd())))
                                     },
-                                child: const Text("비밀번호 재설정")),
+                                child: Text(('reset_password').tr())),
                           ],
                         ),
                         Container(
@@ -158,12 +161,12 @@ class _LoginState extends State<Login> {
                           ),
                           child: OutlinedButton(
                               onPressed: () => {loginApi()},
-                              child: const Text("로그인")),
+                              child: Text(('titleName_3').tr())),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text("계정이 없으신가요?"),
+                            Text(('dont_have_an_account').tr()),
                             TextButton(
                                 onPressed: () => {
                                       Navigator.push(
@@ -179,16 +182,17 @@ class _LoginState extends State<Login> {
                                                       child:
                                                           const CertifiPhone())))
                                     },
-                                child: const Text(
-                                  "회원가입",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                child: Text(
+                                  ('join_the_membership').tr(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 )),
                           ],
                         ),
                         SizedBox(height: screenHeight * 0.01),
-                        const Row(
+                        Row(
                           children: <Widget>[
-                            Expanded(
+                            const Expanded(
                               child: Divider(
                                 color: Constants.DEFAULT_COLOR,
                                 thickness: 1,
@@ -196,13 +200,13 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             Text(
-                              '또는',
-                              style: TextStyle(
+                              ('or').tr(),
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               child: Divider(
                                 color: Constants.DEFAULT_COLOR,
                                 thickness: 1,
@@ -224,7 +228,7 @@ class _LoginState extends State<Login> {
                                       builder: (context) =>
                                           const KakaoLoginPage(
                                             url:
-                                                'http://3.88.120.90:3000/user/oauth/naver',
+                                                'http://3.233.20.5:3000/user/oauth/naver',
                                           )));
                             },
                             style: OutlinedButton.styleFrom(
@@ -243,9 +247,9 @@ class _LoginState extends State<Login> {
                                       height: 60,
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      "네이버 로그인",
+                                      ('naver_login').tr(),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -266,7 +270,7 @@ class _LoginState extends State<Login> {
                                       builder: (context) =>
                                           const KakaoLoginPage(
                                             url:
-                                                'http://3.88.120.90:3000/user/auth/kakao',
+                                                'http://3.233.20.5:3000/user/auth/kakao',
                                           )));
                             },
                             style: OutlinedButton.styleFrom(
@@ -285,9 +289,9 @@ class _LoginState extends State<Login> {
                                       height: 60,
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      "카카오 로그인",
+                                      ('kakao_login').tr(),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),

@@ -1,5 +1,6 @@
 import 'dart:io' show File;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/assets/constants.dart';
@@ -55,14 +56,16 @@ class _AcountInfoState extends State<AcountInfo> {
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
-        showAlert(context, "안내", "닉네임이 사용 가능합니다.", () {
+        showAlert(context, ('guide').tr(), ('nicknames_are_available').tr(),
+            () {
           Navigator.of(context).pop();
         });
         setState(() {
           checked = true;
         });
       } else {
-        showAlert(context, "경고", "닉네임이 중복되었습니다.", () {
+        showAlert(context, ('warning').tr(), ('nickname_is_duplicated').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -101,8 +104,8 @@ class _AcountInfoState extends State<AcountInfo> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomTitleBar(
-        titleName: "계정 정보",
+      appBar: CustomTitleBar(
+        titleName: ('titleName_5').tr(),
       ),
       body: Stack(
         children: [
@@ -199,7 +202,9 @@ class _AcountInfoState extends State<AcountInfo> {
                           },
                           child: Center(
                             child: Text(
-                              checked ? '수정' : '중복확인',
+                              checked
+                                  ? ('correction').tr()
+                                  : ('duplicate_check').tr(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
@@ -227,10 +232,10 @@ class _AcountInfoState extends State<AcountInfo> {
                                         create: (_) => UserNotifier())
                                   ], child: const ResetPasswd())));
                     },
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        '비밀번호 재설정',
-                        style: TextStyle(
+                        ('reset_password').tr(),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),
@@ -254,14 +259,14 @@ class _AcountInfoState extends State<AcountInfo> {
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        '성별 : ${User().gender}',
-                        style: const TextStyle(
+                      child: const Text(
+                        'gender__',
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize: 16,
                         ),
-                      ),
+                      ).tr(args: [User().gender]),
                     ),
                   ),
                 ),
@@ -281,14 +286,14 @@ class _AcountInfoState extends State<AcountInfo> {
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        '나이 : ${User().age}',
-                        style: const TextStyle(
+                      child: const Text(
+                        'age__',
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize: 16,
                         ),
-                      ),
+                      ).tr(args: [User().age.toString()]),
                     ),
                   ),
                 ),
@@ -311,15 +316,16 @@ class _AcountInfoState extends State<AcountInfo> {
                       profileModifyImage();
                     }
                   } else {
-                    showAlert(context, "경고", "닉네임 중복확인을 해주세요.", () {
+                    showAlert(context, ('warning').tr(),
+                        ('please_check_for_duplicate_nicknames').tr(), () {
                       Navigator.of(context).pop();
                     });
                   }
                 },
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '수정하기',
-                    style: TextStyle(
+                    ('edit').tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,

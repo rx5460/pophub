@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -61,8 +62,8 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomTitleBar(
-        titleName: "전체 팝업스토어",
+      appBar: CustomTitleBar(
+        titleName: ('titleName_22').tr(),
         useBack: false,
       ),
       body: isLoading

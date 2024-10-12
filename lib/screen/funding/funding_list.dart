@@ -1,10 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_support_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
-import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list_detail.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/log.dart';
@@ -80,9 +79,9 @@ class _FundingListState extends State<FundingList>
     double screenHeight = screenSize.height;
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            '펀딩 리스트',
-            style: TextStyle(
+          title: Text(
+            ('funding_list').tr(),
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -104,12 +103,12 @@ class _FundingListState extends State<FundingList>
                     Tab(
                         child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.33,
-                      child: const Center(child: Text('사용자')),
+                      child: Center(child: Text(('user').tr())),
                     )),
                     Tab(
                         child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.33,
-                      child: const Center(child: Text('제품')),
+                      child: Center(child: Text(('product').tr())),
                     )),
                   ],
                 )
@@ -174,23 +173,29 @@ class _FundingListState extends State<FundingList>
                                 ),
                                 Row(
                                   children: [
-                                    Text(
-                                      '수량 : ${supportList![index].count ?? 2}개',
-                                      style: const TextStyle(
+                                    const Text(
+                                      'quantity__pieces',
+                                      style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                           color: Constants.DARK_GREY),
-                                    ),
+                                    ).tr(args: [
+                                      (supportList![index].count ?? 2)
+                                          .toString()
+                                    ]),
                                     const SizedBox(
                                       width: 20,
                                     ),
-                                    Text(
-                                      '${countFomat.format(supportList![index].amount)}원',
-                                      style: const TextStyle(
+                                    const Text(
+                                      'won',
+                                      style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                           color: Constants.DARK_GREY),
-                                    ),
+                                    ).tr(args: [
+                                      countFomat
+                                          .format(supportList![index].amount)
+                                    ]),
                                   ],
                                 ),
                               ],
@@ -225,36 +230,38 @@ class _FundingListState extends State<FundingList>
                                   bottom: BorderSide(
                                       width: 1,
                                       color: Constants.DEFAULT_COLOR))),
-                          child: const Padding(
-                            padding: EdgeInsets.only(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
                                 top: 10, bottom: 10, left: 20, right: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '황지민님',
-                                  style: TextStyle(
+                                  ('jimin_hwang').tr(),
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w900),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 3,
                                 ),
-                                Text(
+                                const Text(
                                   '2024.08.16 10:10',
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w900,
                                       color: Constants.DARK_GREY),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 3,
                                 ),
-                                Text('파일폴더 및 액자 세트',
-                                    style: TextStyle(
+                                Text(
+                                    ('file_folder_and_picture_frame_set_1')
+                                        .tr(),
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500)),
-                                SizedBox(
+                                const SizedBox(
                                   height: 3,
                                 ),
                               ],
@@ -308,12 +315,14 @@ class _FundingListState extends State<FundingList>
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "${countFomat.format(fundingItem![index].amount)}원",
-                                      style: const TextStyle(
+                                    const Text(
+                                      "won",
+                                      style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
-                                    ),
+                                    ).tr(args: [
+                                      fundingItem![index].amount.toString()
+                                    ]),
                                     const SizedBox(
                                       height: 8,
                                     ),
@@ -326,12 +335,14 @@ class _FundingListState extends State<FundingList>
                                     const SizedBox(
                                       height: 8,
                                     ),
-                                    Text(
-                                      "제한수량 ${fundingItem![index].count.toString()}개",
-                                      style: const TextStyle(
+                                    const Text(
+                                      "limited_quantity_",
+                                      style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
-                                    ),
+                                    ).tr(args: [
+                                      fundingItem![index].count.toString()
+                                    ]),
                                     const SizedBox(
                                       height: 8,
                                     ),

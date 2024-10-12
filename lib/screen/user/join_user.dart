@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
@@ -48,9 +49,10 @@ class _JoinUserState extends State<JoinUser> {
 
     if (!mounted) return;
 
-    if (data.toString().contains("완료")) {
+    if (data.toString().contains(('complete').tr())) {
       joinComplete = true;
-      showAlert(context, "확인", "회원가입이 완료되었습니다.", () {
+      showAlert(context, ('check').tr(),
+          ('membership_registration_has_been_completed').tr(), () {
         loginApi();
         // if (mounted) {
         //   Navigator.of(context).pop();
@@ -62,7 +64,9 @@ class _JoinUserState extends State<JoinUser> {
       });
     } else {
       joinComplete = false;
-      showAlert(context, "경고", "회원가입에 실패했습니다.", () {
+      showAlert(
+          context, ('warning').tr(), ('membership_registration_failed').tr(),
+          () {
         if (mounted) {
           Navigator.of(context).pop();
         }
@@ -102,7 +106,8 @@ class _JoinUserState extends State<JoinUser> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "로그인 처리에 실패하였습니다.", () {
+        showAlert(context, ('warning').tr(), ('login_processing_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -112,7 +117,7 @@ class _JoinUserState extends State<JoinUser> {
 
   Future<void> idCheckApi() async {
     if (idController.text == "") {
-      showAlert(context, "경고", "아이디를 입력해주세요.", () {
+      showAlert(context, ('warning').tr(), ('please_enter_your_id').tr(), () {
         Navigator.of(context).pop();
       });
     }
@@ -121,14 +126,14 @@ class _JoinUserState extends State<JoinUser> {
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
-        showAlert(context, "안내", "아이디 사용 가능합니다.", () {
+        showAlert(context, ('guide').tr(), ('id_can_be_used').tr(), () {
           Navigator.of(context).pop();
         });
         setState(() {
           checked = true;
         });
       } else {
-        showAlert(context, "경고", "아이디가 중복되었습니다.", () {
+        showAlert(context, ('warning').tr(), ('id_is_duplicated').tr(), () {
           Navigator.of(context).pop();
         });
       }
@@ -152,7 +157,7 @@ class _JoinUserState extends State<JoinUser> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        const CustomTitleBar(titleName: "회원가입"),
+                        CustomTitleBar(titleName: ('join_the_membership').tr()),
                         Padding(
                           padding: const EdgeInsets.only(left: 5, right: 5),
                           child: Row(
@@ -163,10 +168,11 @@ class _JoinUserState extends State<JoinUser> {
                                     key: _idFormkey,
                                     child: CustomTextFormFeild(
                                       controller: idController,
-                                      hintText: "아이디",
+                                      hintText: ('hintText').tr(),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return "아이디를 입력해주세요 !";
+                                          return ('please_enter_your_id_1')
+                                              .tr();
                                         }
                                         //TODO 황지민 : 중복된 확인
                                         return null;
@@ -193,11 +199,14 @@ class _JoinUserState extends State<JoinUser> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      checked ? '수정' : '중복확인',
+                                      checked
+                                          ? ('correction').tr()
+                                          : ('duplicate_check').tr(),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
@@ -212,13 +221,14 @@ class _JoinUserState extends State<JoinUser> {
                             key: _pwFormkey,
                             child: CustomTextFormFeild(
                               controller: pwController,
-                              hintText: "비밀번호",
+                              hintText: ('hintText_1').tr(),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "비밀번호를 입력해주세요 !";
+                                  return ('please_enter_your_password').tr();
                                 }
                                 if (value.length < 8) {
-                                  return '비밀번호는 8자 이상으로 입력해주세요.';
+                                  return ('please_enter_a_password_of_at_least_8_characters')
+                                      .tr();
                                 }
                                 //TODO 황지민 : 중복된 확인
                                 return null;
@@ -236,17 +246,18 @@ class _JoinUserState extends State<JoinUser> {
                             key: _confirmPwFormkey,
                             child: CustomTextFormFeild(
                               controller: confirmPwController,
-                              hintText: "비밀번호 재입력",
+                              hintText: ('hintText_4').tr(),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "비밀번호를 입력해주세요 !";
+                                  return ('please_enter_your_password').tr();
                                 }
                                 if (value.length < 8) {
-                                  return '비밀번호는 8자 이상으로 입력해주세요.';
+                                  return ('please_enter_a_password_of_at_least_8_characters')
+                                      .tr();
                                 }
                                 if (confirmPwController.text !=
                                     pwController.text) {
-                                  return '비밀번호가 일치하지 않습니다.';
+                                  return ('password_does_not_match').tr();
                                 }
                                 return null;
                               },
@@ -267,12 +278,16 @@ class _JoinUserState extends State<JoinUser> {
                               color: Colors.black87,
                               size: 25,
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 5),
-                              child: Text(
-                                "팝업스토어 등록하실 분들은 판매자로 가입부탁드립니다 !",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 12),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  ('if_you_would_like_to_register_a_popup_store_please_sign_up_as_a_seller')
+                                      .tr(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),
+                                ),
                               ),
                             )
                           ],
@@ -291,7 +306,7 @@ class _JoinUserState extends State<JoinUser> {
                               visualDensity: const VisualDensity(
                                   horizontal: -4, vertical: 0),
                             ),
-                            const Text('사용자'),
+                            Text(('user').tr()),
                             Container(
                               margin: const EdgeInsets.only(left: 10),
                             ),
@@ -306,7 +321,7 @@ class _JoinUserState extends State<JoinUser> {
                               visualDensity: const VisualDensity(
                                   horizontal: -4, vertical: 0),
                             ),
-                            const Text('판매자'),
+                            Text(('seller').tr()),
                             // Radio<String>(
                             //   value: 'Manager',
                             //   groupValue: userRole,
@@ -318,7 +333,7 @@ class _JoinUserState extends State<JoinUser> {
                             //   visualDensity: const VisualDensity(
                             //       horizontal: -4, vertical: 0),
                             // ),
-                            // const Text('맛스타'),
+                            // Text('맛스타'),
                           ],
                         ),
                         const Spacer(flex: 40),
@@ -339,14 +354,17 @@ class _JoinUserState extends State<JoinUser> {
                                           }
                                         else
                                           {
-                                            showAlert(context, "경고",
-                                                "아이디 중복체크를 해주세요.", () {
+                                            showAlert(
+                                                context,
+                                                ('warning').tr(),
+                                                ('please_check_for_duplicate_ids')
+                                                    .tr(), () {
                                               Navigator.of(context).pop();
                                             })
                                           }
                                       }
                                   },
-                              child: const Text("완료")),
+                              child: Text(('complete').tr())),
                         ),
                       ],
                     )))));

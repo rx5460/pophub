@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_model.dart';
@@ -64,8 +65,8 @@ class _FundingState extends State<Funding> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(
-        titleName: "펀딩 리스트",
+      appBar: CustomTitleBar(
+        titleName: ('funding_list').tr(),
       ),
       floatingActionButton: widget.mode == 'select'
           ? FloatingActionButton(
@@ -192,7 +193,16 @@ class _FundingState extends State<Funding> {
                                                             .amount ==
                                                         null
                                                 ? '0%' // 목표 금액 또는 후원 금액이 없을 때 '0%'로 표시
-                                                : '${((fundingList![index].donation! / fundingList![index].amount!.toDouble()) * 100).toInt()}% 달성', // 도달률 계산 후 퍼센트로 표시
+                                                : '_achieved'.tr(args: [
+                                                    ((fundingList![index]
+                                                                    .donation! /
+                                                                fundingList![
+                                                                        index]
+                                                                    .amount!
+                                                                    .toDouble()) *
+                                                            100)
+                                                        .toString()
+                                                  ]), // 도달률 계산 후 퍼센트로 표시
                                             style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Constants.DEFAULT_COLOR,
@@ -204,8 +214,17 @@ class _FundingState extends State<Funding> {
                                           Text(
                                             fundingList![index].closeDate !=
                                                     null
-                                                ? '${DateTime.parse(fundingList![index].closeDate!).difference(DateTime.now()).inDays}일 남음' // 종료일까지 남은 일수 계산
-                                                : '종료일 없음', // 종료일이 없을 경우
+                                                ? '_days_left'.tr(args: [
+                                                    DateTime.parse(
+                                                            fundingList![index]
+                                                                .closeDate!)
+                                                        .difference(
+                                                            DateTime.now())
+                                                        .inDays
+                                                        .toString()
+                                                  ]) // 종료일까지 남은 일수 계산
+                                                : ('no_end_date')
+                                                    .tr(), // 종료일이 없을 경우
                                             style: const TextStyle(
                                               fontSize: 13,
                                               color: Constants.DARK_GREY,

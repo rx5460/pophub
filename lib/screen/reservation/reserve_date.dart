@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
@@ -93,8 +93,8 @@ class _ReserveDateState extends State<ReserveDate> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          '예약하기',
+        title: Text(
+          ('make_a_reservation').tr(),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
@@ -119,15 +119,15 @@ class _ReserveDateState extends State<ReserveDate> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '예약 날짜 및 시간을',
+                Text(
+                  ('reservation_date_and_time').tr(),
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Text(
-                  '설정해 주세요.',
+                Text(
+                  ('please_set_it').tr(),
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
@@ -252,7 +252,7 @@ class _ReserveDateState extends State<ReserveDate> {
                           )),
                 );
               },
-              child: const Text('다음'),
+              child: Text(('next').tr()),
             ),
           ),
         ],

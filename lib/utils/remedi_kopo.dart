@@ -2,6 +2,7 @@ library remedi_kopo;
 
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/kopo_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -12,17 +13,12 @@ class RemediKopo extends StatefulWidget {
   static const String PATH = '/alter_kopo';
 
   const RemediKopo(
-      {Key? key,
-      this.title = '주소검색',
-      this.colour = Colors.white,
-      this.apiKey = '',
-      this.callback})
+      {Key? key, this.colour = Colors.white, this.apiKey = '', this.callback})
       : super(key: key);
 
   @override
   RemediKopoState createState() => RemediKopoState();
 
-  final String title;
   final Color colour;
   final String apiKey;
   final Function? callback;
@@ -81,8 +77,8 @@ class RemediKopoState extends State<RemediKopo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomTitleBar(
-          titleName: "주소 검색",
+        appBar: CustomTitleBar(
+          titleName: ('titleName').tr(),
         ),
         body: WebViewWidget(controller: _webViewController)
 

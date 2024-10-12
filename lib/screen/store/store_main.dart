@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
@@ -55,7 +56,7 @@ class _StoreMainState extends State<StoreMain> {
                   padding: const EdgeInsets.all(Constants.DEFAULT_PADDING),
                   child: Column(
                     children: <Widget>[
-                      const CustomTitleBar(titleName: "테스트 페이지"),
+                      CustomTitleBar(titleName: ('titleName_21').tr()),
                       Image.asset(
                         'assets/images/logo.png',
                         height: 150,
@@ -68,7 +69,7 @@ class _StoreMainState extends State<StoreMain> {
                         margin: const EdgeInsets.only(top: 10, bottom: 10),
                         child: OutlinedButton(
                             onPressed: () => {popupApi()},
-                            child: const Text("계정정보 가져오기")),
+                            child: Text(('get_account_information').tr())),
                       ),
                     ],
                   )),

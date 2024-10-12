@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -50,8 +51,8 @@ class _GoodsListState extends State<GoodsList> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(
-        titleName: "굿즈",
+      appBar: CustomTitleBar(
+        titleName: ('titleName_7').tr(),
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -135,21 +136,26 @@ class _GoodsListState extends State<GoodsList> {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 8.0, bottom: 8),
-                                    child: Text(
-                                      '${formatNumber(goodsList![index].price)}원',
-                                      style: const TextStyle(
+                                    child: const Text(
+                                      'won',
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
                                       ),
-                                    ),
+                                    ).tr(args: [
+                                      formatNumber(goodsList![index].price)
+                                          .toString()
+                                    ]),
                                   ),
-                                  Text(
-                                    '${goodsList![index].quantity.toString()}개',
-                                    style: const TextStyle(
+                                  const Text(
+                                    'things',
+                                    style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                     ),
-                                  ),
+                                  ).tr(args: [
+                                    goodsList![index].quantity.toString()
+                                  ]),
                                 ],
                               ),
                             ),
@@ -177,7 +183,7 @@ class _GoodsListState extends State<GoodsList> {
                                         mode: "add", popup: widget.popup))));
                   }
                 },
-                child: const Text('굿즈 추가하기'),
+                child: Text(('add_goods').tr()),
               ),
             )
           ],

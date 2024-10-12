@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/kopo_model.dart';
@@ -128,14 +128,14 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('경고'),
-                content: const Text('사진은 최대 5개까지 등록할 수 있습니다.'),
+                title: Text(('warning').tr()),
+                content: Text(('up_to_5_photos_can_be_registered').tr()),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('확인'),
+                    child: Text(('check').tr()),
                   ),
                 ],
               );
@@ -165,8 +165,10 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
             Provider.of<StoreModel>(context, listen: false).startDate;
         if (picked.isBefore(startDate)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('운영 종료일은 운영 시작일 이전으로 설정할 수 없습니다.'),
+            SnackBar(
+              content: Text(
+                  ('the_operation_end_date_cannot_be_set_before_the_operation_start_date')
+                      .tr()),
             ),
           );
         } else {
@@ -178,38 +180,39 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
 
   bool _validateInputs(StoreModel store) {
     if (_nameController.text.isEmpty) {
-      _showValidationDialog("스토어 이름을 입력해주세요.");
+      _showValidationDialog(('please_enter_the_store_name').tr());
       return false;
     }
     if (_descriptionController.text.isEmpty) {
-      _showValidationDialog("스토어 설명을 입력해주세요.");
+      _showValidationDialog(('please_enter_a_store_description').tr());
       return false;
     }
     if (store.location.isEmpty) {
-      _showValidationDialog("스토어 위치를 선택해주세요.");
+      _showValidationDialog(('please_select_a_store_location').tr());
       return false;
     }
     if (_contactController.text.isEmpty) {
-      _showValidationDialog("연락처를 입력해주세요.");
+      _showValidationDialog(('please_enter_your_contact_information').tr());
       return false;
     }
     if (widget.mode == "add" && _maxCapacityController.text.isEmpty) {
-      _showValidationDialog("시간별 최대 인원을 입력해주세요.");
+      _showValidationDialog(
+          ('please_enter_the_maximum_number_of_people_per_hour').tr());
       return false;
     }
     if (store.schedule!.isEmpty) {
-      _showValidationDialog("운영 시간을 설정해주세요.");
+      _showValidationDialog(('please_set_operating_hours').tr());
       return false;
     }
     if (selectedCategory == null) {
-      _showValidationDialog("카테고리를 선택해주세요.");
+      _showValidationDialog(('please_select_a_category').tr());
       return false;
     }
     return true;
   }
 
   void _showValidationDialog(String message) {
-    showAlert(context, "실패", message, () {
+    showAlert(context, ('failure').tr(), message, () {
       Navigator.of(context).pop();
     });
   }
@@ -220,7 +223,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     KopoModel? model = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const RemediKopo(),
+        builder: (context) => RemediKopo(),
       ),
     );
 
@@ -236,7 +239,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     final data = await StoreApi.postStoreAdd(store);
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "팝업스토어 신청이 완료되었습니다.", () {
+      showAlert(context, ('success').tr(),
+          ('the_popup_store_application_has_been_completed').tr(), () {
         Navigator.of(context).pop();
 
         Navigator.push(
@@ -253,7 +257,9 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
     final data = await StoreApi.putStoreModify(store);
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "팝업스토어 수정이 완료되었습니다.", () {
+      showAlert(
+          context, ('success').tr(), ('the_popup_store_has_been_modified').tr(),
+          () {
         Navigator.of(context).pop();
 
         Navigator.push(
@@ -283,7 +289,9 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
 
     return Scaffold(
       appBar: CustomTitleBar(
-          titleName: widget.mode == "modify" ? "스토어 수정" : "스토어 추가"),
+          titleName: widget.mode == "modify"
+              ? ('edit_store').tr()
+              : ('add_store').tr()),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<StoreModel>(
@@ -344,33 +352,37 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "스토어 이름",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('store_name').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: '이름을 작성해주세요.'),
+                  decoration: InputDecoration(labelText: ('labelText_10').tr()),
                   onChanged: (value) => store.name = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "스토어 설명",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('store_description').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(
-                      labelText: '스토어 설명을 작성해주세요.', alignLabelWithHint: true),
+                  decoration: InputDecoration(
+                      labelText: ('labelText_11').tr(),
+                      alignLabelWithHint: true),
                   maxLines: 4,
                   onChanged: (value) => store.description = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "스토어 위치",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('store_location').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -379,8 +391,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-                    title: const Text(
-                      '스토어 위치',
+                    title: Text(
+                      ('store_location').tr(),
                     ),
                     subtitle: store.location.isNotEmpty
                         ? Text(store.location.split("/").first)
@@ -395,13 +407,14 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: _locationController,
-                  decoration: const InputDecoration(labelText: '상세 위치를 적어주세요.'),
+                  decoration: InputDecoration(labelText: ('labelText_7').tr()),
                   onChanged: (value) => store.locationDetail = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "운영 시간",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('operating_hours').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -410,8 +423,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ListTile(
-                    title: const Text(
-                      '운영 시간 설정하기',
+                    title: Text(
+                      ('set_operating_hours').tr(),
                     ),
                     trailing: const Icon(Icons.access_time,
                         color: Constants.DARK_GREY),
@@ -476,9 +489,10 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "운영 기간",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('operating_period').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -490,8 +504,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          title: const Text(
-                            '운영 시작일',
+                          title: Text(
+                            ('operation_start_date').tr(),
                           ),
                           subtitle: Text(
                             _dateFormat.format(store.startDate),
@@ -512,8 +526,8 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          title: const Text(
-                            '운영 종료일',
+                          title: Text(
+                            ('operation_end_date').tr(),
                           ),
                           subtitle: Text(
                             _dateFormat.format(store.endDate),
@@ -529,14 +543,15 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "연락처",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('labelText_12').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _contactController,
-                  decoration: const InputDecoration(labelText: '연락처'),
+                  decoration: InputDecoration(labelText: ('labelText_12').tr()),
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -550,16 +565,16 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "시간별 최대 인원",
-                          style: TextStyle(
+                        Text(
+                          ('labelText_13').tr(),
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         const SizedBox(height: 10),
                         TextField(
                             controller: _maxCapacityController,
-                            decoration:
-                                const InputDecoration(labelText: '시간별 최대 인원'),
+                            decoration: InputDecoration(
+                                labelText: ('labelText_13').tr()),
                             keyboardType: TextInputType.phone,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -572,13 +587,14 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         const SizedBox(height: 20),
                       ],
                     )),
-                const Text(
-                  "카테고리",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('labelText_8').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<CategoryModel>(
-                  decoration: const InputDecoration(labelText: '카테고리'),
+                  decoration: InputDecoration(labelText: ('labelText_8').tr()),
                   value: selectedCategory,
                   items: category.map((categoryModel) {
                     return DropdownMenuItem<CategoryModel>(
@@ -608,7 +624,7 @@ class _StoreCreatePageState extends State<StoreCreatePage> {
                         }
                       }
                     },
-                    child: const Text('완료'),
+                    child: Text(('complete').tr()),
                   ),
                 ),
               ],

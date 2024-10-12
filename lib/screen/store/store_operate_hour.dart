@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
@@ -14,24 +15,32 @@ class StoreOperatingHoursModal extends StatefulWidget {
 }
 
 class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
-  final List<String> daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
+  final List<String> daysOfWeek = [
+    ('month').tr(),
+    ('fury').tr(),
+    ('number').tr(),
+    ('neck').tr(),
+    ('gold').tr(),
+    ('saturday_1').tr(),
+    ('day').tr()
+  ];
   final Map<String, bool> selectedDays = {
-    '월': false,
-    '화': false,
-    '수': false,
-    '목': false,
-    '금': false,
-    '토': false,
-    '일': false,
+    ('month').tr(): false,
+    ('fury').tr(): false,
+    ('number').tr(): false,
+    ('neck').tr(): false,
+    ('gold').tr(): false,
+    ('saturday_1').tr(): false,
+    ('day').tr(): false,
   };
   final Map<String, String> operatingHours = {
-    '월': '',
-    '화': '',
-    '수': '',
-    '목': '',
-    '금': '',
-    '토': '',
-    '일': '',
+    ('month').tr(): '',
+    ('fury').tr(): '',
+    ('number').tr(): '',
+    ('neck').tr(): '',
+    ('gold').tr(): '',
+    ('saturday_1').tr(): '',
+    ('day').tr(): '',
   };
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -57,48 +66,55 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
     switch (day) {
       case 'Monday':
       case 'Mon':
-        return '월';
+        return ('month').tr();
       case 'Tuesday':
       case 'Tue':
-        return '화';
+        return ('fury').tr();
       case 'Wednesday':
       case 'Wed':
-        return '수';
+        return ('number').tr();
       case 'Thursday':
       case 'Thu':
-        return '목';
+        return ('neck').tr();
       case 'Friday':
       case 'Fri':
-        return '금';
+        return ('gold').tr();
       case 'Saturday':
       case 'Sat':
-        return '토';
+        return ('saturday_1').tr();
       case 'Sunday':
       case 'Sun':
-        return '일';
+        return ('day').tr();
       default:
         return '';
     }
   }
 
   String _reverseTranslateDay(String day) {
-    switch (day) {
-      case '월':
-        return 'Monday';
-      case '화':
-        return 'Tuesday';
-      case '수':
-        return 'Wednesday';
-      case '목':
-        return 'Thursday';
-      case '금':
-        return 'Friday';
-      case '토':
-        return 'Saturday';
-      case '일':
-        return 'Sunday';
-      default:
-        return '';
+    String month = 'month'.tr();
+    String fury = 'fury'.tr();
+    String number = 'number'.tr();
+    String neck = 'neck'.tr();
+    String gold = 'gold'.tr();
+    String saturday_1 = 'saturday_1'.tr();
+    String dayStr = 'day'.tr();
+
+    if (day == month) {
+      return 'Monday';
+    } else if (day == fury) {
+      return 'Tuesday';
+    } else if (day == number) {
+      return 'Wednesday';
+    } else if (day == neck) {
+      return 'Thursday';
+    } else if (day == gold) {
+      return 'Friday';
+    } else if (day == saturday_1) {
+      return 'Saturday';
+    } else if (day == dayStr) {
+      return 'Sunday';
+    } else {
+      return '';
     }
   }
 
@@ -143,7 +159,7 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('완료'),
+                  child: Text(('complete').tr()),
                 ),
               ),
             ],
@@ -155,10 +171,14 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
 
   void _updateOperatingHours() {
     if (startTime != null && endTime != null) {
-      final String start =
-          '${startTime!.hour.toString().padLeft(2, '0')}시 ${startTime!.minute.toString().padLeft(2, '0')}분';
-      final String end =
-          '${endTime!.hour.toString().padLeft(2, '0')}시 ${endTime!.minute.toString().padLeft(2, '0')}분';
+      final String start = 'start'.tr(args: [
+        startTime!.hour.toString().padLeft(2, '0'),
+        startTime!.minute.toString().padLeft(2, '0')
+      ]);
+      final String end = 'start'.tr(args: [
+        endTime!.hour.toString().padLeft(2, '0'),
+        endTime!.minute.toString().padLeft(2, '0')
+      ]);
       if (mounted) {
         setState(() {
           selectedDays.forEach((day, selected) {
@@ -191,10 +211,21 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
 
   void _selectWeekdays() {
     setState(() {
-      bool allSelected =
-          ['월', '화', '수', '목', '금'].every((day) => selectedDays[day]!);
+      bool allSelected = [
+        ('month').tr(),
+        ('fury').tr(),
+        ('number').tr(),
+        ('neck').tr(),
+        ('gold').tr()
+      ].every((day) => selectedDays[day]!);
       selectedDays.forEach((day, selected) {
-        if (['월', '화', '수', '목', '금'].contains(day)) {
+        if ([
+          ('month').tr(),
+          ('fury').tr(),
+          ('number').tr(),
+          ('neck').tr(),
+          ('gold').tr()
+        ].contains(day)) {
           selectedDays[day] = !allSelected;
         }
       });
@@ -203,9 +234,10 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
 
   void _selectWeekend() {
     setState(() {
-      bool allSelected = ['토', '일'].every((day) => selectedDays[day]!);
+      bool allSelected = [('saturday_1').tr(), ('day').tr()]
+          .every((day) => selectedDays[day]!);
       selectedDays.forEach((day, selected) {
-        if (['토', '일'].contains(day)) {
+        if ([('saturday_1').tr(), ('day').tr()].contains(day)) {
           selectedDays[day] = !allSelected;
         }
       });
@@ -232,9 +264,9 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '운영일',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Text(
+              ('operating_days').tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 10),
             SingleChildScrollView(
@@ -288,9 +320,9 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                       ),
                     ),
                     onPressed: _selectWeekdays,
-                    child: const Text(
-                      '평일',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      ('weekdays').tr(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -308,9 +340,9 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                       ),
                     ),
                     onPressed: _selectWeekend,
-                    child: const Text(
-                      '주말',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      ('weekend').tr(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -319,9 +351,9 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              '운영 시간',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Text(
+              ('operating_hours').tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             SizedBox(
               width: screenWidth,
@@ -338,7 +370,7 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                             horizontal: 16, vertical: 12), // 패딩 설정
                       ),
                       child: Text(startTime == null
-                          ? '시작 시간'
+                          ? ('start_time').tr()
                           : '${startTime!.hour.toString().padLeft(2, '0')}시 ${startTime!.minute.toString().padLeft(2, '0')}분'),
                     ),
                   ),
@@ -356,7 +388,7 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                             horizontal: 16, vertical: 12),
                       ),
                       child: Text(endTime == null
-                          ? '종료 시간'
+                          ? ('end_time').tr()
                           : '${endTime!.hour.toString().padLeft(2, '0')}시 ${endTime!.minute.toString().padLeft(2, '0')}분'),
                     ),
                   ),
@@ -374,7 +406,7 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 50, vertical: 15),
                     ),
-                    child: const Text('완료'),
+                    child: Text(('complete').tr()),
                   ),
                 ),
                 SizedBox(
@@ -392,9 +424,9 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 50, vertical: 15),
                     ),
-                    child: const Text(
-                      '닫기',
-                      style: TextStyle(color: Colors.black),
+                    child: Text(
+                      ('close').tr(),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                 )

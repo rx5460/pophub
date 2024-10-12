@@ -1,14 +1,17 @@
 import 'dart:developer' as developer;
-import 'package:firebase_core/firebase_core.dart';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/utils/log.dart';
-import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'assets/style.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -114,17 +117,24 @@ Future<void> main() async {
 
   // 초기 알림 설정 로드 및 적용
   // loadInitialNotificationSetting();
+  WidgetsFlutterBinding.ensureInitialized();
 
+  await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: 'assets/config/.env');
 
   AuthRepository.initialize(
     appKey: dotenv.env['APP_KEY'] ?? '',
   );
+  await initializeDateFormatting();
 
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  runApp(const MyApp());
+  runApp(EasyLocalization(
+      supportedLocales: const [Locale('ko'), Locale('en')],
+      startLocale: const Locale('en'),
+      path: 'assets/translations',
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -139,6 +149,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'pophub',
       theme: theme,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       home: const BottomNavigationPage(),
       routes: {
         '/alarm': (context) => const AlarmList(), // 라우트 설정

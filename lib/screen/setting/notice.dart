@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/notice_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -41,7 +41,7 @@ class _NoticePageState extends State<NoticePage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "공지 사항"),
+      appBar: CustomTitleBar(titleName: ('titleName_13').tr()),
       floatingActionButton: FloatingActionButton(onPressed: () {
         Navigator.push(
           context,
@@ -58,11 +58,10 @@ class _NoticePageState extends State<NoticePage> {
               child: ListView.builder(
                 itemCount: 2,
                 itemBuilder: (BuildContext context, int index) {
-                  return const NoticeTile(
-                    title: "공지제목",
+                  return NoticeTile(
+                    title: ('title_2').tr(),
                     date: "2024-08-24",
-                    content:
-                        "안녕하세요. 팝허브입니다. 보다 나은 서비스 제공을 위해 다음과 같이 시스템 점검을 실시할 예정입니다. 고객 여러분의 양해 부탁드립니다.",
+                    content: ('content').tr(),
                   );
                 },
               ),
@@ -74,11 +73,10 @@ class _NoticePageState extends State<NoticePage> {
               child: ListView.builder(
                 itemCount: 2,
                 itemBuilder: (BuildContext context, int index) {
-                  return const NoticeTile(
-                    title: "공지제목",
+                  return NoticeTile(
+                    title: ('title_2').tr(),
                     date: "2024-08-24",
-                    content:
-                        "안녕하세요. 팝허브입니다. 보다 나은 서비스 제공을 위해 다음과 같이 시스템 점검을 실시할 예정입니다. 고객 여러분의 양해 부탁드립니다.",
+                    content: ('content').tr(),
                   );
                 },
               ),

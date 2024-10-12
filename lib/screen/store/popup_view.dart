@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/goods_model.dart';
@@ -69,7 +69,7 @@ class _PopupDetailState extends State<PopupDetail> {
         if (xCoord != null && yCoord != null) {
           center = LatLng(double.parse(popup!.y.toString()),
               double.parse(popup!.x.toString()));
-          markers.add(Marker(markerId: '마커', latLng: center));
+          markers.add(Marker(markerId: ('markerId').tr(), latLng: center));
         }
 
         isLoading = false;
@@ -86,7 +86,8 @@ class _PopupDetailState extends State<PopupDetail> {
       final data = await StoreApi.deletePopup(widget.storeId);
 
       if (!data.toString().contains("fail") && mounted) {
-        showAlert(context, "성공", "팝업스토어가 삭제되었습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('the_popup_store_has_been_deleted').tr(), () {
           Navigator.of(context).pop();
 
           Navigator.push(context,
@@ -110,15 +111,16 @@ class _PopupDetailState extends State<PopupDetail> {
       if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('승인 완료되었습니다.'),
+          SnackBar(
+            content: Text(('approval_has_been_completed').tr()),
           ),
         );
 
         final Map<String, String> alarmDetails = {
-          'title': '팝업 승인 완료',
-          'label': '성공적으로 팝업 등록이 완료되었습니다.',
-          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+          'title': ('popup_approved').tr(),
+          'label': ('popup_registration_has_been_completed_successfully').tr(),
+          'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+              .format(DateTime.now()),
           'active': 'true',
           'storeId': widget.storeId,
         };
@@ -146,8 +148,8 @@ class _PopupDetailState extends State<PopupDetail> {
             alarmDetails['label']!, alarmDetails['time']!);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('승인 완료되었습니다.'),
+          SnackBar(
+            content: Text(('approval_has_been_completed').tr()),
           ),
         );
         Navigator.of(context).pop();
@@ -158,7 +160,7 @@ class _PopupDetailState extends State<PopupDetail> {
             MaterialPageRoute(
                 builder: (context) => StoreListPage(
                       popups: data,
-                      titleName: "승인 리스트",
+                      titleName: ('titleName_1').tr(),
                     )));
 
         setState(() {
@@ -166,7 +168,7 @@ class _PopupDetailState extends State<PopupDetail> {
           isLoading = false;
         });
       } else {
-        Logger.debug("승인에 실패했습니다.");
+        Logger.debug(('authorization_failed').tr());
       }
     } catch (error) {
       // 오류 처리
@@ -197,7 +199,7 @@ class _PopupDetailState extends State<PopupDetail> {
     Map<String, dynamic> data =
         await StoreApi.postStoreLike(User().userName, widget.storeId);
 
-    if (data.toString().contains("추가")) {
+    if (data.toString().contains(('addition').tr())) {
       await getPopupData();
       setState(() {
         like = true;
@@ -601,8 +603,14 @@ class _PopupDetailState extends State<PopupDetail> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Text(
-                                                      '(${rating.toStringAsFixed(1)}점) ${reviewList != null ? reviewList!.length : 0}개'),
+                                                  const Text('_points_')
+                                                      .tr(args: [
+                                                    rating.toStringAsFixed(1),
+                                                    (reviewList != null
+                                                            ? reviewList!.length
+                                                            : 0)
+                                                        .toString()
+                                                  ]),
                                                 ],
                                               ),
                                               const Icon(
@@ -716,7 +724,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                             },
                                             child: SizedBox(
                                               width: screenWidth * 0.9,
-                                              child: const Row(
+                                              child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 mainAxisAlignment:
@@ -724,14 +732,14 @@ class _PopupDetailState extends State<PopupDetail> {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    '굿즈',
-                                                    style: TextStyle(
+                                                    ('titleName_7').tr(),
+                                                    style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
                                                   ),
-                                                  Icon(
+                                                  const Icon(
                                                     Icons.arrow_forward_ios,
                                                     size: 20,
                                                   ),
@@ -850,10 +858,10 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  Text(
-                                                                    '${goods.quantity.toString()}개',
+                                                                  const Text(
+                                                                    'things',
                                                                     style:
-                                                                        const TextStyle(
+                                                                        TextStyle(
                                                                       fontSize:
                                                                           11,
                                                                       color: Colors
@@ -862,7 +870,11 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                           FontWeight
                                                                               .w900,
                                                                     ),
-                                                                  ),
+                                                                  ).tr(args: [
+                                                                    goods
+                                                                        .quantity
+                                                                        .toString()
+                                                                  ]),
                                                                 ],
                                                               ),
                                                             ),
@@ -910,7 +922,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                         ),
                                         itemBuilder: (context) => [
                                           PopupMenuItem(
-                                            child: const Text('스토어 삭제'),
+                                            child: Text(('delete_store').tr()),
                                             onTap: () {
                                               popupDelete();
                                             },
@@ -1027,10 +1039,10 @@ class _PopupDetailState extends State<PopupDetail> {
                                       }
                                     }
                                   },
-                                  child: const Center(
+                                  child: Center(
                                     child: Text(
-                                      '예약하기',
-                                      style: TextStyle(
+                                      ('make_a_reservation').tr(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                         fontSize: 16,
@@ -1057,27 +1069,31 @@ class _PopupDetailState extends State<PopupDetail> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: const Text('팝업 승인'),
-                                              content: const Text('승인 하시겠습니까?'),
+                                              title:
+                                                  Text(('popup_approval').tr()),
+                                              content: Text(
+                                                  ('do_you_want_to_approve')
+                                                      .tr()),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                   },
-                                                  child: const Text('취소'),
+                                                  child: Text(
+                                                      ('cancellation').tr()),
                                                 ),
                                                 TextButton(
                                                   onPressed: () async {
                                                     popupStoreAllow();
                                                   },
-                                                  child: const Text('승인하기'),
+                                                  child: Text(('approve').tr()),
                                                 ),
                                               ],
                                             );
                                           },
                                         )
                                       },
-                                      child: const Text("승인하기"),
+                                      child: Text(('approve').tr()),
                                     ),
                                   ),
                                   Container(
@@ -1111,9 +1127,10 @@ class _PopupDetailState extends State<PopupDetail> {
                                                               .toString(),
                                                         ))))
                                       },
-                                      child: const Text(
-                                        "거절하기",
-                                        style: TextStyle(color: Colors.black),
+                                      child: Text(
+                                        ('refuse').tr(),
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
                                     ),
                                   ),
@@ -1148,7 +1165,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                                               ))))
                                             }
                                         },
-                                    child: const Text("수정하기")),
+                                    child: Text(('edit').tr())),
                               ),
                             )
                           ],

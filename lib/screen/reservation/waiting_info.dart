@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 
@@ -19,9 +20,9 @@ class _WaitingInfoState extends State<WaitingInfo> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          '예약하기',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          ('make_a_reservation').tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () {
@@ -47,19 +48,19 @@ class _WaitingInfoState extends State<WaitingInfo> {
                     left: screenWidth * 0.05,
                     right: screenWidth * 0.05,
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        '서울 라이프 팝업스토어',
-                        style: TextStyle(
+                        ('seoul_life_popup_store').tr(),
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 8,
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios,
                         size: 24,
                       )
@@ -71,9 +72,9 @@ class _WaitingInfoState extends State<WaitingInfo> {
                     left: screenWidth * 0.05,
                     right: screenWidth * 0.05,
                   ),
-                  child: const Text(
-                    '전시',
-                    style: TextStyle(
+                  child: Text(
+                    ('display').tr(),
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Constants.DARK_GREY),
@@ -93,28 +94,28 @@ class _WaitingInfoState extends State<WaitingInfo> {
                       // bottom: screenHeight * 0.03,
                       left: screenWidth * 0.05,
                       right: screenWidth * 0.05),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "나의 순서",
-                        style: TextStyle(
+                        ('my_order').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 8, bottom: 8),
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
+                            const Text(
                               "18",
                               style: TextStyle(
                                   fontSize: 28, fontWeight: FontWeight.w900),
                             ),
                             Text(
-                              "번째",
-                              style: TextStyle(
+                              ('th').tr(),
+                              style: const TextStyle(
                                   fontSize: 22, fontWeight: FontWeight.w600),
                             ),
                           ],
@@ -123,23 +124,23 @@ class _WaitingInfoState extends State<WaitingInfo> {
                       Row(
                         children: [
                           Text(
-                            "대기 번호 ",
-                            style: TextStyle(
+                            ('waiting_number').tr(),
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "18번",
-                            style: TextStyle(
+                            ('number_18').tr(),
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w900),
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       Text(
-                        '2024.07.30 17:21 등록',
-                        style: TextStyle(
+                        ('var_20240730_1721_registered').tr(),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: Constants.DARK_GREY),
@@ -160,9 +161,10 @@ class _WaitingInfoState extends State<WaitingInfo> {
                       top: screenHeight * 0.03,
                       left: screenWidth * 0.05,
                       right: screenWidth * 0.05),
-                  child: const Text(
-                    '등록 정보',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  child: Text(
+                    ('properties').tr(),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Padding(
@@ -171,17 +173,17 @@ class _WaitingInfoState extends State<WaitingInfo> {
                       bottom: screenHeight * 0.03,
                       left: screenWidth * 0.05,
                       right: screenWidth * 0.05),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "총 입장 인원",
-                        style: TextStyle(
+                        ('total_number_of_attendees').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '2 명',
-                        style: TextStyle(
+                        ('var_2_people').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -200,9 +202,9 @@ class _WaitingInfoState extends State<WaitingInfo> {
               height: screenHeight * 0.07,
               child: OutlinedButton(
                   onPressed: () {},
-                  child: const Text(
-                    '닫기',
-                    style: TextStyle(fontSize: 18),
+                  child: Text(
+                    ('close').tr(),
+                    style: const TextStyle(fontSize: 18),
                   )),
             ),
           ),

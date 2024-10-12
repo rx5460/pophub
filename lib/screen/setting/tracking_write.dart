@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -34,13 +35,16 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        showAlert(context, "성공", "운송장 등록을 완료했습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('the_waybill_registration_has_been_completed').tr(), () {
           Navigator.of(context).pop();
         });
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "운송장 등록에 실패했습니다.", () {
+        showAlert(
+            context, ('warning').tr(), ('the_waybill_registration_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -58,7 +62,7 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-        appBar: const CustomTitleBar(titleName: "운송장 등록"),
+        appBar: CustomTitleBar(titleName: ('titleName_9').tr()),
         body: Padding(
           padding: EdgeInsets.only(
               left: screenWidth * 0.05,
@@ -68,9 +72,10 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "택배사 선택하기",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              Text(
+                ('select_a_courier_company').tr(),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(
                 height: 10,
@@ -78,26 +83,26 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 DropdownButtonFormField<String>(
                   value: selectedCourier,
-                  items: const [
+                  items: [
                     DropdownMenuItem<String>(
                       value: 'cjlogistics',
-                      child: Text('cj대한통운'),
+                      child: Text(('cj_korea_express').tr()),
                     ),
                     DropdownMenuItem<String>(
                       value: 'logen',
-                      child: Text('로젠택배'),
+                      child: Text(('rosen_express').tr()),
                     ),
                     DropdownMenuItem<String>(
                       value: 'epost',
-                      child: Text('우체국택배'),
+                      child: Text(('post_office_delivery').tr()),
                     ),
                     DropdownMenuItem<String>(
                       value: 'hanjin',
-                      child: Text('한진택배'),
+                      child: Text(('hanjin_express').tr()),
                     ),
                     DropdownMenuItem<String>(
                       value: 'lotte',
-                      child: Text('롯데택배'),
+                      child: Text(('lotte_express').tr()),
                     ),
                   ],
                   onChanged: (String? value) {
@@ -112,9 +117,10 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  "운송장",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('waybill').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(
                   height: 10,
@@ -130,9 +136,9 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
                   onPressed: () {
                     addTracking();
                   },
-                  child: const Text(
-                    '완료',
-                    style: TextStyle(
+                  child: Text(
+                    ('complete').tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                     ),

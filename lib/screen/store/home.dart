@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
+import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/model/funding_model.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
@@ -21,8 +24,6 @@ import 'package:pophub/utils/api/user_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:pophub/model/ad_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -145,7 +146,7 @@ class _HomePageState extends State<HomePage> {
     List<dynamic> data = await StoreApi.getMyPopup(User().userName);
 
     if (!data.toString().contains("fail") &&
-        !data.toString().contains("없습니다")) {
+        !data.toString().contains(('doesnt_exist_1').tr())) {
       setState(() {
         addGoodsVisible = true;
 
@@ -175,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                         child: StoreListPage(
                           popups: data,
-                          titleName: "검색 결과",
+                          titleName: ('titleName_16').tr(),
                         ))));
       }
     } else {}
@@ -290,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                                   popup: popup!))));
                             },
                             icon: Icons.check_box_outlined,
-                            text: '굿즈',
+                            text: ('titleName_7').tr(),
                           )
                         : const SizedBox(),
                     addGoodsVisible
@@ -310,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                                             mode: "add"))));
                       },
                       icon: Icons.calendar_today,
-                      text: '팝업스토어',
+                      text: ('popup_store').tr(),
                     ),
                   ],
                 ),
@@ -367,11 +368,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         title: User().userId != ""
-            ? Text(
-                "반갑습니다, ${User().userName}님 !",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              )
+            ? const Text(
+                "nice_to_meet_you_",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ).tr(args: [User().userName])
             : Image.asset(
                 'assets/images/logo.png',
                 width: screenWidth * 0.14,
@@ -440,7 +440,7 @@ class _HomePageState extends State<HomePage> {
                         Radius.circular(10),
                       ),
                     ),
-                    labelText: '어떤 정보를 찾아볼까요?',
+                    labelText: ('labelText_9').tr(),
                     labelStyle: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -478,9 +478,10 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Text(
-                                            '이미지를 불러올 수 없습니다.',
-                                            style: TextStyle(color: Colors.red),
+                                          Text(
+                                            ('the_image_cannot_be_loaded').tr(),
+                                            style: const TextStyle(
+                                                color: Colors.red),
                                           ),
                                           const SizedBox(height: 8),
                                           Text('Error: $error',
@@ -507,11 +508,12 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                       )
-                    : const Padding(
-                        padding: EdgeInsets.all(16.0),
+                    : Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          '※ 광고 문의 ※',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ('_advertisement_inquiry_').tr(),
+                          style:
+                              const TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       ),
               ),
@@ -551,10 +553,10 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '인기 있는 팝업스토어',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Text(
+                      ('popular_popup_stores').tr(),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -569,7 +571,7 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                           child: StoreListPage(
                                             popups: poppularList,
-                                            titleName: "인기 팝업스토어",
+                                            titleName: ('titleName_17').tr(),
                                           ))));
                         }
                       },
@@ -680,10 +682,10 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '종료 예정 팝업스토어',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Text(
+                      ('titleName_18').tr(),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -698,7 +700,7 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                           child: StoreListPage(
                                             popups: willBeCloseList,
-                                            titleName: "종료 예정 팝업스토어",
+                                            titleName: ('titleName_18').tr(),
                                           ))));
                         }
                       },
@@ -812,9 +814,9 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '추천 팝업스토어',
-                        style: TextStyle(
+                      Text(
+                        ('titleName_19').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
@@ -830,7 +832,7 @@ class _HomePageState extends State<HomePage> {
                                             ],
                                             child: StoreListPage(
                                               popups: recommandList,
-                                              titleName: "추천 팝업스토어",
+                                              titleName: ('titleName_19').tr(),
                                             ))));
                           }
                         },
@@ -947,10 +949,10 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '신규 펀딩',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Text(
+                      ('new_funding').tr(),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
                       onTap: () {

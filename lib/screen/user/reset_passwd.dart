@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pophub/assets/constants.dart';
@@ -53,12 +54,12 @@ class _ResetPasswdState extends State<ResetPasswd> {
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
       if (mounted) {
-        ToastUtil.customToastMsg("전송되었습니다.", context);
+        ToastUtil.customToastMsg(('sent').tr(), context);
       }
       setState(() {});
     } else {
       if (mounted) {
-        ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+        ToastUtil.customToastMsg(('transmission_failed').tr(), context);
       }
     }
   }
@@ -74,7 +75,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
         });
 
         if (mounted) {
-          showAlert(context, "확인", "인증되었습니다.", () {
+          showAlert(context, ('check').tr(), ('certified').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
             userNoti.isVerify = true;
@@ -91,7 +92,8 @@ class _ResetPasswdState extends State<ResetPasswd> {
           isDialogShowing = true;
         });
         if (mounted) {
-          showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+          showAlert(context, ('warning').tr(),
+              ('please_check_the_authentication_number_again').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
 
@@ -116,7 +118,8 @@ class _ResetPasswdState extends State<ResetPasswd> {
         await secureStorage.deleteAll();
         User().clear();
         if (mounted) {
-          showAlert(context, "확인", "비밀번호 재설정이 완료되었습니다.", () {
+          showAlert(context, ('check').tr(),
+              ('password_reset_has_been_completed').tr(), () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Login()));
           });
@@ -124,7 +127,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "확인", "비밀번호 재설정에 실패했습니다.", () {
+        showAlert(context, ('check').tr(), ('password_reset_failed').tr(), () {
           Navigator.of(context).pop();
           setState(() {});
         });
@@ -154,17 +157,18 @@ class _ResetPasswdState extends State<ResetPasswd> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      const CustomTitleBar(titleName: "비밀번호 재설정"),
+                      CustomTitleBar(titleName: ('reset_password').tr()),
                       Form(
                           key: _phoneFormkey,
                           child: CustomTextFormFeild(
                             controller: phoneController,
-                            hintText: "핸드폰 번호 입력",
+                            hintText: ('hintText_2').tr(),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "번호를 입력해주세요 !";
+                                return ('please_enter_your_number').tr();
                               } else if (!isValidPhoneNumber(value)) {
-                                return "전화번호 형식에 맞게 입력해주세요 !";
+                                return ('please_enter_your_phone_number_in_the_correct_format')
+                                    .tr();
                               }
                               return null;
                             },
@@ -180,7 +184,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                   if (_phoneFormkey.currentState!.validate())
                                     {certifiApi()}
                                 },
-                            child: const Text("전송")),
+                            child: Text(('forwarding').tr())),
                       ),
                       Row(
                         children: [
@@ -189,13 +193,15 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                   key: _certifiFormkey,
                                   child: CustomTextFormFeild(
                                     controller: certifiController,
-                                    hintText: "인증번호 입력",
+                                    hintText: ('hintText_3').tr(),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "인증번호를 입력해주세요!";
+                                        return ('please_enter_your_authentication_number')
+                                            .tr();
                                       }
                                       if (value.length < 6) {
-                                        return "인증번호 6자리를 입력해주세요 !";
+                                        return ('please_enter_your_6digit_authentication_number')
+                                            .tr();
                                       }
                                       return null;
                                     },
@@ -219,8 +225,8 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                               userNotifier),
                                         }
                                     },
-                                child: const Text(
-                                  "확인",
+                                child: Text(
+                                  ('check').tr(),
                                   textAlign: TextAlign.center,
                                 )),
                           ),
@@ -233,13 +239,14 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           key: _pwFormkey,
                           child: CustomTextFormFeild(
                             controller: pwController,
-                            hintText: "비밀번호",
+                            hintText: ('hintText_1').tr(),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "비밀번호를 입력해주세요 !";
+                                return ('please_enter_your_password').tr();
                               }
                               if (value.length < 8) {
-                                return '비밀번호는 8자 이상으로 입력해주세요.';
+                                return ('please_enter_a_password_of_at_least_8_characters')
+                                    .tr();
                               }
                               //TODO 황지민 : 중복된 확인
                               return null;
@@ -257,17 +264,18 @@ class _ResetPasswdState extends State<ResetPasswd> {
                           key: _confirmPwFormkey,
                           child: CustomTextFormFeild(
                             controller: confirmPwController,
-                            hintText: "비밀번호 재입력",
+                            hintText: ('hintText_4').tr(),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "비밀번호를 입력해주세요 !";
+                                return ('please_enter_your_password').tr();
                               }
                               if (value.length < 8) {
-                                return '비밀번호는 8자 이상으로 입력해주세요.';
+                                return ('please_enter_a_password_of_at_least_8_characters')
+                                    .tr();
                               }
                               if (confirmPwController.text !=
                                   pwController.text) {
-                                return '비밀번호가 일치하지 않습니다.';
+                                return ('password_does_not_match').tr();
                               }
                               return null;
                             },
@@ -310,7 +318,7 @@ class _ResetPasswdState extends State<ResetPasswd> {
                                           shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(10)))),
-                                      child: const Text("완료")),
+                                      child: Text(('complete').tr())),
                                 ),
                               ),
                             ],

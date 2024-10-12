@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -20,7 +21,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       await secureStorage.deleteAll();
       User().clear();
       if (mounted) {
-        showAlert(context, "성공", "회원탈퇴에 성공했습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('you_have_successfully_withdrawn_your_membership').tr(), () {
           // 여기서 실제 회원탈퇴 로직을 구현
 
           Navigator.of(context).pop();
@@ -32,7 +34,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "실패", "회원탈퇴에 실패하였습니다.", () {});
+        showAlert(context, ('failure').tr(),
+            ('membership_withdrawal_failed').tr(), () {});
       }
     }
   }
@@ -43,7 +46,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "회원탈퇴"),
+      appBar: CustomTitleBar(titleName: ('titleName_11').tr()),
       body: Padding(
           padding: EdgeInsets.only(
               left: screenWidth * 0.05,
@@ -53,28 +56,39 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                '개인정보 처리 방침',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                ('privacy_policy').tr(),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                '회원탈퇴 시 개인정보는 다음과 같이 처리됩니다.',
-                style: TextStyle(fontSize: 16),
+              Text(
+                ('when_you_cancel_your_membership_your_personal_information_will_be_processed_as_follows')
+                    .tr(),
+                style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
-              const Text(
-                '• 보유 기간: 탈퇴 신청일로부터 1개월 동안 회원님의 개인정보를 보유합니다.\n'
-                '• 목적: 이 기간 동안 법적 의무 이행을 위해 개인정보를 보유합니다.\n'
-                '• 삭제: 보유 기간이 만료되면 회원님의 개인정보는 안전하게 삭제됩니다.',
+              Text(
+                ('_retention_period_your_personal_information_is_retained_for_1_month_from_the_date_of_withdrawal_applicationn')
+                    .tr(),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                  ('_purpose_we_retain_your_personal_information_for_this_period_to_fulfill_our_legal_obligationsn')
+                      .tr()),
+              const SizedBox(height: 8),
+              Text(
+                ('_deletion_when_the_retention_period_expires_your_personal_information_is_securely_deleted')
+                    .tr(),
               ),
               const SizedBox(height: 16),
-              const Text(
-                '유의 사항',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                ('note').tr(),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text('• 탈퇴하면 보유 포인트는 사라지게 됩니다.\n'),
+              Text(('_if_you_withdraw_your_points_will_be_lostn').tr()),
               const Spacer(),
               Center(
                 child: OutlinedButton(
@@ -84,20 +98,22 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('회원탈퇴'),
-                          content: const Text('정말로 회원탈퇴를 하시겠습니까?'),
+                          title: Text(('titleName_11').tr()),
+                          content: Text(
+                              ('do_you_really_want_to_cancel_your_membership')
+                                  .tr()),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text('취소'),
+                              child: Text(('cancellation').tr()),
                             ),
                             TextButton(
                               onPressed: () {
                                 resetPasswdApi();
                               },
-                              child: const Text('탈퇴하기'),
+                              child: Text(('unsubscribe').tr()),
                             ),
                           ],
                         );
@@ -107,8 +123,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('탈퇴하기',
-                      style: TextStyle(
+                  child: Text(('unsubscribe').tr(),
+                      style: const TextStyle(
                         fontSize: 18,
                       )),
                 ),

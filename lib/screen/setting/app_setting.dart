@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -33,9 +34,9 @@ class _AppSettingState extends State<AppSetting> {
       backgroundColor: Colors.white,
       body: ListView(
         children: <Widget>[
-          const CustomTitleBar(titleName: "앱 설정"),
+          CustomTitleBar(titleName: ('titleName_15').tr()),
           ListTile(
-            title: const Text('알림 설정'),
+            title: Text(('notification_settings').tr()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               // 알림 설정 페이지로 이동
@@ -47,7 +48,7 @@ class _AppSettingState extends State<AppSetting> {
             },
           ),
           // ListTile(
-          //   title: const Text('약관'),
+          //   title: Text('약관'),
           //   trailing: const Icon(Icons.arrow_forward_ios),
           //   onTap: () {
           //     // 약관 페이지로 이동
@@ -58,14 +59,14 @@ class _AppSettingState extends State<AppSetting> {
           //   },
           // ),
           ListTile(
-            title: const Text('로그아웃'),
+            title: Text(('log_out').tr()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               logout();
             },
           ),
           ListTile(
-            title: const Text('회원탈퇴'),
+            title: Text(('titleName_11').tr()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(
@@ -74,9 +75,9 @@ class _AppSettingState extends State<AppSetting> {
                       builder: (context) => const WithdrawalPage()));
             },
           ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('앱버전 0.1'),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(('app_version_01').tr()),
           ),
         ],
       ),

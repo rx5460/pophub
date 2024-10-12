@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
+import 'package:easy_localization/easy_localization.dart';
 class PushAutoToken {
   final String apiUrl = "http://3.233.20.5:3000/token_create";
 

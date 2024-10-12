@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:pophub/model/goods_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
@@ -45,12 +45,14 @@ class _PurchasePageState extends State<PurchasePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        showAlert(context, "결제", "결제 성공했습니다.", () async {
+        showAlert(context, ('payment').tr(), ('payment_was_successful').tr(),
+            () async {
           // 결제 완료 알림
-          const String title = '결제 완료';
-          const String label = '성공적으로 결제가 완료되었습니다.';
+          String title = ('title_1').tr();
+          String label = ('label').tr();
           final String time =
-              DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now());
+              DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+                  .format(DateTime.now());
 
           final Map<String, String> alarmDetails = {
             'title': title,
@@ -71,8 +73,8 @@ class _PurchasePageState extends State<PurchasePage> {
           );
           // 판매자 알람 추가
           final Map<String, String> sellerAlarmDetails = {
-            'title': '주문 들어옴',
-            'label': '자사 굿즈 주문이 들어왔습니다.',
+            'title': ('order_came_in').tr(),
+            'label': ('orders_for_our_goods_have_arrived').tr(),
             'time': time,
             'active': 'true',
           };
@@ -96,7 +98,7 @@ class _PurchasePageState extends State<PurchasePage> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "실패", "결제 실패했습니다.", () {
+        showAlert(context, ('failure').tr(), ('payment_failed').tr(), () {
           Navigator.of(context).pop();
         });
       }
@@ -132,7 +134,7 @@ class _PurchasePageState extends State<PurchasePage> {
 
               return NavigationDecision.prevent;
             } else if (request.url.startsWith('http://localhost')) {
-              showAlert(context, "결제", "결제 실패했습니다.", () {
+              showAlert(context, ('payment').tr(), ('payment_failed').tr(), () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

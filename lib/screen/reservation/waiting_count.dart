@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/reservation/waiting_registration.dart';
@@ -22,9 +23,9 @@ class _WaitingCountState extends State<WaitingCount> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          '예약하기',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          ('make_a_reservation').tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () {
@@ -48,9 +49,9 @@ class _WaitingCountState extends State<WaitingCount> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '방문할 인원을 선택해주세요.',
-                  style: TextStyle(
+                Text(
+                  ('please_select_the_number_of_people_who_will_visit').tr(),
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
@@ -61,9 +62,9 @@ class _WaitingCountState extends State<WaitingCount> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "인원수",
-                      style: TextStyle(
+                    Text(
+                      ('number_of_people').tr(),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -145,13 +146,13 @@ class _WaitingCountState extends State<WaitingCount> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '방문 인원',
-                        style: TextStyle(
+                      Text(
+                        ('number_of_visitors').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '총 $count 명',
+                        ('total_count_people').tr(args: [count.toString()]),
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
@@ -175,9 +176,9 @@ class _WaitingCountState extends State<WaitingCount> {
                             ),
                           );
                         },
-                        child: const Text(
-                          '다음',
-                          style: TextStyle(fontSize: 18),
+                        child: Text(
+                          ('next').tr(),
+                          style: const TextStyle(fontSize: 18),
                         )),
                   ),
                 ),

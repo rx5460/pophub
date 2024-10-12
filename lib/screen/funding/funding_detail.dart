@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
@@ -82,7 +82,7 @@ class _FundingDetailState extends State<FundingDetail> {
   //     if (User().userName != "") {
   //       List<dynamic> popupData = await StoreApi.getMyPopup(User().userName);
 
-  //       if (!popupData.toString().contains("없습니다")) {
+  //       if (!popupData.toString().contains(('doesnt_exist_1').tr())) {
   //         setState(() {
   //           goods = data;
   //           isLoading = true;
@@ -119,7 +119,7 @@ class _FundingDetailState extends State<FundingDetail> {
   //   final data = await GoodsApi.deleteGoods(productId);
 
   //   if (!data.toString().contains("fail") && mounted) {
-  //     showAlert(context, "성공", "굿즈가 삭제되었습니다.", () {
+  //     showAlert(context, ('success').tr(), ('goods_have_been_deleted').tr(), () {
   //       Navigator.of(context).pop();
   //       Navigator.of(context).pop();
 
@@ -138,7 +138,7 @@ class _FundingDetailState extends State<FundingDetail> {
   //     });
   //   } else {
   //     if (mounted) {
-  //       showAlert(context, "실패", "굿즈 삭제 실패했습니다.", () {
+  //       showAlert(context, ('failure').tr(), ('deletion_of_goods_failed').tr(), () {
   //         Navigator.of(context).pop();
   //       });
   //     }
@@ -235,8 +235,18 @@ class _FundingDetailState extends State<FundingDetail> {
                                                 Text(
                                                   widget.funding.closeDate !=
                                                           null
-                                                      ? '${DateTime.parse(widget.funding.closeDate!).difference(DateTime.now()).inDays}일 남음' // 종료일까지 남은 일수 계산
-                                                      : '종료일 없음', // 종료일이 없을 경우
+                                                      ? '_days_left'.tr(args: [
+                                                          DateTime.parse(widget
+                                                                  .funding
+                                                                  .closeDate!)
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inDays
+                                                              .toString()
+                                                        ]) // 종료일까지 남은 일수 계산
+                                                      : ('no_end_date')
+                                                          .tr(), // 종료일이 없을 경우
                                                   style: const TextStyle(
                                                     fontSize: 13,
                                                     color: Constants.DARK_GREY,
@@ -248,21 +258,24 @@ class _FundingDetailState extends State<FundingDetail> {
                                           ),
                                           Row(
                                             children: [
-                                              const Text(
-                                                '목표금액 :  ',
-                                                style: TextStyle(
+                                              Text(
+                                                ('target_amount').tr(),
+                                                style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
                                                     color: Constants.DARK_GREY),
                                               ),
-                                              Text(
-                                                '${countFormat.format(widget.funding.amount)}원',
-                                                style: const TextStyle(
+                                              const Text(
+                                                'won',
+                                                style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w600,
                                                     color: Constants
                                                         .DEFAULT_COLOR),
-                                              ),
+                                              ).tr(args: [
+                                                countFormat.format(
+                                                    widget.funding.amount)
+                                              ]),
                                             ],
                                           ),
                                           Row(
@@ -278,8 +291,17 @@ class _FundingDetailState extends State<FundingDetail> {
                                                             0 ||
                                                         widget.funding.amount ==
                                                             null
-                                                    ? '0% 달성' // 목표 금액 또는 후원 금액이 없을 때 '0%'로 표시
-                                                    : '${((widget.funding.donation! / widget.funding.amount!.toDouble()) * 100).toInt()}% 달성',
+                                                    ? ('var_0_achieved')
+                                                        .tr() // 목표 금액 또는 후원 금액이 없을 때 '0%'로 표시
+                                                    : '_achieved'.tr(args: [
+                                                        ((widget.funding.donation! /
+                                                                    widget
+                                                                        .funding
+                                                                        .amount!
+                                                                        .toDouble()) *
+                                                                100)
+                                                            .toString()
+                                                      ]),
                                                 style: const TextStyle(
                                                     fontSize: 14,
                                                     color:
@@ -300,10 +322,11 @@ class _FundingDetailState extends State<FundingDetail> {
                                                         BorderRadius.all(
                                                             Radius.circular(
                                                                 10))),
-                                                child: const Center(
+                                                child: Center(
                                                   child: Text(
-                                                    '999명 참여',
-                                                    style: TextStyle(
+                                                    ('var_999_people_participated')
+                                                        .tr(),
+                                                    style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 12,
                                                       fontWeight:
@@ -333,9 +356,9 @@ class _FundingDetailState extends State<FundingDetail> {
                                                     top: 20, bottom: 10),
                                                 child: SizedBox(
                                                   width: screenWidth * 0.9,
-                                                  child: const Text(
-                                                    '제품 선택하기',
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    ('select_product').tr(),
+                                                    style: const TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:
                                                           FontWeight.w900,
@@ -374,14 +397,19 @@ class _FundingDetailState extends State<FundingDetail> {
                                                                 color: Constants
                                                                     .DARK_GREY,
                                                               ),
-                                                        Text(
-                                                          "${countFormat.format(fundingItem![index].amount)}원",
-                                                          style: const TextStyle(
+                                                        const Text(
+                                                          "won",
+                                                          style: TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
-                                                        ),
+                                                        ).tr(args: [
+                                                          countFormat.format(
+                                                              fundingItem![
+                                                                      index]
+                                                                  .amount)
+                                                        ]),
                                                       ],
                                                     ),
                                                   ),
@@ -453,14 +481,18 @@ class _FundingDetailState extends State<FundingDetail> {
                                                           const SizedBox(
                                                             height: 4,
                                                           ),
-                                                          Text(
-                                                            "잔여수량 ${fundingItem![index].amount.toString()}개",
-                                                            style: const TextStyle(
+                                                          const Text(
+                                                            "remaining_quantity_",
+                                                            style: TextStyle(
                                                                 fontSize: 13,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500),
-                                                          ),
+                                                          ).tr(args: [
+                                                            fundingItem![index]
+                                                                .amount
+                                                                .toString()
+                                                          ]),
                                                           const SizedBox(
                                                             height: 4,
                                                           ),
@@ -595,14 +627,19 @@ class _FundingDetailState extends State<FundingDetail> {
                                                         fontWeight:
                                                             FontWeight.w900),
                                                   ),
-                                                  Text(
-                                                    '${formatNumber(fundingItem![selected].amount! * count)}원',
-                                                    style: const TextStyle(
+                                                  const Text(
+                                                    'won',
+                                                    style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
-                                                  ),
+                                                  ).tr(args: [
+                                                    formatNumber(
+                                                        fundingItem![selected]
+                                                                .amount! *
+                                                            count)
+                                                  ]),
                                                 ]),
                                             Row(
                                               mainAxisAlignment:
@@ -698,10 +735,10 @@ class _FundingDetailState extends State<FundingDetail> {
                                         );
                                       }
                                     },
-                                    child: const Center(
+                                    child: Center(
                                       child: Text(
-                                        '펀딩하기',
-                                        style: TextStyle(
+                                        ('funding').tr(),
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
                                           fontSize: 16,

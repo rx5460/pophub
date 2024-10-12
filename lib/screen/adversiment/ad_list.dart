@@ -1,6 +1,8 @@
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:pophub/model/ad_model.dart';
 import 'package:pophub/screen/adversiment/ad_edit.dart';
 import 'package:pophub/screen/adversiment/ad_upload.dart';
@@ -37,7 +39,9 @@ class AdListPageState extends State<AdListPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("광고 목록을 불러오지 못했습니다: ${response.body}")),
+        SnackBar(
+            content: const Text("failed_to_load_ad_list_")
+                .tr(args: [response.body.toString()])),
       );
     }
   }
@@ -78,7 +82,7 @@ class AdListPageState extends State<AdListPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("광고가 삭제되었습니다.")),
+        SnackBar(content: Text(('the_ad_has_been_removed').tr())),
       );
     }
   }
@@ -106,9 +110,10 @@ class AdListPageState extends State<AdListPage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          '광고 목록',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        title: Text(
+          ('advertisement_list').tr(),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -120,9 +125,9 @@ class AdListPageState extends State<AdListPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      const Text(
-                        '등록된 광고',
-                        style: TextStyle(
+                      Text(
+                        ('registered_advertisement').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       ListView.builder(
@@ -160,10 +165,10 @@ class AdListPageState extends State<AdListPage> {
           const Divider(),
           Expanded(
             child: ads.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      '광고 목록이 없습니다!',
-                      style: TextStyle(
+                      ('no_advertising_listings').tr(),
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -207,9 +212,9 @@ class AdListPageState extends State<AdListPage> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
-                child: const Text(
-                  '광고 추가',
-                  style: TextStyle(
+                child: Text(
+                  ('add_ad').tr(),
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:pophub/model/inquiry_model.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -57,9 +57,10 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
       String userName = data['userName'];
 
       final Map<String, String> alarmDetails = {
-        'title': '문의 답변 완료',
-        'label': '해당 문의에 관리자가 답변했습니다.',
-        'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+        'title': ('inquiry_response_completed').tr(),
+        'label': ('an_administrator_has_responded_to_this_inquiry').tr(),
+        'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+            .format(DateTime.now()),
         'active': 'true',
         'inquiryId': widget.inquiryId.toString(),
       };
@@ -89,7 +90,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
           alarmDetails['label']!, alarmDetails['time']!);
     } else {
       if (mounted) {
-        showAlert(context, "경고", "답변 추가에 실패했습니다.", () {
+        showAlert(context, ('warning').tr(), ('failed_to_add_answer').tr(), () {
           Navigator.of(context).pop();
         });
       }
@@ -109,7 +110,7 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "문의 답변 하기"),
+      appBar: CustomTitleBar(titleName: ('titleName_8').tr()),
       body: Padding(
         padding: EdgeInsets.only(
           left: screenWidth * 0.05,
@@ -121,8 +122,9 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('문의 제목',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(('inquiry_subject').tr(),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -145,8 +147,9 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('문의 내용',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(('inquiry_details').tr(),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -182,18 +185,19 @@ class _InquiryAnswerPageState extends State<InquiryAnswerPage> {
                     )),
               ),
               const SizedBox(height: 16),
-              const Text('답변 내용',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(('answer_content').tr(),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextField(
                 controller: _answerContentController,
-                decoration: const InputDecoration(hintText: '답변 내용을 입력하세요'),
+                decoration: InputDecoration(hintText: ('hintText_10').tr()),
                 maxLines: 6,
               ),
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: _submitInquiry,
-                child: const Text('완료'),
+                child: Text(('complete').tr()),
               ),
             ],
           ),

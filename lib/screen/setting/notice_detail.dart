@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 
@@ -21,7 +22,7 @@ class _NoticeDetailState extends State<NoticeDetail> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "공지 사항"),
+      appBar: CustomTitleBar(titleName: ('titleName_13').tr()),
       body: Padding(
         padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(

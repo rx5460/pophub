@@ -1,5 +1,6 @@
 import 'dart:io' show File;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/assets/constants.dart';
@@ -33,7 +34,7 @@ class _ProfileAddState extends State<ProfileAdd> {
   TextEditingController phoneController = TextEditingController();
   String? nicknameInput;
   bool nicknameChecked = false;
-  String? _gender = 'M'; // 기본 선택 옵션을 "남자"로 설정
+  String? _gender = 'M'; // 기본 선택 옵션을 ('man').tr()로 설정
 
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
@@ -57,14 +58,16 @@ class _ProfileAddState extends State<ProfileAdd> {
 
     if (mounted) {
       if (!data.toString().contains("Exists")) {
-        showAlert(context, "안내", "닉네임이 사용 가능합니다.", () {
+        showAlert(context, ('guide').tr(), ('nicknames_are_available').tr(),
+            () {
           Navigator.of(context).pop();
         });
         setState(() {
           nicknameChecked = true;
         });
       } else {
-        showAlert(context, "경고", "닉네임이 중복되었습니다.", () {
+        showAlert(context, ('warning').tr(), ('nickname_is_duplicated').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -122,7 +125,8 @@ class _ProfileAddState extends State<ProfileAdd> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "프로필 추가에 실패했습니다.", () {
+        showAlert(context, ('warning').tr(), ('adding_profile_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -146,7 +150,7 @@ class _ProfileAddState extends State<ProfileAdd> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: CustomTitleBar(
-            titleName: "프로필 추가",
+            titleName: ('titleName_4').tr(),
             onBackPressed: () {
               Navigator.push(
                   context,
@@ -229,9 +233,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: screenHeight * 0.02),
-                                const Text(
-                                  "닉네임",
-                                  style: TextStyle(
+                                Text(
+                                  ('labelText').tr(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -252,9 +256,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                               nicknameInput = value;
                                             });
                                           },
-                                          decoration: const InputDecoration(
+                                          decoration: InputDecoration(
                                             filled: true,
-                                            labelText: '닉네임',
+                                            labelText: ('labelText').tr(),
                                           ),
                                         ),
                                       ),
@@ -276,7 +280,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                           },
                                           child: Center(
                                             child: Text(
-                                              nicknameChecked ? '수정' : '중복확인',
+                                              nicknameChecked
+                                                  ? ('correction').tr()
+                                                  : ('duplicate_check').tr(),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 16,
@@ -289,9 +295,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                   ),
                                 ),
                                 SizedBox(height: screenHeight * 0.01),
-                                const Text(
-                                  "나이",
-                                  style: TextStyle(
+                                Text(
+                                  ('labelText_1').tr(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -302,9 +308,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                   child: TextField(
                                     controller: ageController,
                                     keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       filled: true,
-                                      labelText: '나이',
+                                      labelText: ('labelText_1').tr(),
                                     ),
                                   ),
                                 ),
@@ -312,9 +318,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                                 SizedBox(height: screenHeight * 0.01),
                               ],
                             )),
-                        const Text(
-                          "핸드폰 번호",
-                          style: TextStyle(
+                        Text(
+                          ('cell_phone_number').tr(),
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -325,9 +331,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                           child: TextField(
                             controller: phoneController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               filled: true,
-                              labelText: '번호',
+                              labelText: ('labelText_2').tr(),
                             ),
                           ),
                         ),
@@ -338,9 +344,9 @@ class _ProfileAddState extends State<ProfileAdd> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: screenHeight * 0.02),
-                                const Text(
-                                  "성별",
-                                  style: TextStyle(
+                                Text(
+                                  ('gender').tr(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -367,7 +373,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                           _gender = 'M';
                                         });
                                       },
-                                      child: const Text('남자'),
+                                      child: Text(('man').tr()),
                                     ),
                                     const SizedBox(width: 20), // 라디오 버튼 간의 간격
                                     // 여자 선택
@@ -386,7 +392,7 @@ class _ProfileAddState extends State<ProfileAdd> {
                                           _gender = 'F';
                                         });
                                       },
-                                      child: const Text('여자'),
+                                      child: Text(('female').tr()),
                                     ),
                                   ],
                                 ),
@@ -408,8 +414,11 @@ class _ProfileAddState extends State<ProfileAdd> {
                                       phoneController.text.isNotEmpty) {
                                     profileAdd();
                                   } else {
-                                    showAlert(context, "경고",
-                                        "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {
+                                    showAlert(
+                                        context,
+                                        ('warning').tr(),
+                                        ('please_enter_all_fields_correctly_and_check_for_duplicate_nicknames')
+                                            .tr(), () {
                                       Navigator.of(context).pop();
                                     });
                                   }
@@ -417,14 +426,17 @@ class _ProfileAddState extends State<ProfileAdd> {
                                   if (phoneController.text.isNotEmpty) {
                                     profileAdd();
                                   } else {
-                                    showAlert(context, "경고",
-                                        "모든 필드를 올바르게 입력하고 닉네임 중복확인을 해주세요.", () {
+                                    showAlert(
+                                        context,
+                                        ('warning').tr(),
+                                        ('please_enter_all_fields_correctly_and_check_for_duplicate_nicknames')
+                                            .tr(), () {
                                       Navigator.of(context).pop();
                                     });
                                   }
                                 }
                               },
-                              child: const Text("완료")),
+                              child: Text(('complete').tr())),
                         )
                       ],
                     ),

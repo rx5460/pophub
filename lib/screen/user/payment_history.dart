@@ -1,6 +1,8 @@
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:pophub/model/pay_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 
@@ -30,19 +32,19 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage> {
         payments = paymentData.map((data) => Payment.fromJson(data)).toList();
       });
     } else {
-      throw Exception('결재 내역을 불러오지 못함');
+      throw Exception(('unable_to_load_payment_details').tr());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "결제 내역"),
+      appBar: CustomTitleBar(titleName: ('text_9').tr()),
       body: payments.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
-                '결제 내역이 없습니다',
-                style: TextStyle(
+                ('there_is_no_payment_history').tr(),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

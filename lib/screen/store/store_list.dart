@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/popup_view.dart';
@@ -13,7 +13,7 @@ class StoreListPage extends StatelessWidget {
   const StoreListPage(
       {super.key,
       required this.popups,
-      this.titleName = "팝업스토어",
+      required this.titleName,
       this.mode = "view",
       this.useBack = true});
 
@@ -29,10 +29,10 @@ class StoreListPage extends StatelessWidget {
         useBack: useBack,
       ),
       body: popups.isEmpty || popups[0].category == null
-          ? const Center(
+          ? Center(
               child: Text(
-                '팝업스토어 리스트가 없습니다!',
-                style: TextStyle(fontSize: 18.0),
+                ('there_is_no_popup_store_list').tr(),
+                style: const TextStyle(fontSize: 18.0),
               ),
             )
           : ListView.builder(
