@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pophub/screen/custom/custom_alert.dart';
 
+
+import 'package:easy_localization/easy_localization.dart';
 bool isValidPhoneNumber(String input) {
   // 숫자와 공백을 제외한 모든 문자를 제거
   String digits = input.replaceAll(RegExp(r'\D'), '');
@@ -38,25 +40,25 @@ String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
     switch (dayOfWeek.toLowerCase()) {
       case 'monday':
       case 'mon':
-        return '월요일';
+        return ('monday').tr();
       case 'tuesday':
       case 'tue':
-        return '화요일';
+        return ('tuesday').tr();
       case 'wednesday':
       case 'wed':
-        return '수요일';
+        return ('wednesday').tr();
       case 'thursday':
       case 'thu':
-        return '목요일';
+        return ('thursday').tr();
       case 'friday':
       case 'fri':
-        return '금요일';
+        return ('friday').tr();
       case 'saturday':
       case 'sat':
-        return '토요일';
+        return ('saturday').tr();
       case 'sunday':
       case 'sun':
-        return '일요일';
+        return ('sunday').tr();
       default:
         return dayOfWeek;
     }
@@ -83,10 +85,10 @@ String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
 }
 
 String formatTime(String timeString) {
-  if (timeString.contains('시') && timeString.contains('분')) {
-    List<String> timeParts = timeString.split('시');
+  if (timeString.contains(('city').tr()) && timeString.contains(('minute').tr())) {
+    List<String> timeParts = timeString.split(('city').tr());
     int hour = int.parse(timeParts[0]);
-    timeParts = timeParts[1].split('분');
+    timeParts = timeParts[1].split(('minute').tr());
     int.parse(timeParts[0]);
 
     return '${hour.toString().padLeft(2, '0')}:00';

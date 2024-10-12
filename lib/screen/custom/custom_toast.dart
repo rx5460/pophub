@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+
+import 'package:easy_localization/easy_localization.dart';
 class ToastUtil {
   static void customToastMsg(String message, BuildContext context,
       {ToastGravity gravity = ToastGravity.BOTTOM}) {

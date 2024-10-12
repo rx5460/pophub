@@ -10,6 +10,8 @@ import 'package:pophub/screen/user/profile.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/user_api.dart';
 
+
+import 'package:easy_localization/easy_localization.dart';
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});
 

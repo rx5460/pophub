@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
@@ -169,7 +170,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         ],
                         child: StoreListPage(
                           popups: data,
-                          titleName: "검색 결과",
+                          titleName: ('titleName_16').tr(),
                         ))));
       }
     } else {}
@@ -187,8 +188,8 @@ class _CategoryPageState extends State<CategoryPage> {
                         providers: [
                           ChangeNotifierProvider(create: (_) => StoreModel())
                         ],
-                        child:
-                            StoreListPage(popups: data, titleName: "검색 결과"))));
+                        child: StoreListPage(
+                            popups: data, titleName: ('titleName_16').tr()))));
       }
     } else {}
     setState(() {});
@@ -197,8 +198,8 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomTitleBar(
-        titleName: "검색",
+      appBar: CustomTitleBar(
+        titleName: ('titleName_23').tr(),
         useBack: false,
       ),
       body: Padding(
@@ -210,7 +211,7 @@ class _CategoryPageState extends State<CategoryPage> {
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: '어떤 정보를 찾아볼까요?',
+                  hintText: ('labelText_9').tr(),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
@@ -221,7 +222,7 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
               if (_recentSearches.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('최근 검색어',
+                Text(('recent_searches').tr(),
                     style:
                         TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
@@ -250,7 +251,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 )
               ],
               const SizedBox(height: 16),
-              const Text('카테고리',
+              Text(('labelText_8').tr(),
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               GridView.builder(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,14 +93,14 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('경고'),
-                content: const Text('사진은 최대 5개까지 등록할 수 있습니다.'),
+                title: Text(('warning').tr()),
+                content: Text(('up_to_5_photos_can_be_registered').tr()),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('확인'),
+                    child: Text(('check').tr()),
                   ),
                 ],
               );
@@ -117,7 +118,8 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
     final data = await GoodsApi.postGoodsAdd(goods, widget.popup.id.toString());
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "굿즈가 등록되었습니다.", () {
+      showAlert(context, ('success').tr(), ('goods_have_been_registered').tr(),
+          () {
         Navigator.of(context).pop();
 
         Navigator.push(
@@ -136,26 +138,26 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
 
   bool _validateInputs() {
     if (_nameController.text.isEmpty) {
-      _showValidationDialog("굿즈 이름을 입력해주세요.");
+      _showValidationDialog(('please_enter_the_product_name').tr());
       return false;
     }
     if (_priceController.text.isEmpty) {
-      _showValidationDialog("굿즈 가격을 입력해주세요.");
+      _showValidationDialog(('please_enter_the_price_of_the_goods').tr());
       return false;
     }
     if (_quantityController.text.isEmpty) {
-      _showValidationDialog("굿즈 수량을 입력해주세요.");
+      _showValidationDialog(('please_enter_the_quantity_of_goods').tr());
       return false;
     }
     if (_descriptionController.text.isEmpty) {
-      _showValidationDialog("굿즈 설명을 입력해주세요.");
+      _showValidationDialog(('please_enter_a_product_description').tr());
       return false;
     }
     return true;
   }
 
   void _showValidationDialog(String message) {
-    showAlert(context, "실패", message, () {
+    showAlert(context, ('failure').tr(), message, () {
       Navigator.of(context).pop();
     });
   }
@@ -165,7 +167,8 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
         await GoodsApi.putGoodsModify(goods, widget.productId.toString());
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "굿즈 수정이 완료되었습니다.", () {
+      showAlert(context, ('success').tr(),
+          ('goods_modifications_have_been_completed').tr(), () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -195,7 +198,9 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
     // double screenHeight = screenSize.height;
     return Scaffold(
       appBar: CustomTitleBar(
-          titleName: widget.mode == "modify" ? "굿즈 수정" : "굿즈 추가"),
+          titleName: widget.mode == "modify"
+              ? ('edit_goods').tr()
+              : ('add_goods_1').tr()),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<GoodsNotifier>(
@@ -256,26 +261,27 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "굿즈 이름",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('goods_name').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _nameController,
-                  decoration:
-                      const InputDecoration(labelText: '굿즈 이름을 작성해주세요.'),
+                  decoration: InputDecoration(labelText: ('labelText_3').tr()),
                   onChanged: (value) => goods.productName = value,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "가격",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('labelText_4').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _priceController,
-                  decoration: const InputDecoration(labelText: '가격'),
+                  decoration: InputDecoration(labelText: ('labelText_4').tr()),
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -288,14 +294,15 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "수량",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('labelText_5').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _quantityController,
-                  decoration: const InputDecoration(labelText: '수량'),
+                  decoration: InputDecoration(labelText: ('labelText_5').tr()),
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -304,15 +311,17 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                   onChanged: (value) => goods.quantity = int.parse(value),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "굿즈 설명",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Text(
+                  ('goods_description').tr(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(
-                      labelText: '굿즈 설명을 작성해주세요.', alignLabelWithHint: true),
+                  decoration: InputDecoration(
+                      labelText: ('labelText_6').tr(),
+                      alignLabelWithHint: true),
                   maxLines: 4,
                   onChanged: (value) => goods.description = value,
                 ),
@@ -329,7 +338,7 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
                         }
                       }
                     },
-                    child: const Text('완료'),
+                    child: Text(('complete').tr()),
                   ),
                 ),
               ],

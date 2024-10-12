@@ -5,7 +5,7 @@ class CustomTitleBar extends StatelessWidget implements PreferredSizeWidget {
   final bool useBack;
   final VoidCallback? onBackPressed;
 
-  const CustomTitleBar({
+  CustomTitleBar({
     Key? key,
     this.titleName = "",
     this.useBack = true,

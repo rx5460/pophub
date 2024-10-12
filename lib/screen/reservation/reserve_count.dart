@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
@@ -34,17 +34,22 @@ class _ReserveCountState extends State<ReserveCount> {
       if (data.toString().contains("fail")) {
         if (mounted) {
           // 예약 실패 알림 표시 및 대기 목록 추가 확인
-          showAlert(context, "경고", "사전 예약에 실패했습니다. 대기 목록에 추가하시겠습니까?", () async {
+          showAlert(
+              context,
+              ('warning').tr(),
+              ('advance_reservation_failed_would_you_like_to_be_added_to_the_waiting_list')
+                  .tr(), () async {
             Navigator.of(context).pop();
             await addToWaitlist();
           });
         }
       } else {
         await sendAlarmAndNotification();
-        print('예약 성공');
+        print(('reservation_successful').tr());
         if (mounted) {
-          print('예약 성공 마운트');
-          showAlert(context, "안내", "사전 예약에 성공했습니다.", () async {
+          print(('reservation_successful_mount').tr());
+          showAlert(context, ('guide').tr(), ('preorder_was_successful').tr(),
+              () async {
             Navigator.pop(context);
             Navigator.pop(context);
           });
@@ -53,7 +58,11 @@ class _ReserveCountState extends State<ReserveCount> {
     } catch (e) {
       print('Error during reservation: $e');
       if (mounted) {
-        showAlert(context, "오류", "예약 중 오류가 발생했습니다. 다시 시도해주세요.", () {
+        showAlert(
+            context,
+            ('error').tr(),
+            ('an_error_occurred_while_making_a_reservation_please_try_again')
+                .tr(), () {
           Navigator.of(context).pop();
         });
       }
@@ -75,17 +84,24 @@ class _ReserveCountState extends State<ReserveCount> {
       );
 
       if (response.statusCode == 201) {
-        showAlert(context, "알림", "대기 목록에 성공적으로 추가되었습니다.", () {
+        showAlert(context, ('alarm').tr(),
+            ('you_have_been_successfully_added_to_the_waiting_list').tr(), () {
           Navigator.of(context).pop();
         });
       } else {
-        showAlert(context, "오류", "대기 목록 추가에 실패했습니다.", () {
+        showAlert(
+            context, ('error').tr(), ('adding_to_standby_list_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
     } catch (e) {
       print('Error during adding to waitlist: $e');
-      showAlert(context, "오류", "대기 목록 추가 중 오류가 발생했습니다. 다시 시도해주세요.", () {
+      showAlert(
+          context,
+          ('error').tr(),
+          ('an_error_occurred_while_adding_to_the_standby_list_please_try_again')
+              .tr(), () {
         Navigator.of(context).pop();
       });
     }
@@ -93,9 +109,10 @@ class _ReserveCountState extends State<ReserveCount> {
 
   Future<void> sendAlarmAndNotification() async {
     final Map<String, String> alarmDetails = {
-      'title': '사전 예약 완료',
-      'label': '사전 예약이 성공적으로 완료되었습니다.',
-      'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+      'title': ('preorder_completed').tr(),
+      'label': ('your_preorder_has_been_completed_successfully').tr(),
+      'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+          .format(DateTime.now()),
       'active': 'true',
     };
 
@@ -132,9 +149,9 @@ class _ReserveCountState extends State<ReserveCount> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          '예약하기',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          ('make_a_reservation').tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () {
@@ -158,9 +175,9 @@ class _ReserveCountState extends State<ReserveCount> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '방문할 인원을 선택해주세요.',
-                  style: TextStyle(
+                Text(
+                  ('please_select_the_number_of_people_who_will_visit').tr(),
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
@@ -171,9 +188,9 @@ class _ReserveCountState extends State<ReserveCount> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "인원수",
-                      style: TextStyle(
+                    Text(
+                      ('number_of_people').tr(),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -254,13 +271,13 @@ class _ReserveCountState extends State<ReserveCount> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '방문 인원',
-                        style: TextStyle(
+                      Text(
+                        ('number_of_visitors').tr(),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '총 $count 명',
+                        ('total_count_people').tr(args: [count.toString()]),
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
@@ -277,9 +294,9 @@ class _ReserveCountState extends State<ReserveCount> {
                         onPressed: () {
                           reservationApi();
                         },
-                        child: const Text(
-                          '다음',
-                          style: TextStyle(fontSize: 18),
+                        child: Text(
+                          ('next').tr(),
+                          style: const TextStyle(fontSize: 18),
                         )),
                   ),
                 ),

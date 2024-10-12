@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/funding_model.dart';
@@ -62,14 +62,16 @@ class _FundingAddPageState extends State<FundingAddPage> {
         _targetAmountController.text.isEmpty ||
         fundingItem.isEmpty ||
         images == []) {
-      showAlert(context, "오류", "모든 필드를 입력하고 펀딩 아이템을 추가하세요.", () {
+      showAlert(context, ('error').tr(),
+          ('complete_all_fields_and_add_your_funding_item').tr(), () {
         Navigator.pop(context);
       });
       return;
     }
     // 날짜 유효성 검사: startDate와 endDate가 7일 이상 차이가 나는지 확인
     if (startDate == null || endDate == null) {
-      showAlert(context, "오류", "펀딩 시작일과 종료일을 선택하세요.", () {
+      showAlert(context, ('error').tr(),
+          ('select_your_funding_start_and_end_date').tr(), () {
         Navigator.pop(context);
       });
       return;
@@ -77,7 +79,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
 
     Duration dateDifference = endDate!.difference(startDate!);
     if (dateDifference.inDays < 7) {
-      showAlert(context, "오류", "펀딩 기간은 최소 7일 이상이어야 합니다.", () {
+      showAlert(context, ('error').tr(),
+          ('the_funding_period_must_be_at_least_7_days').tr(), () {
         Navigator.pop(context);
       });
       return;
@@ -98,8 +101,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
     print('result : $result');
     if (result.toString().contains("fail")) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('펀딩이 등록에 실패했습니다.'),
+        SnackBar(
+          content: Text(('funding_failed_to_register').tr()),
         ),
       );
     } else {
@@ -108,7 +111,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
         _submitItem(fundingItem[index], result['data']);
       }
 
-      showAlert(context, "성공", "펀딩이 성공적으로 등록되었습니다.", () {
+      showAlert(context, ('success').tr(),
+          ('funding_has_been_successfully_registered').tr(), () {
         Navigator.pop(context); // 페이지 닫기
         Navigator.pop(context);
       });
@@ -136,8 +140,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
     if (result.toString().contains("fail")) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('아이템 등록에 실패했습니다. 펀딩 아이템 : ${items['title'].toString()}'),
+          content: const Text('item_registration_failed_funding_item_')
+              .tr(args: [items['title'].toString()]),
         ),
       );
     } else {}
@@ -152,10 +156,10 @@ class _FundingAddPageState extends State<FundingAddPage> {
           images.add({'type': 'file', 'data': File(pickedFile.path)});
         });
       } else {
-        print('이미지를 선택하지 않았습니다.');
+        print(('no_image_has_been_selected').tr());
       }
     } catch (e) {
-      print('이미지를 선택하는 중 오류 발생: $e');
+      print(('an_error_occurred_while_selecting_image_e_1').tr());
     }
   }
 
@@ -173,7 +177,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
         });
       }
     } catch (e) {
-      print('이미지를 선택하는 중 오류 발생: $e');
+      print(('an_error_occurred_while_selecting_image_e_1').tr());
     }
   }
 
@@ -192,8 +196,10 @@ class _FundingAddPageState extends State<FundingAddPage> {
       } else {
         if (picked.isBefore(startDate!)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('운영 종료일은 운영 시작일 이전으로 설정할 수 없습니다.'),
+            SnackBar(
+              content: Text(
+                  ('the_operation_end_date_cannot_be_set_before_the_operation_start_date')
+                      .tr()),
             ),
           );
         } else {
@@ -293,27 +299,27 @@ class _FundingAddPageState extends State<FundingAddPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        '펀딩 제목',
-                        style: TextStyle(
+                      Text(
+                        ('funding_title').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _itemTitleController,
-                        decoration: const InputDecoration(
-                          labelText: '제목을 작성해주세요.',
+                        decoration: InputDecoration(
+                          labelText: ('labelText_14').tr(),
                           alignLabelWithHint: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
                           labelStyle:
-                              TextStyle(fontSize: 13, color: Colors.grey),
+                              const TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        '펀딩 가격',
-                        style: TextStyle(
+                      Text(
+                        ('funding_price').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
@@ -322,19 +328,19 @@ class _FundingAddPageState extends State<FundingAddPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
-                        decoration: const InputDecoration(
-                          labelText: '금액을 작성해주세요.',
+                        decoration: InputDecoration(
+                          labelText: ('labelText_15').tr(),
                           alignLabelWithHint: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
                           labelStyle:
-                              TextStyle(fontSize: 13, color: Colors.grey),
+                              const TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        '펀딩 수량',
-                        style: TextStyle(
+                      Text(
+                        ('funding_quantity').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
@@ -343,31 +349,31 @@ class _FundingAddPageState extends State<FundingAddPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
-                        decoration: const InputDecoration(
-                          labelText: '수량을 작성해주세요.',
+                        decoration: InputDecoration(
+                          labelText: ('labelText_16').tr(),
                           alignLabelWithHint: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
                           labelStyle:
-                              TextStyle(fontSize: 13, color: Colors.grey),
+                              const TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        '펀딩 설명',
-                        style: TextStyle(
+                      Text(
+                        ('funding_description').tr(),
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _itemDescriptionController,
-                        decoration: const InputDecoration(
-                          labelText: '펀딩 설명을 작성해주세요.',
+                        decoration: InputDecoration(
+                          labelText: ('labelText_17').tr(),
                           alignLabelWithHint: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
                           labelStyle:
-                              TextStyle(fontSize: 13, color: Colors.grey),
+                              const TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                         maxLines: 4,
                       ),
@@ -383,8 +389,11 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                     _itemPriceController.text.isEmpty ||
                                     _itemAmountController.text.isEmpty ||
                                     _itemDescriptionController.text.isEmpty) {
-                                  showAlert(context, "오류",
-                                      "모든 필드를 입력하고 펀딩 아이템을 추가하세요.", () {
+                                  showAlert(
+                                      context,
+                                      ('error').tr(),
+                                      ('complete_all_fields_and_add_your_funding_item')
+                                          .tr(), () {
                                     Navigator.pop(context);
                                   });
                                   return;
@@ -412,7 +421,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 50, vertical: 15),
                               ),
-                              child: const Text('추가'),
+                              child: Text(('addition').tr()),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -435,8 +444,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 50, vertical: 15),
                               ),
-                              child: const Text('닫기',
-                                  style: TextStyle(color: Colors.black)),
+                              child: Text(('close').tr(),
+                                  style: const TextStyle(color: Colors.black)),
                             ),
                           )
                         ],
@@ -460,7 +469,9 @@ class _FundingAddPageState extends State<FundingAddPage> {
 
     return Scaffold(
         appBar: CustomTitleBar(
-            titleName: widget.mode == "modify" ? "펀딩 수정" : "펀딩 등록"),
+            titleName: widget.mode == "modify"
+                ? ('funding_modification').tr()
+                : ('funding_registration').tr()),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -536,12 +547,12 @@ class _FundingAddPageState extends State<FundingAddPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Text(
-                      "펀딩 이름",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ('funding_name').tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -550,17 +561,17 @@ class _FundingAddPageState extends State<FundingAddPage> {
                     child: TextField(
                       controller: _titleController,
                       decoration:
-                          const InputDecoration(labelText: '이름을 작성해주세요.'),
+                          InputDecoration(labelText: ('labelText_10').tr()),
                       onChanged: (value) => {},
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Text(
-                      "펀딩 설명",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ('funding_description').tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -568,20 +579,20 @@ class _FundingAddPageState extends State<FundingAddPage> {
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: TextField(
                       controller: _descriptionController,
-                      decoration: const InputDecoration(
-                          labelText: '펀딩 설명을 작성해주세요.',
+                      decoration: InputDecoration(
+                          labelText: ('labelText_17').tr(),
                           alignLabelWithHint: true),
                       maxLines: 4,
                       onChanged: (value) => {},
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Text(
-                      "펀딩 기간",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ('funding_period').tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -596,8 +607,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: ListTile(
-                              title: const Text(
-                                '펀딩 시작일',
+                              title: Text(
+                                ('funding_start_date').tr(),
                               ),
                               subtitle: Text(
                                 _dateFormat.format(startDate!),
@@ -618,8 +629,8 @@ class _FundingAddPageState extends State<FundingAddPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: ListTile(
-                              title: const Text(
-                                '펀딩 종료일',
+                              title: Text(
+                                ('funding_end_date').tr(),
                               ),
                               subtitle: Text(
                                 _dateFormat.format(endDate!),
@@ -636,12 +647,12 @@ class _FundingAddPageState extends State<FundingAddPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Text(
-                      "펀딩 목표 금액",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ('funding_target_amount').tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -653,7 +664,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       decoration:
-                          const InputDecoration(labelText: '금액을 작성해주세요.'),
+                          InputDecoration(labelText: ('labelText_15').tr()),
                       onChanged: (value) => {},
                     ),
                   ),
@@ -706,12 +717,15 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "${countFomat.format(fundingItem[index]["price"])}원",
-                                    style: const TextStyle(
+                                  const Text(
+                                    "won",
+                                    style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
-                                  ),
+                                  ).tr(args: [
+                                    countFomat
+                                        .format(fundingItem[index]["price"])
+                                  ]),
                                   const SizedBox(height: 8),
                                   Text(
                                     fundingItem[index]["title"].toString(),
@@ -720,12 +734,14 @@ class _FundingAddPageState extends State<FundingAddPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    "제한수량 ${fundingItem[index]["limit"].toString()}개",
-                                    style: const TextStyle(
+                                  const Text(
+                                    "limited_quantity_",
+                                    style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
-                                  ),
+                                  ).tr(args: [
+                                    fundingItem[index]["limit"].toString()
+                                  ]),
                                   const SizedBox(height: 8),
                                   SizedBox(
                                     width: screenWidth * 0.4,
@@ -757,7 +773,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                       onPressed: () {
                         addItemModal();
                       },
-                      child: const Text('펀딩 아이템 추가하기'),
+                      child: Text(('add_funding_item').tr()),
                     ),
                   ),
                 ],
@@ -768,7 +784,7 @@ class _FundingAddPageState extends State<FundingAddPage> {
                   onPressed: () {
                     _submitFunding();
                   },
-                  child: const Text('완료'),
+                  child: Text(('complete').tr()),
                 ),
               ),
             ],

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/store/store_list.dart';
@@ -34,15 +34,16 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
       if (applicantUsername.isNotEmpty && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('거절 완료되었습니다.'),
+          SnackBar(
+            content: Text(('rejection_has_been_completed').tr()),
           ),
         );
 
         final Map<String, String> alarmDetails = {
-          'title': '팝업 등록 거절됨',
-          'label': '당사의 팝업 등록이 거절되었습니다.',
-          'time': DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now()),
+          'title': ('popup_registration_rejected').tr(),
+          'label': ('our_popup_registration_has_been_rejected').tr(),
+          'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+              .format(DateTime.now()),
           'active': 'true',
           'storeId': widget.id,
         };
@@ -71,8 +72,8 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
 
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('거절 완료되었습니다.'),
+          SnackBar(
+            content: Text(('rejection_has_been_completed').tr()),
           ),
         );
         Navigator.of(context).pop();
@@ -83,11 +84,11 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
             MaterialPageRoute(
                 builder: (context) => StoreListPage(
                       popups: data,
-                      titleName: "승인 리스트",
+                      titleName: ('titleName_1').tr(),
                       mode: "pending",
                     )));
       } else {
-        Logger.debug("거절에 실패했습니다.");
+        Logger.debug(('rejection_failed').tr());
       }
     } catch (error) {
       // 오류 처리
@@ -98,15 +99,15 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "승인 거절"),
+      appBar: CustomTitleBar(titleName: ('titleName_24').tr()),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '거절 사유',
-              style: TextStyle(
+            Text(
+              ('reason_for_rejection').tr(),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -123,9 +124,9 @@ class _PendingRejectPageState extends State<PendingRejectPage> {
                 onPressed: () {
                   popupStoreDeny();
                 },
-                child: const Text(
-                  '완료',
-                  style: TextStyle(
+                child: Text(
+                  ('complete').tr(),
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                   ),

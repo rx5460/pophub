@@ -62,8 +62,8 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: const Text(
-//           '알림',
+//         title: Text(
+//           ('alarm').tr(),
 //           style: TextStyle(
 //             fontWeight: FontWeight.bold,
 //           ),
@@ -85,17 +85,17 @@
 //             Tab(
 //                 child: SizedBox(
 //               width: MediaQuery.of(context).size.width * 0.33,
-//               child: const Center(child: Text('전체')),
+//               child: const Center(child: Text(('_selectedCategory').tr())),
 //             )),
 //             Tab(
 //                 child: SizedBox(
 //               width: MediaQuery.of(context).size.width * 0.33,
-//               child: const Center(child: Text('주문')),
+//               child: const Center(child: Text(('value').tr())),
 //             )),
 //             Tab(
 //                 child: SizedBox(
 //               width: MediaQuery.of(context).size.width * 0.33,
-//               child: const Center(child: Text('대기')),
+//               child: const Center(child: Text(('value_1').tr())),
 //             )),
 //           ],
 //         ),
@@ -126,7 +126,7 @@
 //           return Text('Error: ${snapshot.error}');
 //         }
 //         if (!snapshot.hasData) {
-//           return const Text('No data available');
+//           return Text('No data available');
 //         }
 //         return ListView(
 //           children: snapshot.data!.docs.map((document) {
@@ -184,6 +184,7 @@
 //   }
 // }
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pophub/model/user.dart';
@@ -236,8 +237,8 @@ class AlarmListState extends State<AlarmList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '알림',
+        title: Text(
+          ('alarm').tr(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -267,7 +268,7 @@ class AlarmListState extends State<AlarmList> {
           return Text('Error: ${snapshot.error}');
         }
         if (!snapshot.hasData) {
-          return const Text('No data available');
+          return Text('No data available');
         }
         return ListView(
           children: snapshot.data!.docs.map((document) {

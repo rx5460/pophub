@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AlarmSettingsPage extends StatefulWidget {
@@ -47,8 +48,8 @@ class AlarmSettingsPageState extends State<AlarmSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '알림 설정',
+        title: Text(
+          ('notification_settings').tr(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -67,8 +68,8 @@ class AlarmSettingsPageState extends State<AlarmSettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SwitchListTile(
-              title: const Text(
-                '푸시 알림 ON / OFF',
+              title: Text(
+                ('push_notification_onoff').tr(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),

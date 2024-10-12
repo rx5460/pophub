@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pophub/model/category_model.dart';
@@ -17,7 +19,7 @@ class InquiryWritePage extends StatefulWidget {
 }
 
 class InquiryWritePageState extends State<InquiryWritePage> {
-  String selectedCategory = '광고';
+  String selectedCategory = ('text_11').tr();
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
   final _titleController = TextEditingController();
@@ -64,7 +66,8 @@ class InquiryWritePageState extends State<InquiryWritePage> {
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
-        showAlert(context, "성공", "문의 등록을 완료했습니다.", () {
+        showAlert(context, ('success').tr(),
+            ('inquiry_registration_has_been_completed').tr(), () {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           Navigator.push(
@@ -77,7 +80,9 @@ class InquiryWritePageState extends State<InquiryWritePage> {
       }
     } else {
       if (mounted) {
-        showAlert(context, "경고", "문의 등록에 실패했습니다.", () {
+        showAlert(
+            context, ('warning').tr(), ('inquiry_registration_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -98,7 +103,7 @@ class InquiryWritePageState extends State<InquiryWritePage> {
     double screenHeight = screenSize.height;
 
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "문의 하기"),
+      appBar: CustomTitleBar(titleName: ('titleName_12').tr()),
       body: Padding(
         padding: EdgeInsets.only(
             left: screenWidth * 0.05,
@@ -108,15 +113,16 @@ class InquiryWritePageState extends State<InquiryWritePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '문의 카테고리',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            Text(
+              ('inquiry_category').tr(),
+              style:
+                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             DropdownButtonFormField<CategoryModel>(
-              decoration: const InputDecoration(
-                labelText: '카테고리',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: ('labelText_8').tr(),
+                border: const OutlineInputBorder(),
               ),
               items: categoryList.map((categoryModel) {
                 return DropdownMenuItem<CategoryModel>(
@@ -133,31 +139,34 @@ class InquiryWritePageState extends State<InquiryWritePage> {
               },
             ),
             const SizedBox(height: 16.0),
-            if (selectedCategory == '광고 문의')
-              const Text(
-                '이미지는 1:1 비율로 등록해주세요.\n광고는 팝업 배너 형식으로 등록됩니다.\n\n광고 등록 시 수정 및 삭제가 불가능합니다.',
-                style: TextStyle(
+            if (selectedCategory == ('advertisement_inquiry').tr())
+              Text(
+                ('please_register_images_at_a_11_rationads_are_registered_in_popup_banner_formatnnwhen_registering_an_ad_modification_or_deletion_is_not_possible')
+                    .tr(),
+                style: const TextStyle(
                   fontSize: 14.0,
                   color: Colors.grey,
                 ),
               ),
             const SizedBox(height: 16.0),
-            const Text(
-              '문의 제목',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            Text(
+              ('inquiry_subject').tr(),
+              style:
+                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: '문의 제목을 입력하세요',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: ('hintText_11').tr(),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16.0),
-            const Text(
-              '문의 내용',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            Text(
+              ('inquiry_details').tr(),
+              style:
+                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             Expanded(
@@ -166,9 +175,9 @@ class InquiryWritePageState extends State<InquiryWritePage> {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  hintText: '문의 내용을 입력하세요',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  hintText: ('hintText_12').tr(),
+                  border: const OutlineInputBorder(),
                 ),
               ),
             ),
@@ -176,9 +185,10 @@ class InquiryWritePageState extends State<InquiryWritePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '이미지 첨부',
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                Text(
+                  ('attach_image').tr(),
+                  style: const TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8.0),
                 _selectedImage == null
@@ -192,14 +202,14 @@ class InquiryWritePageState extends State<InquiryWritePage> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '   첨부하기',
-                              style: TextStyle(color: Colors.black),
+                              ('attach_1').tr(),
+                              style: const TextStyle(color: Colors.black),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios,
                               color: Colors.black,
                             ),
@@ -225,14 +235,14 @@ class InquiryWritePageState extends State<InquiryWritePage> {
                                     BorderRadius.all(Radius.circular(10)),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '다시 선택',
-                                  style: TextStyle(color: Colors.black),
+                                  ('select_again').tr(),
+                                  style: const TextStyle(color: Colors.black),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.arrow_forward_ios,
                                   color: Colors.black,
                                 ),
@@ -263,9 +273,9 @@ class InquiryWritePageState extends State<InquiryWritePage> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
             ),
-            child: const Text(
-              '완료',
-              style: TextStyle(
+            child: Text(
+              ('complete').tr(),
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

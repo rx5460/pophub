@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -17,8 +18,8 @@ class _MyReviewState extends State<MyReview> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
     return Scaffold(
-      appBar: const CustomTitleBar(
-        titleName: "나의 리뷰",
+      appBar: CustomTitleBar(
+        titleName: ('titleName_2').tr(),
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -33,11 +34,11 @@ class _MyReviewState extends State<MyReview> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 30),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
                   child: Text(
-                    "총 방문한 스토어 : ",
-                    style: TextStyle(
+                    ('total_visited_stores').tr(),
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -75,10 +76,10 @@ class _MyReviewState extends State<MyReview> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Text(
-                                "대충 팝업스토어 명",
+                              Text(
+                                ('roughly_the_name_of_a_popup_store').tr(),
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -114,10 +115,11 @@ class _MyReviewState extends State<MyReview> {
                                       ],
                                     ),
                                   ]),
-                              const Text(
-                                '빵이 착하고 사장님이 맛있어요 !',
+                              Text(
+                                ('the_bread_is_good_and_the_owner_is_delicious')
+                                    .tr(),
                                 overflow: TextOverflow.clip,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
                                 ),

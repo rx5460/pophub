@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/review_model.dart';
@@ -159,10 +160,10 @@ class _PopupReviewState extends State<PopupReview> {
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                         color: Constants.DEFAULT_COLOR,
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          '작성',
-                          style: TextStyle(
+                          ('write').tr(),
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                             fontWeight: FontWeight.w600,

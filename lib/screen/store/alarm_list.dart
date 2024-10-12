@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/model/user.dart';
@@ -70,7 +70,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
     try {
       List<dynamic> data = await StoreApi.getMyPopup(User().userName);
       if (!data.toString().contains("fail") &&
-          !data.toString().contains("없습니다")) {
+          !data.toString().contains(('doesnt_exist_1').tr())) {
         PopupModel popup = PopupModel.fromJson(data[0]);
         final listData =
             await ReservationApi.getReservationByStoreId(popup.id.toString());
@@ -90,7 +90,9 @@ class _AlarmListPageState extends State<AlarmListPage> {
     try {
       final data = await ReservationApi.deleteReserve(reserveId);
       if (!data.toString().contains("fail") && mounted) {
-        showAlert(context, "성공", "알림이 삭제되었습니다.", () {
+        showAlert(
+            context, ('success').tr(), ('notification_has_been_deleted').tr(),
+            () {
           Navigator.of(context).pop();
           setState(() {
             reserveList
@@ -142,10 +144,10 @@ class _AlarmListPageState extends State<AlarmListPage> {
                 child: CircularProgressIndicator(),
               )
             : reserveList.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      '예약 리스트가 없습니다!',
-                      style: TextStyle(fontSize: 18.0),
+                      ('there_is_no_reservation_list').tr(),
+                      style: const TextStyle(fontSize: 18.0),
                     ),
                   )
                 : ListView.builder(
@@ -221,15 +223,22 @@ class _AlarmListPageState extends State<AlarmListPage> {
                                       visible: widget.mode == "store",
                                       child: Row(
                                         children: [
-                                          Text(
-                                              "아이디: ${reserve.userName != null ? reserve.userName.toString() : ""}"),
+                                          const Text("id_").tr(args: [
+                                            reserve.userName != null
+                                                ? reserve.userName.toString()
+                                                : ""
+                                          ]),
                                         ],
                                       ),
                                     ),
                                     Row(
                                       children: [
-                                        Text(
-                                            "인원: ${(reserve.capacity != null) ? reserve.capacity.toString() : ''}명"),
+                                        const Text("number_of_people__people")
+                                            .tr(args: [
+                                          (reserve.capacity != null)
+                                              ? reserve.capacity.toString()
+                                              : ''
+                                        ]),
                                       ],
                                     ),
                                   ],
@@ -241,14 +250,16 @@ class _AlarmListPageState extends State<AlarmListPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('삭제'),
-                                        content: const Text('알림 삭제를 하시겠습니까?'),
+                                        title: Text(('delete').tr()),
+                                        content: Text(
+                                            ('are_you_sure_you_want_to_delete_the_notification')
+                                                .tr()),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: const Text('취소'),
+                                            child: Text(('cancellation').tr()),
                                           ),
                                           TextButton(
                                             onPressed: () {
@@ -256,7 +267,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
                                               alarmDelete(
                                                   reserve.reservationId);
                                             },
-                                            child: const Text('삭제'),
+                                            child: Text(('delete').tr()),
                                           ),
                                         ],
                                       );

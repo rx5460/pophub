@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/reservation/waiting_info.dart';
@@ -20,9 +21,9 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          '예약하기',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          ('make_a_reservation').tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () {
@@ -48,9 +49,9 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                     left: screenWidth * 0.05,
                     right: screenWidth * 0.05,
                   ),
-                  child: const Text(
-                    '서울 라이프 팝업스토어에',
-                    style: TextStyle(
+                  child: Text(
+                    ('at_seoul_life_popup_store').tr(),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                     ),
@@ -61,9 +62,9 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                     left: screenWidth * 0.05,
                     right: screenWidth * 0.05,
                   ),
-                  child: const Text(
-                    '예약 등록 하시겠습니까?',
-                    style: TextStyle(
+                  child: Text(
+                    ('would_you_like_to_register_for_a_reservation').tr(),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                     ),
@@ -84,20 +85,20 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                           Border.all(width: 2, color: Constants.DEFAULT_COLOR),
                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
-                    child: const Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          '현재 대기',
-                          style: TextStyle(
+                          ('currently_waiting').tr(),
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w500),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
+                            const Text(
                               '17',
                               style: TextStyle(
                                 fontSize: 28,
@@ -105,8 +106,8 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                               ),
                             ),
                             Text(
-                              '팀',
-                              style: TextStyle(
+                              ('team').tr(),
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -131,17 +132,17 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                       bottom: screenHeight * 0.03,
                       left: screenWidth * 0.05,
                       right: screenWidth * 0.05),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "총 입장 인원",
-                        style: TextStyle(
+                        ('total_number_of_attendees').tr(),
+                        style: const TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '2 명',
-                        style: TextStyle(
+                        ('var_2_people').tr(),
+                        style: const TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -150,9 +151,10 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                 Padding(
                   padding: EdgeInsets.only(
                       left: screenWidth * 0.05, right: screenWidth * 0.05),
-                  child: const Text(
-                    '매장 대기 유의사항',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                  child: Text(
+                    ('precautions_for_waiting_in_store').tr(),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w900),
                   ),
                 ),
                 const SizedBox(
@@ -161,9 +163,11 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                 Padding(
                   padding: EdgeInsets.only(
                       left: screenWidth * 0.05, right: screenWidth * 0.05),
-                  child: const Text(
-                    '입장 안내 알림을 꼭 확인해 주세요.',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  child: Text(
+                    ('please_be_sure_to_check_the_admission_information_notice')
+                        .tr(),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w700),
                   ),
                 ),
                 const SizedBox(
@@ -172,9 +176,11 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                 Padding(
                   padding: EdgeInsets.only(
                       left: screenWidth * 0.05, right: screenWidth * 0.05),
-                  child: const Text(
-                    '인원에 따라 입장순서가 변경될 수 있습니다.',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  child: Text(
+                    ('entry_order_may_change_depending_on_the_number_of_people')
+                        .tr(),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w700),
                   ),
                 )
               ],
@@ -197,9 +203,9 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
                       ),
                     );
                   },
-                  child: const Text(
-                    '등록하기',
-                    style: TextStyle(fontSize: 18),
+                  child: Text(
+                    ('register').tr(),
+                    style: const TextStyle(fontSize: 18),
                   )),
             ),
           ),

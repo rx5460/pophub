@@ -21,7 +21,7 @@ class _NoticeWriteState extends State<NoticeWrite> {
     double bottomNavBarHeight = kBottomNavigationBarHeight;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("dsa"),
+        title: Text("dsa"),
       ),
     );
   }

@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/address_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
@@ -46,8 +46,8 @@ class _FundingOrderState extends State<FundingOrder> {
 
     if (!result.toString().contains("fail")) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('펀딩에 참여하였습니다.'),
+        SnackBar(
+          content: Text(('participated_in_funding').tr()),
         ),
       );
       Navigator.pop(context);
@@ -75,9 +75,9 @@ class _FundingOrderState extends State<FundingOrder> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: const Text(
-          '주문/결제',
-          style: TextStyle(
+        title: Text(
+          ('orderpayment').tr(),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
           ),
@@ -158,21 +158,21 @@ class _FundingOrderState extends State<FundingOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '상품 금액',
-                          style: TextStyle(
+                        Text(
+                          ('product_amount').tr(),
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          '${countFomat.format(widget.item.amount!)}원',
-                          style: const TextStyle(
+                        const Text(
+                          'won',
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                        ),
+                        ).tr(args: [countFomat.format(widget.item.amount!)]),
                       ],
                     ),
                     const SizedBox(
@@ -181,21 +181,21 @@ class _FundingOrderState extends State<FundingOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '수량',
-                          style: TextStyle(
+                        Text(
+                          ('labelText_5').tr(),
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          '${widget.count}개',
-                          style: const TextStyle(
+                        const Text(
+                          'things',
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                        ),
+                        ).tr(args: [widget.count.toString()]),
                       ],
                     ),
                   ],
@@ -215,19 +215,23 @@ class _FundingOrderState extends State<FundingOrder> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('총 결제 금액',
-                        style: TextStyle(
+                    Text(('total_payment_amount').tr(),
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                         )),
-                    Text(
-                      '${countFomat.format(widget.item.amount! * widget.count).toString()}원',
-                      style: const TextStyle(
+                    const Text(
+                      'won',
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         color: Constants.DEFAULT_COLOR,
                       ),
-                    ),
+                    ).tr(args: [
+                      countFomat
+                          .format(widget.item.amount! * widget.count)
+                          .toString()
+                    ]),
                   ],
                 ),
               ),
@@ -242,16 +246,18 @@ class _FundingOrderState extends State<FundingOrder> {
               Padding(
                 padding: EdgeInsets.only(
                     left: screenWidth * 0.05, right: screenWidth * 0.05),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('안내 사항',
-                        style: TextStyle(
+                    Text(('notification').tr(),
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                         )),
-                    Text('1. 결제는 펀딩 종료 후 진행합니다. '),
-                    Text('2. 미 결제 시 불이익이 있을 수 있습니다.'),
+                    Text(
+                        ('var_1_payment_will_be_made_after_funding_ends').tr()),
+                    Text(('var_2_there_may_be_disadvantages_for_nonpayment')
+                        .tr()),
                   ],
                 ),
               ),
@@ -273,10 +279,10 @@ class _FundingOrderState extends State<FundingOrder> {
                 onTap: () async {
                   submit();
                 },
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '펀딩 참여하기',
-                    style: TextStyle(
+                    ('participate_in_funding').tr(),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                       fontSize: 22,

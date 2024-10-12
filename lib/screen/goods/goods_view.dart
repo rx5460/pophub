@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pophub/assets/constants.dart';
@@ -72,7 +73,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
       if (User().userName != "") {
         List<dynamic> popupData = await StoreApi.getMyPopup(User().userName);
 
-        if (!popupData.toString().contains("없습니다")) {
+        if (!popupData.toString().contains(('doesnt_exist_1').tr())) {
           setState(() {
             goods = data;
             isLoading = true;
@@ -109,7 +110,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
     final data = await GoodsApi.deleteGoods(productId);
 
     if (!data.toString().contains("fail") && mounted) {
-      showAlert(context, "성공", "굿즈가 삭제되었습니다.", () {
+      showAlert(context, ('success').tr(), ('goods_have_been_deleted').tr(),
+          () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
 
@@ -128,7 +130,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
       });
     } else {
       if (mounted) {
-        showAlert(context, "실패", "굿즈 삭제 실패했습니다.", () {
+        showAlert(context, ('failure').tr(), ('deletion_of_goods_failed').tr(),
+            () {
           Navigator.of(context).pop();
         });
       }
@@ -218,13 +221,15 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            '${formatNumber(goods!.price)}원',
-                                            style: const TextStyle(
+                                          const Text(
+                                            'won',
+                                            style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
                                             ),
-                                          ),
+                                          ).tr(args: [
+                                            formatNumber(goods!.price)
+                                          ]),
                                           Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -236,14 +241,16 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                               const SizedBox(
                                                 width: 8,
                                               ),
-                                              Text(
-                                                '1인당 ${goods?.quantity}개까지 구매 가능합니다.',
-                                                style: const TextStyle(
+                                              const Text(
+                                                'you_can_purchase_up_to__items_per_person',
+                                                style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w600,
                                                 ),
-                                              ),
+                                              ).tr(args: [
+                                                goods?.quantity.toString() ?? ''
+                                              ]),
                                             ],
                                           ),
                                           Container(
@@ -265,9 +272,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                     top: 20, bottom: 10),
                                                 child: SizedBox(
                                                   width: screenWidth * 0.9,
-                                                  child: const Text(
-                                                    '이 스토어의 다른 제품들',
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    ('other_products_in_this_store')
+                                                        .tr(),
+                                                    style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -392,10 +400,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  Text(
-                                                                    '${goods.quantity.toString()}개',
+                                                                  const Text(
+                                                                    'things',
                                                                     style:
-                                                                        const TextStyle(
+                                                                        TextStyle(
                                                                       fontSize:
                                                                           11,
                                                                       color: Colors
@@ -404,7 +412,11 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                                           FontWeight
                                                                               .w900,
                                                                     ),
-                                                                  ),
+                                                                  ).tr(args: [
+                                                                    goods
+                                                                        .quantity
+                                                                        .toString()
+                                                                  ]),
                                                                 ],
                                                               ),
                                                             ),
@@ -479,13 +491,16 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                   itemBuilder:
                                                       (BuildContext context) =>
                                                           [
-                                                    const PopupMenuItem(
+                                                    PopupMenuItem(
                                                       value: 'edit',
-                                                      child: Text('굿즈 수정'),
+                                                      child: Text(
+                                                          ('edit_goods').tr()),
                                                     ),
-                                                    const PopupMenuItem(
+                                                    PopupMenuItem(
                                                       value: 'delete',
-                                                      child: Text('굿즈 삭제'),
+                                                      child: Text(
+                                                          ('delete_goods')
+                                                              .tr()),
                                                     ),
                                                   ],
                                                 ),
@@ -572,14 +587,16 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                         fontWeight:
                                                             FontWeight.w900),
                                                   ),
-                                                  Text(
-                                                    '${formatNumber(goods!.price)}원',
-                                                    style: const TextStyle(
+                                                  const Text(
+                                                    'won',
+                                                    style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
-                                                  ),
+                                                  ).tr(args: [
+                                                    goods!.price.toString()
+                                                  ]),
                                                 ]),
                                             Row(
                                               mainAxisAlignment:
@@ -675,10 +692,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                         );
                                       }
                                     },
-                                    child: const Center(
+                                    child: Center(
                                       child: Text(
-                                        '구매하기',
-                                        style: TextStyle(
+                                        ('purchase').tr(),
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
                                           fontSize: 16,

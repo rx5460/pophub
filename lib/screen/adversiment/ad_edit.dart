@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:pophub/model/ad_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../utils/log.dart';
 
 class AdEditPage extends StatefulWidget {
@@ -30,7 +33,9 @@ class _AdEditPageState extends State<AdEditPage> {
     await prefs.setStringList('selected_ads', storedAds);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("${widget.ad.title} 광고가 등록되었습니다!")),
+      SnackBar(
+          content: const Text("_your_ad_has_been_registered")
+              .tr(args: [widget.ad.title])),
     );
 
     // 광고 등록 후 true 값을 반환
@@ -48,9 +53,10 @@ class _AdEditPageState extends State<AdEditPage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          '광고 상세 정보',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        title: Text(
+          ('advertisement_details').tr(),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -85,20 +91,21 @@ class _AdEditPageState extends State<AdEditPage> {
                 height: 500,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  Logger.error('이미지 로드 중 에러 발생: $error');
-                  Logger.error('스택 트레이스: $stackTrace');
+                  Logger.error(
+                      ('an_error_occurred_while_loading_image_error').tr());
+                  Logger.error(('stack_trace_stacktrace').tr());
                   return Column(
                     children: [
-                      const Text('이미지를 불러올 수 없습니다.'),
+                      Text(('the_image_cannot_be_loaded').tr()),
                       const SizedBox(height: 8),
-                      Text('에러: $error',
+                      Text(('error_error').tr(),
                           style: const TextStyle(color: Colors.red)),
                     ],
                   );
                 },
               )
             else
-              const Text('이미지가 없습니다.'),
+              Text(('there_are_no_images').tr()),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -111,9 +118,9 @@ class _AdEditPageState extends State<AdEditPage> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
-                child: const Text(
-                  '광고 등록',
-                  style: TextStyle(
+                child: Text(
+                  ('advertisement_registration').tr(),
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

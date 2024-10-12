@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/answer_model.dart';
 import 'package:pophub/model/inquiry_model.dart';
@@ -47,7 +47,7 @@ class InquiryPageState extends State<InquiryPage> {
     double screenHeight = screenSize.height;
 
     return Scaffold(
-      appBar: const CustomTitleBar(titleName: "문의 내역"),
+      appBar: CustomTitleBar(titleName: ('titleName_14').tr()),
       body: Padding(
         padding: const EdgeInsets.only(bottom: Constants.DEFAULT_PADDING),
         child: Column(
@@ -60,9 +60,9 @@ class InquiryPageState extends State<InquiryPage> {
                         return InquiryTile(inquiry: inquiryList[index]);
                       },
                     )
-                  : const Center(
-                      child: Text("문의 내역이 없습니다!",
-                          style: TextStyle(
+                  : Center(
+                      child: Text(('there_are_no_inquiries').tr(),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ))),
@@ -81,9 +81,9 @@ class InquiryPageState extends State<InquiryPage> {
                       ),
                     ),
                   },
-                  child: const Text(
-                    '문의 하기',
-                    style: TextStyle(
+                  child: Text(
+                    ('titleName_12').tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -182,7 +182,7 @@ class InquiryTileState extends State<InquiryTile> {
                             ),
                           ),
                         },
-                        child: const Text('답변하기'),
+                        child: Text(('reply').tr()),
                       )
                     : widget.inquiry.status == "complete" ||
                             widget.inquiry.answerStatus == "complete"
@@ -195,16 +195,16 @@ class InquiryTileState extends State<InquiryTile> {
                               ),
                             ),
                             onPressed: () => {},
-                            child: const Text(
-                              '완료',
-                              style: TextStyle(color: Colors.black),
+                            child: Text(
+                              ('complete').tr(),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           )
                         : OutlinedButton(
                             style: OutlinedButton.styleFrom(),
                             onPressed: () => {},
-                            child: const Text(
-                              '접수',
+                            child: Text(
+                              ('receipt').tr(),
                             ),
                           )),
           ],
@@ -253,9 +253,9 @@ class InquiryTileState extends State<InquiryTile> {
                           SizedBox(
                             height: screenHeight * 0.02,
                           ),
-                          const Text(
-                            "문의 답변 드립니다.",
-                            style: TextStyle(fontSize: 20),
+                          Text(
+                            ('we_will_respond_to_your_inquiries').tr(),
+                            style: const TextStyle(fontSize: 20),
                           ),
                           Text(DateFormat("yyyy.MM.dd").format(
                               DateTime.parse(widget.inquiry.writeDate))),
@@ -278,7 +278,7 @@ class InquiryTileState extends State<InquiryTile> {
               width: screenWidth,
               color: Constants.LIGHT_GREY,
               padding: const EdgeInsets.all(16.0),
-              child: const Text('내용을 불러오는 중 오류가 발생했습니다.'),
+              child: Text(('an_error_occurred_while_loading_content').tr()),
             ),
         ],
       ),

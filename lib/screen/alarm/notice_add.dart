@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 
 class NoticeAdd extends StatelessWidget {
   const NoticeAdd({Key? key}) : super(key: key);
@@ -9,7 +9,8 @@ class NoticeAdd extends StatelessWidget {
       BuildContext context, String title, String label) async {
     try {
       String formattedTime =
-          DateFormat('MM월 dd일 HH시 mm분').format(DateTime.now());
+          DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+              .format(DateTime.now());
 
       // Firestore에 공지사항 저장
       await FirebaseFirestore.instance.collection('alarms').add({
@@ -19,10 +20,12 @@ class NoticeAdd extends StatelessWidget {
         'title': title,
       });
 
-      _showSuccessDialog(context, '공지사항 등록이 완료되었습니다.');
+      _showSuccessDialog(
+          context, ('notice_registration_has_been_completed').tr());
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('공지사항 전송에 실패했습니다. 다시 시도해주세요.')),
+        SnackBar(
+            content: Text(('failed_to_send_notice_please_try_again').tr())),
       );
     }
   }
@@ -43,9 +46,9 @@ class NoticeAdd extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  '성공',
-                  style: TextStyle(
+                Text(
+                  ('success').tr(),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -72,9 +75,9 @@ class NoticeAdd extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    '닫기',
-                    style: TextStyle(
+                  child: Text(
+                    ('close').tr(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -95,9 +98,9 @@ class NoticeAdd extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '공지사항',
-          style: TextStyle(
+        title: Text(
+          ('text_2').tr(),
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -114,9 +117,9 @@ class NoticeAdd extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '공지사항 제목',
-              style: TextStyle(
+            Text(
+              ('notice_title').tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -124,15 +127,15 @@ class NoticeAdd extends StatelessWidget {
             const SizedBox(height: 8.0),
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '공지사항 제목을 입력하세요',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: ('hintText_8').tr(),
               ),
             ),
             const SizedBox(height: 16.0),
-            const Text(
-              '공지사항 내용',
-              style: TextStyle(
+            Text(
+              ('notice_contents').tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -144,9 +147,9 @@ class NoticeAdd extends StatelessWidget {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: '공지사항 내용을 입력하세요',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: ('hintText_9').tr(),
                 ),
               ),
             ),
@@ -168,9 +171,9 @@ class NoticeAdd extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
-                child: const Text(
-                  '완료',
-                  style: TextStyle(
+                child: Text(
+                  ('complete').tr(),
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

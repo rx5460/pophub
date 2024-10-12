@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/notifier/UserNotifier.dart';
@@ -45,12 +46,12 @@ class _FindIdState extends State<FindId> {
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
       if (mounted) {
-        ToastUtil.customToastMsg("전송되었습니다.", context);
+        ToastUtil.customToastMsg(('sent').tr(), context);
       }
       setState(() {});
     } else {
       if (mounted) {
-        ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+        ToastUtil.customToastMsg(('transmission_failed').tr(), context);
       }
     }
   }
@@ -65,7 +66,7 @@ class _FindIdState extends State<FindId> {
         });
 
         if (mounted) {
-          showAlert(context, "확인", "인증되었습니다.", () {
+          showAlert(context, ('check').tr(), ('certified').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
             userNoti.isVerify = true;
@@ -84,7 +85,8 @@ class _FindIdState extends State<FindId> {
           isDialogShowing = true;
         });
         if (mounted) {
-          showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+          showAlert(context, ('warning').tr(),
+              ('please_check_the_authentication_number_again').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
 
@@ -130,17 +132,18 @@ class _FindIdState extends State<FindId> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    const CustomTitleBar(titleName: "아이디 찾기"),
+                    CustomTitleBar(titleName: ('find_id').tr()),
                     Form(
                         key: _phoneFormkey,
                         child: CustomTextFormFeild(
                           controller: phoneController,
-                          hintText: "핸드폰 번호 입력",
+                          hintText: ('hintText_2').tr(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "번호를 입력해주세요 !";
+                              return ('please_enter_your_number').tr();
                             } else if (!isValidPhoneNumber(value)) {
-                              return "전화번호 형식에 맞게 입력해주세요 !";
+                              return ('please_enter_your_phone_number_in_the_correct_format')
+                                  .tr();
                             }
                             return null;
                           },
@@ -156,7 +159,7 @@ class _FindIdState extends State<FindId> {
                                 if (_phoneFormkey.currentState!.validate())
                                   {certifiApi()}
                               },
-                          child: const Text("전송")),
+                          child: Text(('forwarding').tr())),
                     ),
                     Row(
                       children: [
@@ -165,13 +168,15 @@ class _FindIdState extends State<FindId> {
                                 key: _certifiFormkey,
                                 child: CustomTextFormFeild(
                                   controller: certifiController,
-                                  hintText: "인증번호 입력",
+                                  hintText: ('hintText_3').tr(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return "인증번호를 입력해주세요!";
+                                      return ('please_enter_your_authentication_number')
+                                          .tr();
                                     }
                                     if (value.length < 6) {
-                                      return "인증번호 6자리를 입력해주세요 !";
+                                      return ('please_enter_your_6digit_authentication_number')
+                                          .tr();
                                     }
                                     return null;
                                   },
@@ -195,8 +200,8 @@ class _FindIdState extends State<FindId> {
                                             userNotifier),
                                       }
                                   },
-                              child: const Text(
-                                "확인",
+                              child: Text(
+                                ('check').tr(),
                                 textAlign: TextAlign.center,
                               )),
                         ),
@@ -207,12 +212,12 @@ class _FindIdState extends State<FindId> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("회원님의 아이디는"),
+                          Text(('your_id_is').tr()),
                           Text(
                             userId,
                             style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
-                          const Text("입니다."),
+                          Text(('no_see').tr()),
                         ],
                       ),
                     ),
@@ -221,8 +226,9 @@ class _FindIdState extends State<FindId> {
                             visible:
                                 findSuccess == false && userNotifier.isVerify,
                             child: Center(
-                              child: Text(
-                                  "${phoneController.text.toString()} 번호에 해당하는 아이디가 없습니다."),
+                              child: const Text(
+                                      "there_is_no_id_corresponding_to_the__number")
+                                  .tr(args: [phoneController.text.toString()]),
                             ))),
                     const Spacer(),
                     SizedBox(
@@ -254,7 +260,7 @@ class _FindIdState extends State<FindId> {
                                         shape: const RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10)))),
-                                    child: const Text("로그인")),
+                                    child: Text(('titleName_3').tr())),
                               ),
                             ),
                             Expanded(
@@ -289,7 +295,7 @@ class _FindIdState extends State<FindId> {
                                         shape: const RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10)))),
-                                    child: const Text("비밀번호 재설정")),
+                                    child: Text(('reset_password').tr())),
                               ),
                             )
                           ],

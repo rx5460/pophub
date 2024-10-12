@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/like_model.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -78,7 +79,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         : StoreListPage(
             popups: likePopupList,
             useBack: false,
-            titleName: "찜 팝업스토어",
+            titleName: ('titleName_20').tr(),
           );
   }
 }

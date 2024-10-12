@@ -9,6 +9,8 @@ import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+
+import 'package:easy_localization/easy_localization.dart';
 class KakaoLoginPage extends StatefulWidget {
   const KakaoLoginPage({super.key, required this.url});
   final String url;
@@ -63,7 +65,7 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
                   }
                 } catch (e) {
                   if (mounted) {
-                    showAlert(context, "경고", "간편로그인에 실패하였습니다.", () {
+                    showAlert(context, ('warning').tr(), ('simple_login_failed').tr(), () {
                       Navigator.of(context).pop();
                     });
                   }
@@ -71,7 +73,7 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               } else {
                 // 에러 처리
                 if (mounted) {
-                  showAlert(context, "경고", "간편로그인 정보를 불러오는데 실패하였습니다.", () {
+                  showAlert(context, ('warning').tr(), ('failed_to_retrieve_simple_login_information').tr(), () {
                     Navigator.of(context).pop();
                   });
                 }

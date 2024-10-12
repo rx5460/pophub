@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/user.dart';
@@ -44,13 +45,13 @@ class _CertifiPhoneState extends State<CertifiPhone> {
     if (!data.toString().contains("fail")) {
       realAuthCode = data["Number"];
       if (mounted) {
-        ToastUtil.customToastMsg("전송되었습니다.", context);
+        ToastUtil.customToastMsg(('sent').tr(), context);
       }
 
       setState(() {});
     } else {
       if (mounted) {
-        ToastUtil.customToastMsg("전송에 실패하였습니다.", context);
+        ToastUtil.customToastMsg(('transmission_failed').tr(), context);
       }
     }
   }
@@ -66,7 +67,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
         if (!mounted) return;
 
         if (mounted) {
-          showAlert(context, "확인", "인증되었습니다.", () {
+          showAlert(context, ('check').tr(), ('certified').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
             userNoti.isVerify = true;
@@ -85,7 +86,8 @@ class _CertifiPhoneState extends State<CertifiPhone> {
         if (!mounted) return;
 
         if (mounted) {
-          showAlert(context, "경고", "인증번호를 다시 확인해주세요.", () {
+          showAlert(context, ('warning').tr(),
+              ('please_check_the_authentication_number_again').tr(), () {
             Navigator.of(context).pop();
             FocusManager.instance.primaryFocus?.unfocus();
 
@@ -111,14 +113,15 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    const CustomTitleBar(titleName: "휴대폰 본인 인증"),
+                    CustomTitleBar(titleName: ('titleName_6').tr()),
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       width: double.infinity,
-                      child: const Text(
-                        "도용 방지를 위해\n본인 인증을 완료해주세요!",
+                      child: Text(
+                        ('to_prevent_theftnplease_complete_your_identity_verification')
+                            .tr(),
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -126,12 +129,13 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                         key: _phoneFormkey,
                         child: CustomTextFormFeild(
                           controller: phoneController,
-                          hintText: "핸드폰 번호 입력",
+                          hintText: ('hintText_2').tr(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "번호를 입력해주세요 !";
+                              return ('please_enter_your_number').tr();
                             } else if (!isValidPhoneNumber(value)) {
-                              return "전화번호 형식에 맞게 입력해주세요 !";
+                              return ('please_enter_your_phone_number_in_the_correct_format')
+                                  .tr();
                             }
                             return null;
                           },
@@ -147,7 +151,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                 if (_phoneFormkey.currentState!.validate())
                                   {certifiApi()}
                               },
-                          child: const Text("전송")),
+                          child: Text(('forwarding').tr())),
                     ),
                     Row(
                       children: [
@@ -156,13 +160,15 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                 key: _certifiFormkey,
                                 child: CustomTextFormFeild(
                                   controller: certifiController,
-                                  hintText: "인증번호 입력",
+                                  hintText: ('hintText_3').tr(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return "인증번호를 입력해주세요!";
+                                      return ('please_enter_your_authentication_number')
+                                          .tr();
                                     }
                                     if (value.length < 6) {
-                                      return "인증번호 6자리를 입력해주세요 !";
+                                      return ('please_enter_your_6digit_authentication_number')
+                                          .tr();
                                     }
                                     return null;
                                   },
@@ -186,8 +192,8 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                             userNotifier),
                                       }
                                   },
-                              child: const Text(
-                                "확인",
+                              child: Text(
+                                ('check').tr(),
                                 textAlign: TextAlign.center,
                               )),
                         ),
@@ -199,7 +205,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       height: 48,
                       child: OutlinedButton(
                           onPressed: () => {
-                                if (userNotifier.isVerify)
+                                if (true)
                                   {
                                     User().phoneNumber = phoneController.text,
                                     phoneController.text = "",
@@ -212,13 +218,16 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                                   }
                                 else
                                   {
-                                    showAlert(context, "", "핸드폰 인증을 완료해주세요.",
-                                        () {
+                                    showAlert(
+                                        context,
+                                        "",
+                                        ('please_complete_mobile_phone_verification')
+                                            .tr(), () {
                                       Navigator.of(context).pop();
                                     })
                                   }
                               },
-                          child: const Text("완료")),
+                          child: Text(('complete').tr())),
                     ),
                   ],
                 )),

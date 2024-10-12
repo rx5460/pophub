@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_support_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
@@ -51,9 +51,9 @@ class _FundingListDetailState extends State<FundingListDetail> {
     return isLoading
         ? Scaffold(
             appBar: AppBar(
-              title: const Text(
-                '펀딩 리스트',
-                style: TextStyle(
+              title: Text(
+                ('funding_list').tr(),
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -148,14 +148,18 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              '수량: ${(widget.support.amount! ~/ int.parse(item!.amount.toString())).toString()}',
-                                            ),
+                                            const Text('quantity_').tr(args: [
+                                              (widget.support.amount! ~/
+                                                      int.parse(item!.amount
+                                                          .toString()))
+                                                  .toString()
+                                            ]),
                                             const SizedBox(
                                               width: 20,
                                             ),
-                                            Text(
-                                                '${countFomat.format(item!.amount!)}원')
+                                            const Text('won').tr(args: [
+                                              countFomat.format(item!.amount!)
+                                            ])
                                           ],
                                         )
                                       ],
@@ -183,21 +187,23 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
-                                      '상품 금액',
-                                      style: TextStyle(
+                                    Text(
+                                      ('product_amount').tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    Text(
-                                      '${countFomat.format(widget.support.amount)}원',
-                                      style: const TextStyle(
+                                    const Text(
+                                      'won',
+                                      style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                    ),
+                                    ).tr(args: [
+                                      countFomat.format(widget.support.amount)
+                                    ]),
                                   ],
                                 ),
                                 const SizedBox(
@@ -207,21 +213,26 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
-                                      '수량',
-                                      style: TextStyle(
+                                    Text(
+                                      ('labelText_5').tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    Text(
-                                      ' ${(widget.support.amount! ~/ int.parse(item!.amount.toString())).toString()}개',
-                                      style: const TextStyle(
+                                    const Text(
+                                      'count_1',
+                                      style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                    ),
+                                    ).tr(args: [
+                                      (widget.support.amount! ~/
+                                              int.parse(
+                                                  item!.amount.toString()))
+                                          .toString()
+                                    ]),
                                   ],
                                 ),
                               ],
@@ -242,19 +253,21 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('총 결제 금액',
-                                    style: TextStyle(
+                                Text(('total_payment_amount').tr(),
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
                                     )),
-                                Text(
-                                  '${countFomat.format(widget.support.amount)}원',
-                                  style: const TextStyle(
+                                const Text(
+                                  'won',
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w900,
                                     color: Constants.DEFAULT_COLOR,
                                   ),
-                                ),
+                                ).tr(args: [
+                                  countFomat.format(widget.support.amount)
+                                ]),
                               ],
                             ),
                           ),
@@ -275,10 +288,10 @@ class _FundingListDetailState extends State<FundingListDetail> {
                               color: Constants.DEFAULT_COLOR),
                           child: InkWell(
                             onTap: () async {},
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                '펀딩 취소',
-                                style: TextStyle(
+                                ('funding_cancellation').tr(),
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                   fontSize: 22,
@@ -320,18 +333,20 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          "파일 폴더 및 액자 세트",
-                                          style: TextStyle(
+                                        Text(
+                                          ('file_folder_and_picture_frame_set')
+                                              .tr(),
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w900,
                                           ),
                                         ),
                                         SizedBox(
                                           width: screenWidth * 0.7 - 8,
-                                          child: const Text(
-                                            '쥐순이 랜텀 파일 폴더 및 액자가 들어있는 세트 입니다.',
-                                            style: TextStyle(
+                                          child: Text(
+                                            ('this_is_a_set_that_includes_jusuni_random_file_folder_and_picture_frame')
+                                                .tr(),
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                               overflow: TextOverflow.ellipsis,
@@ -362,26 +377,27 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.05,
                                 right: screenWidth * 0.05),
-                            child: const Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '서울특별시 구로구 고척동 445-5 3호관 210-1호',
-                                  style: TextStyle(
+                                  ('room_2101_building_3_4455_gocheokdong_gurogu_seoul')
+                                      .tr(),
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
-                                  '황지민',
-                                  style: TextStyle(
+                                  ('hwang_jimin').tr(),
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Row(
+                                const Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -410,30 +426,30 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.05,
                                 right: screenWidth * 0.05),
-                            child: const Column(
+                            child: Column(
                               children: [
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '상품 금액',
-                                      style: TextStyle(
+                                      ('product_amount').tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     Text(
-                                      'ds원',
-                                      style: TextStyle(
+                                      ('dswon').tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 8,
                                 ),
                                 Row(
@@ -441,14 +457,14 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '포인트 할인',
-                                      style: TextStyle(
+                                      ('point_discount').tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    Text(
+                                    const Text(
                                       '-20p',
                                       style: TextStyle(
                                         fontSize: 14,
@@ -472,17 +488,17 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.05,
                                 right: screenWidth * 0.05),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('총 결제 금액',
-                                    style: TextStyle(
+                                Text(('total_payment_amount').tr(),
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
                                     )),
                                 Text(
-                                  'dsa원',
-                                  style: TextStyle(
+                                  ('dsa_won').tr(),
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w900,
                                     color: Constants.DEFAULT_COLOR,
@@ -508,10 +524,10 @@ class _FundingListDetailState extends State<FundingListDetail> {
                               color: Constants.DEFAULT_COLOR),
                           child: InkWell(
                             onTap: () async {},
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                '운송장 등록',
-                                style: TextStyle(
+                                ('titleName_9').tr(),
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                   fontSize: 22,

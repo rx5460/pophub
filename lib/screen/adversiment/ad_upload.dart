@@ -1,7 +1,9 @@
 import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class AdUpload extends StatefulWidget {
   const AdUpload({Key? key, required String mode}) : super(key: key);
@@ -28,10 +30,10 @@ class AdUploadState extends State<AdUpload> {
           _selectedImage = File(pickedImage.path); // 이미지를 File 객체로 변환
         });
       } else {
-        print("이미지 선택이 취소되었습니다.");
+        print(('image_selection_has_been_cancelled').tr());
       }
     } catch (e) {
-      print('이미지 선택 중 오류 발생: $e');
+      print(('an_error_occurred_while_selecting_image_e').tr());
     }
   }
 
@@ -41,7 +43,7 @@ class AdUploadState extends State<AdUpload> {
         endDate == null ||
         adTitle.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("모든 값을 입력해주세요.")),
+        SnackBar(content: Text(('please_enter_all_values').tr())),
       );
       return;
     }
@@ -63,13 +65,15 @@ class AdUploadState extends State<AdUpload> {
         _showSuccessDialog();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("광고 업로드 실패: ${response.reasonPhrase}")),
+          SnackBar(
+              content: const Text("ad_upload_failed_")
+                  .tr(args: [response.reasonPhrase.toString()])),
         );
       }
     } catch (e) {
-      print("업로드 중 오류 발생: $e");
+      print(('an_error_occurred_while_uploading_e').tr());
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("업로드 중 오류가 발생했습니다.")),
+        SnackBar(content: Text(('an_error_occurred_during_upload').tr())),
       );
     }
   }
@@ -90,18 +94,18 @@ class AdUploadState extends State<AdUpload> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  '성공',
-                  style: TextStyle(
+                Text(
+                  ('success').tr(),
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                const Text(
-                  '광고 등록이 완료되었습니다.',
+                Text(
+                  ('advertisement_registration_has_been_completed').tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -119,9 +123,9 @@ class AdUploadState extends State<AdUpload> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text(
-                    '닫기',
-                    style: TextStyle(
+                  child: Text(
+                    ('close').tr(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -158,9 +162,9 @@ class AdUploadState extends State<AdUpload> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '광고 추가',
-          style: TextStyle(
+        title: Text(
+          ('add_ad').tr(),
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -178,18 +182,18 @@ class AdUploadState extends State<AdUpload> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16.0),
-            const Text(
-              '광고 제목',
-              style: TextStyle(
+            Text(
+              ('advertisement_title').tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8.0),
             TextField(
-              decoration: const InputDecoration(
-                hintText: '광고 제목을 입력하세요',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: ('hintText_5').tr(),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
                 setState(() {
@@ -198,9 +202,9 @@ class AdUploadState extends State<AdUpload> {
               },
             ),
             const SizedBox(height: 16.0),
-            const Text(
-              '광고 이미지',
-              style: TextStyle(
+            Text(
+              ('advertising_image').tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -213,7 +217,7 @@ class AdUploadState extends State<AdUpload> {
               ),
               child: _selectedImage == null
                   ? ListTile(
-                      title: const Text('첨부하기'),
+                      title: Text(('attach').tr()),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: _pickImage,
                     )
@@ -226,7 +230,7 @@ class AdUploadState extends State<AdUpload> {
                         ),
                         const SizedBox(height: 8.0),
                         ListTile(
-                          title: const Text('다시 선택'),
+                          title: Text(('select_again').tr()),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: _pickImage,
                         ),
@@ -234,9 +238,9 @@ class AdUploadState extends State<AdUpload> {
                     ),
             ),
             const SizedBox(height: 30.0),
-            const Text(
-              '게시 기간',
-              style: TextStyle(
+            Text(
+              ('posting_period').tr(),
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -254,7 +258,7 @@ class AdUploadState extends State<AdUpload> {
                     child: ListTile(
                       title: Text(
                         startDate == null
-                            ? '시작 날짜'
+                            ? ('start_date').tr()
                             : '${startDate!.year}.${startDate!.month.toString().padLeft(2, '0')}.${startDate!.day.toString().padLeft(2, '0')}',
                       ),
                       onTap: () => _selectDate(context, true),
@@ -274,7 +278,7 @@ class AdUploadState extends State<AdUpload> {
                     child: ListTile(
                       title: Text(
                         endDate == null
-                            ? '종료 날짜'
+                            ? ('end_date').tr()
                             : '${endDate!.year}.${endDate!.month.toString().padLeft(2, '0')}.${endDate!.day.toString().padLeft(2, '0')}',
                       ),
                       onTap: () => _selectDate(context, false),
@@ -299,9 +303,9 @@ class AdUploadState extends State<AdUpload> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
             ),
-            child: const Text(
-              '완료',
-              style: TextStyle(
+            child: Text(
+              ('complete').tr(),
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
