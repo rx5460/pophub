@@ -1,22 +1,22 @@
 class Achievement {
-  final String title;
-  final String description;
-  final String imageUrl;
-  final bool isUnlocked;
+  final int achieveId;
+  final String achieveTitle;
+  final String userName;
+  final DateTime completeAt;
 
   Achievement({
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    this.isUnlocked = false,
+    required this.achieveId,
+    required this.achieveTitle,
+    required this.userName,
+    required this.completeAt,
   });
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
     return Achievement(
-      title: json['title'],
-      description: json['description'],
-      imageUrl: json['imageUrl'],
-      isUnlocked: json['isUnlocked'] ?? false,
+      achieveId: json['achieveId'],
+      achieveTitle: json['achieveTitle'],
+      userName: json['userName'],
+      completeAt: DateTime.parse(json['completeAt']),
     );
   }
 }

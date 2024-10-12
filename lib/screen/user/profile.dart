@@ -420,15 +420,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           icon: Icons.star,
                                           text: '업적',
                                           onClick: () {
-                                            String userName =
-                                                profile?['userName'] ??
-                                                    'unknownUser';
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AchievementsPage(
-                                                        userName: userName),
+                                                    const AchievementsPage(),
                                               ),
                                             );
                                           },

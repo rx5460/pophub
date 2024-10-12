@@ -1,3 +1,4 @@
+import 'package:pophub/model/achieve_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
@@ -56,6 +57,21 @@ class UserApi {
     final data = await getData('$domain/user/$userId', {});
     Logger.debug("### 프로필 조회 $data");
     return data;
+  }
+
+// 업적 조회
+  static Future<List<Achievement>> getAchiveList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+          '$domain/user/achieveHub/?userName=${User().userName}', {});
+      List<Achievement> achieveList =
+          dataList.map((data) => Achievement.fromJson(data)).toList();
+      return achieveList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch achive list: $e');
+      throw Exception('Failed to fetch achive list');
+    }
   }
 
   // 닉네임 중복 체크

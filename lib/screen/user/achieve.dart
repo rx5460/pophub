@@ -1,48 +1,16 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:pophub/model/achieve_model.dart';
-
-// 업적 데이터 불러오기
-Future<List<Achievement>> fetchAchievements(String userName) async {
-  final response = await http.get(
-    Uri.parse('http://3.233.20.5:3000/user/achieveHub?userName=$userName'),
-  );
-
-  if (response.statusCode == 200) {
-    List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((data) => Achievement.fromJson(data)).toList();
-  } else {
-    throw Exception('업적 조회에 실패했습니다.');
-  }
-}
-
-// 업적 아이콘 매핑
-String getImageForAchievement(String title) {
-  switch (title) {
-    case '리뷰 스타터':
-      return 'review_starter.png';
-    case '어서와? PopHub는 처음이지?':
-      return 'first.png';
-    case '탐색의 여정':
-      return 'search.png';
-    case '응원의 손길':
-      return 'cheer_up.png';
-    case '첫 걸음':
-      return 'first_start.png';
-    case '탐험의 시작':
-      return 'adventure.png';
-    case '소중한 조언자':
-      return 'good_answer.png';
-    default:
-      return 'logo.png';
-  }
-}
+import 'package:pophub/model/user.dart';
+import 'package:pophub/utils/http.dart';
+import 'package:pophub/utils/log.dart';
+import 'package:intl/intl.dart';
 
 class AchievementsPage extends StatelessWidget {
-  final String userName;
+  const AchievementsPage({super.key});
 
-  const AchievementsPage({super.key, required this.userName});
+  String formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +27,12 @@ class AchievementsPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Achievement>>(
-        future: fetchAchievements(userName),
+        future: ClassAchieve.getAchiveList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
+            Logger.debug('Error fetching achievements: ${snapshot.error}');
             return const Center(
               child: Text(
                 '업적을 불러오는데 오류가 발생했습니다.',
@@ -92,14 +61,23 @@ class AchievementsPage extends StatelessWidget {
                 final achievement = snapshot.data![index];
                 return ListTile(
                   leading: Image.asset(
-                    'assets/img/${getImageForAchievement(achievement.title)}',
-                    color: achievement.isUnlocked ? null : Colors.grey,
+                    'assets/images/${getImageForAchievement(achievement.achieveTitle)}',
+                    color: achievement.completeAt.isBefore(DateTime.now())
+                        ? null
+                        : Colors.grey,
                   ),
-                  title: Text(achievement.title),
-                  subtitle: Text(achievement.description),
+                  title: Text(achievement.achieveTitle),
+                  subtitle: Text(
+                    '완료일: ${formatDate(achievement.completeAt)}',
+                    style: const TextStyle(fontSize: 14),
+                  ),
                   trailing: Icon(
-                    achievement.isUnlocked ? Icons.check_circle : Icons.lock,
-                    color: achievement.isUnlocked ? Colors.green : Colors.red,
+                    achievement.completeAt.isBefore(DateTime.now())
+                        ? Icons.check_circle
+                        : Icons.lock,
+                    color: achievement.completeAt.isBefore(DateTime.now())
+                        ? const Color(0xFFE6A3B3)
+                        : Colors.red,
                   ),
                 );
               },
@@ -108,5 +86,48 @@ class AchievementsPage extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+// 업적 아이콘 매핑
+String getImageForAchievement(String title) {
+  switch (title) {
+    case '리뷰 스타터':
+      return 'review_starter.png';
+    case '어서와? PopHub는 처음이지?':
+      return 'first.png';
+    case '탐색의 여정':
+      return 'search.png';
+    case '응원의 손길':
+      return 'cheer_up.png';
+    case '첫 걸음':
+      return 'first_start.png';
+    case '탐험의 시작':
+      return 'adventure.png';
+    case '소중한 조언자':
+      return 'good_answer.png';
+    case '오랜 친구':
+      return 'long_friend.png';
+    case 'wating...':
+      return 'waiting';
+    default:
+      return 'logo.png';
+  }
+}
+
+class ClassAchieve {
+  static String domain = "http://3.233.20.5:3000";
+
+  static Future<List<Achievement>> getAchiveList() async {
+    try {
+      final List<dynamic> dataList = await getListData(
+        '$domain/user/achieveHub/?userName=${User().userName}',
+        {},
+      );
+      return dataList.map((data) => Achievement.fromJson(data)).toList();
+    } catch (e) {
+      Logger.debug('Failed to fetch achive list: $e');
+      throw Exception('Failed to fetch achive list');
+    }
   }
 }
