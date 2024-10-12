@@ -4,11 +4,12 @@ class Achievement {
   final String imageUrl;
   final bool isUnlocked;
 
-  Achievement(
-      {required this.title,
-      required this.description,
-      required this.imageUrl,
-      this.isUnlocked = false});
+  Achievement({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    this.isUnlocked = false,
+  });
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
     return Achievement(

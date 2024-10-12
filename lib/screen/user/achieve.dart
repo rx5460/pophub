@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:pophub/model/achieve_model.dart';
 
 // 업적 데이터 불러오기
-Future<List<Achievement>> fetchAchievements() async {
-  final response =
-      await http.get(Uri.parse('http://3.233.20.5:3000/user/achieveHub'));
+Future<List<Achievement>> fetchAchievements(String userName) async {
+  final response = await http.get(
+    Uri.parse('http://3.233.20.5:3000/user/achieveHub?userName=$userName'),
+  );
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body);
@@ -39,7 +40,9 @@ String getImageForAchievement(String title) {
 }
 
 class AchievementsPage extends StatelessWidget {
-  const AchievementsPage({super.key});
+  final String userName;
+
+  const AchievementsPage({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +50,7 @@ class AchievementsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           '업적',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -58,7 +59,7 @@ class AchievementsPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Achievement>>(
-        future: fetchAchievements(),
+        future: fetchAchievements(userName),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
