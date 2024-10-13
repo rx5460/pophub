@@ -25,6 +25,7 @@ class _FundingListState extends State<FundingList>
   var countFomat = NumberFormat('###,###,###,###');
   List<FundingItemModel>? fundingItem;
   List<FundingSupportModel>? supportList;
+  List<FundingSupportModel>? supportUserList = [];
 
   Future<void> fetchItemData() async {
     try {
@@ -35,6 +36,7 @@ class _FundingListState extends State<FundingList>
       if (dataList.isNotEmpty) {
         setState(() {
           fundingItem = dataList;
+          fetchSupportList();
         });
       }
     } catch (error) {
@@ -57,12 +59,35 @@ class _FundingListState extends State<FundingList>
     }
   }
 
+  Future<void> fetchSupportList() async {
+    // try {
+    for (int j = 0; j < (fundingItem?.length ?? 0); j++) {
+      List<FundingSupportModel>? dataList =
+          await FundingApi.getFundingSupportUser(fundingItem![j].itemId!);
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          for (int i = 0; i < dataList.length; i++) {
+            supportUserList?.add(dataList[i]);
+            print(supportUserList!.length);
+          }
+        });
+      }
+    }
+    // } catch (error) {
+    //   Logger.debug('Error fetching support data: $error');
+    // }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchItemData();
-    fetchSupportData();
+    if (User().role == "General Member") {
+      fetchSupportData();
+    }
+
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -215,58 +240,76 @@ class _FundingListState extends State<FundingList>
                           const BoxDecoration(color: Constants.DEFAULT_COLOR),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FundingListDetail(
-                                  mode: 'President', support: supportList![0])),
-                        );
-                      },
-                      child: Container(
-                          width: screenWidth,
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: 1,
-                                      color: Constants.DEFAULT_COLOR))),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 20, right: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ('jimin_hwang').tr(),
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900),
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                const Text(
-                                  '2024.08.16 10:10',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w900,
-                                      color: Constants.DARK_GREY),
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                    ('file_folder_and_picture_frame_set_1')
-                                        .tr(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                              ],
-                            ),
-                          )),
+                      onTap: () {},
+                      child: Column(
+                        children: [
+                          if (supportUserList != [])
+                            for (int k = 0;
+                                k < (supportUserList?.length ?? 0);
+                                k++)
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FundingListDetail(
+                                            mode: 'President',
+                                            support: supportUserList![k])),
+                                  );
+                                },
+                                child: Container(
+                                    width: screenWidth,
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                width: 1,
+                                                color:
+                                                    Constants.DEFAULT_COLOR))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 10,
+                                          left: 20,
+                                          right: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            supportUserList![k].userName ?? '',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w900),
+                                          ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                          Text(
+                                            DateFormat('yyyy-MM-dd HH:mm')
+                                                .format(DateTime.parse(
+                                                    supportUserList![k]
+                                                        .createdAt!)),
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w900,
+                                                color: Constants.DARK_GREY),
+                                          ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                          Text(supportUserList![k].itemName!,
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500)),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                        ],
+                      ),
                     )
                   ],
                 ),

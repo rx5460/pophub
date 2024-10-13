@@ -264,6 +264,24 @@ class FundingApi {
     }
   }
 
+  // 펀딩 참여 조회(판매자용)
+  static Future<List<FundingSupportModel>> getFundingSupportUser(
+      String item) async {
+    try {
+      final List<dynamic> dataList =
+          await getListData('$domain/funding/support?itemId=$item', {});
+
+      List<FundingSupportModel> supportList =
+          dataList.map((data) => FundingSupportModel.fromJson(data)).toList();
+      return supportList;
+    } catch (e) {
+      // 오류 처리
+      Logger.debug('Failed to fetch support list: $e');
+      print(item);
+      throw Exception('Failed to fetch support list');
+    }
+  }
+
   // 아이템조회 : itemId
   static Future<FundingItemModel> getFundingItemDetail(String itemId) async {
     final data = await getListData('$domain/funding/item?itemId=$itemId', {});

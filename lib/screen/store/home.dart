@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
     List<dynamic> data = await StoreApi.getMyPopup(User().userName);
 
     if (!data.toString().contains("fail") &&
-        !data.toString().contains(('doesnt_exist_1').tr())) {
+        !data.toString().contains(('없습니다'))) {
       setState(() {
         addGoodsVisible = true;
 

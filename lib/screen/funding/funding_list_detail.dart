@@ -43,6 +43,11 @@ class _FundingListDetailState extends State<FundingListDetail> {
     print('ad');
   }
 
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -320,8 +325,8 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Image.asset(
-                                      'assets/images/goods.png',
+                                    Image.network(
+                                      item!.images![0],
                                       width: screenWidth * 0.2,
                                     ),
                                     const SizedBox(
@@ -334,8 +339,7 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          ('file_folder_and_picture_frame_set')
-                                              .tr(),
+                                          widget.support.itemName!,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w900,
@@ -344,8 +348,7 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                         SizedBox(
                                           width: screenWidth * 0.7 - 8,
                                           child: Text(
-                                            ('this_is_a_set_that_includes_jusuni_random_file_folder_and_picture_frame')
-                                                .tr(),
+                                            item!.content!,
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
@@ -380,17 +383,17 @@ class _FundingListDetailState extends State<FundingListDetail> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Text(
+                                //   ('room_2101_building_3_4455_gocheokdong_gurogu_seoul')
+                                //       .tr(),
+                                //   style: const TextStyle(
+                                //     fontSize: 14,
+                                //     color: Colors.grey,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
                                 Text(
-                                  ('room_2101_building_3_4455_gocheokdong_gurogu_seoul')
-                                      .tr(),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  ('hwang_jimin').tr(),
+                                  widget.support.userName!,
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
@@ -441,7 +444,7 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                       ),
                                     ),
                                     Text(
-                                      ('dswon').tr(),
+                                      countFomat.format(widget.support.amount!),
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -452,27 +455,27 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      ('point_discount').tr(),
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const Text(
-                                      '-20p',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   mainAxisAlignment:
+                                //       MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     Text(
+                                //       ('point_discount').tr(),
+                                //       style: const TextStyle(
+                                //         fontSize: 14,
+                                //         color: Colors.grey,
+                                //         fontWeight: FontWeight.w600,
+                                //       ),
+                                //     ),
+                                //     const Text(
+                                //       '-20p',
+                                //       style: TextStyle(
+                                //         fontSize: 14,
+                                //         fontWeight: FontWeight.w600,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
@@ -496,14 +499,16 @@ class _FundingListDetailState extends State<FundingListDetail> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
                                     )),
-                                Text(
-                                  ('dsa_won').tr(),
-                                  style: const TextStyle(
+                                const Text(
+                                  'won',
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w900,
                                     color: Constants.DEFAULT_COLOR,
                                   ),
-                                ),
+                                ).tr(args: [
+                                  formatCurrency(widget.support.amount!)
+                                ]),
                               ],
                             ),
                           ),
