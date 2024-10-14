@@ -1,4 +1,3 @@
-
 {
   "키 ": "ko-Korean(한국어",
   "title": "주소검색",
@@ -452,5 +451,6 @@
   "funding": "펀딩하기",
   "product": "제품",
   "quantity__pieces": "수량 : {}개",
-  "file_folder_and_picture_frame_set_1": "파일폴더 및 액자 세트"
+  "file_folder_and_picture_frame_set_1": "파일폴더 및 액자 세트",
+  "people_participated": "{}명 참여"
 }

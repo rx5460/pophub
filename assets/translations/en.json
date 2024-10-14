@@ -1,4 +1,3 @@
-
 {
   "키 ": "en-English(영어)",
   "title": "Address search",
@@ -452,5 +451,6 @@
   "funding": "Funding",
   "product": "product",
   "quantity__pieces": "Quantity: {} pieces",
-  "file_folder_and_picture_frame_set_1": "File folder and picture frame set"
+  "file_folder_and_picture_frame_set_1": "File folder and picture frame set",
+  "people_participated": "{} people participated"
 }

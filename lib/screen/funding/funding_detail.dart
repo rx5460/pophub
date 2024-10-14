@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/funding_model.dart';
+import 'package:pophub/model/funding_support_model.dart';
 import 'package:pophub/model/fundingitem_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/funding/funding_order.dart';
@@ -35,6 +36,7 @@ class _FundingDetailState extends State<FundingDetail> {
   int count = 1;
 
   List<FundingItemModel>? fundingItem;
+  List<FundingSupportModel>? supportUserList = [];
 
   Future<void> fetchItemData() async {
     try {
@@ -45,10 +47,28 @@ class _FundingDetailState extends State<FundingDetail> {
       if (dataList.isNotEmpty) {
         setState(() {
           fundingItem = dataList;
+          fetchSupportList();
         });
       }
     } catch (error) {
       Logger.debug('Error fetching item data: $error');
+    }
+  }
+
+  Future<void> fetchSupportList() async {
+    // try {
+    for (int j = 0; j < (fundingItem?.length ?? 0); j++) {
+      List<FundingSupportModel>? dataList =
+          await FundingApi.getFundingSupportUser(fundingItem![j].itemId!);
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          for (int i = 0; i < dataList.length; i++) {
+            supportUserList?.add(dataList[i]);
+            print(supportUserList!.length);
+          }
+        });
+      }
     }
   }
 
@@ -59,91 +79,6 @@ class _FundingDetailState extends State<FundingDetail> {
     // fetchGoodsData();
     // getGoodsData();
   }
-
-  // Future<void> fetchGoodsData() async {
-  //   try {
-  //     List<GoodsModel>? dataList =
-  //         await GoodsApi.getPopupGoodsList(widget.popupId);
-
-  //     if (dataList.isNotEmpty) {
-  //       setState(() {
-  //         goodsList = dataList;
-  //       });
-  //     }
-  //   } catch (error) {
-  //     Logger.debug('Error fetching goods data: $error');
-  //   }
-  // }
-
-  // Future<void> getGoodsData() async {
-  //   try {
-  //     GoodsModel? data = await GoodsApi.getPopupGoodsDetail(widget.goodsId);
-
-  //     if (User().userName != "") {
-  //       List<dynamic> popupData = await StoreApi.getMyPopup(User().userName);
-
-  //       if (!popupData.toString().contains(('doesnt_exist_1').tr())) {
-  //         setState(() {
-  //           goods = data;
-  //           isLoading = true;
-  //           popup = PopupModel.fromJson(popupData[0]);
-  //         });
-  //         if (goods != null) {
-  //           if (popup.id == goods!.store) {
-  //             setState(() {
-  //               addGoodsVisible = true;
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         setState(() {
-  //           goods = data;
-  //           isLoading = true;
-  //           addGoodsVisible = false;
-  //         });
-  //       }
-  //     } else {
-  //       setState(() {
-  //         goods = data;
-  //         isLoading = true;
-  //         addGoodsVisible = false;
-  //       });
-  //     }
-  //   } catch (error) {
-  //     // 오류 처리
-  //     Logger.debug('Error fetching goods data: $error');
-  //   }
-  // }
-
-  // Future<void> goodsDelete(String productId) async {
-  //   final data = await GoodsApi.deleteGoods(productId);
-
-  //   if (!data.toString().contains("fail") && mounted) {
-  //     showAlert(context, ('success').tr(), ('goods_have_been_deleted').tr(), () {
-  //       Navigator.of(context).pop();
-  //       Navigator.of(context).pop();
-
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => GoodsList(
-  //             popup: popup,
-  //           ),
-  //         ),
-  //       ).then((value) {
-  //         if (mounted) {
-  //           setState(() {});
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //     if (mounted) {
-  //       showAlert(context, ('failure').tr(), ('deletion_of_goods_failed').tr(), () {
-  //         Navigator.of(context).pop();
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +248,7 @@ class _FundingDetailState extends State<FundingDetail> {
                                                 width: 10,
                                               ),
                                               Container(
-                                                width: screenWidth * 0.2,
+                                                // width: screenWidth * 0.2,
                                                 height: 22,
                                                 decoration: const BoxDecoration(
                                                     color:
@@ -322,17 +257,26 @@ class _FundingDetailState extends State<FundingDetail> {
                                                         BorderRadius.all(
                                                             Radius.circular(
                                                                 10))),
-                                                child: Center(
-                                                  child: Text(
-                                                    ('var_999_people_participated')
-                                                        .tr(),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0, right: 8),
+                                                  child: Center(
+                                                      child: Text(
+                                                    ('people_participated').tr(
+                                                        args: [
+                                                          (supportUserList
+                                                                      ?.length ??
+                                                                  0)
+                                                              .toString()
+                                                        ]),
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
-                                                  ),
+                                                  )),
                                                 ),
                                               )
                                             ],
