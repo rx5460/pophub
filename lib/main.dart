@@ -1,6 +1,8 @@
 import 'dart:developer' as developer;
+import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -110,13 +112,13 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  // initializeNotification();
+  initializeNotification();
 
   // 초기 알림 설정 로드 및 적용
-  // loadInitialNotificationSetting();
+  loadInitialNotificationSetting();
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
@@ -130,9 +132,16 @@ Future<void> main() async {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  String lang = 'ko';
+
+  final deviceLocales = PlatformDispatcher.instance.locales;
+  if (deviceLocales[0].languageCode != 'ko') {
+    lang = deviceLocales[0].languageCode;
+  }
+
   runApp(EasyLocalization(
       supportedLocales: const [Locale('ko'), Locale('en')],
-      startLocale: const Locale('ko'),
+      startLocale: Locale(lang),
       path: 'assets/translations',
       child: const MyApp()));
 }

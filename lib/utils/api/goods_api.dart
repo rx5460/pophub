@@ -16,8 +16,9 @@ class GoodsApi {
     try {
       final List<dynamic> dataList =
           await getListData('$domain/product/store/$popup', {});
-      List<GoodsModel> goodsList =
-          dataList.map((data) => GoodsModel.fromJson(data)).toList();
+      List<GoodsModel> goodsList = dataList.toString().contains("없네요")
+          ? []
+          : dataList.map((data) => GoodsModel.fromJson(data)).toList();
       return goodsList;
     } catch (e) {
       // 오류 처리

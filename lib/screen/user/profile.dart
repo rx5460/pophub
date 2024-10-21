@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
@@ -7,22 +8,23 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
 import 'package:pophub/screen/alarm/notice_add.dart';
+import 'package:pophub/screen/delivery/delivery_list.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
+import 'package:pophub/screen/setting/address_write.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
 import 'package:pophub/screen/store/alarm_list.dart';
-import 'package:pophub/screen/user/calender.dart';
 import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/achieve.dart';
 import 'package:pophub/screen/user/acount_info.dart';
+import 'package:pophub/screen/user/calender.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
-import 'package:pophub/screen/user/payment_history.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/review_api.dart';
@@ -42,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? profile; // profile 변수를 nullable로 선언
   bool isLoading = true; // 로딩 상태 변수 추가
   List<ReviewModel>? reviewList;
+  String? storeId;
 
   Future<void> profileApi() async {
     setState(() {
@@ -92,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
       //TODO : 황지민 팝업 가져오는경우 처리
       PopupModel popup;
       popup = PopupModel.fromJson(data[0]);
+      storeId = popup.id;
       if (mounted) {
         Navigator.push(
           context,
@@ -117,6 +121,21 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = false; // 로딩 상태 변경
     });
+  }
+
+  Future<void> getStoreId() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<dynamic> data = await StoreApi.getMyPopup(User().userName);
+
+    if (!data.toString().contains("fail") &&
+        !data.toString().contains("없습니다")) {
+      //TODO : 황지민 팝업 가져오는경우 처리
+      PopupModel popup;
+      popup = PopupModel.fromJson(data[0]);
+      storeId = popup.id;
+    } else {}
   }
 
   Future<void> checkFundingApi() async {
@@ -162,7 +181,6 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       List<ReviewModel>? dataList =
           await ReviewApi.getReviewListByUser(User().userName);
-
       if (dataList.isNotEmpty) {
         setState(() {
           reviewList = dataList;
@@ -178,6 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     profileApi(); // API 호출
     fetchReviewData();
+    getStoreId();
   }
 
   @override
@@ -323,9 +342,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       const SizedBox(
                                                         height: 10,
                                                       ),
-                                                      const Text(
-                                                        '포인트',
-                                                        style: TextStyle(
+                                                      Text(
+                                                        'point'.tr(),
+                                                        style: const TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.grey,
                                                         ),
@@ -352,9 +371,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   child: SizedBox(
                                                     width:
                                                         (screenWidth * 0.3) - 2,
-                                                    child: const Column(
+                                                    child: Column(
                                                       children: [
-                                                        Text(
+                                                        const Text(
                                                           '0',
                                                           style: TextStyle(
                                                             fontSize: 20,
@@ -362,12 +381,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 FontWeight.w700,
                                                           ),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 10,
                                                         ),
                                                         Text(
-                                                          '방문',
-                                                          style: TextStyle(
+                                                          'visit'.tr(),
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 16,
                                                             color: Colors.grey,
                                                           ),
@@ -402,11 +422,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       const SizedBox(
                                                         height: 10,
                                                       ),
-                                                      const Text(
-                                                        '리뷰',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey,
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      MyReview(
+                                                                reviews:
+                                                                    reviewList ??
+                                                                        [],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                          'text_1'.tr(),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -418,7 +455,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         MenuList(
                                           icon: Icons.star,
-                                          text: '업적',
+                                          text: 'text'.tr(),
                                           onClick: () {
                                             Navigator.push(
                                               context,
@@ -432,18 +469,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
                                         MenuList(
                                           icon: Icons.comment,
-                                          text: '리뷰',
+                                          text: 'text_1'.tr(),
                                           onClick: () {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const MyReview()));
+                                                        MyReview(
+                                                          reviews:
+                                                              reviewList ?? [],
+                                                        )));
                                           },
                                         ),
                                         MenuList(
                                           icon: Icons.info_outline,
-                                          text: '공지사항',
+                                          text: 'text_2'.tr(),
                                           onClick: () {
                                             Navigator.push(
                                                 context,
@@ -454,7 +494,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         MenuList(
                                           icon: Icons.help_outline,
-                                          text: '문의내역',
+                                          text: 'text_3'.tr(),
                                           onClick: () {
                                             Navigator.push(
                                                 context,
@@ -469,7 +509,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             children: [
                                               MenuList(
                                                 icon: Icons.add_alert,
-                                                text: '알림 등록',
+                                                text: 'text_4'.tr(),
                                                 onClick: () {
                                                   Navigator.push(
                                                       context,
@@ -480,7 +520,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ),
                                               MenuList(
                                                 icon: Icons.add_circle_outline,
-                                                text: '공지사항 등록',
+                                                text: 'text_5'.tr(),
                                                 onClick: () {
                                                   Navigator.push(
                                                       context,
@@ -507,7 +547,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           visible: User().role == "President",
                                           child: MenuList(
                                             icon: Icons.message_outlined,
-                                            text: '내 팝업스토어',
+                                            text: 'text_6'.tr(),
                                             onClick: () {
                                               checkStoreApi();
                                             },
@@ -518,7 +558,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           child: MenuList(
                                             icon: Icons
                                                 .assignment_turned_in_outlined,
-                                            text: '팝업스토어 승인 대기',
+                                            text: 'text_7'.tr(),
                                             onClick: () async {
                                               final data = await StoreApi
                                                   .getPendingList();
@@ -537,7 +577,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                     StoreListPage(
                                                                   popups: data,
                                                                   titleName:
-                                                                      "승인 리스트",
+                                                                      "titleName_1"
+                                                                          .tr(),
                                                                   mode:
                                                                       "pending",
                                                                 ))));
@@ -551,50 +592,66 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   User().role == "President",
                                           child: MenuList(
                                             icon: Icons.event_note,
-                                            text: '예약 내역',
+                                            text: 'text_8'.tr(),
                                             onClick: () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const AlarmListPage(
+                                                          AlarmListPage(
                                                             mode: "name",
-                                                            titleName: "예약 내역",
+                                                            titleName:
+                                                                "text_8".tr(),
                                                           )));
                                             },
                                           ),
                                         ),
-                                        Visibility(
-                                          visible:
-                                              User().role == "General Member",
-                                          child: MenuList(
-                                            icon: Icons.payment,
-                                            text: '결제 내역',
-                                            onClick: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const PaymentHistoryPage(),
+                                        // Visibility(
+                                        //   visible:
+                                        //       User().role == "General Member",
+                                        //   child: MenuList(
+                                        //     icon: Icons.payment,
+                                        //     text: 'text_9'.tr(),
+                                        //     onClick: () {
+                                        //       Navigator.push(
+                                        //         context,
+                                        //         MaterialPageRoute(
+                                        //           builder: (context) =>
+                                        //               const PaymentHistoryPage(),
+                                        //         ),
+                                        //       );
+                                        //     },
+                                        //   ),
+                                        // ),
+                                        MenuList(
+                                          icon: Icons.payment,
+                                          text: 'text_9'.tr(),
+                                          onClick: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DeliveryListPage(
+                                                  storeId: storeId,
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                         Visibility(
                                           visible: User().role == "President",
                                           child: MenuList(
                                             icon: Icons.event_note,
-                                            text: '내 팝업스토어 예약 내역',
+                                            text: 'text_10'.tr(),
                                             onClick: () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const AlarmListPage(
+                                                          AlarmListPage(
                                                             mode: "store",
                                                             titleName:
-                                                                "내 팝업스토어 예약 내역",
+                                                                "text_10".tr(),
                                                           )));
                                             },
                                           ),
@@ -613,7 +670,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           visible: User().role == "Manager",
                                           child: MenuList(
                                             icon: Icons.ad_units,
-                                            text: '광고',
+                                            text: 'text_11'.tr(),
                                             onClick: () {
                                               Navigator.push(
                                                 context,
@@ -631,16 +688,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   User().role == "President",
                                           child: MenuList(
                                             icon: Icons.shopping_bag_outlined,
-                                            text: '펀딩',
+                                            text: 'text_12'.tr(),
                                             onClick: () {
                                               checkFundingApi();
                                             },
                                           ),
                                         ),
                                         MenuList(
-                                          icon: Icons.message_outlined,
-                                          text: '장바구니',
-                                          onClick: () {},
+                                          icon: Icons.mobile_friendly_rounded,
+                                          text: 'address_add'.tr(),
+                                          onClick: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AddressWritePage(),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
@@ -724,10 +789,14 @@ class MenuList extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 20,
+                SizedBox(
+                  width: screenWidth * 0.6,
+                  child: Text(
+                    text,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ],
