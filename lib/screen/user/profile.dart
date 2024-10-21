@@ -10,6 +10,7 @@ import 'package:pophub/screen/alarm/notice_add.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
+import 'package:pophub/screen/reservation/waiting_list_store.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
 import 'package:pophub/screen/setting/notice.dart';
@@ -561,6 +562,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             mode: "name",
                                                             titleName: "예약 내역",
                                                           )));
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: User().role == "President",
+                                          child: MenuList(
+                                            icon: Icons.event_note,
+                                            text: '현장대기',
+                                            onClick: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const WaitingListStorePage()));
                                             },
                                           ),
                                         ),
