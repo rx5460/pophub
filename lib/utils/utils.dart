@@ -1,11 +1,9 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pophub/screen/custom/custom_alert.dart';
 
-
-import 'package:easy_localization/easy_localization.dart';
 bool isValidPhoneNumber(String input) {
   // 숫자와 공백을 제외한 모든 문자를 제거
   String digits = input.replaceAll(RegExp(r'\D'), '');
@@ -38,27 +36,27 @@ void showAlert(BuildContext context, String title, String content,
 String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
   if (lang == "ko") {
     switch (dayOfWeek.toLowerCase()) {
-      case 'monday':
-      case 'mon':
-        return ('monday').tr();
-      case 'tuesday':
-      case 'tue':
-        return ('tuesday').tr();
-      case 'wednesday':
-      case 'wed':
-        return ('wednesday').tr();
-      case 'thursday':
-      case 'thu':
-        return ('thursday').tr();
-      case 'friday':
-      case 'fri':
-        return ('friday').tr();
-      case 'saturday':
-      case 'sat':
-        return ('saturday').tr();
-      case 'sunday':
-      case 'sun':
-        return ('sunday').tr();
+      case 'Monday':
+      case 'Mon':
+        return ('mon').tr();
+      case 'Tuesday':
+      case 'Tue':
+        return ('tue').tr();
+      case 'Wednesday':
+      case 'Wed':
+        return ('wed').tr();
+      case 'Thursday':
+      case 'Thu':
+        return ('thu').tr();
+      case 'Friday':
+      case 'Fri':
+        return ('fri').tr();
+      case 'Saturday':
+      case 'Sat':
+        return ('sat').tr();
+      case 'Sunday':
+      case 'Sun':
+        return ('sun').tr();
       default:
         return dayOfWeek;
     }
@@ -85,7 +83,8 @@ String getDayOfWeekAbbreviation(String dayOfWeek, String lang) {
 }
 
 String formatTime(String timeString) {
-  if (timeString.contains(('city').tr()) && timeString.contains(('minute').tr())) {
+  if (timeString.contains(('city').tr()) &&
+      timeString.contains(('minute').tr())) {
     List<String> timeParts = timeString.split(('city').tr());
     int hour = int.parse(timeParts[0]);
     timeParts = timeParts[1].split(('minute').tr());
