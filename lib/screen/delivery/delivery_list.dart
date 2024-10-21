@@ -89,7 +89,15 @@ class _DeliveryListState extends State<DeliveryListPage> {
         ),
       ),
       body: groupedDeliveries.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Text(
+                ('there_is_no_payment_history').tr(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

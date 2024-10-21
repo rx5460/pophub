@@ -16,31 +16,31 @@ class StoreOperatingHoursModal extends StatefulWidget {
 
 class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
   final List<String> daysOfWeek = [
-    ('month').tr(),
-    ('fury').tr(),
-    ('number').tr(),
-    ('neck').tr(),
-    ('gold').tr(),
-    ('saturday_1').tr(),
-    ('day').tr()
+    ('mon').tr(),
+    ('tue').tr(),
+    ('wed').tr(),
+    ('thu').tr(),
+    ('fri').tr(),
+    ('sat').tr(),
+    ('sun').tr()
   ];
   final Map<String, bool> selectedDays = {
-    ('month').tr(): false,
-    ('fury').tr(): false,
-    ('number').tr(): false,
-    ('neck').tr(): false,
-    ('gold').tr(): false,
-    ('saturday_1').tr(): false,
-    ('day').tr(): false,
+    ('mon').tr(): false,
+    ('tue').tr(): false,
+    ('wed').tr(): false,
+    ('thu').tr(): false,
+    ('fri').tr(): false,
+    ('sat').tr(): false,
+    ('sun').tr(): false,
   };
   final Map<String, String> operatingHours = {
-    ('month').tr(): '',
-    ('fury').tr(): '',
-    ('number').tr(): '',
-    ('neck').tr(): '',
-    ('gold').tr(): '',
-    ('saturday_1').tr(): '',
-    ('day').tr(): '',
+    ('mon').tr(): '',
+    ('tue').tr(): '',
+    ('wed').tr(): '',
+    ('thu').tr(): '',
+    ('fri').tr(): '',
+    ('sat').tr(): '',
+    ('sun').tr(): '',
   };
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -66,50 +66,50 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
     switch (day) {
       case 'Monday':
       case 'Mon':
-        return ('month').tr();
+        return ('mon').tr();
       case 'Tuesday':
       case 'Tue':
-        return ('fury').tr();
+        return ('tue').tr();
       case 'Wednesday':
       case 'Wed':
-        return ('number').tr();
+        return ('wed').tr();
       case 'Thursday':
       case 'Thu':
-        return ('neck').tr();
+        return ('thu').tr();
       case 'Friday':
       case 'Fri':
-        return ('gold').tr();
+        return ('fri').tr();
       case 'Saturday':
       case 'Sat':
-        return ('saturday_1').tr();
+        return ('sat').tr();
       case 'Sunday':
       case 'Sun':
-        return ('day').tr();
+        return ('sun').tr();
       default:
         return '';
     }
   }
 
   String _reverseTranslateDay(String day) {
-    String month = 'month'.tr();
-    String fury = 'fury'.tr();
-    String number = 'number'.tr();
-    String neck = 'neck'.tr();
-    String gold = 'gold'.tr();
-    String saturday_1 = 'saturday_1'.tr();
-    String dayStr = 'day'.tr();
+    String month = 'mon'.tr();
+    String tue = 'tue'.tr();
+    String wed = 'wed'.tr();
+    String thu = 'thu'.tr();
+    String fri = 'fri'.tr();
+    String sat = 'sat'.tr();
+    String dayStr = 'sun'.tr();
 
     if (day == month) {
       return 'Monday';
-    } else if (day == fury) {
+    } else if (day == tue) {
       return 'Tuesday';
-    } else if (day == number) {
+    } else if (day == wed) {
       return 'Wednesday';
-    } else if (day == neck) {
+    } else if (day == thu) {
       return 'Thursday';
-    } else if (day == gold) {
+    } else if (day == fri) {
       return 'Friday';
-    } else if (day == saturday_1) {
+    } else if (day == sat) {
       return 'Saturday';
     } else if (day == dayStr) {
       return 'Sunday';
@@ -212,19 +212,19 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
   void _selectWeekdays() {
     setState(() {
       bool allSelected = [
-        ('month').tr(),
-        ('fury').tr(),
-        ('number').tr(),
-        ('neck').tr(),
-        ('gold').tr()
+        ('mon').tr(),
+        ('tue').tr(),
+        ('wed').tr(),
+        ('thu').tr(),
+        ('fri').tr()
       ].every((day) => selectedDays[day]!);
       selectedDays.forEach((day, selected) {
         if ([
-          ('month').tr(),
-          ('fury').tr(),
-          ('number').tr(),
-          ('neck').tr(),
-          ('gold').tr()
+          ('mon').tr(),
+          ('tue').tr(),
+          ('wed').tr(),
+          ('thu').tr(),
+          ('fri').tr()
         ].contains(day)) {
           selectedDays[day] = !allSelected;
         }
@@ -234,10 +234,10 @@ class _StoreOperatingHoursModalState extends State<StoreOperatingHoursModal> {
 
   void _selectWeekend() {
     setState(() {
-      bool allSelected = [('saturday_1').tr(), ('day').tr()]
-          .every((day) => selectedDays[day]!);
+      bool allSelected =
+          [('sat').tr(), ('sun').tr()].every((day) => selectedDays[day]!);
       selectedDays.forEach((day, selected) {
-        if ([('saturday_1').tr(), ('day').tr()].contains(day)) {
+        if ([('sat').tr(), ('sun').tr()].contains(day)) {
           selectedDays[day] = !allSelected;
         }
       });
