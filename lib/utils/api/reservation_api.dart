@@ -1,5 +1,6 @@
 import 'package:pophub/model/reservation_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/model/waiting_model.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -79,5 +80,36 @@ class ReservationApi {
     List<ReservationModel> reservationList =
         dataList.map((data) => ReservationModel.fromJson(data)).toList();
     return reservationList;
+  }
+
+  // 팝업 현장대기
+  static Future<Map<String, dynamic>> postPopupWaiting(
+      String popup, int count) async {
+    final data = await postData('$domain/reservation/waiting',
+        {'userName': User().userName, 'storeId': popup, 'capacity': count});
+
+    Logger.debug("### 팝업 현장대기 $data");
+    return data;
+  }
+
+  // 팝업 현장대기 조회
+  static Future<List<WaitingModel>> getPopupWaiting(String storeId) async {
+    final dataList = await getListData(
+        '$domain/reservation/waiting/popup?storeId=$storeId', {});
+    Logger.debug("### 팝업 현장대기 조회 by storeId $dataList");
+
+    List<WaitingModel> reservationList =
+        dataList.map((data) => WaitingModel.fromJson(data)).toList();
+    return reservationList;
+  }
+
+  // 팝업 현장대기 입장 승인
+  static Future<Map<String, dynamic>> waitingadmission(
+      String reservationId) async {
+    final data = await putData('$domain/reservation/waiting/admission',
+        {'reservationId': reservationId});
+
+    Logger.debug("### 팝업 현장대기 승인 $data");
+    return data;
   }
 }

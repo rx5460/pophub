@@ -40,7 +40,8 @@ class _ReserveCountState extends State<ReserveCount> {
               ('advance_reservation_failed_would_you_like_to_be_added_to_the_waiting_list')
                   .tr(), () async {
             Navigator.of(context).pop();
-            await addToWaitlist();
+            // await addToWaitlist();
+            waitingApi();
           });
         }
       } else {
@@ -66,6 +67,20 @@ class _ReserveCountState extends State<ReserveCount> {
           Navigator.of(context).pop();
         });
       }
+    }
+  }
+
+  Future<void> waitingApi() async {
+    try {
+      Map<String, dynamic> data =
+          await ReservationApi.postPopupWaiting(widget.popup, count);
+
+      if (data.toString().contains("fail")) {
+      } else {
+        await addToWaitlist();
+      }
+    } catch (e) {
+      print('Error during waiting: $e');
     }
   }
 
