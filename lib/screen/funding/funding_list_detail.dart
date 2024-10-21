@@ -514,34 +514,6 @@ class _FundingListDetailState extends State<FundingListDetail> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Container(
-                          width: screenWidth * 0.9,
-                          height: screenHeight * 0.07,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(
-                                width: 2,
-                                color: Constants.DEFAULT_COLOR,
-                              ),
-                              color: Constants.DEFAULT_COLOR),
-                          child: InkWell(
-                            onTap: () async {},
-                            child: Center(
-                              child: Text(
-                                ('titleName_9').tr(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
           )

@@ -27,16 +27,13 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
 
   Future<void> addTracking() async {
     Map<String, dynamic> data = await DeliveryApi.postTrackingNumber(
-        "da4c607c-d90c-4887-b45e-13c34eb0f9ca",
-        //widget.deliveryId,
-        //Todo : 황지민 배송 넘겨받는거 .. 작업
-        selectedCourier,
-        _trackingNumberController.text);
+        widget.deliveryId, selectedCourier, _trackingNumberController.text);
 
     if (!data.toString().contains("fail")) {
       if (mounted) {
         showAlert(context, ('success').tr(),
             ('the_waybill_registration_has_been_completed').tr(), () {
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
       }
@@ -45,6 +42,7 @@ class _TrackingWritePageState extends State<TrackingWritePage> {
         showAlert(
             context, ('warning').tr(), ('the_waybill_registration_failed').tr(),
             () {
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
       }

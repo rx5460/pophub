@@ -70,7 +70,7 @@ class _AlarmListPageState extends State<AlarmListPage> {
     try {
       List<dynamic> data = await StoreApi.getMyPopup(User().userName);
       if (!data.toString().contains("fail") &&
-          !data.toString().contains(('doesnt_exist_1').tr())) {
+          !data.toString().contains(('없습니다'))) {
         PopupModel popup = PopupModel.fromJson(data[0]);
         final listData =
             await ReservationApi.getReservationByStoreId(popup.id.toString());

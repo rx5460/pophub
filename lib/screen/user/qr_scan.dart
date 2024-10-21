@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/utils/api/visit_api.dart';
 import 'package:pophub/utils/utils.dart';
@@ -62,7 +62,8 @@ class _QrScanState extends State<QrScan> {
 
         if (!data.toString().contains("fail")) {
           widget.refreshData;
-          showAlert(context, "안내", "방문이 인증되었습니다.", () async {
+          showAlert(context, "guide".tr(), "reservation_succses".tr(),
+              () async {
             Navigator.pop(context);
             Navigator.pop(context);
           });
@@ -96,19 +97,19 @@ class _QrScanState extends State<QrScan> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: screenWidth * 0.05, right: screenWidth * 0.05),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.error_outline_outlined,
                     size: 24,
                     color: Colors.white,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                   ),
                   Text(
-                    '사전예약, 현장대기에 맞게 선택주세요!',
-                    style: TextStyle(color: Colors.white),
+                    'reservation_select_text'.tr(),
+                    style: const TextStyle(color: Colors.white),
                   )
                 ],
               ),

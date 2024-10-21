@@ -73,7 +73,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
       if (User().userName != "") {
         List<dynamic> popupData = await StoreApi.getMyPopup(User().userName);
 
-        if (!popupData.toString().contains(('doesnt_exist_1').tr())) {
+        if (!popupData.toString().contains(('없습니다'))) {
           setState(() {
             goods = data;
             isLoading = true;
@@ -566,7 +566,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                               children: [
                                 isBuying
                                     ? SizedBox(
-                                        width: screenWidth * 0.8,
+                                        width: screenWidth * 0.85,
                                         height: screenHeight * 0.1,
                                         child: Row(
                                           mainAxisAlignment:

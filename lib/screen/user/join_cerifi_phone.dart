@@ -205,7 +205,7 @@ class _CertifiPhoneState extends State<CertifiPhone> {
                       height: 48,
                       child: OutlinedButton(
                           onPressed: () => {
-                                if (true)
+                                if (userNotifier.isVerify)
                                   {
                                     User().phoneNumber = phoneController.text,
                                     phoneController.text = "",
