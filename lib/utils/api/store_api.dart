@@ -385,4 +385,12 @@ class StoreApi {
       throw Exception('Failed to fetch getPopupByCategory list');
     }
   }
+
+  // 팝업 QR등록
+  static Future<Map<String, dynamic>> postPopupQR(String popup) async {
+    final data = await postData('$domain//qrcode/create?storeId=$popup', {});
+    Logger.debug(popup);
+    Logger.debug("### 팝업 QR 등록 $data");
+    return data;
+  }
 }

@@ -19,6 +19,7 @@ import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
 import 'package:pophub/screen/store/pending_reject.dart';
 import 'package:pophub/screen/store/popup_review.dart';
+import 'package:pophub/screen/store/qr_code.dart';
 import 'package:pophub/screen/store/store_add.dart';
 import 'package:pophub/screen/store/store_list.dart';
 import 'package:pophub/screen/user/login.dart';
@@ -925,6 +926,19 @@ class _PopupDetailState extends State<PopupDetail> {
                                             child: Text(('delete_store').tr()),
                                             onTap: () {
                                               popupDelete();
+                                            },
+                                          ),
+                                          PopupMenuItem(
+                                            child: const Text('QR코드'),
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        QrCode(
+                                                          popup: popup!,
+                                                        )),
+                                              );
                                             },
                                           ),
                                         ],
