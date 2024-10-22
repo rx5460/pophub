@@ -27,19 +27,29 @@ class _QrCodeState extends State<QrCode> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    popupQr();
+    _initializeQr(); // Call the new method
+  }
+
+  // New method to handle async call
+  Future<void> _initializeQr() async {
+    await popupQr(); // Await the popupQr method
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: QrImageView(
-        data: qr['QRcode'],
-        version: QrVersions.auto,
-        size: 200.0,
-      ),
+      body: qr != null // Check if qr is not null
+          ? Center(
+              child: QrImageView(
+                data: qr['QRcode'],
+                version: QrVersions.auto,
+                size: 200.0,
+              ),
+            )
+          : const Center(
+              child:
+                  CircularProgressIndicator()), // Show a loading indicator if qr is null
     );
   }
 }
