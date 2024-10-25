@@ -30,6 +30,7 @@ import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PopupDetail extends StatefulWidget {
   final String storeId;
@@ -70,7 +71,11 @@ class _PopupDetailState extends State<PopupDetail> {
         if (xCoord != null && yCoord != null) {
           center = LatLng(double.parse(popup!.y.toString()),
               double.parse(popup!.x.toString()));
-          markers.add(Marker(markerId: ('markerId').tr(), latLng: center));
+
+          markers.add(Marker(
+            markerId: ('markerId').tr(),
+            latLng: center,
+          ));
         }
 
         isLoading = false;
@@ -242,7 +247,7 @@ class _PopupDetailState extends State<PopupDetail> {
 
   Future<void> initializeData() async {
     print('refresh');
-    await getPopupData(); // getPopupData가 완료될 때까지 기다립니다.
+    await getPopupData(); // getPopupData가 완료 때까지 기다립니다.
     fetchReviewData(); // fetchReviewData를 호출합니다.
     fetchGoodsData();
 
@@ -527,8 +532,39 @@ class _PopupDetailState extends State<PopupDetail> {
 
                                             setState(() {});
                                           }),
+                                          onMarkerTap:
+                                              (markerId, latLng, zoomLevel) {
+                                            String content =
+                                                "kakaomap://look?p=${double.parse(popup!.y.toString())},${double.parse(popup!.x.toString())}";
+                                            // "kakaomap://route?sp=&ep=${double.parse(popup!.y.toString())},${double.parse(popup!.x.toString())}&by=PUBLICTRANSIT";
+                                            launchUrl(Uri.parse(content));
+                                          },
                                           markers: markers.toList(),
                                           center: center,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: screenWidth * 0.05,
+                                        right: screenWidth * 0.05,
+                                        top: 8.0,
+                                      ),
+                                      child: GestureDetector(
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.location_on_outlined,
+                                              size: 20,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                  popup!.location
+                                                      .toString()
+                                                      .replaceAll("/", " "),
+                                                  maxLines: 3),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -537,26 +573,21 @@ class _PopupDetailState extends State<PopupDetail> {
                                           left: screenWidth * 0.05,
                                           right: screenWidth * 0.05,
                                           top: 8.0),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on_outlined,
-                                            size: 20,
+                                      child: GestureDetector(
+                                        child: Text(
+                                          "marker_text".tr(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          popup!.location != ""
-                                              ? Expanded(
-                                                  // Expanded로 감싸서 공간을 제한
-                                                  child: Text(
-                                                    popup!.location
-                                                        .toString()
-                                                        .replaceAll("/", "  "),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                  ),
-                                                )
-                                              : const Text("")
-                                        ],
+                                        ),
+                                        // onTap: () {
+                                        //   String content =
+                                        //       "kakaomap://look?p=${double.parse(popup!.y.toString())},${double.parse(popup!.x.toString())}";
+                                        //   // "kakaomap://route?sp=&ep=${double.parse(popup!.y.toString())},${double.parse(popup!.x.toString())}&by=PUBLICTRANSIT";
+                                        //   launchUrl(Uri.parse(content));
+                                        // },
                                       ),
                                     ),
                                     const SizedBox(
