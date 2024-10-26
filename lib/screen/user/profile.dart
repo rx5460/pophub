@@ -25,6 +25,7 @@ import 'package:pophub/screen/user/calender.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
 import 'package:pophub/screen/user/payment_history.dart';
+import 'package:pophub/screen/user/point_list.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/review_api.dart';
@@ -324,32 +325,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                SizedBox(
-                                                  width:
-                                                      (screenWidth * 0.3) - 2,
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        profile?['pointScore']
-                                                                .toString() ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.w700,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const PointListPage()));
+                                                  },
+                                                  child: SizedBox(
+                                                    width:
+                                                        (screenWidth * 0.3) - 2,
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          profile?['pointScore']
+                                                                  .toString() ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        'point'.tr(),
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey,
+                                                        const SizedBox(
+                                                          height: 10,
                                                         ),
-                                                      ),
-                                                    ],
+                                                        Text(
+                                                          'point'.tr(),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                                 Container(

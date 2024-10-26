@@ -1,4 +1,5 @@
 import 'package:pophub/model/achieve_model.dart';
+import 'package:pophub/model/point_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
@@ -160,5 +161,15 @@ class UserApi {
         'https://dapi.kakao.com/v2/local/search/address.json?nalyze_type=similar&page=1&size=10&query=$encode',
         {});
     return data;
+  }
+
+  // 전체 포인트 조회
+  static Future<List<PointModel>> getPointList() async {
+    final dataList =
+        await getListData('$domain/user/point?userName=${User().userName}', {});
+    List<PointModel> pointList =
+        dataList.map((data) => PointModel.fromJson(data)).toList();
+    Logger.debug("### 포인트 조회 $pointList");
+    return pointList;
   }
 }
