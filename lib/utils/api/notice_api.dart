@@ -1,4 +1,5 @@
 import 'package:pophub/model/notice_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/utils/http.dart';
 import 'package:pophub/utils/log.dart';
 
@@ -15,6 +16,7 @@ class NoticeApi {
     return noticeList;
   }
 
+  // 필요?
   static Future<dynamic> getFirstItem(String url) async {
     final List<dynamic> dataList = await getListData(url, {});
     if (dataList.isNotEmpty) {
@@ -22,5 +24,14 @@ class NoticeApi {
     } else {
       throw Exception('Data list is empty');
     }
+  }
+
+  // 공지사항 추가
+  static Future<Map<String, dynamic>> postNoticeAdd(
+      String title, String content) async {
+    final data = await postData('$domain/admin/notice/create',
+        {'userName': User().userName, 'title': title, 'content': content});
+    Logger.debug("### 공지사항 추가 $data");
+    return data;
   }
 }

@@ -8,11 +8,9 @@ import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
 import 'package:pophub/screen/alarm/notice_add.dart';
-import 'package:pophub/screen/delivery/delivery_list.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
-import 'package:pophub/screen/reservation/waiting_list_store.dart';
 import 'package:pophub/screen/setting/address_write.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
@@ -534,17 +532,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        // MenuList(
-                                        //   icon: Icons.credit_card,
-                                        //   text: '결제 내역',
-                                        //   onClick: () {
-                                        //     Navigator.push(
-                                        //         context,
-                                        //         MaterialPageRoute(
-                                        //             builder: (context) =>
-                                        //                 const PaymentHistoryPage()));
-                                        //   },
-                                        // ),
                                         Visibility(
                                           visible: User().role == "President",
                                           child: MenuList(
@@ -608,22 +595,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                             },
                                           ),
                                         ),
-                                        Visibility(
-                                          visible:
-                                              User().role == "General Member",
-                                          child: MenuList(
-                                            icon: Icons.payment,
-                                            text: '결제 내역',
-                                            onClick: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const PaymentHistoryPage(),
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                        MenuList(
+                                          icon: Icons.payment,
+                                          text: '결제 내역',
+                                          onClick: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PaymentHistoryPage(),
+                                              ),
+                                            );
+                                          },
                                         ),
                                         Visibility(
                                           visible: User().role == "President",
