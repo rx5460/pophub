@@ -37,7 +37,7 @@ class ReservationApi {
       String popup) async {
     try {
       final dataList =
-          await getListData('$domain/reservationStatus/$popup', {});
+          await getListData('$domain/reservation/advance/status/$popup', {});
       Logger.debug("### 예약 상태 조회 $dataList");
 
       List<ReservationModel> reservationList =

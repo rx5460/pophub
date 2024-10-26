@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/reservation_model.dart';
@@ -57,7 +57,7 @@ class _ReserveDateState extends State<ReserveDate> {
   }
 
   void _updateAvailableHours() {
-    String dayOfWeek = DateFormat('EEE').format(selectedDate);
+    String dayOfWeek = DateFormat('EEE', 'en_US').format(selectedDate);
 
     int? openHour;
     int? closeHour;
@@ -93,8 +93,8 @@ class _ReserveDateState extends State<ReserveDate> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text(
-          ('make_a_reservation').tr(),
+        title: const Text(
+          '예약하기',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
@@ -119,15 +119,15 @@ class _ReserveDateState extends State<ReserveDate> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  ('reservation_date_and_time').tr(),
+                const Text(
+                  '예약 날짜 및 시간을',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Text(
-                  ('please_set_it').tr(),
+                const Text(
+                  '설정해 주세요.',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
@@ -178,13 +178,16 @@ class _ReserveDateState extends State<ReserveDate> {
                     bool abled = true;
                     if (reserve != null && reserve!.isNotEmpty) {
                       for (int i = 0; i < reserve!.length; i++) {
-                        if (reserve![i].time != null &&
+                        if (reserve![0].status![i].time != null &&
                                 DateFormat('HH:mm')
-                                        .format(DateFormat('HH:mm:ss')
-                                            .parse(reserve![i].time.toString()))
+                                        .format(DateFormat('HH:mm:ss').parse(
+                                            reserve![0]
+                                                .status![i]
+                                                .time
+                                                .toString()))
                                         .toString() ==
                                     "${hour.toString().padLeft(2, '0')}:00" ||
-                            reserve![i].status == true) {
+                            reserve![0].status![i].status == true) {
                           abled = false;
                           break;
                         }
@@ -252,7 +255,7 @@ class _ReserveDateState extends State<ReserveDate> {
                           )),
                 );
               },
-              child: Text(('next').tr()),
+              child: const Text('다음'),
             ),
           ),
         ],

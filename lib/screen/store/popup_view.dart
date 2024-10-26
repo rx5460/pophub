@@ -17,6 +17,7 @@ import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/screen/goods/goods_list.dart';
 import 'package:pophub/screen/goods/goods_view.dart';
 import 'package:pophub/screen/reservation/reserve_date.dart';
+import 'package:pophub/screen/reservation/waiting_count.dart';
 import 'package:pophub/screen/store/pending_reject.dart';
 import 'package:pophub/screen/store/popup_review.dart';
 import 'package:pophub/screen/store/qr_code.dart';
@@ -64,7 +65,8 @@ class _PopupDetailState extends State<PopupDetail> {
 
       setState(() {
         popup = data;
-
+        print('팝업 요일 : ${popup!.schedule![0].dayOfWeek}');
+        print(DateFormat('EEE', 'en_US').format(DateTime.now()));
         double? xCoord = double.tryParse(popup!.y.toString());
         double? yCoord = double.tryParse(popup!.x.toString());
 
@@ -371,7 +373,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                         i < popup!.schedule!.length;
                                         i++)
                                       if (popup!.schedule![i].dayOfWeek ==
-                                          DateFormat('EEE')
+                                          DateFormat('EEE', 'en_US')
                                               .format(DateTime.now()))
                                         Padding(
                                           padding: EdgeInsets.only(
@@ -1046,56 +1048,121 @@ class _PopupDetailState extends State<PopupDetail> {
                               visible: widget.mode == "view",
                               child: const Spacer(),
                             ),
-                            Visibility(
-                              visible: widget.mode == "view",
-                              child: Container(
-                                width: screenWidth * 0.3,
-                                height: screenHeight * 0.05,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Constants.DEFAULT_COLOR,
-                                  ),
-                                  color: Constants.DEFAULT_COLOR,
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    if (User().userName != "") {
-                                      if (context.mounted) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ReserveDate(
-                                              popup: popup!,
-                                            ),
+                            Row(
+                              children: [
+                                Visibility(
+                                  visible: widget.mode == "view" &&
+                                      (popup!.status == '오픈'),
+                                  child: Container(
+                                    width: screenWidth * 0.3,
+                                    height: screenHeight * 0.05,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      border: Border.all(
+                                        width: 2,
+                                        color: Constants.DEFAULT_COLOR,
+                                      ),
+                                      color: Constants.DEFAULT_COLOR,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (User().userName != "") {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WaitingCount(
+                                                  popup: popup!.id!,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Login(),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          ('make_a_waiting').tr(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 16,
                                           ),
-                                        );
-                                      }
-                                    } else {
-                                      if (context.mounted) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const Login(),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      ('make_a_reservation').tr(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Visibility(
+                                  visible: widget.mode == "view" &&
+                                      (popup!.status == '오픈' ||
+                                          popup!.status == '오픈 예정'),
+                                  child: Container(
+                                    width: screenWidth * 0.3,
+                                    height: screenHeight * 0.05,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      border: Border.all(
+                                        width: 2,
+                                        color: Constants.DEFAULT_COLOR,
+                                      ),
+                                      color: Constants.DEFAULT_COLOR,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (User().userName != "") {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReserveDate(
+                                                  popup: popup!,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Login(),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          ('make_a_reservation').tr(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             Visibility(
                               visible: widget.mode == "pending" &&
