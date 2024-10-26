@@ -53,8 +53,8 @@ class ReservationApi {
 // 팝업 예약 상태 조회 by store
   static Future<List<ReservationModel>> getReservationByStoreId(
       String storeId) async {
-    final dataList =
-        await getListData('$domain/reservation/advance/$storeId', {});
+    final dataList = await getListData(
+        '$domain/reservation/advance/show?type=president&storeId=$storeId', {});
     Logger.debug("### 팝업 예약 상태 조회 by storeId $dataList");
 
     List<ReservationModel> reservationList =
@@ -74,7 +74,8 @@ class ReservationApi {
   // 팝업 예약 상태 조회 by name
   static Future<List<ReservationModel>> getReservationByUserName() async {
     final dataList = await getListData(
-        '$domain/popup/getReservation/user/${User().userName}', {});
+        '$domain/reservation/advance/show?type=user&userName=${User().userName}',
+        {});
     Logger.debug("### 팝업 예약 상태 조회 by name $dataList");
 
     List<ReservationModel> reservationList =
