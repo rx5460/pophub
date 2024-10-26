@@ -42,45 +42,39 @@ class _NoticePageState extends State<NoticePage> {
     double screenWidth = screenSize.width;
     return Scaffold(
       appBar: CustomTitleBar(titleName: ('titleName_13').tr()),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const NoticeWrite(),
-          ),
-        );
-      }),
-      body: notices.isNotEmpty
-          ? Container(
-              decoration: const BoxDecoration(
-                  border: Border(
-                      top: BorderSide(width: 0.5, color: Constants.DARK_GREY))),
-              child: ListView.builder(
-                itemCount: 2,
-                itemBuilder: (BuildContext context, int index) {
-                  return NoticeTile(
-                    title: ('title_2').tr(),
-                    date: "2024-08-24",
-                    content: ('content').tr(),
-                  );
-                },
-              ),
-            )
-          : Container(
-              decoration: const BoxDecoration(
-                  border: Border(
-                      top: BorderSide(width: 0.5, color: Constants.DARK_GREY))),
-              child: ListView.builder(
-                itemCount: 2,
-                itemBuilder: (BuildContext context, int index) {
-                  return NoticeTile(
-                    title: ('title_2').tr(),
-                    date: "2024-08-24",
-                    content: ('content').tr(),
-                  );
-                },
-              ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NoticeWritePage(),
             ),
+          );
+        },
+        heroTag: null,
+        backgroundColor: Constants.DEFAULT_COLOR,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add_outlined,
+          color: Colors.white,
+        ),
+      ),
+      body: notices.isNotEmpty
+          ? ListView.builder(
+              itemCount: notices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return NoticeTile(
+                  title: notices[index].title,
+                  date: notices[index].time,
+                  content: notices[index].content,
+                );
+              },
+            )
+          : const Center(
+              child: Text(
+              "공지사항이 없습니다.",
+              style: TextStyle(fontSize: 16),
+            )),
     );
   }
 }
