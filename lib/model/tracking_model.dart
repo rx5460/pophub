@@ -52,7 +52,7 @@ class TrackingParty {
 
   factory TrackingParty.fromJson(Map<String, dynamic> json) {
     return TrackingParty(
-      name: json['name'],
+      name: json['name'] ?? "",
       time: DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(json['time']),
     );
   }
