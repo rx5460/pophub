@@ -16,6 +16,7 @@ class NoticeApi {
     return noticeList;
   }
 
+  // 필요?
   static Future<dynamic> getFirstItem(String url) async {
     final List<dynamic> dataList = await getListData(url, {});
     if (dataList.isNotEmpty) {

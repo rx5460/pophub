@@ -532,17 +532,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ],
                                           ),
                                         ),
-                                        // MenuList(
-                                        //   icon: Icons.credit_card,
-                                        //   text: '결제 내역',
-                                        //   onClick: () {
-                                        //     Navigator.push(
-                                        //         context,
-                                        //         MaterialPageRoute(
-                                        //             builder: (context) =>
-                                        //                 const PaymentHistoryPage()));
-                                        //   },
-                                        // ),
                                         Visibility(
                                           visible: User().role == "President",
                                           child: MenuList(

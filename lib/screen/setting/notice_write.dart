@@ -22,7 +22,7 @@ class _NoticeWritePageState extends State<NoticeWritePage> {
     super.dispose();
   }
 
-  Future<void> _submitInquiry() async {
+  Future<void> postNotice() async {
     String title = _titleController.text;
     String content = _contentController.text;
     try {
@@ -94,7 +94,7 @@ class _NoticeWritePageState extends State<NoticeWritePage> {
             const SizedBox(height: 16),
             const Spacer(),
             OutlinedButton(
-              onPressed: _submitInquiry,
+              onPressed: postNotice,
               child: const Text('complete').tr(),
             ),
           ],

@@ -31,7 +31,6 @@ class _NoticePageState extends State<NoticePage> {
       });
       Logger.debug("### $data");
     } catch (error) {
-      // 오류 처리
       Logger.debug('Error fetching popup data: $error');
     }
   }
