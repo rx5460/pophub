@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/model/point_model.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
@@ -47,7 +48,7 @@ class _PointListPageState extends State<PointListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomTitleBar(
-        titleName: ('포인트'),
+        titleName: ('point').tr(),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator()) // 로딩 중일 때 인디케이터 표시
