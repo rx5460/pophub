@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/notice_model.dart';
+import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/setting/notice_detail.dart';
 import 'package:pophub/screen/setting/notice_write.dart';
@@ -41,21 +42,24 @@ class _NoticePageState extends State<NoticePage> {
     double screenWidth = screenSize.width;
     return Scaffold(
       appBar: CustomTitleBar(titleName: ('titleName_13').tr()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NoticeWritePage(),
-            ),
-          );
-        },
-        heroTag: null,
-        backgroundColor: Constants.DEFAULT_COLOR,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.add_outlined,
-          color: Colors.white,
+      floatingActionButton: Visibility(
+        visible: User().role == "Manager",
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NoticeWritePage(),
+              ),
+            );
+          },
+          heroTag: null,
+          backgroundColor: Constants.DEFAULT_COLOR,
+          shape: const CircleBorder(),
+          child: const Icon(
+            Icons.add_outlined,
+            color: Colors.white,
+          ),
         ),
       ),
       body: notices.isNotEmpty
