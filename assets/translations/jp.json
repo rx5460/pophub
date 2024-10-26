@@ -444,5 +444,6 @@
   "address_add": "住所登録",
   "delivery_list": "配送照会",
   "show_detail": "詳細を見る",
-  "marker_text": "マーカーを押すと、カカオマップのルートに移動します。"
+  "marker_text": "マーカーを押すと、カカオマップのルートに移動します。",
+  "make_a_waiting": "現場待機"
 }

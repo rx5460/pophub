@@ -444,5 +444,6 @@
   "address_add": "Address registration",
   "delivery_list": "delivery tracking",
   "show_detail": "View details",
-  "marker_text": "Clicking on the marker takes you to Kakao Map directions."
+  "marker_text": "Clicking on the marker takes you to Kakao Map directions.",
+  "make_a_waiting": "On-site standby"
 }

@@ -2,15 +2,31 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/screen/reservation/waiting_info.dart';
+import 'package:pophub/utils/api/reservation_api.dart';
 
 class WaitingRegistration extends StatefulWidget {
-  const WaitingRegistration({super.key});
+  final int count;
+  final String popup;
+  const WaitingRegistration(
+      {super.key, required this.count, required this.popup});
 
   @override
   State<WaitingRegistration> createState() => _WaitingRegistrationState();
 }
 
 class _WaitingRegistrationState extends State<WaitingRegistration> {
+  Future<void> waitingApi() async {
+    try {
+      Map<String, dynamic> data =
+          await ReservationApi.postPopupWaiting(widget.popup, widget.count);
+
+      if (data.toString().contains("fail")) {
+      } else {}
+    } catch (e) {
+      print('Error during waiting: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -22,7 +38,7 @@ class _WaitingRegistrationState extends State<WaitingRegistration> {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          ('make_a_reservation').tr(),
+          ('make_a_waiting').tr(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(

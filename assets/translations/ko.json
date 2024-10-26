@@ -444,5 +444,6 @@
   "address_add": "주소 등록",
   "delivery_list": "배송 조회",
   "show_detail": "상세 보기",
-  "marker_text": "마커를 누르면 카카오맵 길찾기로 이동합니다."
+  "marker_text": "마커를 누르면 카카오맵 길찾기로 이동합니다.",
+  "make_a_waiting": "현장대기"
 }
