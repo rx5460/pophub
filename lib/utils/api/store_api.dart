@@ -222,7 +222,7 @@ class StoreApi {
           'storeStartDate', store.startDate.toIso8601String().split('T').first),
       MapEntry(
           'storeEndDate', store.endDate.toIso8601String().split('T').first),
-      MapEntry('maxCapacity', store.maxCapacity.toString()),
+      const MapEntry('maxCapacity', "100"),
     ]);
 
     if (store.schedule != null) {
