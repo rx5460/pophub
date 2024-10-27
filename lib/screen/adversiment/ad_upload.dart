@@ -176,118 +176,120 @@ class AdUploadState extends State<AdUpload> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16.0),
-            Text(
-              ('advertisement_title').tr(),
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16.0),
+              Text(
+                ('advertisement_title').tr(),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                hintText: ('hintText_5').tr(),
-                border: const OutlineInputBorder(),
+              const SizedBox(height: 8.0),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: ('hintText_5').tr(),
+                  border: const OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    adTitle = value;
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  adTitle = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              ('advertising_image').tr(),
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 16.0),
+              Text(
+                ('advertising_image').tr(),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 8.0),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: _selectedImage == null
-                  ? ListTile(
-                      title: Text(('attach').tr()),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: _pickImage,
-                    )
-                  : Column(
-                      children: [
-                        Image.file(
-                          _selectedImage!,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(height: 8.0),
-                        ListTile(
-                          title: Text(('select_again').tr()),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: _pickImage,
-                        ),
-                      ],
-                    ),
-            ),
-            const SizedBox(height: 30.0),
-            Text(
-              ('posting_period').tr(),
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        startDate == null
-                            ? ('start_date').tr()
-                            : '${startDate!.year}.${startDate!.month.toString().padLeft(2, '0')}.${startDate!.day.toString().padLeft(2, '0')}',
+              const SizedBox(height: 8.0),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: _selectedImage == null
+                    ? ListTile(
+                        title: Text(('attach').tr()),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                        onTap: _pickImage,
+                      )
+                    : Column(
+                        children: [
+                          Image.file(
+                            _selectedImage!,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(height: 8.0),
+                          ListTile(
+                            title: Text(('select_again').tr()),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: _pickImage,
+                          ),
+                        ],
                       ),
-                      onTap: () => _selectDate(context, true),
+              ),
+              const SizedBox(height: 30.0),
+              Text(
+                ('posting_period').tr(),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          startDate == null
+                              ? ('start_date').tr()
+                              : '${startDate!.year}.${startDate!.month.toString().padLeft(2, '0')}.${startDate!.day.toString().padLeft(2, '0')}',
+                        ),
+                        onTap: () => _selectDate(context, true),
+                      ),
                     ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text('~', style: TextStyle(fontSize: 24)),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        endDate == null
-                            ? ('end_date').tr()
-                            : '${endDate!.year}.${endDate!.month.toString().padLeft(2, '0')}.${endDate!.day.toString().padLeft(2, '0')}',
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('~', style: TextStyle(fontSize: 24)),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      onTap: () => _selectDate(context, false),
+                      child: ListTile(
+                        title: Text(
+                          endDate == null
+                              ? ('end_date').tr()
+                              : '${endDate!.year}.${endDate!.month.toString().padLeft(2, '0')}.${endDate!.day.toString().padLeft(2, '0')}',
+                        ),
+                        onTap: () => _selectDate(context, false),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
