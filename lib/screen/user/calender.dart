@@ -47,6 +47,7 @@ class _CalenderState extends State<Calender> {
         });
       }
     } catch (error) {
+      visitList = [];
       Logger.debug('Error fetching calendar data: $error');
     }
   }
@@ -129,9 +130,9 @@ class _CalenderState extends State<Calender> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => QrScan(
+                              builder: (context) => const QrScan(
                                     type: "reservation",
-                                    refreshData: fetchData,
+                                    // refreshData: fetchData,
                                   )),
                         );
                       },
@@ -144,9 +145,9 @@ class _CalenderState extends State<Calender> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => QrScan(
+                              builder: (context) => const QrScan(
                                     type: "waiting",
-                                    refreshData: fetchData,
+                                    // refreshData: fetchData,
                                   )),
                         );
                       },
