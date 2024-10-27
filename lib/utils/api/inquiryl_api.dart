@@ -58,7 +58,7 @@ class InquiryApi {
   // 문의 내역 상세 조회
   static Future<InquiryModel> getInquiry(int inquiryId) async {
     final data =
-        await getData('$domain/user/answer/search?inquiryId=$inquiryId', {});
+        await getData('$domain/user/inquiry/search?inquiryId=$inquiryId', {});
     Logger.debug("### 문의 내역 상세 조회 $data");
 
     InquiryModel inquiryModel = InquiryModel.fromJson(data);
