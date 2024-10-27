@@ -1,18 +1,19 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/utils/api/visit_api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScan extends StatefulWidget {
-  final Function() refreshData;
+  // final Function() refreshData;
   final String type;
   const QrScan({
     Key? key,
     required this.type,
-    required this.refreshData,
+    // required this.refreshData,
   }) : super(key: key);
 
   @override
@@ -61,7 +62,7 @@ class _QrScanState extends State<QrScan> {
             await VisitApi.reservationVisit(code, widget.type);
 
         if (!data.toString().contains("fail")) {
-          widget.refreshData;
+          // widget.refreshData;
           showAlert(context, "guide".tr(), "reservation_succses".tr(),
               () async {
             Navigator.pop(context);
@@ -115,14 +116,14 @@ class _QrScanState extends State<QrScan> {
               ),
             ),
           ),
-          // SizedBox(
-          //   child: Center(
-          //     child: (result != null)
-          //         ? Text(
-          //             'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-          //         : const Text('Scan a code'),
-          //   ),
-          // )
+          SizedBox(
+            child: Center(
+              child: (result != null)
+                  ? Text(
+                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                  : const Text('Scan a code'),
+            ),
+          )
         ],
       ),
     );
