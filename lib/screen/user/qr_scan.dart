@@ -68,7 +68,12 @@ class _QrScanState extends State<QrScan> {
             Navigator.pop(context);
             Navigator.pop(context);
           });
-        } else {}
+        } else {
+          showAlert(context, "guide".tr(), "방문인증에 실패했습니다.", () async {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        }
       } catch (e) {
         print('HTTP 요청 실패: $e');
       }
@@ -116,14 +121,14 @@ class _QrScanState extends State<QrScan> {
               ),
             ),
           ),
-          SizedBox(
-            child: Center(
-              child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : const Text('Scan a code'),
-            ),
-          )
+          // SizedBox(
+          //   child: Center(
+          //     child: (result != null)
+          //         ? Text(
+          //             'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+          //         : const Text('Scan a code'),
+          //   ),
+          // )
         ],
       ),
     );
