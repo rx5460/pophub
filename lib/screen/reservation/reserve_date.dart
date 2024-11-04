@@ -177,19 +177,21 @@ class _ReserveDateState extends State<ReserveDate> {
                     int hour = availableHours[index];
                     bool abled = true;
                     if (reserve != null && reserve!.isNotEmpty) {
-                      for (int i = 0; i < reserve!.length; i++) {
-                        if (reserve![0].status![i].time != null &&
-                                DateFormat('HH:mm')
-                                        .format(DateFormat('HH:mm:ss').parse(
-                                            reserve![0]
-                                                .status![i]
-                                                .time
-                                                .toString()))
-                                        .toString() ==
-                                    "${hour.toString().padLeft(2, '0')}:00" ||
-                            reserve![0].status![i].status == true) {
-                          abled = false;
-                          break;
+                      if (reserve?[0].date != null) {
+                        for (int i = 0; i < reserve!.length; i++) {
+                          if (reserve![0].status![i].time != null &&
+                                  DateFormat('HH:mm')
+                                          .format(DateFormat('HH:mm:ss').parse(
+                                              reserve![0]
+                                                  .status![i]
+                                                  .time
+                                                  .toString()))
+                                          .toString() ==
+                                      "${hour.toString().padLeft(2, '0')}:00" ||
+                              reserve![0].status![i].status == true) {
+                            abled = false;
+                            break;
+                          }
                         }
                       }
                     }
