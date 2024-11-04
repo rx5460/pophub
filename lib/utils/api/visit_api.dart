@@ -1,4 +1,3 @@
-import 'package:pophub/model/category_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/model/visit_model.dart';
 import 'package:pophub/utils/http.dart';
@@ -11,9 +10,9 @@ class VisitApi {
   // 사전예약 방문 인증
   static Future<Map<String, dynamic>> reservationVisit(
       String qr, String type) async {
-    final data = await postData('$domain/qrcode/scan/visit?type=$type', {
+    final data = await putData('$domain/qrcode/scan/visit?type=$type', {
       'userName': User().userName,
-      'qrCode': qr,
+      'storeId': qr,
     });
 
     Logger.debug("### 방문 인증 $data");
