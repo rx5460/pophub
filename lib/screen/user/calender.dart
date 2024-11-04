@@ -241,160 +241,163 @@ class _CalenderState extends State<Calender> {
       floatingActionButton: _isExpanded
           ? _buildExpandedFloatingButtons()
           : _buildCollapsedFloatingButton(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.only(
-                top: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  DayOfWeek(str: 'S'),
-                  DayOfWeek(str: 'M'),
-                  DayOfWeek(str: 'T'),
-                  DayOfWeek(str: 'W'),
-                  DayOfWeek(str: 'T'),
-                  DayOfWeek(str: 'F'),
-                  DayOfWeek(str: 'S'),
-                ],
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+          const Padding(
+            padding: EdgeInsets.only(
+              top: 8,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 8),
-              child: Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                  width: 0.5,
-                  color: Colors.grey,
-                ))),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DayOfWeek(str: 'S'),
+                DayOfWeek(str: 'M'),
+                DayOfWeek(str: 'T'),
+                DayOfWeek(str: 'W'),
+                DayOfWeek(str: 'T'),
+                DayOfWeek(str: 'F'),
+                DayOfWeek(str: 'S'),
+              ],
             ),
-            SizedBox(
-              width: screenWidth * 0.9,
-              child: Table(
-                children: buildCalendar(_currentDate),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                width: 0.5,
+                color: Colors.grey,
+              ))),
             ),
-            SizedBox(
-              height: screenHeight * 0.03,
+          ),
+          SizedBox(
+            width: screenWidth * 0.9,
+            child: Table(
+              children: buildCalendar(_currentDate),
             ),
-            SizedBox(
-              width: screenWidth * 0.9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${_selectedDate.month}월 ${_selectedDate.day}일 (${getWeekdayString(_selectedDate.weekday)})',
-                    style: const TextStyle(
-                        fontSize: 20,
+          ),
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
+          SizedBox(
+            width: screenWidth * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${_selectedDate.month}월 ${_selectedDate.day}일 (${getWeekdayString(_selectedDate.weekday)})',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20, left: 8, bottom: 16),
+                  child: Text(
+                    '방문',
+                    style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, left: 8, bottom: 16),
-                    child: Text(
-                      '방문',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: Container(
-                      width: screenWidth * 0.82,
-                      height: screenHeight * 0.07,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                            width: 3,
-                            color: Constants.DEFAULT_COLOR,
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Container(
+                    width: screenWidth * 0.82,
+                    height: visitData != null && visitData!.isNotEmpty
+                        ? (visitData!.length * (screenHeight * 0.07))
+                        : screenHeight * 0.07,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          width: 3,
+                          color: Constants.DEFAULT_COLOR,
                         ),
                       ),
-                      child: visitData != null && visitData!.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: visitData!.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 1),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 4, bottom: 4, right: 4),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              8.0), // 모서리를 둥글게 설정
-                                          child: Image.network(
-                                            visitData![index].images!,
-                                            fit: BoxFit.cover,
-                                            width: screenHeight * 0.07 - 8,
-                                            height: screenHeight * 0.07 - 8,
-                                          ),
+                    ),
+                    child: visitData != null && visitData!.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: visitData!.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 1),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 4, bottom: 4, right: 4),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // 모서리를 둥글게 설정
+                                        child: Image.network(
+                                          visitData![index].images!,
+                                          fit: BoxFit.cover,
+                                          width: screenHeight * 0.07 - 8,
+                                          height: screenHeight * 0.07 - 8,
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: screenHeight * 0.07,
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
+                                    ),
+                                    SizedBox(
+                                      height: screenHeight * 0.07,
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: screenWidth * 0.65,
+                                              child: Text(
                                                 visitData![index].storeName!,
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w900,
                                                   fontSize: 16,
                                                 ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              Text(
-                                                DateFormat('yyyy-MM-dd HH:mm')
-                                                    .format(DateTime.parse(
-                                                        visitData![index]
-                                                            .reservationDate!)),
-                                                style: const TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                              ),
-                                            ]),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          : SizedBox(
-                              height: screenHeight * 0.07,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text('방문한 팝업스토어가 없습니다.'),
-                                  ),
-                                ],
-                              )),
-                    ),
-                  )
-                ],
-              ),
+                                            ),
+                                            Text(
+                                              DateFormat('yyyy-MM-dd HH:mm')
+                                                  .format(DateTime.parse(
+                                                      visitData![index]
+                                                          .reservationDate!)),
+                                              style: const TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ]),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : SizedBox(
+                            height: screenHeight * 0.07,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text('방문한 팝업스토어가 없습니다.'),
+                                ),
+                              ],
+                            )),
+                  ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
