@@ -4,6 +4,7 @@ import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/custom/custom_title_bar.dart';
 import 'package:pophub/screen/nav/bottom_navigation.dart';
 import 'package:pophub/screen/setting/alarm_setting.dart';
+import 'package:pophub/screen/setting/language_change_page.dart';
 import 'package:pophub/screen/setting/withdrawal.dart';
 import 'package:pophub/utils/http.dart';
 
@@ -73,6 +74,16 @@ class _AppSettingState extends State<AppSetting> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const WithdrawalPage()));
+            },
+          ),
+          ListTile(
+            title: const Text("change_lang").tr(),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LanguageChangePage()));
             },
           ),
           Padding(

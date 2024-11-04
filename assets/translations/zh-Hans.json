@@ -445,5 +445,6 @@
   "delivery_list": "交货追踪",
   "show_detail": "查看详情",
   "marker_text": "单击标记即可前往 Kakao 地图方向。",
-  "make_a_waiting": "现场待命"
+  "make_a_waiting": "现场待命",
+  "change_lang": "改变语言"
 }

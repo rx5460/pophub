@@ -445,5 +445,6 @@
   "delivery_list": "delivery tracking",
   "show_detail": "View details",
   "marker_text": "Clicking on the marker takes you to Kakao Map directions.",
-  "make_a_waiting": "On-site standby"
+  "make_a_waiting": "On-site standby",
+  "change_lang": "change language"
 }

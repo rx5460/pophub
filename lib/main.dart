@@ -112,17 +112,20 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  // initializeNotification();
+  initializeNotification();
 
   // 초기 알림 설정 로드 및 적용
-  // loadInitialNotificationSetting();
-  // WidgetsFlutterBinding.ensureInitialized();
+  loadInitialNotificationSetting();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: 'assets/config/.env');
+
+  final prefs = await SharedPreferences.getInstance();
+  final String? languageCode = prefs.getString('selected_language');
 
   AuthRepository.initialize(
     appKey: dotenv.env['APP_KEY'] ?? '',
@@ -135,14 +138,24 @@ Future<void> main() async {
   String lang = 'ko';
 
   final deviceLocales = PlatformDispatcher.instance.locales;
-  if (deviceLocales[0].languageCode != 'ko') {
-    lang = deviceLocales[0].languageCode;
+  if (languageCode != "") {
+    lang = languageCode.toString();
+  } else {
+    if (deviceLocales[0].languageCode != 'ko') {
+      lang = deviceLocales[0].languageCode;
+    }
   }
 
   runApp(EasyLocalization(
-      supportedLocales: const [Locale('ko'), Locale('en')],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ko'),
+        Locale('ja'),
+        Locale('zh', 'Hans') // 중국어 간체
+      ],
       startLocale: Locale(lang),
       path: 'assets/translations',
+      saveLocale: true,
       child: const MyApp()));
 }
 
