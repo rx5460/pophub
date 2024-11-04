@@ -1104,8 +1104,11 @@ class _PopupDetailState extends State<PopupDetail> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
+                                Visibility(
+                                  visible: widget.mode != "modify",
+                                  child: const SizedBox(
+                                    width: 10,
+                                  ),
                                 ),
                                 Visibility(
                                   visible: widget.mode == "view" &&
