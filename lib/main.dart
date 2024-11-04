@@ -124,6 +124,9 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: 'assets/config/.env');
 
+  final prefs = await SharedPreferences.getInstance();
+  final String? languageCode = prefs.getString('selected_language');
+
   AuthRepository.initialize(
     appKey: dotenv.env['APP_KEY'] ?? '',
   );
@@ -135,14 +138,24 @@ Future<void> main() async {
   String lang = 'ko';
 
   final deviceLocales = PlatformDispatcher.instance.locales;
-  if (deviceLocales[0].languageCode != 'ko') {
-    lang = deviceLocales[0].languageCode;
+  if (languageCode != "") {
+    lang = languageCode.toString();
+  } else {
+    if (deviceLocales[0].languageCode != 'ko') {
+      lang = deviceLocales[0].languageCode;
+    }
   }
 
   runApp(EasyLocalization(
-      supportedLocales: const [Locale('ko'), Locale('en')],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ko'),
+        Locale('ja'),
+        Locale('zh', 'Hans') // 중국어 간체
+      ],
       startLocale: Locale(lang),
       path: 'assets/translations',
+      saveLocale: true,
       child: const MyApp()));
 }
 
