@@ -1,19 +1,16 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pophub/utils/api/visit_api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScan extends StatefulWidget {
-  // final Function() refreshData;
   final String type;
   const QrScan({
     Key? key,
     required this.type,
-    // required this.refreshData,
   }) : super(key: key);
 
   @override
@@ -24,24 +21,29 @@ class _QrScanState extends State<QrScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
+  bool hasScanned = false; // New variable to track if a scan has occurred
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller!.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-        addSchedule(scanData.code);
-      });
+      if (!hasScanned) {
+        // Only process the first scan
+        setState(() {
+          hasScanned = true; // Prevent further scans
+          result = scanData;
+          addSchedule(scanData.code);
+        });
+      }
     });
   }
 
@@ -56,13 +58,11 @@ class _QrScanState extends State<QrScan> {
   void addSchedule(String? code) async {
     if (code != null) {
       try {
-        // 요청이 성공했다고 가정
         print('QR 코드가 인식되었습니다: $code');
         Map<String, dynamic> data =
             await VisitApi.reservationVisit(code, widget.type);
 
         if (!data.toString().contains("fail")) {
-          // widget.refreshData;
           showAlert(context, "guide".tr(), "reservation_succses".tr(),
               () async {
             Navigator.pop(context);
@@ -101,8 +101,7 @@ class _QrScanState extends State<QrScan> {
             height: screenHeight * 0.075,
             decoration: const BoxDecoration(color: Colors.black54),
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: screenWidth * 0.05, right: screenWidth * 0.05),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
               child: Row(
                 children: [
                   const Icon(
@@ -110,25 +109,15 @@ class _QrScanState extends State<QrScan> {
                     size: 24,
                     color: Colors.white,
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'reservation_select_text'.tr(),
                     style: const TextStyle(color: Colors.white),
-                  )
+                  ),
                 ],
               ),
             ),
           ),
-          // SizedBox(
-          //   child: Center(
-          //     child: (result != null)
-          //         ? Text(
-          //             'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-          //         : const Text('Scan a code'),
-          //   ),
-          // )
         ],
       ),
     );
