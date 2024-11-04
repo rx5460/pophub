@@ -40,7 +40,7 @@ class _QrScanState extends State<QrScan> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-        addSchedule(scanData.code);
+        // addSchedule(scanData.code);
       });
     });
   }
@@ -121,14 +121,14 @@ class _QrScanState extends State<QrScan> {
               ),
             ),
           ),
-          // SizedBox(
-          //   child: Center(
-          //     child: (result != null)
-          //         ? Text(
-          //             'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-          //         : const Text('Scan a code'),
-          //   ),
-          // )
+          SizedBox(
+            child: Center(
+              child: (result != null)
+                  ? Text(
+                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                  : const Text('Scan a code'),
+            ),
+          )
         ],
       ),
     );

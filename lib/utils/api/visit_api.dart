@@ -13,7 +13,7 @@ class VisitApi {
       String qr, String type) async {
     final data = await postData('$domain/qrcode/scan/visit?type=$type', {
       'userName': User().userName,
-      'qrCode': qr,
+      'storeId': qr,
     });
 
     Logger.debug("### 방문 인증 $data");
