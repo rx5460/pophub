@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<ReviewModel>? reviewList;
   String? storeId;
   String visitCount = "";
+  List<PopupModel> reviewPopupList = [];
 
   Future<void> profileApi() async {
     setState(() {
@@ -203,6 +204,12 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           reviewList = dataList;
         });
+
+        for (ReviewModel review in dataList) {
+          PopupModel? data =
+              await StoreApi.getPopup(review.store.toString(), false, "");
+          reviewPopupList.add(data);
+        }
       }
     } catch (error) {
       Logger.debug('Error fetching review data: $error');
@@ -464,6 +471,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 reviews:
                                                                     reviewList ??
                                                                         [],
+                                                                popupModels:
+                                                                    reviewPopupList,
                                                               ),
                                                             ),
                                                           );
@@ -507,9 +516,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         MyReview(
-                                                          reviews:
-                                                              reviewList ?? [],
-                                                        )));
+                                                            reviews:
+                                                                reviewList ??
+                                                                    [],
+                                                            popupModels:
+                                                                reviewPopupList ??
+                                                                    [])));
                                           },
                                         ),
                                         MenuList(
