@@ -1,10 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pophub/model/user.dart';
+import 'package:pophub/screen/alarm/alarm.dart';
 import 'package:pophub/utils/api/visit_api.dart';
 import 'package:pophub/utils/utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:http/http.dart' as http;
 
 class QrScan extends StatefulWidget {
   final String type;
@@ -41,7 +47,7 @@ class _QrScanState extends State<QrScan> {
         setState(() {
           hasScanned = true; // Prevent further scans
           result = scanData;
-          addSchedule(scanData.code);
+          addSchedule(result!.code);
         });
       }
     });
@@ -62,13 +68,16 @@ class _QrScanState extends State<QrScan> {
         Map<String, dynamic> data =
             await VisitApi.reservationVisit(code, widget.type);
 
-        if (!data.toString().contains("fail")) {
+        if (!data.toString().contains("실패")) {
+          // 방문 인증 성공 시 알림 전송
           showAlert(context, "guide".tr(), "reservation_succses".tr(),
               () async {
+            await sendAlarmAndNotification(); // 알림 전송 메소드 호출
             Navigator.pop(context);
             Navigator.pop(context);
           });
         } else {
+          // 방문 인증 실패 시 알림
           showAlert(context, "guide".tr(), "방문인증에 실패했습니다.", () async {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -78,6 +87,38 @@ class _QrScanState extends State<QrScan> {
         print('HTTP 요청 실패: $e');
       }
     }
+  }
+
+  Future<void> sendAlarmAndNotification() async {
+    final Map<String, String> alarmDetails = {
+      'title': ('visit_verification_completed').tr(),
+      'label': ('your_visit_verification_is_successful').tr(),
+      'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
+          .format(DateTime.now()),
+      'active': 'true',
+    };
+
+    // 서버에 알람 추가
+    await http.post(
+      Uri.parse('http://3.233.20.5:3000/alarm_add'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userName': User().userName,
+        'type': 'alarms',
+        'alarmDetails': alarmDetails,
+      }),
+    );
+
+    // Firestore에 알람 추가
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(User().userName)
+        .collection('alarms')
+        .add(alarmDetails);
+
+    // 로컬 알림 발송
+    await const AlarmList().showNotification(
+        alarmDetails['title']!, alarmDetails['label']!, alarmDetails['time']!);
   }
 
   @override
@@ -118,6 +159,14 @@ class _QrScanState extends State<QrScan> {
               ),
             ),
           ),
+          // SizedBox(
+          //   child: Center(
+          //     child: (result != null)
+          //         ? Text(
+          //             'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+          //         : const Text('Scan a code'),
+          //   ),
+          // )
         ],
       ),
     );
