@@ -91,10 +91,9 @@ class _QrScanState extends State<QrScan> {
 
   Future<void> sendAlarmAndNotification() async {
     final Map<String, String> alarmDetails = {
-      'title': ('visit_verification_completed').tr(),
-      'label': ('your_visit_verification_is_successful').tr(),
-      'time': DateFormat(('mm_month_dd_day_hh_hours_mm_minutes').tr())
-          .format(DateTime.now()),
+      'title': ('방문 확인 완료').tr(),
+      'label': ('방문 확인이 성공적으로 완료되었습니다').tr(),
+      'time': DateFormat(('MM월 dd일 hh시 mm분').tr()).format(DateTime.now()),
       'active': 'true',
     };
 
