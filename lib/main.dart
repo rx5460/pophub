@@ -10,7 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:pophub/screen/alarm/alarm.dart';
-import 'package:pophub/screen/nav/bottom_navigation.dart';
+import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -138,7 +138,7 @@ Future<void> main() async {
   String lang = 'ko';
 
   final deviceLocales = PlatformDispatcher.instance.locales;
-  if (languageCode != "" && languageCode != null) {
+  if (languageCode != null) {
     lang = languageCode.toString();
   } else {
     if (deviceLocales[0].languageCode != 'ko') {
@@ -174,7 +174,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const BottomNavigationPage(),
+      home: const AppSetting(),
       routes: {
         '/alarm': (context) => const AlarmList(), // 라우트 설정
       },
