@@ -177,9 +177,8 @@ class _GoodsCreatePageState extends State<GoodsCreatePage> {
           context,
           MaterialPageRoute(
             builder: (context) => GoodsDetail(
-              popupName: widget.popup.name!,
               goodsId: widget.productId.toString(),
-              popupId: widget.popup.id!,
+              popup: widget.popup,
             ),
           ),
         ).then((value) {

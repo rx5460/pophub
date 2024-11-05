@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/address_model.dart';
 import 'package:pophub/model/goods_model.dart';
+import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/user.dart';
 import 'package:pophub/screen/setting/address_write.dart';
 import 'package:pophub/screen/user/purchase.dart';
@@ -14,12 +15,13 @@ import 'package:pophub/utils/log.dart';
 class GoodsOrder extends StatefulWidget {
   final int count;
   final GoodsModel goods;
-  final String popupName;
-  const GoodsOrder(
-      {super.key,
-      required this.count,
-      required this.goods,
-      required this.popupName});
+  final PopupModel popup;
+  const GoodsOrder({
+    super.key,
+    required this.count,
+    required this.goods,
+    required this.popup,
+  });
 
   @override
   State<GoodsOrder> createState() => _GoodsOrderState();
@@ -143,7 +145,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.popupName,
+                              widget.popup.name!,
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -155,10 +157,18 @@ class _GoodsOrderState extends State<GoodsOrder> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/images/goods.png',
-                            width: screenWidth * 0.2,
-                          ),
+                          widget.goods.image != null &&
+                                  widget.goods.image!.isNotEmpty
+                              ? Image.network(
+                                  widget.goods.image![0],
+                                  width: screenWidth * 0.2,
+                                  height: screenWidth * 0.2,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/images/goods.png',
+                                  width: screenWidth * 0.2,
+                                ),
                           const SizedBox(
                             width: 8,
                           ),
@@ -426,6 +436,7 @@ class _GoodsOrderState extends State<GoodsOrder> {
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 const Icon(

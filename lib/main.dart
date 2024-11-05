@@ -95,7 +95,7 @@ Future<void> _toggleNotification(bool value) async {
 
   if (value) {
     // 푸시 알림을 켤 때 FCM 구독
-    await FirebaseMessaging.instance.subscribeToTopic('all_users');
+    // await FirebaseMessaging.instance.subscribeToTopic('all_users');
   } else {
     // 푸시 알림을 끌 때 FCM 구독 해제
     await FirebaseMessaging.instance.unsubscribeFromTopic('all_users');
@@ -112,10 +112,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   // FCM 알림 초기화
-  initializeNotification();
+  // initializeNotification();
 
   // 초기 알림 설정 로드 및 적용
   loadInitialNotificationSetting();

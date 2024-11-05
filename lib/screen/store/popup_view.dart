@@ -828,12 +828,8 @@ class _PopupDetailState extends State<PopupDetail> {
                                                                   builder:
                                                                       (context) =>
                                                                           GoodsDetail(
-                                                                    popupName:
-                                                                        popup!
-                                                                            .name!,
-                                                                    popupId:
-                                                                        popup!
-                                                                            .id!,
+                                                                    popup:
+                                                                        popup!,
                                                                     goodsId: goods
                                                                         .product,
                                                                   ),

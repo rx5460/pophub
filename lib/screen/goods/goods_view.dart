@@ -19,14 +19,13 @@ import 'package:provider/provider.dart';
 
 class GoodsDetail extends StatefulWidget {
   final String goodsId;
-  final String popupName;
-  final String popupId;
-  const GoodsDetail(
-      {Key? key,
-      required this.goodsId,
-      required this.popupName,
-      required this.popupId})
-      : super(key: key);
+  final PopupModel popup;
+
+  const GoodsDetail({
+    Key? key,
+    required this.goodsId,
+    required this.popup,
+  }) : super(key: key);
 
   @override
   State<GoodsDetail> createState() => _GoodsDetailState();
@@ -54,7 +53,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Future<void> fetchGoodsData() async {
     try {
       List<GoodsModel>? dataList =
-          await GoodsApi.getPopupGoodsList(widget.popupId);
+          await GoodsApi.getPopupGoodsList(widget.popup.id!);
 
       if (dataList.isNotEmpty) {
         setState(() {
@@ -331,12 +330,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                                                   builder:
                                                                       (context) =>
                                                                           GoodsDetail(
-                                                                    popupName:
-                                                                        popup
-                                                                            .name!,
-                                                                    popupId:
-                                                                        popup
-                                                                            .id!,
+                                                                    popup: widget
+                                                                        .popup,
                                                                     goodsId: goods
                                                                         .product,
                                                                   ),
@@ -675,8 +670,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       GoodsOrder(
-                                                        popupName:
-                                                            widget.popupName,
+                                                        popup: widget.popup,
                                                         goods: goods!,
                                                         count: count,
                                                       )),

@@ -87,9 +87,8 @@ class _GoodsListState extends State<GoodsList> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => GoodsDetail(
-                                popupName: widget.popup.name!,
                                 goodsId: goodsList![index].product,
-                                popupId: widget.popup.id!,
+                                popup: widget.popup,
                               ),
                             ),
                           );
