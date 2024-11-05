@@ -40,7 +40,7 @@ class ReviewApi {
 
   // 리뷰 작성
   static Future<Map<String, dynamic>> postWriteReview(
-      String popup, double rating, String content, String userName) async {
+      String popup, String rating, String content, String userName) async {
     final data = await postData('$domain/popup/review/create/$popup', {
       'userName': userName,
       'reviewRating': rating,
