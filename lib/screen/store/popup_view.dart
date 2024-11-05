@@ -730,8 +730,13 @@ class _PopupDetailState extends State<PopupDetail> {
                                                             ),
                                                           ),
                                                           Text(
-                                                              reviewList![index]
-                                                                  .date!)
+                                                            DateFormat(
+                                                                    'yyyy-MM-dd HH:mm')
+                                                                .format(DateTime.parse(
+                                                                    reviewList![
+                                                                            index]
+                                                                        .date!)),
+                                                          )
                                                         ],
                                                       ),
                                                       Text(reviewList![index]

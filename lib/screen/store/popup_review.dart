@@ -48,8 +48,8 @@ class _PopupReviewState extends State<PopupReview> {
   }
 
   Future<void> writeReview() async {
-    Map<String, dynamic> data = await ReviewApi.postWriteReview(
-        widget.storeId, _selectedRating, contentController.text, User().userId);
+    Map<String, dynamic> data = await ReviewApi.postWriteReview(widget.storeId,
+        _selectedRating.toString(), contentController.text, User().userName);
 
     if (!data.toString().contains("fail")) {
       widget.popupDetailRefresh(); // 수정된 부분
@@ -202,6 +202,10 @@ class _PopupReviewState extends State<PopupReview> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
+                                Text(
+                                  DateFormat('yyyy-MM-dd HH:mm').format(
+                                      DateTime.parse(reviewList![index].date!)),
+                                )
                               ],
                             ),
                             Row(

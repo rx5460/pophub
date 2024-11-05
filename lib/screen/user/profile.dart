@@ -4,6 +4,7 @@ import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/review_model.dart';
 import 'package:pophub/model/user.dart';
+import 'package:pophub/model/visit_model.dart';
 import 'package:pophub/notifier/StoreNotifier.dart';
 import 'package:pophub/screen/adversiment/ad_list.dart';
 import 'package:pophub/screen/alarm/alarm_add.dart';
@@ -31,6 +32,7 @@ import 'package:pophub/utils/api/funding_api.dart';
 import 'package:pophub/utils/api/review_api.dart';
 import 'package:pophub/utils/api/store_api.dart';
 import 'package:pophub/utils/api/user_api.dart';
+import 'package:pophub/utils/api/visit_api.dart';
 import 'package:pophub/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true; // 로딩 상태 변수 추가
   List<ReviewModel>? reviewList;
   String? storeId;
+  String visitCount = "";
 
   Future<void> profileApi() async {
     setState(() {
@@ -124,6 +127,20 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> fetchVisitData() async {
+    try {
+      List<VisitModel>? dataList = await VisitApi.getCalendar();
+
+      if (dataList.isNotEmpty) {
+        setState(() {
+          visitCount = dataList.length.toString();
+        });
+      }
+    } catch (error) {
+      Logger.debug('Error fetching calendar data: $error');
+    }
+  }
+
   Future<void> getStoreId() async {
     setState(() {
       isLoading = true;
@@ -198,6 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
     profileApi(); // API 호출
     fetchReviewData();
     getStoreId();
+    fetchVisitData();
   }
 
   @override
@@ -385,9 +403,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         (screenWidth * 0.3) - 2,
                                                     child: Column(
                                                       children: [
-                                                        const Text(
-                                                          '0',
-                                                          style: TextStyle(
+                                                        Text(
+                                                          visitCount,
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 20,
                                                             fontWeight:
                                                                 FontWeight.w700,

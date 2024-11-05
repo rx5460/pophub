@@ -18,7 +18,7 @@ class _LanguageChangePageState extends State<LanguageChangePage> {
     'English': const Locale('en'),
     '한국어': const Locale('ko'),
     '日本語': const Locale('ja'),
-    '中文 (简体)': const Locale('zh', 'Hans'), // 중국어 간체
+    '中文 (简体)': const Locale('zh-Hans'), // 중국어 간체
   };
 
   @override
