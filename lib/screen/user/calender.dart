@@ -352,7 +352,7 @@ class _CalenderState extends State<Calender> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(
-                                              width: screenWidth * 0.65,
+                                              width: screenWidth * 0.55,
                                               child: Text(
                                                 visitData![index].storeName!,
                                                 style: const TextStyle(
@@ -364,8 +364,8 @@ class _CalenderState extends State<Calender> {
                                               ),
                                             ),
                                             Text(
-                                              DateFormat('yyyy-MM-dd HH:mm')
-                                                  .format(DateTime.parse(
+                                              DateFormat('yyyy-MM-dd').format(
+                                                  DateTime.parse(
                                                       visitData![index]
                                                           .reservationDate!)),
                                               style: const TextStyle(
