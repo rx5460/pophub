@@ -138,7 +138,7 @@ Future<void> main() async {
   String lang = 'ko';
 
   final deviceLocales = PlatformDispatcher.instance.locales;
-  if (languageCode != "") {
+  if (languageCode != "" && languageCode != null) {
     lang = languageCode.toString();
   } else {
     if (deviceLocales[0].languageCode != 'ko') {
