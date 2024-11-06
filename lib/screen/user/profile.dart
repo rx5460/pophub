@@ -673,9 +673,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
 
                                         Visibility(
-                                          visible:
-                                              User().role == "General Member" ||
-                                                  User().role == "President",
+                                          visible: User().role == "President",
                                           child: MenuList(
                                             icon: Icons.event_note,
                                             text: 'make_a_waiting'.tr(),
