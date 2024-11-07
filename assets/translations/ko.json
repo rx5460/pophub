@@ -69,7 +69,7 @@
   "titleName_1": "승인 리스트",
   "text_8": "예약 내역",
   "text_9": "결제 내역",
-  "text_10": "내 팝업스토어 예약 내역",
+  "text_10": "사전 예약",
   "text_11": "광고",
   "text_12": "펀딩",
   "text_13": "장바구니",
@@ -445,6 +445,6 @@
   "delivery_list": "배송 조회",
   "show_detail": "상세 보기",
   "marker_text": "마커를 누르면 카카오맵 길찾기로 이동합니다.",
-  "make_a_waiting": "현장대기",
+  "make_a_waiting": "현장 대기",
   "change_lang": "언어 변경"
 }

@@ -431,12 +431,14 @@ class _GoodsOrderState extends State<GoodsOrder> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  totalAddress != null ? totalAddress! : "",
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    overflow: TextOverflow.ellipsis,
+                                Expanded(
+                                  child: Text(
+                                    totalAddress != null ? totalAddress! : "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
                                 const Icon(

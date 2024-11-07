@@ -35,6 +35,19 @@ class _WaitingListStorePageState extends State<WaitingListStorePage> {
     }
   }
 
+  Future<void> initializeData() async {
+    await checkStoreApi();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializeData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Size screenSize = MediaQuery.of(context).size;

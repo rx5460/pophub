@@ -13,6 +13,7 @@ import 'package:pophub/screen/delivery/delivery_list.dart';
 import 'package:pophub/screen/funding/funding.dart';
 import 'package:pophub/screen/funding/funding_add.dart';
 import 'package:pophub/screen/funding/funding_list.dart';
+import 'package:pophub/screen/reservation/waiting_list_store.dart';
 import 'package:pophub/screen/setting/address_write.dart';
 import 'package:pophub/screen/setting/app_setting.dart';
 import 'package:pophub/screen/setting/inquiry.dart';
@@ -620,8 +621,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         Visibility(
                                           visible:
-                                              User().role == "General Member" ||
-                                                  User().role == "President",
+                                              User().role == "General Member",
                                           child: MenuList(
                                             icon: Icons.event_note,
                                             text: 'text_8'.tr(),
@@ -668,6 +668,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             titleName:
                                                                 "text_10".tr(),
                                                           )));
+                                            },
+                                          ),
+                                        ),
+
+                                        Visibility(
+                                          visible: User().role == "President",
+                                          child: MenuList(
+                                            icon: Icons.event_note,
+                                            text: 'make_a_waiting'.tr(),
+                                            onClick: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const WaitingListStorePage()));
                                             },
                                           ),
                                         ),
