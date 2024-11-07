@@ -11,7 +11,7 @@ class WaitingModel {
 
 class WaitingResultModel {
   final String? reservationId, userName, storeId, status, phoneNumber;
-  final int? capacity;
+  final int? capacity, position;
   final DateTime? createdAt;
 
   WaitingResultModel.fromJson(Map<String, dynamic> json)
@@ -21,5 +21,6 @@ class WaitingResultModel {
         status = json['status'],
         capacity = json['capacity'],
         phoneNumber = json['phone_number'],
+        position = json['position'],
         createdAt = DateTime.tryParse(json['created_at'] ?? '');
 }

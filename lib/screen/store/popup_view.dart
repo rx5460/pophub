@@ -1075,7 +1075,7 @@ class _PopupDetailState extends State<PopupDetail> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     WaitingCount(
-                                                  popup: popup!.id!,
+                                                  popup: popup!,
                                                 ),
                                               ),
                                             );

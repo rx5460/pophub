@@ -104,6 +104,17 @@ class ReservationApi {
     return reservationList;
   }
 
+  static Future<List<WaitingResultModel>> getWaitingData(String storeId) async {
+    final dataList = await getListData(
+        '$domain/reservation/waiting/show?userName=${User().userName}&storeId=$storeId',
+        {});
+    Logger.debug("### 팝업 현장대기 데이터 조회 by storeId $dataList");
+
+    List<WaitingResultModel> reservationList =
+        dataList.map((data) => WaitingResultModel.fromJson(data)).toList();
+    return reservationList;
+  }
+
   // 팝업 현장대기 입장 승인
   static Future<Map<String, dynamic>> waitingadmission(
       String reservationId) async {

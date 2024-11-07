@@ -74,12 +74,15 @@ class _WaitingListState extends State<WaitingList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(reserveList[index].userName.toString()),
+                      Text(reserveList[0].result[index].userName.toString()),
                       Visibility(
-                          visible: reserveList[index].status == "pending",
+                          visible:
+                              reserveList[0].result[index].status == "pending",
                           child: OutlinedButton(
                               onPressed: () {
-                                waitingApi(reserveList[index].reservationId!);
+                                waitingApi(reserveList[0]
+                                    .result[index]
+                                    .reservationId!);
                               },
                               child: const Text('입장'))),
                     ],
