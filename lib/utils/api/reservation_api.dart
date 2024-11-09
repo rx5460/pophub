@@ -124,4 +124,24 @@ class ReservationApi {
     Logger.debug("### 팝업 현장대기 승인 $data");
     return data;
   }
+
+  // 팝업 현장대기 상태 조회 by name
+  static Future<List<WaitingResultModel>> getWaitingByUserName() async {
+    final dataList = await getListData(
+        '$domain/reservation/waiting/show?userName=${User().userName}', {});
+    Logger.debug("### 팝업 현장대기 상태 조회 by name $dataList");
+
+    List<WaitingResultModel> reservationList =
+        dataList.map((data) => WaitingResultModel.fromJson(data)).toList();
+    return reservationList;
+  }
+
+  // 팝업 현장대기 삭제
+  static Future<Map<String, dynamic>> deleteWaiting(
+      String reservationId) async {
+    final data = await deleteData(
+        '$domain/reservation/waiting/cancel?reservationId=$reservationId', {});
+    Logger.debug("### 현장대기 삭제 $data");
+    return data;
+  }
 }

@@ -27,6 +27,7 @@ import 'package:pophub/screen/user/acount_info.dart';
 import 'package:pophub/screen/user/calender.dart';
 import 'package:pophub/screen/user/login.dart';
 import 'package:pophub/screen/user/my_review.dart';
+import 'package:pophub/screen/user/my_waiting.dart';
 import 'package:pophub/screen/user/point_list.dart';
 import 'package:pophub/screen/user/profile_add.dart';
 import 'package:pophub/utils/api/funding_api.dart';
@@ -635,6 +636,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             titleName:
                                                                 "text_8".tr(),
                                                           )));
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              User().role == "General Member",
+                                          child: MenuList(
+                                            icon: Icons.event_note,
+                                            text: '현장대기 내역',
+                                            onClick: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const MyWaiting()));
                                             },
                                           ),
                                         ),

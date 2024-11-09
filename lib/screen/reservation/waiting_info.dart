@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:pophub/assets/constants.dart';
 import 'package:pophub/model/popup_model.dart';
 import 'package:pophub/model/waiting_model.dart';
+import 'package:pophub/screen/store/popup_view.dart';
 import 'package:pophub/utils/api/reservation_api.dart';
 import 'package:pophub/utils/log.dart';
 
 class WaitingInfo extends StatefulWidget {
+  final String mode;
   final PopupModel popup;
   const WaitingInfo({
     super.key,
     required this.popup,
+    this.mode = 'waiting',
   });
 
   @override
@@ -85,23 +88,44 @@ class _WaitingInfoState extends State<WaitingInfo> {
                           left: screenWidth * 0.05,
                           right: screenWidth * 0.05,
                         ),
-                        child: Row(
-                          children: [
-                            Text(
-                              widget.popup.name!,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w900,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PopupDetail(
+                                  storeId: widget.popup.id!,
+                                  mode: 'view',
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 24,
-                            )
-                          ],
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: screenWidth * 0.8, // 원하는 너비
+                                child: Text(
+                                  widget.popup.name!,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                  maxLines: 2, // 최대 두 줄까지만 출력
+                                  overflow: TextOverflow
+                                      .ellipsis, // 두 줄을 초과하면 "..." 표시
+                                  softWrap: true,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 24,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -243,9 +267,13 @@ class _WaitingInfoState extends State<WaitingInfo> {
                     height: screenHeight * 0.07,
                     child: OutlinedButton(
                         onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                          if (widget.mode == 'waiting') {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.pop(context);
+                          }
                         },
                         child: Text(
                           ('close').tr(),
