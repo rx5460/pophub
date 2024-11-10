@@ -21,7 +21,7 @@ class _WaitingListState extends State<WaitingList> {
 
   Future<void> getWaitingList() async {
     try {
-      final data = await ReservationApi.getPopupWaiting("widget.popup");
+      final data = await ReservationApi.getPopupWaiting(widget.popup);
       if (data.isNotEmpty && !data.toString().contains("fail")) {
         setState(() {
           reserveList = data;
